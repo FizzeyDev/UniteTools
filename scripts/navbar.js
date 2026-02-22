@@ -3,7 +3,7 @@ let currentLang = localStorage.getItem('lang') || 'fr';
 
 document.addEventListener("DOMContentLoaded", () => {
   const isLocal = ["localhost", "127.0.0.1", "0.0.0.0"].includes(window.location.hostname);
-  const basePath = isLocal ? "./" : "/PokemonUniteDraft/";
+  const basePath = isLocal ? "./" : "/";
 
   const navbarPath = `${basePath}components/navbar.html`;
 
