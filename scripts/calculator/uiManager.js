@@ -1,5 +1,3 @@
-// uiManager.js - Gestion de l'interface utilisateur
-
 import { state } from './state.js';
 import { selectAttacker, selectDefender } from './pokemonManager.js';
 import { updateDamages } from './damageDisplay.js';

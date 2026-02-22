@@ -1,5 +1,3 @@
-// constants.js - Constantes et données statiques
-
 export const specialHeldItems = {
   "mega-charizard-x": "Charizardite X",
   "mega-charizard-y": "Charizardite Y",
@@ -20,7 +18,6 @@ export const stackableItems = [
   "Accel Bracer", "Drive Lens", "Weakness Policy"
 ];
 
-// FARMS
 export const registeel = {
   pokemonId: "registeel-farm",
   role: "farm",
@@ -174,7 +171,6 @@ export const rayquaza = {
   }))
 };
 
-// DOLLS
 export const substituteDoll = {
   pokemonId: "substitute-doll",
   role: "dummy",

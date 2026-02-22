@@ -1,10 +1,8 @@
-// itemManager.js - Gestion des items
-
 import { state } from './state.js';
 import { specialHeldItems, stackableItems } from './constants.js';
 import { updateDamages } from './damageDisplay.js';
+import { t } from './i18n.js';
 
-// Groupes de stacks liés
 const STACK_GROUPS = {
   scoring: ['Attack Weight', 'Sp. Atk Specs', 'Aeos Cookie'],
   kill:    ['Drive Lens', 'Accel Bracer'],
@@ -33,7 +31,6 @@ function syncLinkedStacks(side, changedSlot, newValue) {
     if (slot === changedSlot) return;
     if (item && groupItems.includes(item.name)) {
       stacksArray[slot] = newValue;
-      // Mettre à jour l'affichage de la carte
       const grid = side === 'attacker' ? document.getElementById('itemsEquippedAttacker') : document.getElementById('itemsEquippedDefender');
       const card = grid.querySelector(`[data-slot="${slot}"]`);
       if (card) {
@@ -72,7 +69,7 @@ export function setupItemSearch() {
   search.addEventListener('input', () => {
     const term = search.value.toLowerCase();
     document.querySelectorAll('#itemGrid .item-grid-item').forEach(el => {
-      if (el.classList.contains('equipped-elsewhere')) return; // déjà hidden par CSS
+      if (el.classList.contains('equipped-elsewhere')) return;
       const name = (el.querySelector('span')?.textContent || '').toLowerCase();
       el.style.display = name.includes(term) ? '' : 'none';
     });
@@ -139,7 +136,7 @@ export function updateItemCard(side, slot, item = null) {
 
   if (!item) {
     icon.src = 'assets/items/none.png';
-    nameEl.textContent = 'Empty';
+    nameEl.textContent = window.translations?.calc_item_empty ?? 'Empty';
     statsEl.innerHTML = '';
     if (stacksEl) stacksEl.style.display = 'none';
     card.classList.remove('has-item');
@@ -177,7 +174,7 @@ export function updateItemCard(side, slot, item = null) {
     statsText += `<br><span style="color:var(--green);font-weight:bold;">Proc (full energy): +40 + ${item.level20} Atk dmg</span>`;
   }
 
-  statsEl.innerHTML = statsText || '<span style="color:#666">No bonus</span>';
+  statsEl.innerHTML = statsText || `<span style="color:#666">${t('calc_item_no_bonus')}</span>`;
 
   if (stackableItems.includes(item.name)) {
     const maxStacks = item.name === "Weakness Policy" ? 4 : (item.name.includes("Accel") || item.name.includes("Drive") ? 20 : 6);
@@ -194,12 +191,12 @@ export function updateItemCard(side, slot, item = null) {
     toggleBtn.className = 'item-equipped-toggle';
     const activatedArray = side === 'attacker' ? state.attackerItemActivated : state.defenderItemActivated;
     toggleBtn.classList.toggle('active', activatedArray[slot]);
-    toggleBtn.textContent = activatedArray[slot] ? 'Désactiver' : 'Activer';
+    toggleBtn.textContent = activatedArray[slot] ? t('calc_item_deactivate_btn') : t('calc_item_activate_btn');
     toggleBtn.onclick = (e) => {
       e.stopPropagation();
       activatedArray[slot] = !activatedArray[slot];
       toggleBtn.classList.toggle('active', activatedArray[slot]);
-      toggleBtn.textContent = activatedArray[slot] ? 'Désactiver' : 'Activer';
+      toggleBtn.textContent = activatedArray[slot] ? t('calc_item_deactivate_btn') : t('calc_item_activate_btn');
       updateDamages();
     };
     card.appendChild(toggleBtn);
@@ -209,7 +206,7 @@ export function updateItemCard(side, slot, item = null) {
     const indicator = document.createElement('div');
     indicator.className = 'choice-specs-indicator';
     indicator.style.cssText = 'margin-top:8px; font-size:0.85rem; color:var(--green); font-weight:bold;';
-    indicator.textContent = 'Effet toujours actif';
+    indicator.textContent = t('calc_item_always_active');
     card.appendChild(indicator);
   }
 
@@ -269,7 +266,7 @@ function attachStackButtons(side, slot) {
     if (stacksArray[slot] > 0) {
       stacksArray[slot]--;
       valueSpan.textContent = stacksArray[slot];
-      syncLinkedStacks(side, slot, stacksArray[slot]); // ← ajout
+      syncLinkedStacks(side, slot, stacksArray[slot]);
       updateDamages();
     }
   };
@@ -279,7 +276,7 @@ function attachStackButtons(side, slot) {
     if (stacksArray[slot] < max) {
       stacksArray[slot]++;
       valueSpan.textContent = stacksArray[slot];
-      syncLinkedStacks(side, slot, stacksArray[slot]); // ← ajout
+      syncLinkedStacks(side, slot, stacksArray[slot]);
       updateDamages();
     }
   };
@@ -329,7 +326,7 @@ export function autoEquipSpecialItem(side, pokemonId) {
   if (card) {
     card.style.opacity = "0.7";
     card.style.pointerEvents = "none";
-    card.title = "Item obligatoire pour ce Pokémon";
+    card.title = t('calc_item_mandatory');
   }
 }
 
@@ -340,7 +337,7 @@ export function disableItemSlots(side) {
   cards.forEach(card => {
     card.style.opacity = '0.5';
     card.style.pointerEvents = 'none';
-    card.title = "Items are deactivate for this character.";
+    card.title = t('calc_item_disabled');
   });
 }
 

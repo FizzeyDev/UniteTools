@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Unite Tools - Damage Calculator</title>
+  <title data-lang="calc_page_title">Unite Tools - Damage Calculator</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/navbar.css">
   <link rel="stylesheet" href="css/damage-calc.css" />
@@ -31,7 +31,7 @@
 </head>
 <body>
   <div id="navbar-container"></div>
-  <h1>Pokémon UNITE Damage Calculator (WIP)</h1>
+  <h1 data-lang="calc_h1">Pokémon UNITE Damage Calculator (WIP)</h1>
 
   <!-- Bouton Warning -->
   <button id="warningBtn" class="warning-btn" title="Important Information">
@@ -46,14 +46,14 @@
         <span id="attackerRole" class="role-icon"></span>
       </div>
 
-      <input type="text" id="searchAttacker" class="pokemon-search" placeholder="Search a Pokemon...">
+      <input type="text" id="searchAttacker" class="pokemon-search" placeholder="Search a Pokémon..." data-lang-placeholder="calc_search_placeholder">
 
       <div class="pokemon-grid-wrapper">
         <div id="pokemonGridAttacker" class="pokemon-grid"></div>
       </div>
 
       <div class="items-section">
-        <h3>Equiped Items</h3>
+        <h3 data-lang="calc_equipped_items">Equipped Items</h3>
         <div class="items-equipped-grid" id="itemsEquippedAttacker">
           <div class="item-equipped-card" data-slot="0">
             <div class="item-equipped-icon">
@@ -101,10 +101,10 @@
             </div>
           </div>
         </div>
-        <button class="reset-items-btn" data-side="attacker">Reset Items</button>
+        <button class="reset-items-btn" data-side="attacker" data-lang="calc_reset_items">Reset Items</button>
       </div>
       <div class="additional-effects">
-        <h3>Universal Offensive Buffs</h3>
+        <h3 data-lang="calc_off_buffs">Universal Offensive Buffs</h3>
         <div class="buff-checkboxes">
           <label class="buff-label">
             <input type="checkbox" id="registeelBuffAttacker">
@@ -149,7 +149,7 @@
         </div>
       </div>
       <div class="additional-effects">
-        <h3>Universal Offensive Debuffs</h3>
+        <h3 data-lang="calc_off_debuffs">Universal Offensive Debuffs</h3>
         <div class="buff-checkboxes">
           <label class="buff-label">
             <input type="checkbox" id="buzzwoleLungeDebuffAttacker">
@@ -281,19 +281,19 @@
 
       <!-- NOUVEAU : Onglets de catégorie -->
       <div class="category-tabs defender-tabs">
-        <button class="tab-button active" data-category="playable">Playable Pokemons</button>
-        <button class="tab-button" data-category="mob">Wilds Pokemons</button>
-        <button class="tab-button" data-category="other">Other</button>
+        <button class="tab-button active" data-category="playable" data-lang="calc_tab_playable">Playable Pokémon</button>
+        <button class="tab-button" data-category="mob" data-lang="calc_tab_wilds">Wild Pokémon</button>
+        <button class="tab-button" data-category="other" data-lang="calc_tab_other">Other</button>
       </div>
 
-      <input type="text" id="searchDefender" class="pokemon-search" placeholder="Search a Pokemon...">
+      <input type="text" id="searchDefender" class="pokemon-search" placeholder="Search a Pokémon..." data-lang-placeholder="calc_search_placeholder">
 
       <div class="pokemon-grid-wrapper">
         <div id="pokemonGridDefender" class="pokemon-grid"></div>
       </div>
 
       <div class="items-section">
-        <h3>Equiped Items</h3>
+        <h3 data-lang="calc_equipped_items">Equipped Items</h3>
         <div class="items-equipped-grid" id="itemsEquippedDefender">
           <div class="item-equipped-card" data-slot="0">
             <div class="item-equipped-icon">
@@ -341,10 +341,10 @@
             </div>
           </div>
         </div>
-        <button class="reset-items-btn" data-side="defender">Reset Items</button>
+        <button class="reset-items-btn" data-side="defender" data-lang="calc_reset_items">Reset Items</button>
       </div>
       <div class="additional-effects">
-        <h3>Universal Defensive Buffs</h3>
+        <h3 data-lang="calc_def_buffs">Universal Defensive Buffs</h3>
         <div class="buff-checkboxes">
           <label class="buff-label">
             <input type="checkbox" id="regirockBuffDefender">
@@ -381,7 +381,7 @@
         </div>
       </div>
       <div class="additional-effects">
-        <h3>Universal Defensive Debuffs</h3>
+        <h3 data-lang="calc_def_debuffs">Universal Defensive Debuffs</h3>
         <div class="buff-checkboxes">
           <label class="buff-label">
             <input type="checkbox" id="absolBoostedDebuffDefender">
@@ -512,10 +512,10 @@
   <div class="results-container">
     <!-- Stats Attaquant -->
     <div class="stats-card attacker-stats">
-      <h3>Attacker</h3>
+      <h3 data-lang="calc_section_attacker">Attacker</h3>
       <div class="pokemon-name-header">
         <img id="resultsAttackerImg" class="stats-pokemon-img" src="assets/items/none.png" alt="">
-        <span id="resultsAttackerName">Select an attacker</span>
+        <span id="resultsAttackerName" data-lang="calc_select_attacker">Select an attacker</span>
       </div>
       <div class="stats-grid">
         <div class="stat-item">
@@ -527,22 +527,22 @@
           </div>
 
           <!-- Level -->
-           <span class="stat-label">Level</span>
+           <span class="stat-label" data-lang="calc_stat_level">Level</span>
           <div class="slider-block">
             <label>Level <span id="levelValueAttacker">15</span></label>
             <input type="range" id="levelSliderAttacker" min="1" max="15" value="15">
           </div>
         </div>
         <div class="stat-item">
-          <span class="stat-label">ATK</span>
+          <span class="stat-label" data-lang="calc_stat_atk">ATK</span>
           <span id="attackerAtk" class="stat-value">0</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Sp.Atk</span>
+          <span class="stat-label" data-lang="calc_stat_spatk">Sp.Atk</span>
           <span id="attackerSpAtk" class="stat-value">0</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Crit Chance</span>
+          <span class="stat-label" data-lang="calc_stat_crit">Crit Chance</span>
           <span id="attackerCritChance" class="stat-value">0%</span>
         </div>
       </div>
@@ -550,15 +550,15 @@
 
     <!-- Dégâts des moves (section centrale large) -->
     <div class="moves-section">
-      <h3>Moves Damage</h3>
+      <h3 data-lang="calc_section_moves">Moves Damage</h3>
       <div id="movesGrid" class="moves-grid"></div>
     </div>
 
     <!-- Stats Défenseur -->
     <div class="stats-card defender-stats">
-      <h3>Defender</h3>
+      <h3 data-lang="calc_section_defender">Defender</h3>
       <div class="pokemon-name-header">
-        <span id="resultsDefenderName">Select a defender</span>
+        <span id="resultsDefenderName" data-lang="calc_select_defender">Select a defender</span>
         <img id="resultsDefenderImg" class="stats-pokemon-img" src="assets/items/none.png" alt="">
       </div>
       <div class="stats-grid">
@@ -571,7 +571,7 @@
           </div>
 
           <!-- Level -->
-           <span class="stat-label">Level</span>
+           <span class="stat-label" data-lang="calc_stat_level">Level</span>
           <div class="slider-block">
             <label>Level <span id="levelValueDefender">15</span></label>
             <input type="range" id="levelSliderDefender" min="1" max="15" value="15">
@@ -580,29 +580,29 @@
 
         <!-- HP Max éditable (seulement pour Custom Doll) -->
         <div class="stat-item custom-stat" style="display:none;">
-          <span class="stat-label">HP Max</span>
+          <span class="stat-label" data-lang="calc_stat_hp">HP Max</span>
           <span id="defenderMaxHP" class="stat-value editable-custom">10 000</span>
         </div>
 
         <!-- DEF normale -->
         <div class="stat-item" id="defenderDefNormal">
-          <span class="stat-label">DEF</span>
+          <span class="stat-label" data-lang="calc_stat_def">DEF</span>
           <span id="defenderDef" class="stat-value">0</span>
         </div>
         <!-- DEF custom -->
         <div class="stat-item custom-stat" style="display:none;">
-          <span class="stat-label">DEF</span>
+          <span class="stat-label" data-lang="calc_stat_def">DEF</span>
           <span id="defenderDefCustom" class="stat-value editable-custom">100</span>
         </div>
 
         <!-- Sp.Def normale -->
         <div class="stat-item" id="defenderSpDefNormal">
-          <span class="stat-label">Sp.Def</span>
+          <span class="stat-label" data-lang="calc_stat_spdef">Sp.Def</span>
           <span id="defenderSpDef" class="stat-value">0</span>
         </div>
         <!-- Sp.Def custom -->
         <div class="stat-item custom-stat" style="display:none;">
-          <span class="stat-label">Sp.Def</span>
+          <span class="stat-label" data-lang="calc_stat_spdef">Sp.Def</span>
           <span id="defenderSpDefCustom" class="stat-value editable-custom">100</span>
         </div>
       </div>
@@ -613,8 +613,8 @@
   <div id="itemSelectorModal" class="item-modal" style="display:none;">
     <div class="item-modal-content">
       <span class="close-modal">×</span>
-      <h3>Select an Item</h3>
-      <input type="text" id="itemSearch" class="item-search" placeholder="Rechercher...">
+      <h3 data-lang="calc_item_modal_title">Select an Item</h3>
+      <input type="text" id="itemSearch" class="item-search" placeholder="Search..." data-lang-placeholder="calc_search_placeholder">
       <div id="itemGrid" class="item-grid"></div>
     </div>
   </div>
@@ -623,7 +623,7 @@
   <div id="warningModal" class="warning-modal" style="display:none;">
     <div class="warning-modal-content">
       <span class="close-warning">x</span>
-      <h3>⚠️ IMPORTANT INFORMATIONS - BETA</h3>
+      <h3 data-lang="calc_warning_title">⚠️ IMPORTANT INFORMATIONS - BETA</h3>
         <div id="warningText">
         <p><strong>This calculator try to provides exact values but may contain errors.</strong></p>
 
@@ -637,7 +637,6 @@
         <p>All items are set to <strong>maximum level (40)</strong> and cannot be changed (tournament format).</p>
         <p>Some items or passives may be missing and will be implemented later.</p>
         <p>All wild pokemon have their HP start based on their first spawn in-game. (Will see later for a better implementation)</p>
-        <p>Only support English language.</p>
         <p>If you encounter incorrect values or bugs, feel free to contact <strong>@FizzeyS</strong> on Twitter or <strong>fizzeys</strong> on Discord.</p>
 
         <br><p><strong>Planned features:</strong></p>

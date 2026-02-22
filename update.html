@@ -2,168 +2,380 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Unite Tools - Updates</title>
-
   <link rel="stylesheet" href="css/navbar.css">
   <link rel="stylesheet" href="css/update.css">
-
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div id="navbar-container"></div>
 
   <div class="page-wrapper">
-    <h1>Recent Updates</h1>
+    <header class="page-header">
+      <div class="page-eyebrow">Changelog</div>
+      <h1>Updates</h1>
+      <p>What's new in Unite Tools</p>
+    </header>
 
-    <div class="updates-container">
-      <div class="update-main">
-        <h2>Latest Update</h2>
+    <div class="timeline">
 
-        <div class="update-content">
-          <h3>Update v2.2.0</h3>
-          <p>
-            []===[] Global Design Rework: all pages now share a unified design system.<br>
-            []===[] Draft Simulator Updates:
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Online multiplayer is here (still WIP).<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Allow you to create room, invite your friends with 1 purple player, 1 orange player and maximum 5 spectator.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add legendary birds because why not.<br>
-            []===[] Map Timer Updates:
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Full-width map display, no more max-width constraint.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sprites now scale proportionally with the map size at any screen width.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All Pokémon spawns, towers and Altaria sprites resize dynamically on load and window resize.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tooltip enlarged for better readability<br>
-
-          </p>
-          <span class="update-date">February 22, 2026</span>
-        </div><br><br><br>
-        <div class="update-content">
-          <h3>Update v2.0.2</h3>
-          <p>
-            []===[] Early Update: Add Zapdos, Moltres & Articuno in the Draft and Tierlist.<br>
-            []===[] Fix issue with "All" button in draft that was not showing all pokemons.<br>
-            []===[] Damage Calculator Update:<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Complete the implementation of ALL useful passives. Some are not shown but effective.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WARNING: If you find any bugs / issues, feel free to contact me with what you found so I can work on fixing this.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Change slider design.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Sirfetch moves to the calculator.<br>
-            []===[] Damage Calculator Bugs Fix:<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fix bug item that are not shown as already equiped in item selection.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fix Aegislash stats.<br>
-            []===[] Next big update: Implement all move specifics and complete version 1 of the calculator.<br>
-          </p>
-          <span class="update-date">February 20, 2026</span>
-        </div><br><br><br>
-        <div class="update-content">
-          <h3>Update v2.0.1</h3>
-          <p>
-            []===[] Can now hide the sidebar for a better experience.<br>
-            []===[] Damage Calculator Update:<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item Selection now only display items that are not equipped.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Levels are now display and can be changed in the stat display window.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Move damage windows can now be scrolled and have a better presentation.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stacks items are now linked together.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Overall presentation upgrade of the page.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Custom Doll now has a better presentation.<br>
-            []===[] Damage Calculator Bugs Fix:<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fix bug with Gyaradosite: now only applies to Mega Gyarados.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fix reset item button.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fix a bug where wild pokemon were able to equip items.<br>
-          </p>
-          <span class="update-date">February 20, 2026</span>
-        </div><br><br><br>
-        <div class="update-content">
-        <div class="update-content">
-          <h3>Update v2.0.0</h3>
-          <p>
-            []===[] Add menu page to present all important tools.<br>
-            []===[] Draft Update:<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adding map selection (Groudon, Rayquaza, Kyogre). Random if no one was chosen.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adding Fearless Mode.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Sirfetch'd.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add search bar for Pokemons.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fix all issues with draft.<br>
-            []===[] Tierlist Update:<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add some modes for Pokemons tiers (Simple, moves, passives, unite move).<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add move image for move, passives and unite move modes.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add searching bar for Pokemon, Items, Battle Items.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add new item Vanguard Bell and Sirfetch'd.<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fix all issues with Tierlist.<br>
-            []===[] NEXT UPDATE: Map Timer and Damage Calculator
-          </p>
-          <span class="update-date">February 19, 2026</span>
-        </div><br><br><br>
-        <div class="update-content">
-          <h3>Update v1.4.2</h3>
-          <p>
-            - Implement passive for some Pokemons:<br>
-            Mewtwo X, Mewtwo Y, Mimikyu, Rapidash, Mr. Mime, Scizor, Scyther<br>
-            - Still working to implement all passive. After that I will only miss move effects.<br>
-            - Update Meowth based on latest patch
-          </p>
-          <span class="update-date">January 28, 2026</span>
-        </div><br><br><br>
-        <div class="update-content">
-          <h3>Update v1.4.1</h3>
-          <p>
-            - Implement passive for some Pokemons:<br>
-            Mega Lucario, Machamp, Meowscarada, Lapras, Mamoswine, Venusaur<br>
-            - Still working to implement all passive. After that I will only miss move effects.<br>
-            - Fix some issue with some other existing passive.
-          </p>
-          <span class="update-date">January 28, 2026</span>
-        </div><br><br><br>
-        <div class="update-content">
-          <h3>Update v1.4</h3>
-          <p>
-            - Implement passive for some Pokemons:<br>
-            Absol, Buzzwole, Ceruledge, Mega Gyarados, Gyarados, Mega Charizard X and Y, Blastoise, Charizard, Darkrai, Decidueye, Crustle & Dragonite.<br>
-            - Still working to implement all passive. After that I will only miss move effects.<br><br>
-            - Known bug: Having the same Pokémon as both attacker and defender may cause a bug.
-          </p>
-          <span class="update-date">January 28, 2026</span>
-        </div><br><br><br>
-        <div class="update-content">
-          <h3>Update v1.3</h3>
-          <p>
-            - Add "Offensive Universal Debuff" & "Defensive Universal Debuff".<br>
-            - Add some Wild Pokémons (only objectives currently).<br>
-            - Upgrade UI in some part (still not optimized for phone usage)<br>
-            - Rework code on my part (now it's more clean hehe ...)
-          </p>
-          <span class="update-date">January 26, 2026</span>
-        </div><br><br><br>
-        <div class="update-content">
-          <h3>Update v1.2</h3>
-          <p>
-            - Add Meowth in Draft, Tierlist and Damage Calculator.<br>
-            - Update pokémon stats and move damage based on recent balance patch.<br>
-            - Add "Offensive Universal Buff" & "Defensive Universal Buff".<br>
-            - Thanks to Scrub Lord from Mathcord for sharing with me a document with some value and informations !
-          </p>
-          <span class="update-date">January 24, 2026</span>
-        </div><br><br><br>
-        <div class="update-content">
-          <h3>Update v1.1</h3>
-          <p>
-            - Damage Calculator is here (but still in beta)<br>
-            - Added Rayquaza map in the Map Timing pages (not done).<br>
-            - Merry Christmas everyone :).
-          </p>
-          <span class="update-date">December 24, 2025</span>
-        </div><br><br><br>
-        <div class="update-content">
-          <h3>Update v1.0</h3>
-          <p>
-            - Update Navbar to display the pages where you are.<br>
-            - New page: Update (this one).<br>
-            - Still working on the Damage Calculator.
-          </p>
-          <span class="update-date">December 17, 2025</span>
+      <!-- v2.1.1 -->
+      <div class="update-entry">
+        <div class="update-card">
+          <div class="update-card-header" onclick="toggleCard(this)">
+            <span class="update-version">v2.1.1</span>
+            <span class="update-badge-latest">Latest</span>
+            <span class="update-date">February 22, 2026</span>
+            <span class="update-chevron">▾</span>
+          </div>
+          <div class="update-card-body">
+            <div class="update-card-divider"></div>
+            <div class="update-card-content">
+              <ul class="change-list">
+                <li class="change-item">
+                  <span class="change-icon">✦</span>
+                  <span><span class="change-category cat-new">New</span>About page is live — learn who we are and find useful links.</span>
+                </li>
+                <li class="change-item">
+                  <span class="change-icon">✦</span>
+                  <span><span class="change-category cat-new">New</span>Full i18n support — all pages are now available in English and French.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+
+      <!-- v2.1.0 -->
+      <div class="update-entry">
+        <div class="update-card">
+          <div class="update-card-header" onclick="toggleCard(this)">
+            <span class="update-version">v2.1.0</span>
+            <span class="update-date">February 22, 2026</span>
+            <span class="update-chevron">▾</span>
+          </div>
+          <div class="update-card-body">
+            <div class="update-card-divider"></div>
+            <div class="update-card-content">
+              <div class="change-section">
+                <div class="change-section-title">General</div>
+                <ul class="change-list">
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-design">Design</span>Global design rework — all pages now share a unified design system.</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="change-section">
+                <div class="change-section-title">Draft Simulator</div>
+                <ul class="change-list">
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-new">New</span>Online multiplayer is here (WIP) — create rooms with 1 Purple, 1 Orange and up to 5 spectators.</span>
+                  </li>
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-new">New</span>Added legendary birds (Zapdos, Moltres, Articuno) to the roster.</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="change-section">
+                <div class="change-section-title">Map Timer</div>
+                <ul class="change-list">
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-design">Design</span>Full-width map display — no more max-width constraint.</span>
+                  </li>
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-update">Update</span>Sprites now scale proportionally at any screen width, on load and on resize.</span>
+                  </li>
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-design">Design</span>Tooltip enlarged for better readability.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v2.0.2 -->
+      <div class="update-entry">
+        <div class="update-card">
+          <div class="update-card-header" onclick="toggleCard(this)">
+            <span class="update-version">v2.0.2</span>
+            <span class="update-date">February 20, 2026</span>
+            <span class="update-chevron">▾</span>
+          </div>
+          <div class="update-card-body">
+            <div class="update-card-divider"></div>
+            <div class="update-card-content">
+              <div class="change-section">
+                <div class="change-section-title">Draft & Tierlist</div>
+                <ul class="change-list">
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-new">New</span>Added Zapdos, Moltres & Articuno.</span>
+                  </li>
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-fix">Fix</span>"All" filter button now correctly shows all Pokémon.</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="change-section">
+                <div class="change-section-title">Damage Calculator</div>
+                <ul class="change-list">
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-new">New</span>Complete implementation of all relevant passives.</span>
+                  </li>
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-new">New</span>Added Sirfetch'd moves.</span>
+                  </li>
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-design">Design</span>New slider design.</span>
+                  </li>
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-fix">Fix</span>Items no longer shown as unequipped when they already are.</span>
+                  </li>
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-fix">Fix</span>Fixed Aegislash stats.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v2.0.1 -->
+      <div class="update-entry">
+        <div class="update-card">
+          <div class="update-card-header" onclick="toggleCard(this)">
+            <span class="update-version">v2.0.1</span>
+            <span class="update-date">February 20, 2026</span>
+            <span class="update-chevron">▾</span>
+          </div>
+          <div class="update-card-body">
+            <div class="update-card-divider"></div>
+            <div class="update-card-content">
+              <ul class="change-list">
+                <li class="change-item">
+                  <span class="change-icon">✦</span>
+                  <span><span class="change-category cat-new">New</span>Sidebar can now be hidden for a better experience.</span>
+                </li>
+              </ul>
+              <div class="change-section" style="margin-top:0.8rem">
+                <div class="change-section-title">Damage Calculator</div>
+                <ul class="change-list">
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-update">Update</span>Item selection only shows unequipped items.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-update">Update</span>Levels now displayed and editable in the stat window.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-design">Design</span>Move damage panel is now scrollable with better presentation.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-update">Update</span>Stack items are now linked together.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-design">Design</span>Custom Doll now has a better presentation.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-fix">Fix</span>Gyaradosite now only applies to Mega Gyarados.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-fix">Fix</span>Fixed reset item button.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-fix">Fix</span>Wild Pokémon can no longer equip items.</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v2.0.0 -->
+      <div class="update-entry">
+        <div class="update-card">
+          <div class="update-card-header" onclick="toggleCard(this)">
+            <span class="update-version">v2.0.0</span>
+            <span class="update-date">February 19, 2026</span>
+            <span class="update-chevron">▾</span>
+          </div>
+          <div class="update-card-body">
+            <div class="update-card-divider"></div>
+            <div class="update-card-content">
+              <ul class="change-list">
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Home page to present all tools.</span></li>
+              </ul>
+              <div class="change-section" style="margin-top:0.8rem">
+                <div class="change-section-title">Draft</div>
+                <ul class="change-list">
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Map selection (Groudon, Rayquaza, Kyogre) — random if none chosen.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Fearless Mode.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Added Sirfetch'd & Pokémon search bar.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-fix">Fix</span>All draft issues resolved.</span></li>
+                </ul>
+              </div>
+              <div class="change-section">
+                <div class="change-section-title">Tierlist</div>
+                <ul class="change-list">
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Multiple tier modes: Simple, Moves, Passives, Unite Move.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Move images for move, passive and unite move modes.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Search bar for Pokémon, Items and Battle Items.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Added Vanguard Bell & Sirfetch'd.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-fix">Fix</span>All tierlist issues resolved.</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v1.4.2 -->
+      <div class="update-entry">
+        <div class="update-card">
+          <div class="update-card-header" onclick="toggleCard(this)">
+            <span class="update-version">v1.4.2</span>
+            <span class="update-date">January 28, 2026</span>
+            <span class="update-chevron">▾</span>
+          </div>
+          <div class="update-card-body">
+            <div class="update-card-divider"></div>
+            <div class="update-card-content">
+              <ul class="change-list">
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Passives implemented: Mewtwo X, Mewtwo Y, Mimikyu, Rapidash, Mr. Mime, Scizor, Scyther.</span></li>
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-update">Update</span>Meowth updated based on latest balance patch.</span></li>
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-wip">WIP</span>Continuing passive implementations — move effects remaining.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v1.4.1 -->
+      <div class="update-entry">
+        <div class="update-card">
+          <div class="update-card-header" onclick="toggleCard(this)">
+            <span class="update-version">v1.4.1</span>
+            <span class="update-date">January 28, 2026</span>
+            <span class="update-chevron">▾</span>
+          </div>
+          <div class="update-card-body">
+            <div class="update-card-divider"></div>
+            <div class="update-card-content">
+              <ul class="change-list">
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Passives implemented: Mega Lucario, Machamp, Meowscarada, Lapras, Mamoswine, Venusaur.</span></li>
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-fix">Fix</span>Various fixes on existing passives.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v1.4 -->
+      <div class="update-entry">
+        <div class="update-card">
+          <div class="update-card-header" onclick="toggleCard(this)">
+            <span class="update-version">v1.4</span>
+            <span class="update-date">January 28, 2026</span>
+            <span class="update-chevron">▾</span>
+          </div>
+          <div class="update-card-body">
+            <div class="update-card-divider"></div>
+            <div class="update-card-content">
+              <ul class="change-list">
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Passives implemented: Absol, Buzzwole, Ceruledge, Mega Gyarados, Gyarados, Mega Charizard X/Y, Blastoise, Charizard, Darkrai, Decidueye, Crustle, Dragonite.</span></li>
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-wip">Known bug</span>Having the same Pokémon as both attacker and defender may cause issues.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v1.3 -->
+      <div class="update-entry">
+        <div class="update-card">
+          <div class="update-card-header" onclick="toggleCard(this)">
+            <span class="update-version">v1.3</span>
+            <span class="update-date">January 26, 2026</span>
+            <span class="update-chevron">▾</span>
+          </div>
+          <div class="update-card-body">
+            <div class="update-card-divider"></div>
+            <div class="update-card-content">
+              <ul class="change-list">
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Offensive and Defensive Universal Debuffs.</span></li>
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Added Wild Pokémon (objectives only for now).</span></li>
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-design">Design</span>UI improvements — not yet fully optimized for mobile.</span></li>
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-update">Update</span>Internal code rework for cleanliness.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v1.2 -->
+      <div class="update-entry">
+        <div class="update-card">
+          <div class="update-card-header" onclick="toggleCard(this)">
+            <span class="update-version">v1.2</span>
+            <span class="update-date">January 24, 2026</span>
+            <span class="update-chevron">▾</span>
+          </div>
+          <div class="update-card-body">
+            <div class="update-card-divider"></div>
+            <div class="update-card-content">
+              <ul class="change-list">
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Added Meowth to Draft, Tierlist and Damage Calculator.</span></li>
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-update">Update</span>Pokémon stats and move damage updated for latest balance patch.</span></li>
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Offensive and Defensive Universal Buffs.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v1.1 -->
+      <div class="update-entry">
+        <div class="update-card">
+          <div class="update-card-header" onclick="toggleCard(this)">
+            <span class="update-version">v1.1</span>
+            <span class="update-date">December 24, 2025</span>
+            <span class="update-chevron">▾</span>
+          </div>
+          <div class="update-card-body">
+            <div class="update-card-divider"></div>
+            <div class="update-card-content">
+              <ul class="change-list">
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Damage Calculator (beta).</span></li>
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-wip">WIP</span>Rayquaza map added to Map Timer (incomplete).</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- v1.0 -->
+      <div class="update-entry">
+        <div class="update-card">
+          <div class="update-card-header" onclick="toggleCard(this)">
+            <span class="update-version">v1.0</span>
+            <span class="update-date">December 17, 2025</span>
+            <span class="update-chevron">▾</span>
+          </div>
+          <div class="update-card-body">
+            <div class="update-card-divider"></div>
+            <div class="update-card-content">
+              <ul class="change-list">
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-update">Update</span>Navbar now highlights the active page.</span></li>
+                <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Updates page (this one).</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.timeline -->
   </div>
 
   <script src="scripts/navbar.js"></script>
+  <script src="scripts/update.js"></script>
 </body>
 </html>

@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unite Tools - Map Timer</title>
+  <title data-lang="map_timer_page_title">Unite Tools - Map Timer</title>
   <link rel="stylesheet" href="./css/map_timer.css">
   <link rel="stylesheet" href="./css/navbar.css">
 </head>
 <body>
   <div id="navbar-container"></div>
 
-  <h1>Pokémon Unite — Map Timer</h1>
+  <h1 data-lang="map_timer_h1">Pokémon Unite — Map Timer</h1>
 
   <div class="map-switch">
-    <button class="active" data-map="groudon">Map Groudon</button>
-    <button data-map="kyogre">Map Kyogre</button>
-    <button data-map="rayquaza">Map Rayquaza <span style="font-size:0.7em;opacity:0.5;">[WIP]</span></button>
+    <button class="active" data-map="groudon" data-lang="map_timer_map_groudon">Map Groudon</button>
+    <button data-map="kyogre" data-lang="map_timer_map_kyogre">Map Kyogre</button>
+    <button data-map="rayquaza" data-lang="map_timer_map_rayquaza">Map Rayquaza <span style="font-size:0.7em;opacity:0.5;">[WIP]</span></button>
   </div>
 
   <div class="timer-section">
     <div class="middle-bubble">
       <div class="timer-top">
-        <button id="play-btn">▶ Play</button>
+        <button id="play-btn" data-lang="map_timer_play">▶ Play</button>
       </div>
 
       <div id="timer-display">
@@ -54,7 +54,7 @@
   </div>
 
   <footer>
-    <p>Created by Fizzey — Pokémon Unite Map Timer</p>
+    <p data-lang="map_timer_footer">Created by Fizzey — Pokémon Unite Map Timer</p>
   </footer>
 
   <script type="module" src="./scripts/map_timer/main.js"></script>

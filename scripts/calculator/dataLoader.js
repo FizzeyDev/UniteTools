@@ -1,5 +1,3 @@
-// dataLoader.js - Chargement des données
-
 import { state } from './state.js';
 import { mobIds, registeel, regirock, regice, regieleki, regieleki2, regidrago, kyogre, groudon, rayquaza, substituteDoll, customDoll } from './constants.js';
 
@@ -65,11 +63,9 @@ export async function loadData() {
       };
     });
 
-    // Dolls Push
     state.allPokemon.push(substituteDoll);
     state.allPokemon.push(customDoll);
 
-    // Regi Push
     state.allPokemon.push(regice);
     state.allPokemon.push(regirock);
     state.allPokemon.push(registeel);
@@ -77,7 +73,6 @@ export async function loadData() {
     state.allPokemon.push(regieleki2);
     state.allPokemon.push(regidrago);
 
-    // Boss
     state.allPokemon.push(kyogre);
     state.allPokemon.push(groudon);
     state.allPokemon.push(rayquaza);

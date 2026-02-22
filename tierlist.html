@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unite Tools - Tierlist</title>
+  <title data-lang="tierlist_page_title">Unite Tools - Tierlist</title>
 
   <link rel="stylesheet" href="./css/navbar.css">
   <link rel="stylesheet" href="./css/tierlist.css">
@@ -11,12 +11,12 @@
 <body>
   <div id="navbar-container"></div>
 
-  <h1>Pokémon Unite Tier List</h1>
+  <h1 data-lang="tierlist_h1">Pokémon Unite Tier List</h1>
 
   <div class="tabs">
     <div class="tab-list">
-      <button class="tab active" data-tab-id="1">Tierlist 1</button>
-      <button id="add-tab">+ Add Tierlist</button>
+      <button class="tab active" data-tab-id="1" data-lang="tierlist_tab_default">Tierlist 1</button>
+      <button id="add-tab" data-lang="tierlist_add_tab">+ Add Tierlist</button>
     </div>
   </div>
 
@@ -25,9 +25,9 @@
   <div class="selection-panel">
     <!-- Categories -->
     <div class="category-tabs">
-      <button class="category-tab active" data-category="pokemon">Pokémon</button>
-      <button class="category-tab" data-category="items">Items</button>
-      <button class="category-tab" data-category="battle_items">Battle Items</button>
+      <button class="category-tab active" data-category="pokemon" data-lang="tierlist_cat_pokemon">Pokémon</button>
+      <button class="category-tab" data-category="items" data-lang="tierlist_cat_items">Items</button>
+      <button class="category-tab" data-category="battle_items" data-lang="tierlist_cat_battle">Battle Items</button>
     </div>
 
     <!-- Search Bar -->
@@ -36,7 +36,7 @@
       <input
         type="text"
         id="gallery-search"
-        placeholder="Search Pokémon, items..."
+        placeholder="Search Pokémon, items..." data-lang-placeholder="tierlist_search_placeholder"
         autocomplete="off"
         spellcheck="false"
       />
@@ -44,12 +44,12 @@
 
     <!-- Roles Filters -->
     <div id="filters" class="pokemon-filters">
-      <button class="filter-btn active" data-role="unknown">All</button>
-      <button class="filter-btn" data-role="all">All-Rounder</button>
-      <button class="filter-btn" data-role="atk">Attacker</button>
-      <button class="filter-btn" data-role="def">Defender</button>
-      <button class="filter-btn" data-role="spe">Speedster</button>
-      <button class="filter-btn" data-role="sup">Supporter</button>
+      <button class="filter-btn active" data-role="unknown" data-lang="tierlist_filter_all">All</button>
+      <button class="filter-btn" data-role="all" data-lang="tierlist_filter_allround">All-Rounder</button>
+      <button class="filter-btn" data-role="atk" data-lang="tierlist_filter_atk">Attacker</button>
+      <button class="filter-btn" data-role="def" data-lang="tierlist_filter_def">Defender</button>
+      <button class="filter-btn" data-role="spe" data-lang="tierlist_filter_spe">Speedster</button>
+      <button class="filter-btn" data-role="sup" data-lang="tierlist_filter_sup">Supporter</button>
     </div>
 
     <div class="gallery" id="gallery"></div>
@@ -58,11 +58,11 @@
   <!-- Selection Move Modal -->
   <div id="move-modal" class="modal">
     <div class="modal-content modal-content--moves">
-      <h3 id="move-modal-title">Select Moves</h3>
+      <h3 id="move-modal-title" data-lang="tierlist_modal_select_moves">Select Moves</h3>
       <div id="move-options"></div>
       <div class="modal-actions">
-        <button id="move-cancel">Cancel</button>
-        <button id="move-save">Save</button>
+        <button id="move-cancel" data-lang="tierlist_modal_cancel">Cancel</button>
+        <button id="move-save" data-lang="tierlist_modal_save">Save</button>
       </div>
     </div>
   </div>
@@ -70,19 +70,19 @@
   <!-- Edition Tier Modal -->
   <div id="tier-modal" class="modal">
     <div class="modal-content">
-      <h3>Edit Tier</h3>
-      <label>Name:</label><input id="tier-name" type="text">
-      <label>Color:</label><input id="tier-color" type="color">
+      <h3 data-lang="tierlist_modal_edit_tier">Edit Tier</h3>
+      <label data-lang="tierlist_modal_name_label">Name:</label><input id="tier-name" type="text">
+      <label data-lang="tierlist_modal_color_label">Color:</label><input id="tier-color" type="color">
       <div class="modal-actions">
-        <button id="tier-save">Save</button>
-        <button id="tier-delete">Delete Tier</button>
-        <button id="tier-cancel">Cancel</button>
+        <button id="tier-save" data-lang="tierlist_modal_save">Save</button>
+        <button id="tier-delete" data-lang="tierlist_modal_tier_delete">Delete Tier</button>
+        <button id="tier-cancel" data-lang="tierlist_modal_cancel">Cancel</button>
       </div>
     </div>
   </div>
 
   <footer>
-    <p>Created by Fizzey — Pokémon Unite Tierlist</p>
+    <p data-lang="tierlist_footer">Created by Fizzey — Pokémon Unite Tierlist</p>
   </footer>
 
   <script type="module" src="./scripts/tierlists/main.js"></script>

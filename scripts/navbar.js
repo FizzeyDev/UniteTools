@@ -25,7 +25,6 @@ function initNavbar(basePath) {
   const header = document.querySelector(".sidebar-header");
   const hideBtn = document.getElementById("hide-sidebar-btn");
 
-  // --- Fonction centralisée pour synchroniser l'état de la sidebar ---
   function syncSidebarState(hidden) {
     sidebar.classList.toggle("hidden", hidden);
     document.body.classList.toggle("sidebar-collapsed", hidden);
@@ -34,11 +33,9 @@ function initNavbar(basePath) {
     localStorage.setItem("sidebarHidden", hidden);
   }
 
-  // Applique l'état sauvegardé dès le chargement
   const isHidden = localStorage.getItem("sidebarHidden") === "true";
   syncSidebarState(isHidden);
 
-  // Bouton hide (desktop)
   if (hideBtn && sidebar) {
     hideBtn.addEventListener("click", () => {
       const nowHidden = !sidebar.classList.contains("hidden");
@@ -46,7 +43,6 @@ function initNavbar(basePath) {
     });
   }
 
-  // Bouton toggle (mobile)
   if (toggle && sidebar) {
     toggle.addEventListener("click", () => {
       const isMobile = window.innerWidth <= 768;
@@ -58,7 +54,6 @@ function initNavbar(basePath) {
     });
   }
 
-  // Clic sur le header → retour à l'accueil
   if (header) {
     header.style.cursor = "pointer";
     header.addEventListener("click", () => {
@@ -66,7 +61,6 @@ function initNavbar(basePath) {
     });
   }
 
-  // Correction des liens de la sidebar
   document.querySelectorAll("#sidebar a").forEach(link => {
     const href = link.getAttribute("href");
     if (href && (href.startsWith("/") || href.startsWith("../"))) {
@@ -75,7 +69,6 @@ function initNavbar(basePath) {
     }
   });
 
-  // Correction des images de la sidebar
   document.querySelectorAll("#sidebar img").forEach(img => {
     const src = img.getAttribute("src");
     if (src && src.startsWith("/UniteTools")) {
@@ -83,10 +76,8 @@ function initNavbar(basePath) {
     }
   });
 
-  // Chargement des traductions
   loadAllTranslations(basePath);
 
-  // Changement de langue
   document.body.addEventListener("click", e => {
     const btn = e.target.closest(".lang-btn");
     if (btn && btn.dataset.lang) {
@@ -99,7 +90,6 @@ function initNavbar(basePath) {
     }
   });
 
-  // Lien actif selon la page courante
   function normalizePath(url) {
     try {
       const path = new URL(url, window.location.origin).pathname;

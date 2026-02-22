@@ -1,9 +1,8 @@
-// pokemonManager.js - Gestion des Pokémon
-
 import { state } from './state.js';
 import { highlightGridSelection } from './uiManager.js';
 import { resetItems, autoEquipSpecialItem, disableItemSlots, enableItemSlots } from './itemManager.js';
 import { updateDamages } from './damageDisplay.js';
+import { t } from './i18n.js';
 
 const pokemonGridAttacker = document.getElementById("pokemonGridAttacker");
 const pokemonGridDefender = document.getElementById("pokemonGridDefender");
@@ -13,7 +12,7 @@ export function selectAttacker(id) {
   if (state.currentAttacker) {
     document.getElementById('attackerName').textContent = state.currentAttacker.displayName;
     document.getElementById('attackerImage').innerHTML = `<img src="${state.currentAttacker.image}" alt="${state.currentAttacker.displayName}">`;
-    document.getElementById('resultsAttackerImg').src = state.currentAttacker.image || 'assets/items/none.png'; // ← ajout
+    document.getElementById('resultsAttackerImg').src = state.currentAttacker.image || 'assets/items/none.png';
     highlightGridSelection(pokemonGridAttacker, id);
   }
 
@@ -27,7 +26,6 @@ export function selectAttacker(id) {
   state.attackerStance = 'shield';
   state.attackerFlashFireActive = false;
 
-  // Reset buffs
   state.attackerRegisteelBuff = false;
   state.attackerGroudonBuff = false;
   state.attackerRayquazaBuff = false;
@@ -56,7 +54,6 @@ export function selectAttacker(id) {
     if (el) el.checked = false;
   });
 
-  // Reset debuffs
   resetAttackerDebuffs();
   
   const attackerDebuffCheckboxes = document.querySelectorAll('.additional-effects:nth-of-type(2) input[type="checkbox"]');
@@ -137,7 +134,7 @@ export function selectDefender(id) {
       hint = document.createElement('p');
       hint.id = 'customDollHint';
       hint.className = 'custom-doll-hint';
-      hint.textContent = '✏️ Click on the stats values to edit them';
+      hint.textContent = t('calc_custom_doll_hint');
       document.querySelector('.defender-stats .stats-grid').prepend(hint);
     }
     hint.style.display = 'block';

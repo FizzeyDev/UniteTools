@@ -1,8 +1,7 @@
-// damageDisplay.js - Affichage des dégâts et résultats
-
 import { state } from './state.js';
 import { getModifiedStats, calculateDamage, getAutoAttackResults } from './damageCalculator.js';
 import { updateHPDisplays } from './uiManager.js';
+import { t } from './i18n.js';
 import { stackableItems } from './constants.js';
 
 import {
@@ -55,7 +54,7 @@ const movesGrid = document.getElementById("movesGrid");
 
 export function updateDamages() {
   if (!state.currentAttacker?.moves?.length) {
-    movesGrid.innerHTML = `<div class="loading">Sélectionne un attaquant !</div>`;
+    movesGrid.innerHTML = `<div class="loading">${t('calc_js_select_attacker')}</div>`;
     return;
   }
 
@@ -143,7 +142,6 @@ export function updateDamages() {
     }
   }
 
-  // Mewtwo X
   if (state.currentAttacker?.pokemonId === "mewtwo_x") {
     atkStats.atk = Math.floor(
       atkStats.atk *
@@ -169,7 +167,6 @@ export function updateDamages() {
     )
   }
 
-  // Mewtwo Y
   if (state.currentAttacker?.pokemonId === "mewtwo_y") {
     atkStats.sp_atk = Math.floor(
       atkStats.sp_atk *
@@ -179,7 +176,6 @@ export function updateDamages() {
     )
   }
 
-  // Sylveon
   if (state.currentDefender?.pokemonId === "sylveon") {
     const isEevee = state.defenderLevel <= 3;
     if (!isEevee) {
@@ -189,7 +185,6 @@ export function updateDamages() {
     }
   }
 
-  // Machamp
   if (state.currentAttacker?.pokemonId === "machamp" && state.attackerMachampActive) {
     atkStats.atk = Math.floor(
       atkStats.atk * (1 + state.currentAttacker.passive.bonusPercentAtk / 100)
@@ -322,7 +317,7 @@ export function updateDamages() {
     line.className = "global-bonus-line";
     line.innerHTML = `
       <div style="margin:12px 0;padding:8px 12px;background:#2a1f0f;border-radius:8px;border-left:4px solid #ff9d00;font-size:0.9rem;">
-        <strong style="color:#ff9d00;">Rough Skin</strong> — Reflects ~<strong>${reflectDamage.toLocaleString()}</strong> dmg on AA contact
+        <strong style="color:#ff9d00;">${t('calc_js_rough_skin')}</strong> — ${t('calc_js_rough_skin_desc')}<strong>${reflectDamage.toLocaleString()}</strong> dmg on AA contact
       </div>
     `;
     defenderCard.appendChild(line);
@@ -417,7 +412,7 @@ function applyItemsAndGlobalEffects(atkStats, defStats) {
     line.className = "global-bonus-line";
     line.innerHTML = `
       <div style="margin:12px 0;padding:8px;background:#2a2a3a;border-radius:8px;font-size:0.95rem;">
-        <strong>Charging Charm</strong> (full stack)<br>
+        <strong>${t('calc_js_charging_charm')}</strong> (${t('calc_js_charging_charm_sub')})<br>
         <span style="color:#a0d8ff;">+${chargingExtra.toLocaleString()} additional damages</span>
       </div>
     `;
@@ -433,7 +428,7 @@ function applyItemsAndGlobalEffects(atkStats, defStats) {
     line.className = "global-bonus-line";
     line.innerHTML = `
       <div style="margin:12px 0;padding:10px;background:#3a2a2a;border-radius:8px;border-left:4px solid #ff6b6b;font-size:0.95rem;">
-        <strong>🪨 Rocky Helmet</strong><br>
+        <strong>${t('calc_js_rocky_helmet')}</strong><br>
         <span style="color:#ff9999;">Deal ${rockyDamage.toLocaleString()} damage when hit</span>
       </div>
     `;
@@ -625,7 +620,7 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
     if (!move.damages || move.damages.length === 0 || move.damages.every(d => !d.dealDamage)) {
       const line = document.createElement("div");
       line.className = "damage-line";
-      line.innerHTML = `<span class="dmg-name" style="color:#888;">Utility / No damage</span>`;
+      line.innerHTML = `<span class="dmg-name" style="color:#888;">${t('calc_js_utility')}</span>`;
       card.appendChild(line);
       movesGrid.appendChild(card);
       return;
@@ -700,7 +695,6 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
 
       card.appendChild(line);
 
-      // Cap 110% Falinks multi-hit
       if (
         state.currentDefender?.pokemonId === "falinks" &&
         state.defenderFalinksMultiHit
@@ -725,7 +719,7 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         let muscleExtra = Math.floor(aaResults.muscleExtra * defenderDamageMult);
         const line = document.createElement("div");
         line.className = "damage-line";
-        line.innerHTML = `<span class="dmg-name">Muscle Band bonus (remaining HP)</span><div class="dmg-values"><span class="dmg-crit">+ ${muscleExtra.toLocaleString()}</span></div>`;
+        line.innerHTML = `<span class="dmg-name">${t('calc_js_muscle_band')}</span><div class="dmg-values"><span class="dmg-crit">+ ${muscleExtra.toLocaleString()}</span></div>`;
         card.appendChild(line);
       }
 
@@ -733,7 +727,7 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         let scopeExtra = Math.floor(aaResults.scopeExtra * defenderDamageMult);
         const line = document.createElement("div");
         line.className = "damage-line";
-        line.innerHTML = `<span class="dmg-name">Scope Lens bonus (extra hit on crit)</span><div class="dmg-values"><span class="dmg-crit">+ ${scopeExtra.toLocaleString()}</span></div>`;
+        line.innerHTML = `<span class="dmg-name">${t('calc_js_scope_lens')}</span><div class="dmg-values"><span class="dmg-crit">+ ${scopeExtra.toLocaleString()}</span></div>`;
         card.appendChild(line);
       }
 
@@ -752,7 +746,7 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         razorExtra = Math.floor(razorExtra * defenderDamageMult);
         const line = document.createElement("div");
         line.className = "damage-line";
-        line.innerHTML = `<span class="dmg-name">Razor Claw bonus (next AA after move)</span><div class="dmg-values"><span class="dmg-crit">+ ${razorExtra.toLocaleString()}</span></div>`;
+        line.innerHTML = `<span class="dmg-name">${t('calc_js_razor_claw')}</span><div class="dmg-values"><span class="dmg-crit">+ ${razorExtra.toLocaleString()}</span></div>`;
         card.appendChild(line);
       }
     }

@@ -1,5 +1,3 @@
-// state.js - Gestion de l'état global
-
 export const state = {
   allPokemon: [],
   allItems: [],

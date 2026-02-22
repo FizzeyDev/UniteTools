@@ -1,5 +1,3 @@
-// events.js - Gestion des événements et listeners
-
 import { state } from './state.js';
 import { updateDamages } from './damageDisplay.js';
 
@@ -205,13 +203,11 @@ export function setupDebuffListeners() {
 }
 
 export function setupStackableDebuffs() {
-  // Stackables attaquants
   const attackerStackable = {
     'umbreonSnarlDebuffAttacker':       { max: 6, stateKey: 'umbreonSnarlStacks' },
     'sylveonMysticalFireDebuffAttacker': { max: 4, stateKey: 'sylveonMysticalFireStacks' }
   };
 
-  // Stackables défenseurs
   const defenderStackable = {
     'gardevoirPsychicDebuffDefender':         { max: 3,  stateKey: 'gardevoirPsychicStacks' },
     'mimePsychicDebuffDefender':              { max: 8,  stateKey: 'mimePsychicStacks' },

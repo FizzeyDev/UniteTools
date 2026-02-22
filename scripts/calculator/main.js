@@ -1,11 +1,10 @@
-// main.js - Point d'entrée principal de l'application
-
 import { loadData } from './dataLoader.js';
 import { populateGrids, setupSearch, setupLevelSliders, setupHPSliders, setupModals, setupCollapsibleSections, makeHPValueEditable, makeCustomStatEditable } from './uiManager.js';
 import { populateItemGrid, setupItemSearch, setupItemSelection } from './itemManager.js';
 import { selectAttacker, selectDefender } from './pokemonManager.js';
 import { setupBuffListeners, setupDebuffListeners, setupStackableDebuffs } from './events.js';
 import { updateDamages } from './damageDisplay.js';
+import { t } from './i18n.js';
 import { resetItems } from './itemManager.js';
 
 document.querySelectorAll('.reset-items-btn').forEach(btn => {
@@ -20,12 +19,11 @@ async function initApp() {
   if (!success) {
     const movesGrid = document.getElementById("movesGrid");
     if (movesGrid) {
-      movesGrid.innerHTML = `<div class="error">Erreur chargement données (voir console)</div>`;
+      movesGrid.innerHTML = `<div class="error">${t('calc_error_loading')}</div>`;
     }
     return;
   }
 
-  // Initialisation de l'UI
   populateGrids();
   populateItemGrid();
   setupItemSelection();
@@ -36,27 +34,22 @@ async function initApp() {
   setupModals();
   setupCollapsibleSections();
 
-  // Configuration des listeners d'événements
   setupBuffListeners();
   setupDebuffListeners();
   setupStackableDebuffs();
 
-  // Rendre les HP éditables
   makeHPValueEditable('hpValueAttacker', 'hpSliderAttacker');
   makeHPValueEditable('hpValueDefender', 'hpSliderDefender');
 
-  // Rendre les stats custom éditables
   makeCustomStatEditable('defenderMaxHP', 'hp');
   makeCustomStatEditable('defenderDefCustom', 'def');
   makeCustomStatEditable('defenderSpDefCustom', 'sp_def');
 
-  // Sélection initiale
   selectAttacker('absol');
   selectDefender('substitute-doll');
   updateDamages();
 }
 
-// Lancer l'application quand le DOM est prêt
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initApp);
 } else {

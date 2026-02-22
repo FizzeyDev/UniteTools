@@ -1,5 +1,3 @@
-// damageCalculator.js - Calculs de dégâts
-
 import { state } from './state.js';
 import { stackableItems } from './constants.js';
 
