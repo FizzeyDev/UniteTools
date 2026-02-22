@@ -137,7 +137,7 @@ function applyTranslations() {
   document.querySelectorAll('[data-lang]').forEach(el => {
     const key = el.dataset.lang;
     if (translations[currentLang] && translations[currentLang][key]) {
-      el.textContent = translations[currentLang][key];
+      el.innerHTML = translations[currentLang][key];
     }
   });
 

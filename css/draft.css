@@ -891,9 +891,6 @@ input:checked + .slider::before { transform: translateX(18px); }
   background: rgba(239,83,80,0.22) !important;
 }
 
-footer { text-align: center; margin-top: 2rem; font-size: 0.78rem; color: var(--text-dim); }
-footer #footer-legal { margin-top: 3px; font-size: 0.68rem; }
-
 @media (max-width: 860px) {
   body { margin-left: 0; padding: 1rem 0.75rem 2rem; }
 

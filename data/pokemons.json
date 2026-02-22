@@ -885,8 +885,8 @@
     "name_es": "Zapdos",
     "name_de": "Zapdos",
     "name_it": "Zapdos",
-    "file": "zapdos_all.png",
-    "role": "all",
+    "file": "zapdos_atk.png",
+    "role": "atk",
     "dex": 145
   },
   {
@@ -895,8 +895,8 @@
     "name_es": "Moltres",
     "name_de": "Lavados",
     "name_it": "Moltres",
-    "file": "moltres_atk.png",
-    "role": "atk",
+    "file": "moltres_all.png",
+    "role": "all",
     "dex": 146
   }
 ]

@@ -192,3 +192,78 @@
   .sidebar.active { transform: translateX(0); }
   .toggle-sidebar-btn { display: block; }
 }
+
+/* ── USEFUL LINKS ── */
+/* À ajouter dans navbar.css */
+
+.useful-links {
+  flex-shrink: 0;
+  padding: 10px 12px 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.useful-links-title {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim, #6a8587);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.useful-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 5px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.useful-link:last-child { margin-bottom: 0; }
+
+.useful-link::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #7ef0ff, #ffd27a);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.useful-link:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateX(3px);
+}
+
+.useful-link:hover::before { opacity: 1; }
+
+.useful-link-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #cfe0e2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.useful-link-desc {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: #6a8587;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.useful-link:hover .useful-link-name { color: #fff; }
+.useful-link:hover .useful-link-desc  { color: #7ef0ff; }

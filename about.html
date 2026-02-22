@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-lang="about_page_title">Unite Tools - About</title>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/about.css">
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main>
+    <!-- HERO -->
+    <section class="about-hero">
+      <div class="hero-left">
+        <div class="hero-eyebrow" data-lang="about_eyebrow">About</div>
+        <h1 data-lang="about_hero_title">Behind Unite Tools</h1>
+        <p class="hero-desc" data-lang="about_hero_desc">
+          A project born from passion for <strong style="color:#cfe0e2">Pokémon Unite</strong> and competitive esports.
+          Built by a player, for players who want to improve seriously.
+        </p>
+        <div class="hero-badges">
+          <span class="badge badge-violet" data-lang="about_badge_game">🎮 Pokémon Unite</span>
+          <span class="badge badge-orange" data-lang="about_badge_esport">🏆 Competitive</span>
+        </div>
+      </div>
+
+      <!-- TEAM LOGO + CTA -->
+      <div class="hero-right">
+        <div style="display:flex; flex-direction:column; align-items:center;">
+          <div class="hero-team-logo">
+            <img src="assets/about/volticons.png" alt="Volticons Logo"
+                 onerror="this.style.display='none'; this.parentElement.classList.add('placeholder')">
+            <span class="img-placeholder-label">team-logo.png</span>
+          </div>
+          <a href="https://x.com/VoltIconsUnite" target="_blank" class="team-cta-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            <span data-lang="about_team_follow">Follow Volticons</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="about-content">
+
+      <!-- STATS BAR -->
+      <div class="full-width">
+        <div class="stats-bar">
+          <div class="stat-item">
+            <div class="stat-number">4</div>
+            <div class="stat-label" data-lang="about_stat_tools">Tools</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">1</div>
+            <div class="stat-label" data-lang="about_stat_dev">Dev</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">∞</div>
+            <div class="stat-label" data-lang="about_stat_passion">Passion</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHO AM I -->
+      <div class="about-card card-violet">
+        <span class="card-icon">👤</span>
+        <div class="section-title" data-lang="about_creator_section">The creator</div>
+        <p class="card-title" data-lang="about_creator_title">Who am I?</p>
+        <p class="card-body" data-lang="about_creator_body">
+          I'm <strong>Fizzey</strong>, a competitive Pokémon Unite player and passionate web developer.
+          An active member of the French esport scene, I created Unite Tools to fill the gap
+          in quality tools for our community.<br><br>
+          My goal: make competitive resources <strong>accessible to everyone</strong> in the same place,
+          for free, without compromising on quality.
+        </p>
+        <div class="quote-block" data-lang="about_quote">
+          "My goal is to create a tool for competitive community that I and my team will also use."
+        </div>
+      </div>
+
+      <!-- WHY THIS PROJECT -->
+      <div class="about-card card-blue">
+        <span class="card-icon">💡</span>
+        <div class="section-title" data-lang="about_why_section">The origin</div>
+        <p class="card-title" data-lang="about_why_title">Why Unite Tools?</p>
+        <p class="card-body" data-lang="about_why_body">
+          The competitive Pokémon Unite scene was sorely lacking dedicated tools.
+          No updated online draft simulator, no damage calculator,
+          nothing to practice <strong>map control</strong>.<br><br>
+          Unite Tools was born from that frustration. A solo project, built with passion,
+          to raise the level of the entire community and beyond.
+        </p>
+      </div>
+
+      <!-- THE TEAM -->
+      <div class="about-card card-orange full-width">
+        <span class="card-icon">🏆</span>
+        <div class="section-title" data-lang="about_team_section">The esport team</div>
+        <p class="card-title" data-lang="about_team_title">Our competitive squad — Volticons</p>
+        <p class="card-body" style="margin-bottom: 24px;" data-lang="about_team_desc">
+          Beyond building this site, I'm a player for <strong>Volticons Unite</strong>, a European team
+          qualified in the official Pokémon Unite league.
+        </p>
+
+        <!-- PLAYERS -->
+        <div class="team-group-label" data-lang="about_team_players">Players</div>
+
+        <div class="team-card me">
+          <div class="team-avatar">
+            <img src="assets/about/fizzey.jpg" alt="Fizzey"
+                 onerror="this.style.display='none'; this.parentElement.textContent='🎮'">
+          </div>
+          <div class="team-info">
+            <div class="team-name-row">
+              <span class="team-member-name">Fizzey</span>
+              <span class="team-role-badge role-dev" data-lang="about_role_dev">Dev &amp; Player</span>
+            </div>
+            <div class="team-member-desc" data-lang="about_member_fizzey_desc">Founder of Unite Tools · Defender</div>
+          </div>
+          <div class="member-socials">
+            <a href="https://x.com/FizzeyS" target="_blank" class="member-social-btn twitter" aria-label="Twitter / X">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="https://www.twitch.tv/fizzeyss" target="_blank" class="member-social-btn twitch" aria-label="Twitch">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="team-card member">
+          <div class="team-avatar">
+            <img src="assets/about/chariking.png" alt="Chariking"
+                 onerror="this.style.display='none'; this.parentElement.textContent='⚔️'">
+          </div>
+          <div class="team-info">
+            <div class="team-name-row">
+              <span class="team-member-name">Chariking</span>
+              <span class="team-role-badge role-captain" data-lang="about_role_captain">Captain &amp; Player</span>
+            </div>
+            <div class="team-member-desc" data-lang="about_member_chariking_desc">Captain · Carry Bot</div>
+          </div>
+          <div class="member-socials">
+            <a href="https://x.com/Chariking1" target="_blank" class="member-social-btn twitter" aria-label="Twitter / X">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="https://www.twitch.tv/chariking8" target="_blank" class="member-social-btn twitch" aria-label="Twitch">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="team-card member">
+          <div class="team-avatar">
+            <img src="assets/about/snow.png" alt="Snow"
+                 onerror="this.style.display='none'; this.parentElement.textContent='❄️'">
+          </div>
+          <div class="team-info">
+            <div class="team-name-row">
+              <span class="team-member-name">Snow</span>
+              <span class="team-role-badge role-player" data-lang="about_role_player">Player</span>
+            </div>
+            <div class="team-member-desc" data-lang="about_member_snow_desc">Jungler</div>
+          </div>
+          <div class="member-socials">
+            <a href="https://x.com/kawaiii_snow" target="_blank" class="member-social-btn twitter" aria-label="Twitter / X">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="https://twitch.tv/whensnowy" target="_blank" class="member-social-btn twitch" aria-label="Twitch">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="team-card member">
+          <div class="team-avatar">
+            <img src="assets/about/tibi.png" alt="Tibi"
+                 onerror="this.style.display='none'; this.parentElement.textContent='🌀'">
+          </div>
+          <div class="team-info">
+            <div class="team-name-row">
+              <span class="team-member-name">Tibi</span>
+              <span class="team-role-badge role-player" data-lang="about_role_player">Player</span>
+            </div>
+            <div class="team-member-desc" data-lang="about_member_tibi_desc">Carry Top</div>
+          </div>
+          <!-- Pas de réseaux pour Tibi -->
+        </div>
+
+        <div class="team-card member">
+          <div class="team-avatar">
+            <img src="assets/about/daddyleon.jpg" alt="DaddyLeon"
+                 onerror="this.style.display='none'; this.parentElement.textContent='⚡'">
+          </div>
+          <div class="team-info">
+            <div class="team-name-row">
+              <span class="team-member-name">DaddyLeon</span>
+              <span class="team-role-badge role-player" data-lang="about_role_player">Player</span>
+            </div>
+            <div class="team-member-desc" data-lang="about_member_daddyleon_desc">Support</div>
+          </div>
+          <div class="member-socials">
+            <a href="https://x.com/YungLeon051" target="_blank" class="member-social-btn twitter" aria-label="Twitter / X">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="team-card sub">
+          <div class="team-avatar">
+            <img src="assets/about/jellyman.png" alt="Jellyman"
+                 onerror="this.style.display='none'; this.parentElement.textContent='🔄'">
+          </div>
+          <div class="team-info">
+            <div class="team-name-row">
+              <span class="team-member-name">Jellyman</span>
+              <span class="team-role-badge role-sub" data-lang="about_role_sub">Sub</span>
+            </div>
+            <div class="team-member-desc" data-lang="about_member_jellyman_desc">Substitute player · Flexible role</div>
+          </div>
+          <div class="member-socials">
+            <a href="https://x.com/JellymanStr" target="_blank" class="member-social-btn twitter" aria-label="Twitter / X">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="https://www.twitch.tv/jellymanstr" target="_blank" class="member-social-btn twitch" aria-label="Twitch">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- STAFF -->
+        <div class="team-group-label" style="margin-top: 8px;" data-lang="about_team_staff">Staff</div>
+
+        <div class="team-card coach">
+          <div class="team-avatar">
+            <img src="assets/about/jrabsent.png" alt="Jrabsent"
+                 onerror="this.style.display='none'; this.parentElement.textContent='🧠'">
+          </div>
+          <div class="team-info">
+            <div class="team-name-row">
+              <span class="team-member-name">Jrabsent</span>
+              <span class="team-role-badge role-coach" data-lang="about_role_coach">Coach</span>
+            </div>
+            <div class="team-member-desc" data-lang="about_member_jrabsent_desc">Head coach · Strategy &amp; draft optimisation</div>
+          </div>
+        </div>
+
+        <div class="team-card coach">
+          <div class="team-avatar">
+            <img src="assets/about/geassind.jpg" alt="GeasSind"
+                 onerror="this.style.display='none'; this.parentElement.textContent='📋'">
+          </div>
+          <div class="team-info">
+            <div class="team-name-row">
+              <span class="team-member-name">GeasSind</span>
+              <span class="team-role-badge role-coach" data-lang="about_role_manager">Manager</span>
+            </div>
+            <div class="team-member-desc" data-lang="about_member_geassind_desc">Manager · Scrim schedule &amp; player preparation</div>
+          </div>
+          <div class="member-socials">
+            <a href="https://x.com/GeasSind" target="_blank" class="member-social-btn twitter" aria-label="Twitter / X">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TOOLS -->
+      <div class="about-card card-yellow">
+        <span class="card-icon">🔧</span>
+        <div class="section-title" data-lang="about_tools_section">The tools</div>
+        <p class="card-title" data-lang="about_tools_title">What we offer</p>
+        <div class="tools-showcase" style="margin-top: 16px;">
+          <a href="/draft.html" class="tool-item">
+            <span class="tool-emoji">📋</span>
+            <div>
+              <div class="tool-item-name" data-lang="draft_title">Draft Simulator</div>
+              <div class="tool-item-desc" data-lang="about_tool_draft_short">Bans, picks, timer, Fearless mode &amp; multiplayer</div>
+            </div>
+          </a>
+          <a href="/map_timer.html" class="tool-item">
+            <span class="tool-emoji">⏱️</span>
+            <div>
+              <div class="tool-item-name" data-lang="map_title">Map Timer</div>
+              <div class="tool-item-desc" data-lang="about_tool_map_short">Real-time objective timers</div>
+            </div>
+          </a>
+          <a href="/damage-calc.html" class="tool-item">
+            <span class="tool-emoji">💥</span>
+            <div>
+              <div class="tool-item-name" data-lang="calc_title">Damage Calculator</div>
+              <div class="tool-item-desc" data-lang="about_tool_calc_short">Precise calculations with items, levels &amp; buffs</div>
+            </div>
+          </a>
+          <a href="/tierlist.html" class="tool-item">
+            <span class="tool-emoji">📊</span>
+            <div>
+              <div class="tool-item-name" data-lang="tierlist_title">Tier List</div>
+              <div class="tool-item-desc" data-lang="about_tool_tierlist_short">Create and share your custom tier lists</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- ROADMAP -->
+      <div class="about-card card-green">
+        <span class="card-icon">🗺️</span>
+        <div class="section-title" data-lang="about_roadmap_section">Roadmap</div>
+        <p class="card-title" data-lang="about_roadmap_title">What's coming</p>
+        <div class="roadmap-list" style="margin-top: 16px;">
+          <div class="roadmap-item">
+            <div class="roadmap-status status-wip"></div>
+            <div class="roadmap-text">
+              <div class="roadmap-label" data-lang="about_road_mp_label">Multiplayer Draft</div>
+              <div class="roadmap-sublabel" data-lang="about_road_mp_sub">Real-time sessions with room codes</div>
+            </div>
+            <span class="roadmap-tag tag-wip" data-lang="about_tag_wip">In progress</span>
+          </div>
+          <div class="roadmap-item">
+            <div class="roadmap-status status-wip"></div>
+            <div class="roadmap-text">
+              <div class="roadmap-label" data-lang="about_road_calc_label">Damage Calculator</div>
+              <div class="roadmap-sublabel" data-lang="about_road_calc_sub">Advanced stats and data, optimisation</div>
+            </div>
+            <span class="roadmap-tag tag-wip" data-lang="about_tag_wip">In progress</span>
+          </div>
+          <div class="roadmap-item">
+            <div class="roadmap-status status-planned"></div>
+            <div class="roadmap-text">
+              <div class="roadmap-label" data-lang="about_road_map_label">Stats &amp; Interactive Map</div>
+              <div class="roadmap-sublabel" data-lang="about_road_map_sub">Meta tracking and win rates</div>
+            </div>
+            <span class="roadmap-tag tag-future" data-lang="about_tag_future">Future</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="about-card card-violet full-width">
+        <span class="card-icon">📬</span>
+        <div class="section-title" data-lang="about_contact_section">Contact &amp; Community</div>
+        <p class="card-title" data-lang="about_contact_title">Get in touch</p>
+        <p class="card-body" data-lang="about_contact_body">
+          Found a bug? Have a feature idea? We're available on social media.
+        </p>
+        <div class="links-row">
+          <a href="https://x.com/FizzeyS" class="social-link twitter" target="_blank" data-lang="about_link_twitter">𝕏 Twitter / X</a>
+          <a href="https://discord.gg/PerJa3Su" class="social-link discord" target="_blank" data-lang="about_link_discord">Discord</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="scripts/navbar.js"></script>
+</body>
+</html>
