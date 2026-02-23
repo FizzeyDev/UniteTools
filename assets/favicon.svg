@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1B6B8A"/>
+      <stop offset="50%" stop-color="#2A7A6A"/>
+      <stop offset="100%" stop-color="#C4622A"/>
+    </linearGradient>
+    <linearGradient id="txt" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7FE0D4"/>
+      <stop offset="100%" stop-color="#FFD080"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="64" height="64" rx="12" fill="url(#bg)"/>
+
+  <text x="5" y="47" font-family="Arial Black, sans-serif" font-weight="900" font-size="38" fill="url(#txt)">UT</text>
+</svg>
