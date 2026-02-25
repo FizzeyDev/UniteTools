@@ -1,3 +1,4 @@
 export function t(key) {
-  return window.translations?.[key] ?? key;
+  const lang = localStorage.getItem('lang') || 'fr';
+  return window.translations?.[lang]?.[key] ?? key;
 }

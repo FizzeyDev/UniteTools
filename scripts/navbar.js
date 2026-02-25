@@ -20,15 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initNavbar(basePath) {
-  const toggle = document.getElementById("toggle-sidebar");
+  const toggle  = document.getElementById("toggle-sidebar");
   const sidebar = document.getElementById("sidebar");
-  const header = document.querySelector(".sidebar-header");
+  const header  = document.querySelector(".sidebar-header");
   const hideBtn = document.getElementById("hide-sidebar-btn");
 
   function syncSidebarState(hidden) {
     sidebar.classList.toggle("hidden", hidden);
     document.body.classList.toggle("sidebar-collapsed", hidden);
-    if (toggle) toggle.classList.toggle("sidebar-hidden", hidden);
+    if (toggle)  toggle.classList.toggle("sidebar-hidden", hidden);
     if (hideBtn) hideBtn.textContent = hidden ? "▶" : "◀";
     localStorage.setItem("sidebarHidden", hidden);
   }
@@ -118,24 +118,37 @@ function loadAllTranslations(basePath) {
   .then(([fr, en]) => {
     translations.fr = fr;
     translations.en = en;
+    // Expose sur window pour les scripts externes (ex: feedback.js)
+    window.translations = translations;
     applyTranslations();
   })
   .catch(err => console.error("Erreur chargement traductions:", err));
 }
 
 function applyTranslations() {
+  const lang = translations[currentLang];
+  if (!lang) return;
+
+  // Textes
   document.querySelectorAll('[data-lang]').forEach(el => {
     const key = el.dataset.lang;
-    if (translations[currentLang] && translations[currentLang][key]) {
-      el.innerHTML = translations[currentLang][key];
-    }
+    if (lang[key]) el.innerHTML = lang[key];
   });
 
-  if (translations[currentLang] && translations[currentLang].page_title) {
-    document.title = translations[currentLang].page_title;
-  }
+  // Placeholders
+  document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
+    const key = el.dataset.langPlaceholder;
+    if (lang[key]) el.placeholder = lang[key];
+  });
 
+  // Titre de la page
+  if (lang.page_title) document.title = lang.page_title;
+
+  // Boutons de langue actifs
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.lang === currentLang);
   });
+
+  // Notifie les autres scripts que les traductions sont prêtes
+  document.dispatchEvent(new CustomEvent('translationsReady', { detail: { lang: currentLang } }));
 }

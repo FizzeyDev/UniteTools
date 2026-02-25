@@ -1,5 +1,7 @@
 import { state } from './state.js';
 import { getModifiedStats, calculateDamage, getAutoAttackResults } from './damageCalculator.js';
+import { renderHealLine } from './healCalculator.js';
+import { renderShieldLine } from './shieldCalculator.js';
 import { updateHPDisplays } from './uiManager.js';
 import { t } from './i18n.js';
 import { stackableItems } from './constants.js';
@@ -435,6 +437,297 @@ function applyItemsAndGlobalEffects(atkStats, defStats) {
     defenderCard.appendChild(line);
   }
 
+  // ── RESONANT GUARD ─────────────────────────────────────────────────────
+  ['attacker', 'defender'].forEach(side => {
+    const items  = side === 'attacker' ? state.attackerItems : state.defenderItems;
+    const stats  = side === 'attacker' ? atkStats : defStats;
+    const card   = side === 'attacker' ? attackerCard : defenderCard;
+    const idx    = items.findIndex(i => i?.name === "Resonant Guard");
+    if (idx === -1) return;
+    const percent     = parseFloat(items[idx].level20.replace('%', '')) / 100;
+    const shieldAmt   = Math.floor(stats.hp * percent);
+    const line = document.createElement("div");
+    line.className = "global-bonus-line";
+    line.innerHTML = `
+      <div style="margin:12px 0;padding:10px;background:#1a2a2b;border-radius:8px;border-left:4px solid #64b5f6;display:flex;align-items:center;gap:12px;">
+        <img src="assets/items/resonant_guard.png" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/items/missing.png'">
+        <div style="flex:1;">
+          <strong style="color:#64b5f6;">Resonant Guard</strong><br>
+          <span style="font-size:0.85rem;color:#a0c4d8;">Shield on hit (holder + lowest HP ally)</span><br>
+          <span style="color:#64b5f6;font-family:'Exo 2',sans-serif;font-size:1.4rem;font-weight:900;">${shieldAmt.toLocaleString()}</span>
+        </div>
+      </div>
+    `;
+    card.appendChild(line);
+  });
+
+  // ── DRAIN CROWN ────────────────────────────────────────────────────────
+  ['attacker', 'defender'].forEach(side => {
+    const items = side === 'attacker' ? state.attackerItems : state.defenderItems;
+    const card  = side === 'attacker' ? attackerCard : defenderCard;
+    const idx   = items.findIndex(i => i?.name === "Drain Crown");
+    if (idx === -1) return;
+    const percent = parseFloat(items[idx].level20.replace('%', ''));
+    const line = document.createElement("div");
+    line.className = "global-bonus-line";
+    line.innerHTML = `
+      <div style="margin:12px 0;padding:10px;background:#1a2d1a;border-radius:8px;border-left:4px solid #4caf82;display:flex;align-items:center;gap:12px;">
+        <img src="assets/items/drain_crown.png" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/items/missing.png'">
+        <div style="flex:1;">
+          <strong style="color:#4caf82;">Drain Crown</strong><br>
+          <span style="font-size:0.85rem;color:#a0c8a0;">Heals ${percent}% of AA physical damage dealt</span><br>
+          <span style="font-size:0.8rem;color:#6a9a6a;">(shown in green next to each AA damage value)</span>
+        </div>
+      </div>
+    `;
+    card.appendChild(line);
+  });
+
+  // ── ASSAULT VEST ───────────────────────────────────────────────────────
+  ['attacker', 'defender'].forEach(side => {
+    const items  = side === 'attacker' ? state.attackerItems : state.defenderItems;
+    const stats  = side === 'attacker' ? atkStats : defStats;
+    const card   = side === 'attacker' ? attackerCard : defenderCard;
+    const idx    = items.findIndex(i => i?.name === "Assault Vest");
+    if (idx === -1) return;
+    const percent    = parseFloat(items[idx].level20.replace('%', '')) / 100;
+    const shieldAmt  = Math.floor(stats.hp * percent);
+    const line = document.createElement("div");
+    line.className = "global-bonus-line";
+    line.innerHTML = `
+      <div style="margin:12px 0;padding:10px;background:#1a2a2b;border-radius:8px;border-left:4px solid #64b5f6;display:flex;align-items:center;gap:12px;">
+        <img src="assets/items/assault_vest.png" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/items/missing.png'">
+        <div style="flex:1;">
+          <strong style="color:#64b5f6;">Assault Vest</strong><br>
+          <span style="font-size:0.85rem;color:#a0c4d8;">Shield vs Sp. Attack (15s no Sp. dmg)</span><br>
+          <span style="color:#64b5f6;font-family:'Exo 2',sans-serif;font-size:1.4rem;font-weight:900;">${shieldAmt.toLocaleString()}</span>
+        </div>
+      </div>
+    `;
+    card.appendChild(line);
+  });
+
+  // ── FOCUS BAND ─────────────────────────────────────────────────────────
+  ['attacker', 'defender'].forEach(side => {
+    const items   = side === 'attacker' ? state.attackerItems : state.defenderItems;
+    const stats   = side === 'attacker' ? atkStats : defStats;
+    const hpPct   = side === 'attacker' ? state.attackerHPPercent : state.defenderHPPercent;
+    const card    = side === 'attacker' ? attackerCard : defenderCard;
+    const idx     = items.findIndex(i => i?.name === "Focus Band");
+    if (idx === -1) return;
+
+    const percent    = parseFloat(items[idx].level20.replace('%', '')) / 100;
+    const currentHP  = Math.floor(stats.hp * (hpPct / 100));
+    const missingHP  = stats.hp - currentHP;
+    const healTotal  = Math.floor(missingHP * percent);
+    const healPerSec = Math.floor(healTotal / 3);
+
+    // Curse items sur l'adversaire
+    const oppItems     = side === 'attacker' ? state.defenderItems : state.attackerItems;
+    const oppActivated = side === 'attacker' ? state.defenderItemActivated : state.attackerItemActivated;
+    let curseMult = 1.0;
+    ['Curse Bangle', 'Curse Incense'].forEach(name => {
+      const ci = oppItems.findIndex(i => i?.name === name);
+      if (ci !== -1 && oppActivated[ci])
+        curseMult *= 1 - parseFloat(oppItems[ci].level20.replace('%', '')) / 100;
+    });
+
+    // Big Root si attaquant
+    let bigRootMult = 1.0;
+    if (side === 'attacker') {
+      const bri = items.findIndex(i => i?.name === "Big Root");
+      if (bri !== -1) bigRootMult = 1 + parseFloat(items[bri].level20.replace('%', '')) / 100;
+    }
+
+    const selfHeal  = Math.floor(healTotal  * bigRootMult * curseMult);
+    const selfPerSec = Math.floor(healPerSec * bigRootMult * curseMult);
+
+    const line = document.createElement("div");
+    line.className = "global-bonus-line";
+    line.innerHTML = `
+      <div style="margin:12px 0;padding:10px;background:#1a2d1a;border-radius:8px;border-left:4px solid #4caf82;display:flex;align-items:center;gap:12px;">
+        <img src="assets/items/focus_band.png" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/items/missing.png'">
+        <div style="flex:1;">
+          <strong style="color:#4caf82;">Focus Band</strong><br>
+          <span style="font-size:0.85rem;color:#a0c8a0;">When below 25% HP: heals ${(percent * 100).toFixed(0)}% missing HP over 3s</span><br>
+          <span style="color:#4caf82;font-family:'Exo 2',sans-serif;font-size:1.4rem;font-weight:900;">${selfHeal.toLocaleString()}</span>
+          <span style="color:#4caf82;font-size:0.9rem;opacity:0.8;"> (${selfPerSec.toLocaleString()}/s)</span>
+        </div>
+      </div>
+    `;
+    card.appendChild(line);
+  });
+
+  // ── CURSE BANGLE / CURSE INCENSE ──────────────────────────────────────
+  [
+    { name: "Curse Bangle",  img: "curse_bangle",  label: "Curse Bangle",  sub: "Weakens HP recovery on Atk-based hit" },
+    { name: "Curse Incense", img: "curse_incense", label: "Curse Incense", sub: "Weakens HP recovery on Sp. Atk-based hit" }
+  ].forEach(({ name, img, label, sub }) => {
+    ['attacker', 'defender'].forEach(side => {
+      const items    = side === 'attacker' ? state.attackerItems : state.defenderItems;
+      const activated = side === 'attacker' ? state.attackerItemActivated : state.defenderItemActivated;
+      const card     = side === 'attacker' ? attackerCard : defenderCard;
+      const idx      = items.findIndex(i => i?.name === name);
+      if (idx === -1) return;
+      const percent  = parseFloat(items[idx].level20.replace('%', ''));
+      const isActive = activated[idx];
+      const line = document.createElement("div");
+      line.className = "global-bonus-line";
+      line.innerHTML = `
+        <div style="margin:12px 0;padding:10px;background:#2a1a1a;border-radius:8px;border-left:4px solid #ef5350;display:flex;align-items:center;gap:12px;">
+          <img src="assets/items/${img}.png" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/items/missing.png'">
+          <div style="flex:1;">
+            <strong style="color:#ef5350;">${label}</strong><br>
+            <span style="font-size:0.85rem;color:#c8a0a0;">${sub}</span><br>
+            <span style="color:${isActive ? '#ef5350' : '#6a8587'};font-weight:bold;">
+              ${isActive ? `-${percent}% enemy heals` : 'Inactive'}
+            </span>
+          </div>
+        </div>
+      `;
+      card.appendChild(line);
+    });
+  });
+
+  // ── SCORE SHIELD ───────────────────────────────────────────────────────
+  ['attacker', 'defender'].forEach(side => {
+    const items = side === 'attacker' ? state.attackerItems : state.defenderItems;
+    const stats = side === 'attacker' ? atkStats : defStats;
+    const card  = side === 'attacker' ? attackerCard : defenderCard;
+    const idx   = items.findIndex(i => i?.name === "Score Shield");
+    if (idx === -1) return;
+    const percent   = parseFloat(items[idx].level20.replace('%', '')) / 100;
+    const shieldAmt = Math.floor(stats.hp * percent);
+
+    const rescueIdx  = items.findIndex(i => i?.name === "Rescue Hood");
+    const rescueMult = rescueIdx !== -1
+      ? 1 + parseFloat(items[rescueIdx].level20.replace('%', '')) / 100
+      : 1.0;
+    const boosted = rescueMult > 1.0 ? Math.floor(shieldAmt * rescueMult) : null;
+
+    const line = document.createElement("div");
+    line.className = "global-bonus-line";
+    line.innerHTML = `
+      <div style="margin:12px 0;padding:10px;background:#1a2a2b;border-radius:8px;border-left:4px solid #64b5f6;display:flex;align-items:center;gap:12px;">
+        <img src="assets/items/score_shield.png" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/items/missing.png'">
+        <div style="flex:1;">
+          <strong style="color:#64b5f6;">Score Shield</strong><br>
+          <span style="font-size:0.85rem;color:#a0c4d8;">Shield while scoring</span><br>
+          <span style="color:#64b5f6;font-family:'Exo 2',sans-serif;font-size:1.4rem;font-weight:900;">${shieldAmt.toLocaleString()}${boosted ? ` <span style="opacity:0.75;font-size:1.1rem;">/ ${boosted.toLocaleString()}</span>` : ""}</span>
+        </div>
+      </div>
+    `;
+    card.appendChild(line);
+  });
+
+  // ── SHELL BELL ─────────────────────────────────────────────────────────
+  ['attacker', 'defender'].forEach(side => {
+    const items  = side === 'attacker' ? state.attackerItems : state.defenderItems;
+    const stats  = side === 'attacker' ? atkStats : defStats;
+    const card   = side === 'attacker' ? attackerCard : defenderCard;
+    const idx    = items.findIndex(i => i?.name === "Shell Bell");
+    if (idx === -1) return;
+    const item       = items[idx];
+    const constant   = parseFloat(item.level20) || 0;
+    const multiplier = item.level20_multiplier
+      ? parseFloat(item.level20_multiplier.replace('%', '')) / 100
+      : 0;
+    const healAmt = constant + Math.floor(stats.sp_atk * multiplier);
+
+    const bigRootIdx  = items.findIndex(i => i?.name === "Big Root");
+    const bigRootMult = bigRootIdx !== -1
+      ? 1 + parseFloat(items[bigRootIdx].level20.replace('%', '')) / 100
+      : 1.0;
+
+    const oppItems     = side === 'attacker' ? state.defenderItems : state.attackerItems;
+    const oppActivated = side === 'attacker' ? state.defenderItemActivated : state.attackerItemActivated;
+    let curseMult = 1.0;
+    ['Curse Bangle', 'Curse Incense'].forEach(name => {
+      const ci = oppItems.findIndex(i => i?.name === name);
+      if (ci !== -1 && oppActivated[ci])
+        curseMult *= 1 - parseFloat(oppItems[ci].level20.replace('%', '')) / 100;
+    });
+
+    const selfHeal = Math.floor(healAmt * bigRootMult * curseMult);
+
+    const line = document.createElement("div");
+    line.className = "global-bonus-line";
+    line.innerHTML = `
+      <div style="margin:12px 0;padding:10px;background:#1a2d1a;border-radius:8px;border-left:4px solid #4caf82;display:flex;align-items:center;gap:12px;">
+        <img src="assets/items/shell_bell.png" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/items/missing.png'">
+        <div style="flex:1;">
+          <strong style="color:#4caf82;">Shell Bell</strong><br>
+          <span style="font-size:0.85rem;color:#a0c8a0;">Heal on move hit (8s CD)</span><br>
+          <span style="color:#4caf82;font-family:'Exo 2',sans-serif;font-size:1.4rem;font-weight:900;">${selfHeal.toLocaleString()}</span>
+        </div>
+      </div>
+    `;
+    card.appendChild(line);
+  });
+
+  // ── VANGUARD BELL ──────────────────────────────────────────────────────
+  ['attacker', 'defender'].forEach(side => {
+    const items = side === 'attacker' ? state.attackerItems : state.defenderItems;
+    const stats = side === 'attacker' ? atkStats : defStats;
+    const card  = side === 'attacker' ? attackerCard : defenderCard;
+    const idx   = items.findIndex(i => i?.name === "Vanguard Bell");
+    if (idx === -1) return;
+    const percent = parseFloat(items[idx].level20.replace('%', '')) / 100;
+    const healAmt = Math.floor(stats.hp * percent);
+
+    const bigRootIdx  = items.findIndex(i => i?.name === "Big Root");
+    const bigRootMult = bigRootIdx !== -1
+      ? 1 + parseFloat(items[bigRootIdx].level20.replace('%', '')) / 100
+      : 1.0;
+
+    const oppItems     = side === 'attacker' ? state.defenderItems : state.attackerItems;
+    const oppActivated = side === 'attacker' ? state.defenderItemActivated : state.attackerItemActivated;
+    let curseMult = 1.0;
+    ['Curse Bangle', 'Curse Incense'].forEach(name => {
+      const ci = oppItems.findIndex(i => i?.name === name);
+      if (ci !== -1 && oppActivated[ci])
+        curseMult *= 1 - parseFloat(oppItems[ci].level20.replace('%', '')) / 100;
+    });
+
+    const selfHeal = Math.floor(healAmt * bigRootMult * curseMult);
+
+    const line = document.createElement("div");
+    line.className = "global-bonus-line";
+    line.innerHTML = `
+      <div style="margin:12px 0;padding:10px;background:#1a2d1a;border-radius:8px;border-left:4px solid #4caf82;display:flex;align-items:center;gap:12px;">
+        <img src="assets/items/vanguard_bell.png" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/items/missing.png'">
+        <div style="flex:1;">
+          <strong style="color:#4caf82;">Vanguard Bell</strong><br>
+          <span style="font-size:0.85rem;color:#a0c8a0;">Heal on hindrance inflicted (5s CD)</span><br>
+          <span style="color:#4caf82;font-family:'Exo 2',sans-serif;font-size:1.4rem;font-weight:900;">${selfHeal.toLocaleString()}</span>
+        </div>
+      </div>
+    `;
+    card.appendChild(line);
+  });
+
+  // ── BIG ROOT ───────────────────────────────────────────────────────────
+  ['attacker', 'defender'].forEach(side => {
+    const items = side === 'attacker' ? state.attackerItems : state.defenderItems;
+    const card  = side === 'attacker' ? attackerCard : defenderCard;
+    const idx   = items.findIndex(i => i?.name === "Big Root");
+    if (idx === -1) return;
+    const percent = parseFloat(items[idx].level20.replace('%', '')) / 100;
+    const line = document.createElement("div");
+    line.className = "global-bonus-line";
+    line.innerHTML = `
+      <div style="margin:12px 0;padding:10px;background:#1a2d1a;border-radius:8px;border-left:4px solid #4caf82;display:flex;align-items:center;gap:12px;">
+        <img src="assets/items/big_root.png" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/items/missing.png'">
+        <div style="flex:1;">
+          <strong style="color:#4caf82;">Big Root</strong><br>
+          <span style="font-size:0.85rem;color:#a0c8a0;">Self-heals boosted by +${(percent * 100).toFixed(0)}%</span><br>
+          <span style="font-size:0.8rem;color:#6a9a6a;">(shown between parentheses on heal values)</span>
+        </div>
+      </div>
+    `;
+    card.appendChild(line);
+  });
+
   return { choiceSpecsBonus, hasChoiceSpecs, slickIgnore, scopeCritBonus, globalDamageMult };
 }
 
@@ -617,7 +910,11 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
     header.innerHTML = `<img src="${move.image}" alt="${move.name}" onerror="this.src='assets/moves/missing.png'"> <strong>${move.name}</strong>`;
     card.appendChild(header);
 
-    if (!move.damages || move.damages.length === 0 || move.damages.every(d => !d.dealDamage)) {
+    const hasDamages = move.damages?.some(d => d.dealDamage);
+    const hasHeals   = move.heals?.length > 0;
+    const hasShields = move.shields?.length > 0;
+
+    if (!hasDamages && !hasHeals && !hasShields) {
       const line = document.createElement("div");
       line.className = "damage-line";
       line.innerHTML = `<span class="dmg-name" style="color:#888;">${t('calc_js_utility')}</span>`;
@@ -626,7 +923,7 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       return;
     }
 
-    move.damages.forEach(dmg => {
+    move.damages?.forEach(dmg => {
       if (!dmg.dealDamage) return;
 
       let relevantAtk = state.currentAttacker.style === "special" ? atkStats.sp_atk : atkStats.atk;
@@ -714,6 +1011,75 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       firstHit = false;
     });
 
+    // ── HEALS ──────────────────────────────────────────────────────────────
+    if (move.heals?.length > 0) {
+      const bigRootIdx  = state.attackerItems.findIndex(i => i?.name === "Big Root");
+      const bigRootMult = bigRootIdx !== -1
+        ? 1 + parseFloat(state.attackerItems[bigRootIdx].level20.replace('%', '')) / 100
+        : 1.0;
+      const rescueIdx  = state.attackerItems.findIndex(i => i?.name === "Rescue Hood");
+      const rescueMult = rescueIdx !== -1
+        ? 1 + parseFloat(state.attackerItems[rescueIdx].level20.replace('%', '')) / 100
+        : 1.0;
+
+      // Curse Bangle/Incense équipé sur le défenseur et activé → réduit les heals de l'attaquant
+      let curseMult = 1.0;
+      const curseBangleDefIdx  = state.defenderItems.findIndex(i => i?.name === "Curse Bangle");
+      const curseIncenseDefIdx = state.defenderItems.findIndex(i => i?.name === "Curse Incense");
+      if (curseBangleDefIdx  !== -1 && state.defenderItemActivated[curseBangleDefIdx])
+        curseMult *= 1 - parseFloat(state.defenderItems[curseBangleDefIdx].level20.replace('%', ''))  / 100;
+      if (curseIncenseDefIdx !== -1 && state.defenderItemActivated[curseIncenseDefIdx])
+        curseMult *= 1 - parseFloat(state.defenderItems[curseIncenseDefIdx].level20.replace('%', '')) / 100;
+
+      move.heals.forEach(heal => {
+        const line = document.createElement("div");
+        line.className = "damage-line";
+        line.innerHTML = renderHealLine(heal, atkStats, state.attackerLevel, bigRootMult, rescueMult, curseMult);
+        card.appendChild(line);
+      });
+    }
+
+    // ── SHIELDS ────────────────────────────────────────────────────────────
+    if (move.shields?.length > 0) {
+      const rescueIdx = state.attackerItems.findIndex(i => i?.name === "Rescue Hood");
+      const rescueMult = rescueIdx !== -1
+        ? 1 + parseFloat(state.attackerItems[rescueIdx].level20.replace('%', '')) / 100
+        : 1.0;
+      move.shields.forEach(shield => {
+        // Rescue Hood booste uniquement les shields sur alliés (target: "ally")
+        const mult = shield.target === "ally" ? rescueMult : 1.0;
+        const line = document.createElement("div");
+        line.className = "damage-line";
+        line.innerHTML = renderShieldLine(shield, atkStats, state.attackerLevel, mult);
+        card.appendChild(line);
+      });
+    }
+
+    // ── BUDDY BARRIER ──────────────────────────────────────────────────────
+    if (move.name.includes("(Unite)")) {
+      const buddyIdx = state.attackerItems.findIndex(i => i?.name === "Buddy Barrier");
+      if (buddyIdx !== -1) {
+        const item = state.attackerItems[buddyIdx];
+        const percent = parseFloat(item.level20.replace('%', '')) / 100;
+        const shieldAmount = Math.floor(atkStats.hp * percent);
+        const rescueIdx = state.attackerItems.findIndex(i => i?.name === "Rescue Hood");
+        const rescueMult = rescueIdx !== -1
+          ? 1 + parseFloat(state.attackerItems[rescueIdx].level20.replace('%', '')) / 100
+          : 1.0;
+        const boosted = rescueMult > 1.0 ? Math.floor(shieldAmount * rescueMult) : null;
+        const line = document.createElement("div");
+        line.className = "damage-line";
+        line.innerHTML = `
+          <span class="dmg-name">Buddy Barrier<br><i>Shield on Unite (holder + lowest HP ally)</i></span>
+          <div class="dmg-values">
+            <span class="dmg-shield">${shieldAmount.toLocaleString()}</span>
+            ${boosted ? `<span class="dmg-shield" style="opacity:0.75;font-size:1.1rem;">(${boosted.toLocaleString()})</span>` : ""}
+          </div>
+        `;
+        card.appendChild(line);
+      }
+    }
+
     if (move.name === "Auto-attack") {
       if (aaResults.hasMuscle) {
         let muscleExtra = Math.floor(aaResults.muscleExtra * defenderDamageMult);
@@ -748,6 +1114,63 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         line.className = "damage-line";
         line.innerHTML = `<span class="dmg-name">${t('calc_js_razor_claw')}</span><div class="dmg-values"><span class="dmg-crit">+ ${razorExtra.toLocaleString()}</span></div>`;
         card.appendChild(line);
+      }
+
+      // ── DRAIN CROWN ─────────────────────────────────────────────────────
+      const drainCrownIdx = state.attackerItems.findIndex(i => i?.name === "Drain Crown");
+      if (drainCrownIdx !== -1) {
+        const drainItem = state.attackerItems[drainCrownIdx];
+        const drainPercent = parseFloat(drainItem.level20.replace('%', '')) / 100;
+
+        const bigRootIdx = state.attackerItems.findIndex(i => i?.name === "Big Root");
+        const bigRootMult = bigRootIdx !== -1
+          ? 1 + parseFloat(state.attackerItems[bigRootIdx].level20.replace('%', '')) / 100
+          : 1.0;
+
+        let curseMult = 1.0;
+        const curseBangleIdx  = state.defenderItems.findIndex(i => i?.name === "Curse Bangle");
+        const curseIncenseIdx = state.defenderItems.findIndex(i => i?.name === "Curse Incense");
+        if (curseBangleIdx  !== -1 && state.defenderItemActivated[curseBangleIdx])
+          curseMult *= 1 - parseFloat(state.defenderItems[curseBangleIdx].level20.replace('%', '')) / 100;
+        if (curseIncenseIdx !== -1 && state.defenderItemActivated[curseIncenseIdx])
+          curseMult *= 1 - parseFloat(state.defenderItems[curseIncenseIdx].level20.replace('%', '')) / 100;
+
+        state.currentAttacker.moves
+          .find(m => m.name === "Auto-attack")
+          ?.damages?.forEach(dmg => {
+            if (!dmg.dealDamage) return;
+
+            // Recalcul du damage pour ce dmg précis (même logique que displayMoves)
+            let relevantAtk = state.currentAttacker.style === "special" ? atkStats.sp_atk : atkStats.atk;
+            let relevantDef = state.currentAttacker.style === "special" ? defStats.sp_def : defStats.def;
+            if (dmg.scaling === "physical") { relevantAtk = atkStats.atk; relevantDef = defStats.def; }
+            if (dmg.scaling === "special")  { relevantAtk = atkStats.sp_atk; relevantDef = defStats.sp_def; }
+
+            let effectiveDef = relevantDef;
+            if (slickIgnore > 0)          effectiveDef = Math.floor(effectiveDef * (1 - slickIgnore));
+            if (infiltratorIgnore > 0)    effectiveDef = Math.floor(effectiveDef * (1 - infiltratorIgnore));
+            if (defenderFlashFireReduction > 0) effectiveDef = Math.floor(effectiveDef / (1 - defenderFlashFireReduction));
+
+            const rawDamage = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0, globalDamageMult, defStats.hp);
+            const finalDamage = Math.floor(rawDamage * defenderDamageMult);
+            const drainHeal = Math.floor(finalDamage * drainPercent * bigRootMult * curseMult);
+
+            // Injection inline sur la damage-line correspondante
+            const damageLines = card.querySelectorAll('.damage-line');
+            damageLines.forEach(dl => {
+              const nameEl = dl.querySelector('.dmg-name');
+              if (nameEl && nameEl.textContent.trim().startsWith(dmg.name)) {
+                const valuesEl = dl.querySelector('.dmg-values');
+                if (valuesEl) {
+                  const healSpan = document.createElement('span');
+                  healSpan.className = 'dmg-heal';
+                  healSpan.style.cssText = 'margin-left:6px;font-size:0.95em;';
+                  healSpan.textContent = `(+${drainHeal.toLocaleString()})`;
+                  valuesEl.appendChild(healSpan);
+                }
+              }
+            });
+          });
       }
     }
 

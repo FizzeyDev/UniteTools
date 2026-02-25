@@ -7,6 +7,15 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/navbar.css">
   <link rel="stylesheet" href="css/update.css">
+  <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-B7HW29S7HW');
+    </script>
 </head>
 <body>
   <div id="navbar-container"></div>
@@ -20,12 +29,54 @@
 
     <div class="timeline">
 
+      <!-- v2.2.0 -->
+      <div class="update-entry">
+        <div class="update-card">
+          <div class="update-card-header" onclick="toggleCard(this)">
+            <span class="update-version">v2.2.0</span>
+            <span class="update-badge-latest">Latest</span>
+            <span class="update-date">February 25, 2026</span>
+            <span class="update-chevron">▾</span>
+          </div>
+          <div class="update-card-body">
+            <div class="update-card-divider"></div>
+            <div class="update-card-content">
+              <div class="change-section">
+                <div class="change-section-title">General</div>
+                <ul class="change-list">
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-new">New</span>Feedback page is live — easier way to communicate with me about anything.</span>
+                  </li>
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-fix">Fix</span>Traductions displays issues.</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="change-section">
+                <div class="change-section-title">Damage Calculator</div>
+                <ul class="change-list">
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-new">New</span>Heals and Shields Calculations — not only calculation for damage now, right ?</span>
+                  </li>
+                  <li class="change-item">
+                    <span class="change-icon">✦</span>
+                    <span><span class="change-category cat-update">Update</span>All effects of items related to heal and/or shield are now implemented.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- v2.1.1 -->
       <div class="update-entry">
         <div class="update-card">
           <div class="update-card-header" onclick="toggleCard(this)">
             <span class="update-version">v2.1.1</span>
-            <span class="update-badge-latest">Latest</span>
             <span class="update-date">February 22, 2026</span>
             <span class="update-chevron">▾</span>
           </div>

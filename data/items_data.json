@@ -200,7 +200,7 @@
     ],
     "description1": "Attack-based damage weakens opposing HP recovery by 20/25/30% for 1.5s.",
     "level20": "30%",
-    "activable": false,
+    "activable": true,
     "activation_effect": null
   },
   {
@@ -212,7 +212,7 @@
     ],
     "description1": "Sp. Attack-based damage weakens opposing HP recovery by 20/25/30% for 1.5s.",
     "level20": "30%",
-    "activable": false,
+    "activable": true,
     "activation_effect": null
   },
   {
@@ -476,11 +476,12 @@
     "bonus1": "Sp. Attack +28",
     "bonus2": "CD Reduction +5.25%",
     "stats": [
-      { "label": "Sp. Attack", "percent": false, "float": 1, "value": 28 },
-      { "label": "CD Reduction", "percent": true, "float": 1, "value": 5.25 }
+      { "label": "Sp. Attack", "percent": false, "float": 0, "value": 28 },
+      { "label": "CD Reduction", "percent": true, "float": 2, "value": 5.25 }
     ],
-    "description1": "Move hits recover HP.",
+    "description1": "When hitting an opposing Pokémon with a move: recovers HP equal to 80 + 60% Sp. Attack (8s CD).",
     "level20": "80",
+    "level20_multiplier": "60%",
     "activable": false,
     "activation_effect": null
   },
@@ -526,6 +527,18 @@
     ],
     "description1": "Further increases Sp. Atk by 3/5/7%.",
     "level20": "7%",
+    "activable": false,
+    "activation_effect": null
+  },
+  {
+    "name": "Vanguard Bell",
+    "display_name": "Vanguard Bell",
+    "bonus1": "HP +525",
+    "stats": [
+      { "label": "HP", "percent": false, "float": 0, "value": 525 }
+    ],
+    "description1": "When a hindrance is inflicted on a Pokémon from the opposing team: restores 10% max HP to the holder (5s CD).",
+    "level20": "10%",
     "activable": false,
     "activation_effect": null
   }

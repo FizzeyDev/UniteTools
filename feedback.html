@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-lang="feedback_page_title">Unite Tools - Feedback</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/feedback.css">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-B7HW29S7HW');
+  </script>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main>
+    <section class="hero">
+      <p class="hero-eyebrow" data-lang="feedback_eyebrow">Unite Tools</p>
+      <h1 data-lang="feedback_h1">Feedback</h1>
+      <p class="hero-subtitle" data-lang="feedback_subtitle">Aide-nous à améliorer l'outil</p>
+      <p class="hero-desc" data-lang="feedback_desc">Un bug, une suggestion, une idée ? Chaque retour est lu et traité directement sur GitHub.</p>
+    </section>
+
+    <div class="feedback-layout">
+
+      <!-- Form -->
+      <div class="feedback-card">
+        <h2 data-lang="feedback_form_title">✉️ Soumettre un retour</h2>
+
+        <div class="type-selector">
+          <button class="type-btn active" data-type="bug">
+            <span class="type-icon">🐛</span>
+            <span data-lang="feedback_type_bug">Bug</span>
+          </button>
+          <button class="type-btn" data-type="suggestion">
+            <span class="type-icon">💡</span>
+            <span data-lang="feedback_type_suggestion">Suggestion</span>
+          </button>
+          <button class="type-btn" data-type="other">
+            <span class="type-icon">💬</span>
+            <span data-lang="feedback_type_other">Autre</span>
+          </button>
+        </div>
+
+        <form id="feedbackForm" novalidate>
+          <div class="field">
+            <label for="feedbackTitle" data-lang="feedback_label_title">Titre</label>
+            <input
+              type="text"
+              id="feedbackTitle"
+              data-lang-placeholder="feedback_placeholder_title"
+              maxlength="120"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="feedbackBody" data-lang="feedback_label_body">Description</label>
+            <textarea
+              id="feedbackBody"
+              data-lang-placeholder="feedback_placeholder_body"
+              required
+            ></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn" data-lang="feedback_submit_btn">
+            Envoyer le retour
+          </button>
+
+          <div class="status-msg" id="statusMsg"></div>
+        </form>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar-info">
+
+        <div class="info-card">
+          <h3 data-lang="feedback_sidebar_how_title">Comment ça marche ?</h3>
+          <div class="info-item">
+            <span class="info-icon">✍️</span>
+            <div class="info-text">
+              <strong data-lang="feedback_how_fill_title">Tu remplis</strong>
+              <span data-lang="feedback_how_fill_desc">Décris ton bug ou ta suggestion dans le formulaire</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">⚡</span>
+            <div class="info-text">
+              <strong data-lang="feedback_how_ticket_title">Ticket créé</strong>
+              <span data-lang="feedback_how_ticket_desc">Une issue GitHub est ouverte automatiquement</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">🔧</span>
+            <div class="info-text">
+              <strong data-lang="feedback_how_process_title">Traitement</strong>
+              <span data-lang="feedback_how_process_desc">Le ticket est suivi et traité directement sur le repo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <h3 data-lang="feedback_sidebar_types_title">Types de retour</h3>
+          <div class="info-item">
+            <span class="info-icon">🐛</span>
+            <div class="info-text">
+              <strong data-lang="feedback_type_bug">Bug</strong>
+              <span data-lang="feedback_type_bug_desc">Quelque chose ne fonctionne pas correctement</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">💡</span>
+            <div class="info-text">
+              <strong data-lang="feedback_type_suggestion">Suggestion</strong>
+              <span data-lang="feedback_type_suggestion_desc">Une idée pour améliorer l'outil</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">💬</span>
+            <div class="info-text">
+              <strong data-lang="feedback_type_other">Autre</strong>
+              <span data-lang="feedback_type_other_desc">Tout autre retour ou question</span>
+            </div>
+          </div>
+        </div>
+
+        <a href="https://github.com/FizzeyDev/UniteTools/issues" target="_blank" class="github-link">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+          <span data-lang="feedback_github_link">Voir les issues GitHub</span>
+        </a>
+
+      </aside>
+    </div>
+
+    <footer>
+      <div id="footer-signature" data-lang="footer_signature"></div>
+      <div id="footer-legal" data-lang="footer_legal"></div>
+    </footer>
+  </main>
+
+  <script src="scripts/navbar.js"></script>
+  <script type="module" src="scripts/feedback.js"></script>
+</body>
+</html>

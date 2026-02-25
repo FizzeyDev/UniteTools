@@ -186,7 +186,7 @@ export function updateItemCard(side, slot, item = null) {
     stacksEl.style.display = 'none';
   }
 
-  if (item.activable && item.name !== "Choice Specs") {
+  if (item.activable && item.name !== "Choice Specs" && item.name !== "Buddy Barrier" && item.name !== "Resonant Guard" && item.name !== "Score Shield" && item.name !== "Focus Band") {
     const toggleBtn = document.createElement('button');
     toggleBtn.className = 'item-equipped-toggle';
     const activatedArray = side === 'attacker' ? state.attackerItemActivated : state.defenderItemActivated;
@@ -202,7 +202,7 @@ export function updateItemCard(side, slot, item = null) {
     card.appendChild(toggleBtn);
   }
 
-  if (item.name === "Choice Specs") {
+  if (item.name === "Choice Specs" || item.name === "Buddy Barrier" || item.name === "Resonant Guard" || item.name === "Score Shield" || item.name === "Focus Band") {
     const indicator = document.createElement('div');
     indicator.className = 'choice-specs-indicator';
     indicator.style.cssText = 'margin-top:8px; font-size:0.85rem; color:var(--green); font-weight:bold;';
