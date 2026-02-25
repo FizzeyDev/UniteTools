@@ -1,7 +1,7 @@
 # Pokemon Unite Tools by Fizzey
 
 Made by Fizzey, Pokemon Unite Player, this repository hosts the Pokémon Unite Tools website :  
-👉 [Direct Link](https://fizzeydev.github.io/PokemonUniteDraft/)
+👉 [Direct Link](https://unite-tools.com)
 
 ---
 
