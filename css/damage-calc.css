@@ -1314,3 +1314,348 @@ h1 {
   .stat-item .stat-value { font-size: 1.4rem; }
   .slider-block { padding: 0.6rem; }
 }
+/* =============================================
+   ALLIES SECTION (in attacker stats card)
+   ============================================= */
+
+.allies-section {
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border);
+}
+
+.allies-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+}
+
+.allies-label {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+
+.allies-hint {
+  font-size: 0.72rem;
+  color: #3a5a5c;
+  font-style: italic;
+}
+
+.allies-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+/* ── Ally slot card ── */
+.ally-slot {
+  position: relative;
+  width: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  animation: allySlotIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes allySlotIn {
+  from { opacity: 0; transform: scale(0.6); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.ally-slot-img-wrap {
+  position: relative;
+  width: 52px;
+  height: 52px;
+}
+
+.ally-slot-img {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: var(--surface-2);
+  border: 2px solid rgba(79, 195, 247, 0.35);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  display: block;
+}
+
+.ally-slot:hover .ally-slot-img {
+  border-color: var(--blue);
+  box-shadow: 0 0 12px rgba(79, 195, 247, 0.4);
+}
+
+.ally-slot-remove {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  font-size: 0.75rem;
+  line-height: 18px;
+  text-align: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, transform 0.15s;
+  padding: 0;
+  font-weight: 700;
+}
+
+.ally-slot:hover .ally-slot-remove {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.ally-slot-name {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--blue);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 64px;
+  line-height: 1.2;
+}
+
+/* ── Add button ── */
+.ally-add-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255,255,255,0.15);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  flex-shrink: 0;
+}
+
+.ally-add-btn:hover {
+  border-color: var(--violet);
+  background: var(--violet-dim);
+  transform: scale(1.08);
+}
+
+.ally-add-btn:active {
+  transform: scale(0.96);
+}
+
+.ally-add-icon {
+  font-size: 1.6rem;
+  color: rgba(255,255,255,0.25);
+  line-height: 1;
+  transition: color 0.2s;
+  font-weight: 300;
+}
+
+.ally-add-btn:hover .ally-add-icon {
+  color: var(--violet);
+}
+
+/* ── Ally Picker Modal ── */
+.ally-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9000;
+  backdrop-filter: blur(4px);
+}
+
+.ally-modal-content {
+  background: var(--surface);
+  border: 1px solid rgba(79, 195, 247, 0.25);
+  border-radius: var(--radius);
+  padding: 1.6rem;
+  width: min(92vw, 480px);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(79,195,247,0.1);
+  position: relative;
+  animation: modalIn 0.2s ease-out;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.ally-modal-content h3 {
+  font-family: 'Exo 2', sans-serif;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ally-modal-close {
+  position: absolute;
+  top: 0.9rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.ally-modal-close:hover { color: #fff; }
+
+.ally-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 0.5rem;
+  overflow-y: auto;
+  flex: 1;
+  padding: 4px;
+}
+
+.ally-picker-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 4px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+  border: 1px solid transparent;
+}
+
+.ally-picker-item:hover {
+  background: var(--surface-2);
+  border-color: rgba(79, 195, 247, 0.3);
+  transform: translateY(-2px);
+}
+
+.ally-picker-item.already-ally {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.ally-picker-item img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.ally-picker-item span {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 1.2;
+  max-width: 66px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Heal/Shield values in damage lines — ally columns ── */
+.dmg-ally-col {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.dmg-ally-badge {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--surface-3);
+  border: 1px solid rgba(79, 195, 247, 0.2);
+  border-radius: 20px;
+  padding: 2px 7px 2px 4px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.dmg-ally-badge img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: var(--surface-2);
+  flex-shrink: 0;
+}
+
+.dmg-ally-badge.dmg-ally-heal { color: var(--green); border-color: rgba(76,175,130,0.25); }
+.dmg-ally-badge.dmg-ally-shield { color: var(--blue); border-color: rgba(79,195,247,0.25); }
+
+/* ── Target badges (self / ally only indicators) ── */
+.dmg-target-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  margin-right: 4px;
+  vertical-align: middle;
+  opacity: 0.8;
+  cursor: help;
+}
+
+/* ─── Timer Mob Slider ─────────────────────────────────────────── */
+.mob-timer-label {
+  color: var(--yellow) !important;
+  letter-spacing: 0.1em;
+}
+
+.mob-timer-value {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--yellow);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Slider timer — sens inversé visuellement (10:00 à gauche, 0:00 à droite) */
+.timer-slider {
+  width: 100%;
+  accent-color: var(--yellow);
+  direction: rtl;
+  margin-top: 0.4rem;
+}
+
+.mob-timer-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+  font-family: 'Exo 2', sans-serif;
+  direction: ltr;
+}
+
+/* ── Tick controls ── */
+.tick-ctrl {
+  transition: background 0.15s;
+  user-select: none;
+}
+.tick-ctrl:hover { background: #666 !important; }
+.tick-ctrl:active { background: #888 !important; transform: scale(0.9); }

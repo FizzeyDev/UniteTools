@@ -2,6 +2,7 @@ import { state } from './state.js';
 import { selectAttacker, selectDefender } from './pokemonManager.js';
 import { updateDamages } from './damageDisplay.js';
 import { getModifiedStats } from './damageCalculator.js';
+import { getMobHPAtTimer } from './constants.js';
 
 const levelSliderAttacker = document.getElementById("levelSliderAttacker");
 const levelSliderDefender = document.getElementById("levelSliderDefender");
@@ -120,6 +121,11 @@ export function updateHPDisplays() {
     state.defenderItemStacks, 
     state.defenderItemActivated
   );
+
+  // Pour les mobs timer-based, on écrase defStats.hp avec la valeur du timer
+  if (state.currentDefender?.timerBased && state.currentDefender.hpTable) {
+    defStats.hp = getMobHPAtTimer(state.currentDefender.hpTable, state.defenderTimer);
+  }
 
   if (!state.isEditingHP.attacker) {
     const currentAtkHP = Math.floor(atkStats.hp * (state.attackerHPPercent / 100));
@@ -240,6 +246,64 @@ export function setupLevelSliders() {
 
   updateSliderStyle(levelSliderAttacker, 15);
   updateSliderStyle(levelSliderDefender, 15);
+}
+
+// ── Timer pour les mobs timer-based ──────────────────────────────────────────
+
+/**
+ * Convertit des secondes en string "M:SS"
+ */
+function secsToTimer(secs) {
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+
+/**
+ * Affiche ou cache le bloc timer/niveau selon que le défenseur est timer-based ou non.
+ * Appelé à chaque changement de défenseur.
+ */
+export function updateDefenderSliderMode() {
+  const defender = state.currentDefender;
+  const isTimerBased = defender?.timerBased === true;
+
+  const levelBlock = document.getElementById('defenderLevelBlock');
+  const timerBlock = document.getElementById('defenderTimerBlock');
+
+  if (!levelBlock || !timerBlock) return;
+
+  if (isTimerBased) {
+    levelBlock.style.display = 'none';
+    timerBlock.style.display = 'block';
+    // Synchro affichage
+    const timerSlider = document.getElementById('timerSliderDefender');
+    const timerValue  = document.getElementById('timerValueDefender');
+    if (timerSlider && timerValue) {
+      timerSlider.value = state.defenderTimer;
+      timerValue.textContent = secsToTimer(state.defenderTimer);
+      updateSliderStyle(timerSlider, 600 - state.defenderTimer); // inversé : 0s = full slider
+    }
+  } else {
+    levelBlock.style.display = 'block';
+    timerBlock.style.display = 'none';
+  }
+}
+
+/**
+ * Initialise le slider timer (appelé une fois au démarrage).
+ */
+export function setupTimerSlider() {
+  const timerSlider = document.getElementById('timerSliderDefender');
+  const timerValue  = document.getElementById('timerValueDefender');
+  if (!timerSlider || !timerValue) return;
+
+  timerSlider.addEventListener('input', (e) => {
+    state.defenderTimer = parseInt(e.target.value);
+    timerValue.textContent = secsToTimer(state.defenderTimer);
+    updateSliderStyle(timerSlider, parseInt(e.target.value));
+    updateHPDisplays();
+    updateDamages();
+  });
 }
 
 export function setupHPSliders() {

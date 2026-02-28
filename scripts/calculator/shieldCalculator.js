@@ -9,6 +9,12 @@
  *   "multiplier": 50,                          // % de la stat
  *   "levelCoef":  0,                           // bonus flat par niveau
  *   "constant":   100,                         // bonus flat fixe
+ *   "target":     "self" | "ally" | "both",    // optionnel, défaut "both"
+ *                   "self"  → lanceur uniquement (pas de badge allié)
+ *                   "ally"  → alliés uniquement
+ *                   "both"  → lanceur + alliés (comportement par défaut)
+ *   "is_tick":    true,                        // optionnel, valeur par tick
+ *   "tick_count": 6,                           // nb de ticks si is_tick
  *   "notes":      "..."                        // optionnel
  * }
  *
@@ -57,13 +63,48 @@ export function calculateShield(shield, atkStats, level) {
  */
 export function renderShieldLine(shield, atkStats, level, rescueMult = 1.0) {
   const amount = calculateShield(shield, atkStats, level);
-  const boosted = rescueMult > 1.0 ? Math.floor(amount * rescueMult) : null;
+  const boosted = rescueMult > 1.0 ? Math.floor(amount * rescueMult) : amount;
+
+  // "both" par défaut si target absent, pour ne pas casser l'existant
+  const target    = shield.target || "both";
+  const forSelf   = target === "self"  || target === "both";
+  const forAllies = target === "ally"  || target === "both";
+
+  // Indicateurs visuels
+  const selfOnlyBadge = (target === "self")
+    ? `<span class="dmg-target-badge dmg-target-self" title="Lanceur uniquement">🧬</span>`
+    : "";
+  const allyOnlyBadge = (target === "ally")
+    ? `<span class="dmg-target-badge dmg-target-ally" title="Alliés uniquement">🤝</span>`
+    : "";
+
+  const isTick    = !!shield.is_tick;
+  const tickCount = shield.tick_count || 1;
+
+  // data-ally-shield n'est mis que si le shield touche les alliés
+  const allyAttr = forAllies ? `data-ally-shield="${boosted}"` : `data-no-allies="true"`;
+
+  if (isTick) {
+    const baseTotal  = amount * tickCount;
+    const allyTotal  = boosted * tickCount;
+    const allyAttrTick = forAllies
+      ? `data-ally-shield="${boosted}" data-ally-shield-total="${allyTotal}"`
+      : `data-no-allies="true"`;
+    return `
+      <span class="dmg-name">${selfOnlyBadge}${allyOnlyBadge}${shield.name}${shield.notes ? `<br><i>${shield.notes}</i>` : ""}</span>
+      <div class="dmg-values" ${allyAttrTick}>
+        ${forSelf ? `<span class="dmg-shield shield-tick-toggle"
+              data-base="${amount}" data-total="${baseTotal}" data-ticks="${tickCount}"
+              title="Cliquez pour afficher le total (${tickCount} ticks)"
+        >${amount.toLocaleString()}<sup class="tick-badge">×${tickCount}</sup></span>` : ""}
+      </div>
+    `;
+  }
 
   return `
-    <span class="dmg-name">${shield.name}${shield.notes ? `<br><i>${shield.notes}</i>` : ""}</span>
-    <div class="dmg-values">
-      <span class="dmg-shield">${amount.toLocaleString()}</span>
-      ${boosted ? `<span class="dmg-shield" style="opacity:0.75;font-size:1.1rem;">(${boosted.toLocaleString()})</span>` : ""}
+    <span class="dmg-name">${selfOnlyBadge}${allyOnlyBadge}${shield.name}${shield.notes ? `<br><i>${shield.notes}</i>` : ""}</span>
+    <div class="dmg-values" ${allyAttr}>
+      ${forSelf ? `<span class="dmg-shield">${amount.toLocaleString()}</span>` : ""}
     </div>
   `;
 }

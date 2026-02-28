@@ -9,6 +9,12 @@
  *   "multiplier": 90,                          // % de la stat
  *   "levelCoef":  0,                           // bonus flat par niveau
  *   "constant":   300,                         // bonus flat fixe
+ *   "target":     "self" | "ally" | "both",    // optionnel, défaut "both"
+ *                   "self"  → lanceur uniquement (pas de badge allié)
+ *                   "ally"  → alliés uniquement (pas de valeur self affichée)
+ *                   "both"  → lanceur + alliés (comportement par défaut)
+ *   "is_tick":    true,                        // optionnel, valeur par tick
+ *   "tick_count": 7,                           // nb de ticks si is_tick
  *   "notes":      "..."                        // optionnel
  * }
  *
@@ -46,13 +52,6 @@ export function calculateHeal(heal, atkStats, level) {
 }
 
 /**
- * Renvoie le HTML d'une ligne de soin à injecter dans une move-card.
- * @param {object} heal       - entrée heal du JSON
- * @param {object} atkStats
- * @param {number} level
- * @returns {string} innerHTML
- */
-/**
  * @param {object} heal         - entrée heal du JSON
  * @param {object} atkStats     - stats de l'attaquant
  * @param {number} level        - niveau de l'attaquant
@@ -66,11 +65,46 @@ export function renderHealLine(heal, atkStats, level, bigRootMult = 1.0, rescueM
   const self = Math.floor(base * bigRootMult * curseMult);
   const ally = Math.floor(base * rescueMult  * curseMult);
 
+  // "both" par défaut si target absent, pour ne pas casser l'existant
+  const target    = heal.target || "both";
+  const forSelf   = target === "self"  || target === "both";
+  const forAllies = target === "ally"  || target === "both";
+
+  const isTick    = !!heal.is_tick;
+  const tickCount = heal.tick_count || 1;
+
+  // Indicateur visuel si le heal ne concerne que le lanceur
+  const selfOnlyBadge = (target === "self")
+    ? `<span class="dmg-target-badge dmg-target-self" title="Lanceur uniquement">🧬</span>`
+    : "";
+  const allyOnlyBadge = (target === "ally")
+    ? `<span class="dmg-target-badge dmg-target-ally" title="Alliés uniquement">🤝</span>`
+    : "";
+
+  // data-ally-heal n'est mis que si le heal touche les alliés
+  const allyAttr = forAllies ? `data-ally-heal="${ally}"` : `data-no-allies="true"`;
+
+  if (isTick) {
+    const selfTotal = self * tickCount;
+    const allyTotal = ally * tickCount;
+    const allyAttrTick = forAllies
+      ? `data-ally-heal="${ally}" data-ally-heal-total="${allyTotal}"`
+      : `data-no-allies="true"`;
+    return `
+      <span class="dmg-name">${selfOnlyBadge}${allyOnlyBadge}${heal.name}${heal.notes ? `<br><i>${heal.notes}</i>` : ""}</span>
+      <div class="dmg-values" ${allyAttrTick}>
+        ${forSelf ? `<span class="dmg-heal heal-tick-toggle"
+              data-base="${self}" data-total="${selfTotal}" data-ticks="${tickCount}"
+              title="Cliquez pour afficher le total (${tickCount} ticks)"
+        >${self.toLocaleString()}<sup class="tick-badge">×${tickCount}</sup></span>` : ""}
+      </div>
+    `;
+  }
+
   return `
-    <span class="dmg-name">${heal.name}${heal.notes ? `<br><i>${heal.notes}</i>` : ""}</span>
-    <div class="dmg-values">
-      <span class="dmg-heal">${self.toLocaleString()}</span>
-      <span class="dmg-heal" style="opacity:0.75;font-size:1.1rem;">/ ${ally.toLocaleString()}</span>
+    <span class="dmg-name">${selfOnlyBadge}${allyOnlyBadge}${heal.name}${heal.notes ? `<br><i>${heal.notes}</i>` : ""}</span>
+    <div class="dmg-values" ${allyAttr}>
+      ${forSelf ? `<span class="dmg-heal">${self.toLocaleString()}</span>` : ""}
     </div>
   `;
 }

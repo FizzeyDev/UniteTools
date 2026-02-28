@@ -556,6 +556,20 @@
           <span id="attackerCritChance" class="stat-value">0%</span>
         </div>
       </div>
+
+      <!-- ── ALLIES SECTION ── -->
+      <div class="allies-section" id="alliesSection">
+        <div class="allies-header">
+          <span class="allies-label">ALLIES</span>
+          <span class="allies-hint">Heals &amp; Shields will be shown for each ally</span>
+        </div>
+        <div class="allies-row" id="alliesRow">
+          <!-- slots filled dynamically (max 4) -->
+          <button class="ally-add-btn" id="allyAddBtn" title="Add an ally">
+            <span class="ally-add-icon">＋</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Dégâts des moves (section centrale large) -->
@@ -580,11 +594,25 @@
             <input type="range" id="hpSliderDefender" min="0" max="100" value="100" class="hp-slider">
           </div>
 
-          <!-- Level -->
-           <span class="stat-label" data-lang="calc_stat_level">Level</span>
-          <div class="slider-block">
-            <label>Level <span id="levelValueDefender">15</span></label>
-            <input type="range" id="levelSliderDefender" min="1" max="15" value="15">
+          <!-- Level (mode normal) -->
+          <div id="defenderLevelBlock">
+            <span class="stat-label" data-lang="calc_stat_level">Level</span>
+            <div class="slider-block">
+              <label>Level <span id="levelValueDefender">15</span></label>
+              <input type="range" id="levelSliderDefender" min="1" max="15" value="15">
+            </div>
+          </div>
+
+          <!-- Timer (mode mob timer-based, caché par défaut) -->
+          <div id="defenderTimerBlock" style="display:none;">
+            <span class="stat-label mob-timer-label">⏱ TIMER</span>
+            <div class="slider-block">
+              <label>Timer <span id="timerValueDefender" class="mob-timer-value"></span></label>
+              <input type="range" id="timerSliderDefender" min="0" max="590" value="470" step="10" class="timer-slider">
+            </div>
+            <div class="mob-timer-ticks">
+              <span>10:00</span><span>5:00</span><span>0:00</span>
+            </div>
           </div>
         </div>
 
@@ -657,6 +685,16 @@
           <li>Move combo damage (able to click to select multiples moves to show global damage)</li>
         </ul>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL ALLY PICKER -->
+  <div id="allyPickerModal" class="ally-modal" style="display:none;">
+    <div class="ally-modal-content">
+      <span class="ally-modal-close">×</span>
+      <h3>Choose an Ally</h3>
+      <input type="text" id="allyPickerSearch" class="pokemon-search" placeholder="Search a Pokémon..." style="margin-bottom:0.8rem;">
+      <div id="allyPickerGrid" class="ally-picker-grid"></div>
     </div>
   </div>
 

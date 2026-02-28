@@ -5,6 +5,7 @@ export const state = {
   currentDefender: null,
   attackerLevel: 15,
   defenderLevel: 15,
+  defenderTimer: 130,
 
   attackerItems: [null, null, null],
   defenderItems: [null, null, null],

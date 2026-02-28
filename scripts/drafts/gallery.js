@@ -25,11 +25,18 @@ export function renderGallery() {
   gallery.innerHTML = "";
   state.allImages = [];
 
-  const sorted = [...state.monsData].sort((a, b) =>
-    state.currentSort === "name"
-      ? (a[`name_${currentLang}`] || a.name).localeCompare(b[`name_${currentLang}`] || b.name)
-      : a.dex - b.dex
-  );
+  const roleOrder = { def: 0, atk: 1, sup: 2, spe: 3, all: 4 };
+
+  const sorted = [...state.monsData].sort((a, b) => {
+    if (state.currentSort === "name")
+      return (a[`name_${currentLang}`] || a.name).localeCompare(b[`name_${currentLang}`] || b.name);
+    if (state.currentSort === "role") {
+      const ra = roleOrder[a.role] ?? 99;
+      const rb = roleOrder[b.role] ?? 99;
+      return ra !== rb ? ra - rb : a.dex - b.dex;
+    }
+    return a.dex - b.dex;
+  });
 
   sorted.forEach(mon => {
     const img = document.createElement("img");

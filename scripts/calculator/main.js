@@ -1,11 +1,13 @@
 import { loadData } from './dataLoader.js';
-import { populateGrids, setupSearch, setupLevelSliders, setupHPSliders, setupModals, setupCollapsibleSections, makeHPValueEditable, makeCustomStatEditable } from './uiManager.js';
+import { populateGrids, setupSearch, setupLevelSliders, setupHPSliders, setupModals, setupCollapsibleSections, makeHPValueEditable, makeCustomStatEditable, setupTimerSlider } from './uiManager.js';
 import { populateItemGrid, setupItemSearch, setupItemSelection } from './itemManager.js';
 import { selectAttacker, selectDefender } from './pokemonManager.js';
 import { setupBuffListeners, setupDebuffListeners, setupStackableDebuffs } from './events.js';
 import { updateDamages } from './damageDisplay.js';
 import { t } from './i18n.js';
 import { resetItems } from './itemManager.js';
+import { initCombatLog, initAllySelector } from './combatLog.js';
+import { initAllyManager } from './allyManager.js';
 
 document.querySelectorAll('.reset-items-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -31,6 +33,7 @@ async function initApp() {
   setupSearch();
   setupLevelSliders();
   setupHPSliders();
+  setupTimerSlider();
   setupModals();
   setupCollapsibleSections();
 
@@ -48,6 +51,10 @@ async function initApp() {
   selectAttacker('absol');
   selectDefender('substitute-doll');
   updateDamages();
+
+  initCombatLog();
+  initAllySelector();
+  initAllyManager();
 }
 
 if (document.readyState === 'loading') {

@@ -1,8 +1,10 @@
 import { state } from './state.js';
-import { highlightGridSelection } from './uiManager.js';
+import { highlightGridSelection, updateDefenderSliderMode } from './uiManager.js';
 import { resetItems, autoEquipSpecialItem, disableItemSlots, enableItemSlots } from './itemManager.js';
 import { updateDamages } from './damageDisplay.js';
 import { t } from './i18n.js';
+import { resetCombatLog } from './combatLog.js';
+import { resetAllies } from './allyManager.js';
 
 const pokemonGridAttacker = document.getElementById("pokemonGridAttacker");
 const pokemonGridDefender = document.getElementById("pokemonGridDefender");
@@ -64,6 +66,8 @@ export function selectAttacker(id) {
     container.querySelector('.stack-value').textContent = '0';
   });
 
+  resetCombatLog();
+  resetAllies();
   updateDamages();
 }
 
@@ -114,6 +118,13 @@ export function selectDefender(id) {
   } else {
     enableItemSlots('defender');
   }
+
+  // Reset timer si c'est un mob timer-based (défaut 2:10 = 130s)
+  if (state.currentDefender?.timerBased) {
+    state.defenderTimer = 130;
+  }
+
+  updateDefenderSliderMode();
 
   const isCustom = id === 'custom-doll';
   document.getElementById('defenderDefNormal').style.display = isCustom ? 'none' : 'block';
