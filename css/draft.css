@@ -929,3 +929,110 @@ input:checked + .slider::before { transform: translateX(18px); }
   .mode-btn { font-size: 0.75rem; padding: 6px 9px; }
   .slot { max-width: 54px; }
 }
+
+/* =============================================
+   BARRE COLLAPSE (map / mode / timer)
+   ============================================= */
+
+#collapse-center-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 10px;
+  background: var(--surface-3);
+  border: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  text-align: left;
+  transition: background 0.2s;
+  min-height: 28px;
+}
+#collapse-center-btn:hover {
+  background: var(--surface-2);
+  transform: none;
+}
+
+.cbar-arrow {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+/* Badge coloré selon la map */
+.cbar-map {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid;
+  flex-shrink: 0;
+  display: none; /* caché tant que le draft n'a pas commencé */
+}
+.cbar-map.map-kyogre   { color: var(--blue);  background: var(--blue-dim);             border-color: rgba(79,195,247,0.4);  }
+.cbar-map.map-rayquaza { color: var(--green); background: rgba(76,175,130,0.12);        border-color: rgba(76,175,130,0.4);  }
+.cbar-map.map-groudon  { color: var(--red);   background: rgba(239,83,80,0.12);         border-color: rgba(239,83,80,0.4);   }
+
+/* Nom du mode / fearless */
+.cbar-mode {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  display: none;
+}
+
+/* Timer */
+.cbar-timer {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: var(--yellow);
+  flex-shrink: 0;
+}
+
+.cbar-spacer { flex: 1; }
+
+.cbar-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+/* ── Animation collapse ── */
+#center-info {
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s ease;
+  max-height: 400px;
+  opacity: 1;
+}
+#center-col.info-collapsed #center-info {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* En mode collapsed : afficher les infos dans la barre */
+#center-col.info-collapsed .cbar-map,
+#center-col.info-collapsed .cbar-mode {
+  display: block;
+}
+#center-col.info-collapsed .cbar-spacer {
+  display: none;
+}

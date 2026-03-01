@@ -30,6 +30,9 @@ export function startDraft() {
   document.getElementById("map-display").style.display = "block";
   document.getElementById("map-selection").style.display = "none";
 
+  // Mettre à jour la barre collapse
+  _updateCollapseBar();
+
   document.getElementById("start-draft").style.display = "none";
   document.getElementById("reset-draft").style.display = "inline-block";
   document.getElementById("backBtn").style.display = "inline-block";
@@ -110,6 +113,7 @@ function _showFinalRecap() {
 
 function _showFearlessRecap() {
   state.draftCount++;
+  _updateCollapseBar();
   _buildCenterRecap(`Draft ${state.draftCount} Recap`);
   _appendToSeriesHistory(`Draft ${state.draftCount}`);
   document.getElementById("fearless-controls").style.display = "flex";
@@ -329,6 +333,8 @@ export async function startNextDraft(skipPublish = false) {
     `<img src="${mapImages[state.selectedMap]}" alt="${state.selectedMap}">`;
   document.getElementById("map-display").style.display = "block";
 
+  _updateCollapseBar();
+
   _hideRecap();
   _showGallery();
   document.getElementById("fearless-controls").style.display = "none";
@@ -375,6 +381,42 @@ export function _updateMpTurnIndicator() {
   }
   indicator.style.display = "block";
 }
+
+// ─── Collapse bar updater ─────────────────────────────────────────────────────
+
+export function updateCollapseBar() {
+  const mapBadge = document.getElementById("cbar-map");
+  const modeEl   = document.getElementById("cbar-mode");
+  if (!mapBadge || !modeEl) return;
+
+  // Map badge
+  const map = state.selectedMap || "";
+  if (map) {
+    mapBadge.textContent = map.charAt(0).toUpperCase() + map.slice(1);
+    mapBadge.className   = `cbar-map map-${map}`;
+  }
+
+  // Mode / fearless label
+  const modeLabels = {
+    classic:    "Tournament 3 Bans",
+    tournament: "Tournament 2 Bans",
+    swap:       "Swap Ban",
+    reban:      "Reban",
+  };
+  if (state.fearlessMode && state.draftCount > 0) {
+    modeEl.textContent = `⚡ Fearless — Draft #${state.draftCount + 1}`;
+    modeEl.style.color = "var(--violet)";
+  } else if (state.fearlessMode) {
+    modeEl.textContent = `⚡ Fearless — ${modeLabels[state.selectedMode] || state.selectedMode || ""}`;
+    modeEl.style.color = "var(--violet)";
+  } else {
+    modeEl.textContent = modeLabels[state.selectedMode] || state.selectedMode || "";
+    modeEl.style.color = "";
+  }
+}
+
+// Alias interne
+function _updateCollapseBar() { updateCollapseBar(); }
 
 // ─── Private helpers ──────────────────────────────────────────────────────────
 

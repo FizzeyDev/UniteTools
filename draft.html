@@ -55,7 +55,7 @@
     <div class="mp-section">
       <div class="mp-join-row">
         <input type="text" id="room-code-input" placeholder="ABC123"
-               maxlength="6" class="mp-code-input" />
+              maxlength="6" class="mp-code-input" />
         <button id="join-room-btn" class="draft-btn mp-btn">🔗 Join</button>
       </div>
       <label class="mp-spectator-label">
@@ -116,9 +116,9 @@
   <button id="backBtn" style="display:none;">⏪ Undo</button>
 
   <!-- ════════════════════════════════════════════════
-       DRAFT WINDOW
-       3 colonnes : picks violet | galerie centrale | picks orange
-       ════════════════════════════════════════════════ -->
+      DRAFT WINDOW
+      3 colonnes : picks violet | galerie centrale | picks orange
+      ════════════════════════════════════════════════ -->
   <div class="draft-window">
 
     <!-- ── Colonne GAUCHE : Purple Team ─────────── -->
@@ -142,6 +142,16 @@
 
     <!-- ── Colonne CENTRALE ──────────────────────── -->
     <div id="center-col">
+
+      <!-- Barre collapse : toujours visible, cliquable -->
+      <button id="collapse-center-btn" title="Masquer / Afficher la map">
+        <span id="cbar-arrow" class="cbar-arrow">▲</span>
+        <span id="cbar-map"   class="cbar-map"></span>
+        <span id="cbar-mode"  class="cbar-mode"></span>
+        <span id="cbar-timer" class="cbar-timer" style="display:none;"></span>
+        <span class="cbar-spacer"></span>
+        <span id="cbar-label" class="cbar-label">Masquer</span>
+      </button>
 
       <!-- Info : map + turn + timer + switches -->
       <div id="center-info">
@@ -280,6 +290,13 @@
       if (!btn) return;
       document.querySelectorAll('.fearless-map-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+    });
+
+    document.getElementById('collapse-center-btn').addEventListener('click', function() {
+      const col = document.getElementById('center-col');
+      const isCollapsed = col.classList.toggle('info-collapsed');
+      document.getElementById('cbar-arrow').textContent = isCollapsed ? '▼' : '▲';
+      document.getElementById('cbar-label').textContent = isCollapsed ? 'Afficher' : 'Masquer';
     });
   </script>
 </body>

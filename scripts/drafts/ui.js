@@ -27,6 +27,9 @@ export function updateTurn() {
   if (mpState.enabled) {
     import("./draft.js").then(({ _updateMpTurnIndicator }) => _updateMpTurnIndicator());
   }
+
+  // Sync mini-bar
+  if (window._updateMiniBar) window._updateMiniBar();
 }
 
 export function highlightCurrentSlot() {
