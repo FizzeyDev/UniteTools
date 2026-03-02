@@ -1070,7 +1070,7 @@
       {
         "name": "Heal Pulse",
         "learnLevel": 1,
-        "unlearn": 6,
+        "unlearn": 4,
         "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/blissey/heal_pulse.png",
@@ -1081,6 +1081,9 @@
       },
       {
         "name": "Soft-Boiled",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/blissey/soft_boiled.png",
         "damages": [],
@@ -1091,6 +1094,9 @@
       },
       {
         "name": "Safeguard",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/blissey/safeguard.png",
         "damages": [],
@@ -1107,12 +1113,16 @@
             "scaling": "sp_atk",
             "multiplier": 205,
             "levelCoef": 14,
-            "constant": 690
+            "constant": 690,
+            "upgraded": true
           }
         ]
       },
       {
         "name": "Egg Bomb",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/blissey/egg_bomb.png",
         "damages": [
@@ -1121,6 +1131,9 @@
       },
       {
         "name": "Bliss Assistance (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/blissey/bliss_assistance.png",
         "damages": [
@@ -1188,71 +1201,92 @@
         ]
       },
       {
-          "name": "Mega Punch",
-          "can_crit": "false",
-          "image": "assets/moves/buzzwole/mega_punch.png",
-          "damages": [
-              {"name": "Damage", "multiplier": 108, "levelCoef": 9, "constant": 180, "dealDamage": true}
-          ]
+        "name": "Mega Punch",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/buzzwole/mega_punch.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 108, "levelCoef": 9, "constant": 180, "dealDamage": true}
+        ]
       },
       {
-          "name": "Lunge",
-          "can_crit": "false",
-          "image": "assets/moves/buzzwole/lunge.png",
-          "damages": [
-              {"name": "Damage", "multiplier": 89, "levelCoef": 6, "constant": 150, "dealDamage": true}
-          ]
+        "name": "Lunge",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/buzzwole/lunge.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 89, "levelCoef": 6, "constant": 150, "dealDamage": true}
+        ]
       },
       {
-          "name": "Smack Down",
-          "can_crit": "false",
-          "image": "assets/moves/buzzwole/smack_down.png",
-          "damages": [
-              {"name": "Damage - Initial Hit", "multiplier": 74, "levelCoef": 3, "constant": 140, "dealDamage": true},
-              {"name": "Damage - Slam", "multiplier": 178.2, "levelCoef": 7, "constant": 336, "dealDamage": true}
-          ]
+        "name": "Smack Down",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/buzzwole/smack_down.png",
+        "damages": [
+          {"name": "Damage - Initial Hit", "multiplier": 74, "levelCoef": 3, "constant": 140, "dealDamage": true},
+          {"name": "Damage - Slam", "multiplier": 178.2, "levelCoef": 7, "constant": 336, "dealDamage": true}
+        ]
       },
       {
-          "name": "Fell Stinger",
-          "can_crit": "false",
-          "image": "assets/moves/buzzwole/fell_stinger.png",
-          "damages": [
-              {"name": "Damage", "multiplier": 167, "levelCoef": 10, "constant": 310, "dealDamage": true, "notes": "+12.5% per muscle gauge increment"}
-          ],
-          "heals": [
-            { "name": "Heal (on KO)", "scaling": "hp", "multiplier": 10, "levelCoef": 0, "constant": 0 }
-          ]
+        "name": "Fell Stinger",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/buzzwole/fell_stinger.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 167, "levelCoef": 10, "constant": 310, "dealDamage": true, "notes": "+12.5% per muscle gauge increment"}
+        ],
+        "heals": [
+          { "name": "Heal (on KO)", "scaling": "hp", "multiplier": 10, "levelCoef": 0, "constant": 0 }
+        ]
       },
       {
-          "name": "Leech Life",
-          "can_crit": "false",
-          "image": "assets/moves/buzzwole/leech_life.png",
-          "damages": [
-              {"name": "Damage - per Tick", "multiplier": 76, "levelCoef": 3, "constant": 120, "dealDamage": true, "is_tick": true, "tick_count": 7, "notes": "+1.5% initial damage per muscle gauge"},
-              {"name": "Damage - Unstoppable Target", "multiplier": 380, "levelCoef": 15, "constant": 600, "dealDamage": true},
-              {"name": "Healing - % of Damage Dealt (per hit)", "multiplier": 0, "levelCoef": 5, "constant": 40, "heal": true, "is_tick": true, "tick_count": 7, "notes": "% of damage dealt per hit"}
-          ]
+        "name": "Leech Life",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/buzzwole/leech_life.png",
+        "damages": [
+          {"name": "Damage - per Tick", "multiplier": 76, "levelCoef": 3, "constant": 120, "dealDamage": true, "is_tick": true, "tick_count": 7, "notes": "+1.5% initial damage per muscle gauge"},
+          {"name": "Damage - Unstoppable Target", "multiplier": 380, "levelCoef": 15, "constant": 600, "dealDamage": true},
+          {"name": "Healing - % of Damage Dealt (per hit)", "multiplier": 0, "levelCoef": 5, "constant": 40, "heal": true, "is_tick": true, "tick_count": 7, "notes": "% of damage dealt per hit"}
+        ]
       },
       {
-          "name": "Superpower",
-          "can_crit": "false",
-          "image": "assets/moves/buzzwole/superpower.png",
-          "damages": [
-              {"name": "Damage - Initial", "multiplier": 69, "levelCoef": 2, "constant": 105, "dealDamage": true, "notes": "+12.5% per muscle gauge increment"},
-              {"name": "Damage - Slam", "multiplier": 230, "levelCoef": 8, "constant": 350, "dealDamage": true, "notes": "+12.5% per muscle gauge increment"},
-              {"name": "Shield", "multiplier": 0, "levelCoef": 0, "constant": 0, "shield": true, "notes": "20% max HP + 2% max HP x muscle gauge"}
-          ]
+        "name": "Superpower",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/buzzwole/superpower.png",
+        "damages": [
+          {"name": "Damage - Initial", "multiplier": 69, "levelCoef": 2, "constant": 105, "dealDamage": true, "notes": "+12.5% per muscle gauge increment"},
+          {"name": "Damage - Slam", "multiplier": 230, "levelCoef": 8, "constant": 350, "dealDamage": true, "notes": "+12.5% per muscle gauge increment"},
+          {"name": "Shield", "multiplier": 0, "levelCoef": 0, "constant": 0, "shield": true, "notes": "20% max HP + 2% max HP x muscle gauge"}
+        ]
       },
       {
-          "name": "Ultra Swole Slam (Unite)",
-          "can_crit": "false",
-          "image": "assets/moves/buzzwole/ultra_swole_slam.png",
-          "damages": [
-              {"name": "Damage - Sweep", "multiplier": 213, "levelCoef": 4, "constant": 210, "dealDamage": true},
-              {"name": "Damage - Seek", "multiplier": 213, "levelCoef": 4, "constant": 210, "dealDamage": true},
-              {"name": "Damage - Execute", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "50% of enemy missing HP"}
-          ],
-          "shields": [
+        "name": "Ultra Swole Slam (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/buzzwole/ultra_swole_slam.png",
+        "damages": [
+          {"name": "Damage - Sweep", "multiplier": 213, "levelCoef": 4, "constant": 210, "dealDamage": true},
+          {"name": "Damage - Seek", "multiplier": 213, "levelCoef": 4, "constant": 210, "dealDamage": true},
+          {"name": "Damage - Execute", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "50% of enemy missing HP"}
+        ],
+        "shields": [
           {
             "name": "Shield - Unite Buffs",
             "scaling": "hp",
@@ -1295,89 +1329,116 @@
       "maxStacks": 6
     },
     "moves": [
-        {
-          "name": "Auto-attack",
-          "can_crit": "true",
-          "image": "assets/moves/basic_attack.png",
-          "damages": [
-            {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
-            {"name": "Boosted (Charcadet)", "multiplier": 130, "levelCoef": 0, "constant": 0, "dealDamage": true},
-            {"name": "Boosted (Ceruledge - per hit x2)", "multiplier": 75, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 2, "notes": "20% lifesteal on all attacks post-evolution"}
-          ]
-        },
-        {
-          "name": "Flame Body (Passive)",
-          "can_crit": "true",
-          "image": "assets/moves/ceruledge/flame_body.png",
-          "damages": [
-            {"name": "Damage", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true}
-          ]
-        },
-        {
-          "name": "Weak Armor (Passive)",
-          "can_crit": "true",
-          "image": "assets/moves/ceruledge/flame_body.png",
-          "damages": [
-            {"name": "Damage", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true}
-          ]
-        },
-        {
-          "name": "Lava Plume",
-          "can_crit": "false",
-          "image": "assets/moves/ceruledge/lava_plume.png",
-          "damages": [
-            {"name": "Damage", "multiplier": 140, "levelCoef": 15, "constant": 300, "dealDamage": true}
-          ]
-        },
-        {
-          "name": "Bitter Blade",
-          "can_crit": "false",
-          "image": "assets/moves/ceruledge/bitter_blade.png",
-          "damages": [
-            {"name": "Damage", "multiplier": 266, "levelCoef": 36, "constant": 363, "dealDamage": true},
-            {"name": "Healing", "multiplier": 0, "levelCoef": 0, "constant": 0, "heal": true, "notes": "50% of damage dealt (70% upgraded); excess becomes shield; half vs wild"}
-          ]
-        },
-        {
-          "name": "Psycho Cut",
-          "can_crit": "false",
-          "image": "assets/moves/ceruledge/psycho_cut.png",
-          "damages": [
-            {"name": "Damage", "multiplier": 160, "levelCoef": 18, "constant": 450, "dealDamage": true}
-          ]
-        },
-        {
-          "name": "Take Down",
-          "can_crit": "false",
-          "image": "assets/moves/ceruledge/take_down.png",
-          "damages": [
-            {"name": "Damage", "multiplier": 140, "levelCoef": 15, "constant": 200, "dealDamage": true}
-          ]
-        },
-        {
-          "name": "Phantom Force",
-          "can_crit": "false",
-          "image": "assets/moves/ceruledge/phantom_force.png",
-          "damages": [
-            {"name": "Damage", "multiplier": 135, "levelCoef": 9, "constant": 334, "dealDamage": true, "notes": "Ignores Defense & shields"}
-          ]
-        },
-        {
-          "name": "Flame Charge",
-          "can_crit": "false",
-          "image": "assets/moves/ceruledge/flame_charge.png",
-          "damages": [
-            {"name": "Damage", "multiplier": 65, "levelCoef": 5, "constant": 250, "dealDamage": true}
-          ]
-        },
-        {
-          "name": "Revenant Rend (Unite)",
-          "can_crit": "false",
-          "image": "assets/moves/ceruledge/revenant_rend.png",
-          "damages": [
-            {"name": "Damage (x3 hits)", "multiplier": 111, "levelCoef": 7, "constant": 460, "dealDamage": true, "is_tick": true, "tick_count": 3}
-          ],
-          "shields": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "true",
+        "image": "assets/moves/basic_attack.png",
+        "damages": [
+          {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Boosted (Charcadet)", "multiplier": 130, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Boosted (Ceruledge - per hit x2)", "multiplier": 75, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 2, "notes": "20% lifesteal on all attacks post-evolution"}
+        ]
+      },
+      {
+        "name": "Flame Body (Passive)",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "true",
+        "image": "assets/moves/ceruledge/flame_body.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Weak Armor (Passive)",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "true",
+        "image": "assets/moves/ceruledge/flame_body.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Lava Plume",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/ceruledge/lava_plume.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 140, "levelCoef": 15, "constant": 300, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Bitter Blade",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/ceruledge/bitter_blade.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 266, "levelCoef": 36, "constant": 363, "dealDamage": true},
+          {"name": "Healing", "multiplier": 0, "levelCoef": 0, "constant": 0, "heal": true, "notes": "50% of damage dealt (70% upgraded); excess becomes shield; half vs wild"}
+        ]
+      },
+      {
+        "name": "Psycho Cut",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/ceruledge/psycho_cut.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 160, "levelCoef": 18, "constant": 450, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Take Down",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/ceruledge/take_down.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 140, "levelCoef": 15, "constant": 200, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Phantom Force",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/ceruledge/phantom_force.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 135, "levelCoef": 9, "constant": 334, "dealDamage": true, "notes": "Ignores Defense & shields"}
+        ]
+      },
+      {
+        "name": "Flame Charge",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/ceruledge/flame_charge.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 65, "levelCoef": 5, "constant": 250, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Revenant Rend (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/ceruledge/revenant_rend.png",
+        "damages": [
+          {"name": "Damage (x3 hits)", "multiplier": 111, "levelCoef": 7, "constant": 460, "dealDamage": true, "is_tick": true, "tick_count": 3}
+        ],
+        "shields": [
           {
             "name": "Shield - Unite Buffs",
             "scaling": "hp",
@@ -1432,6 +1493,9 @@
       },
       {
         "name": "Ember",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/chandelure/ember.png",
         "damages": [
@@ -1441,6 +1505,9 @@
       },
       {
         "name": "Flamethrower",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/chandelure/flamethrower.png",
         "damages": [
@@ -1451,6 +1518,9 @@
       },
       {
         "name": "Overheat",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/chandelure/overheat.png",
         "damages": [
@@ -1464,6 +1534,9 @@
       },
       {
         "name": "Night Shade",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 7,
         "can_crit": "false",
         "image": "assets/moves/chandelure/night_shade.png",
         "damages": [
@@ -1472,6 +1545,9 @@
       },
       {
         "name": "Poltergeist",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/chandelure/poltergeist.png",
         "damages": [
@@ -1480,6 +1556,9 @@
       },
       {
         "name": "Ignite Midnight (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/chandelure/ignite_midnight.png",
         "damages": [
@@ -1539,6 +1618,9 @@
       },
       {
         "name": "Flame Burst",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/charizard/flame_burst.png",
         "damages": [
@@ -1548,17 +1630,23 @@
       },
       {
         "name": "Flamethrower",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/charizard/flamethrower.png",
         "damages": [
             {"name": "Damage", "multiplier": 146, "levelCoef": 7, "constant": 160, "dealDamage": true},
             {"name": "Burn (5 Ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 5},
-            {"name": "Damage (Upgraded)", "multiplier": 172, "levelCoef": 8, "constant": 190, "dealDamage": true},
-            {"name": "Burn (5 Ticks - Upgraded)", "multiplier": 30, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 5}
+            {"name": "Damage +", "multiplier": 172, "levelCoef": 8, "constant": 190, "dealDamage": true, "upgraded": true },
+            {"name": "Burn + (5 Ticks)", "multiplier": 30, "levelCoef": 0, "constant": 0, "dealDamage": true, "upgraded": true, "is_tick": true, "tick_count": 5}
         ]
       },
       {
         "name": "Fire Punch",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/charizard/fire_punch.png",
         "damages": [
@@ -1568,6 +1656,9 @@
       },
       {
         "name": "Fire Spin",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/charizard/fire_spin.png",
         "damages": [
@@ -1577,17 +1668,23 @@
       },
       {
         "name": "Fire Blast",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/charizard/fire_blast.png",
         "damages": [
             {"name": "Damage", "multiplier": 131, "levelCoef": 4, "constant": 158, "dealDamage": true},
             {"name": "DoT (10 Ticks)", "multiplier": 32, "levelCoef": 1, "constant": 40, "dealDamage": true, "is_tick": true, "tick_count": 10},
-            {"name": "Damage (Upgraded)", "multiplier": 140, "levelCoef": 5, "constant": 184, "dealDamage": true},
-            {"name": "DoT (10 Ticks - Upgraded)", "multiplier": 35, "levelCoef": 1, "constant": 46, "dealDamage": true, "is_tick": true, "tick_count": 10}
+            {"name": "Damage +", "multiplier": 140, "levelCoef": 5, "constant": 184, "dealDamage": true, "upgraded": true},
+            {"name": "DoT + (10 Ticks)", "multiplier": 35, "levelCoef": 1, "constant": 46, "dealDamage": true, "upgraded": true, "is_tick": true, "tick_count": 10}
         ]
       },
       {
         "name": "Flare Blitz",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/charizard/flare_blitz.png",
         "damages": [
@@ -1605,12 +1702,14 @@
       },
       {
         "name": "Seismic Slam (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/charizard/seismic_slam.png",
         "damages": [
           {"name": "Slam Damage", "multiplier": 307, "levelCoef": 8, "constant": 380, "dealDamage": true, "notes": "+8% target max HP"},
-          {"name": "Unite Basic Burn (2 Ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 2},
-          {"name": "Shield (Buff)", "multiplier": 0, "levelCoef": 0, "constant": 0, "shield": true, "notes": "20% max HP for 6s"}
+          {"name": "Unite Basic Burn (2 Ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 2}
         ],
         "shields": [
           {
@@ -1659,8 +1758,8 @@
         "can_crit": "true",
         "image": "assets/moves/basic_attack.png",
         "damages": [
-            {"name": "Basic (per hit x4)", "multiplier": 30.8, "levelCoef": 0, "constant": 0, "dealDamage": true},
-            {"name": "Additional to burned targets (per hit x4)", "multiplier": 32, "levelCoef": 2, "constant": 10, "dealDamage": true, "notes": "Lifesteal applies"}
+            {"name": "Basic (per hit x4)", "multiplier": 30.8, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 4},
+            {"name": "Additional to burned targets (per hit x4)", "multiplier": 32, "levelCoef": 2, "constant": 10, "dealDamage": true, "is_tick": true, "tick_count": 4, "notes": "Lifesteal applies"}
         ]
       },
       {
@@ -1681,6 +1780,9 @@
       },
       {
         "name": "Flame Burst",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/mega_charizard_x/flame_burst.png",
         "damages": [
@@ -1689,6 +1791,9 @@
       },
       {
         "name": "Fire Punch",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "true",
         "image": "assets/moves/mega_charizard_x/fire_punch.png",
         "damages": [
@@ -1697,20 +1802,25 @@
       },
       {
         "name": "Fire Spin",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 7,
         "can_crit": "false",
         "image": "assets/moves/mega_charizard_x/fire_spin.png",
         "damages": [
             {"name": "Damage", "multiplier": 100, "levelCoef": 5, "constant": 150, "dealDamage": true},
-            {"name": "DoT (10 Ticks)", "multiplier": 20, "levelCoef": 1, "constant": 30, "dealDamage": true}
+            {"name": "DoT (10 Ticks)", "multiplier": 20, "levelCoef": 1, "constant": 30, "dealDamage": true, "is_tick": true, "tick_count": 10}
         ]
       },
       {
         "name": "Flare Blitz",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/mega_charizard_x/flare_blitz.png",
         "damages": [
-          {"name": "Damage", "multiplier": 160, "levelCoef": 5, "constant": 193, "dealDamage": true},
-          {"name": "Shield", "multiplier": 240, "levelCoef": 0, "constant": 720, "shield": true, "notes": "For 5s"}
+          {"name": "Damage", "multiplier": 160, "levelCoef": 5, "constant": 193, "dealDamage": true}
         ],
         "shields": [
           {
@@ -1724,6 +1834,9 @@
       },
       {
         "name": "Seismic Slam (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/mega_charizard_x/seismic_slam.png",
         "damages": [
@@ -1769,54 +1882,73 @@
         "can_crit": "true",
         "image": "assets/moves/basic_attack.png",
         "damages": [
-          {"name": "Basic (4 hits)", "multiplier": 30.8, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Additional vs Burned (4 hits)", "multiplier": 32, "levelCoef": 2, "constant": 10, "dealDamage": true, "notes": "Additional damage on burned targets (cannot crit); lifesteal applies"}
+          {"name": "Basic (4 hits)", "multiplier": 30.8, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 4},
+          {"name": "Additional vs Burned (4 hits)", "multiplier": 32, "levelCoef": 2, "constant": 10, "dealDamage": true, "is_tick": true, "tick_count": 4}
         ]
       },
       {
+        "name": "Flame Burst",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/mega_charizard_x/flame_burst.png",
+        "damages": [
+            {"name": "Damage", "multiplier": 105, "levelCoef": 4, "constant": 70, "dealDamage": true}
+        ]
+      },
+      
+      {
         "name": "Flamethrower",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/mega_charizard_y/flamethrower.png",
         "damages": [
           {"name": "Damage", "multiplier": 146, "levelCoef": 7, "constant": 160, "dealDamage": true},
-          {"name": "Burn (5 ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "Mega form: movement speed boost reduced to 15% for 3s"}
+          {"name": "Burn (5 ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 5},
+          {"name": "Damage +", "multiplier": 172, "levelCoef": 8, "constant": 190, "dealDamage": true, "upgraded": true},
+          {"name": "Burn + (5 ticks)", "multiplier": 30, "levelCoef": 0, "constant": 0, "dealDamage": true, "upgraded": true, "is_tick": true, "tick_count": 5}
         ]
       },
       {
-        "name": "Flamethrower+",
+        "name": "Fire Spin",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
-        "image": "assets/moves/mega_charizard_y/flamethrower.png",
+        "image": "assets/moves/mega_charizard_x/fire_spin.png",
         "damages": [
-          {"name": "Damage", "multiplier": 172, "levelCoef": 8, "constant": 190, "dealDamage": true},
-          {"name": "Burn (5 ticks)", "multiplier": 30, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "Mega form: movement speed boost reduced to 15% for 3s"}
+          {"name": "Damage", "multiplier": 100, "levelCoef": 5, "constant": 150, "dealDamage": true},
+          {"name": "DoT (10 Ticks)", "multiplier": 20, "levelCoef": 1, "constant": 30, "dealDamage": true, "is_tick": true, "tick_count": 10}
         ]
       },
       {
         "name": "Fire Blast",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/mega_charizard_y/fire_blast.png",
         "damages": [
           {"name": "Initial Damage", "multiplier": 131, "levelCoef": 4, "constant": 158, "dealDamage": true},
-          {"name": "DoT (10 ticks)", "multiplier": 32, "levelCoef": 1, "constant": 40, "dealDamage": true, "notes": "Mega form: increased area of effect"}
-        ]
-      },
-      {
-        "name": "Fire Blast+",
-        "can_crit": "false",
-        "image": "assets/moves/mega_charizard_y/fire_blast.png",
-        "damages": [
-          {"name": "Initial Damage", "multiplier": 140, "levelCoef": 5, "constant": 184, "dealDamage": true},
-          {"name": "DoT (10 ticks)", "multiplier": 35, "levelCoef": 1, "constant": 46, "dealDamage": true, "notes": "Mega form: increased area of effect"}
+          {"name": "DoT (10 ticks)", "multiplier": 32, "levelCoef": 1, "constant": 40, "dealDamage": true, "is_tick": true, "tick_count": 10},
+          {"name": "Initial Damage +", "multiplier": 140, "levelCoef": 5, "constant": 184, "dealDamage": true, "upgraded": true},
+          {"name": "DoT + (10 ticks)", "multiplier": 35, "levelCoef": 1, "constant": 46, "dealDamage": true, "upgraded": true, "is_tick": true, "tick_count": 10}
         ]
       },
       {
         "name": "Seismic Slam (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/mega_charizard_y/seismic_slam.png",
         "damages": [
           {"name": "Slam Damage", "multiplier": 307, "levelCoef": 8, "constant": 380, "dealDamage": true},
           {"name": "% Max HP Damage", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+8% of each enemy max HP"},
-          {"name": "Unite Basic Burn (2 ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "Burn from basics during flight; triggers Mega Evolution into Mega Charizard Y, flight duration 20s"}
+          {"name": "Damage - Burn (2 ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 2}
         ],
         "shields": [
           {
@@ -1874,38 +2006,50 @@
         "can_crit": "false",
         "image": "assets/moves/cinderace/blaze.png",
         "damages": [
-            {"name": "Flare Damage", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "90% Atk + 0.6% Enemy Max HP x (Level - 1) + 25"}
+            {"name": "Flare Damage", "multiplier": 90, "levelCoef": 0, "constant": 25, "dealDamage": true, "notes": "90% Atk + 0.6% Enemy Max HP x (Level - 1) + 25"}
         ]
       },
       {
         "name": "Ember",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/cinderace/ember.png",
         "damages": [
             {"name": "Damage", "multiplier": 100, "levelCoef": 7, "constant": 135, "dealDamage": true},
-            {"name": "Burn (3 Ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true}
+            {"name": "Burn (3 Ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Pyro Ball",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/cinderace/pyro_ball.png",
         "damages": [
             {"name": "Damage", "multiplier": 345, "levelCoef": 32, "constant": 820, "dealDamage": true},
-            {"name": "Burn (3 Ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true}
+            {"name": "Burn (3 Ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Blaze Kick",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "true",
         "image": "assets/moves/cinderace/blaze_kick.png",
         "damages": [
             {"name": "Damage", "multiplier": 48, "levelCoef": 4, "constant": 120, "dealDamage": true, "notes": "Guaranteed crit"},
-            {"name": "Burn (3 Ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true}
+            {"name": "Burn (3 Ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Low Sweep",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 8,
         "can_crit": "false",
         "image": "assets/moves/cinderace/low_sweep.png",
         "damages": [
@@ -1914,6 +2058,9 @@
       },
       {
         "name": "Flame Charge",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/cinderace/flame_charge.png",
         "damages": [
@@ -1922,12 +2069,18 @@
       },
       {
         "name": "Feint",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/cinderace/feint.png",
         "damages": []
       },
       {
         "name": "Blazing Bicycle Kick (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/cinderace/blazing_bicycle_kick.png",
         "damages": [
@@ -1981,6 +2134,9 @@
       },
       {
         "name": "Heal Pulse",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/clefable/heal_pulse.png",
         "damages": [],
@@ -1990,6 +2146,9 @@
       },
       {
         "name": "Moonlight",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/clefable/moonlight.png",
         "damages": [],
@@ -2007,6 +2166,9 @@
       },
       {
         "name": "Draining Kiss",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/clefable/draining_kiss.png",
         "damages": [
@@ -2016,6 +2178,9 @@
       },
       {
         "name": "Disarming Voice",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/clefable/disarming_voice.png",
         "damages": [
@@ -2024,6 +2189,9 @@
       },
       {
         "name": "Gravity",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "true",
         "image": "assets/moves/clefable/gravity.png",
         "damages": [
@@ -2032,6 +2200,9 @@
       },
       {
         "name": "Follow Me",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/clefable/follow_me.png",
         "damages": [],
@@ -2048,6 +2219,9 @@
       },
       {
         "name": "Wonder Wish (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/clefable/wonder_wish.png",
         "damages": [],
@@ -2073,6 +2247,9 @@
       },
       {
         "name": "Explosion (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/clefable/explosion.png",
         "damages": [
@@ -2081,6 +2258,9 @@
       },
       {
         "name": "Hydro Pump (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/clefable/hydro_pump.png",
         "damages": [
@@ -2089,6 +2269,9 @@
       },
       {
         "name": "Hyper Beam (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/clefable/hyper_beam.png",
         "damages": [
@@ -2097,6 +2280,9 @@
       },
       {
         "name": "Close Combat (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/clefable/close_combat.png",
         "damages": [
@@ -2114,6 +2300,9 @@
       },
       {
         "name": "Fly (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/clefable/fly.png",
         "damages": [
@@ -2122,6 +2311,9 @@
       },
       {
         "name": "Block (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/clefable/block.png",
         "damages": [],
@@ -2202,6 +2394,9 @@
       },
       {
         "name": "Synthesis",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/comfey/synthesis.png",
         "damages": [],
@@ -2218,12 +2413,15 @@
             "scaling": "sp_atk",
             "multiplier": 10,
             "levelCoef": 0,
-            "constant": 40
+            "constant": 40, "is_tick": true, "tick_count": 8
           }
         ]
       },
       {
         "name": "Floral Healing",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/comfey/floral_healing.png",
         "damages": [],
@@ -2240,7 +2438,7 @@
             "scaling": "sp_atk",
             "multiplier": 18,
             "levelCoef": 0,
-            "constant": 45
+            "constant": 45, "is_tick": true, "tick_count": 8
           }
         ],
         "shields": [
@@ -2256,17 +2454,18 @@
             "scaling": "sp_atk",
             "multiplier": 7.5,
             "levelCoef": 0,
-            "constant": 23
+            "constant": 23, "is_tick": true, "tick_count": 8
           }
         ]
       },
       {
         "name": "Sweet Kiss",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/comfey/sweet_kiss.png",
-        "damages": [
-            {"name": "Additional Shield (on attach)", "multiplier": 80.45, "levelCoef": 0, "constant": 277, "shield": true}
-        ],
+        "damages": [],
         "shields": [
           {
             "name": "Additional Shield",
@@ -2279,6 +2478,9 @@
       },
       {
         "name": "Vine Whip",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/comfey/vine_whip.png",
         "damages": [
@@ -2287,14 +2489,20 @@
       },
       {
         "name": "Magical Leaf",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/comfey/magical_leaf.png",
         "damages": [
-            {"name": "Damage - per leaf", "multiplier": 16, "levelCoef": 1, "constant": 60, "dealDamage": true}
+            {"name": "Damage - per leaf", "multiplier": 16, "levelCoef": 1, "constant": 60, "dealDamage": true, "is_tick": true, "tick_count": 18}
         ]
       },
       {
         "name": "Grass Knot",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/comfey/grass_knot.png",
         "damages": [
@@ -2304,6 +2512,9 @@
       },
       {
         "name": "Flowery Fields Forever (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/comfey/flowery_fields_forever.png",
         "damages": [],
@@ -2313,7 +2524,7 @@
             "scaling": "sp_atk",
             "multiplier": 22.5,
             "levelCoef": 0,
-            "constant": 120
+            "constant": 120, "is_tick": true, "tick_count": 12
           },
           {
             "name": "Empowered Floral Healing Healing",
@@ -2327,7 +2538,7 @@
             "scaling": "sp_atk",
             "multiplier": 19.5,
             "levelCoef": 0,
-            "constant": 59
+            "constant": 59, "is_tick": true, "tick_count": 8
           }
         ],
         "shields": [
@@ -2343,7 +2554,7 @@
             "scaling": "sp_atk",
             "multiplier": 9.75,
             "levelCoef": 0,
-            "constant": 30
+            "constant": 30, "is_tick": true, "tick_count": 8
           },
           {
             "name": "Shield - Unite",
@@ -2390,16 +2601,22 @@
       },
       {
         "name": "Whirlpool",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/cramorant/whirlpool.png",
         "damages": [
-          {"name": "Damage - Initial (2 Ticks)", "multiplier": 24, "levelCoef": 5, "constant": 100, "dealDamage": true},
-          {"name": "Damage - Middle (2 Ticks)", "multiplier": 27, "levelCoef": 6, "constant": 110, "dealDamage": true},
-          {"name": "Damage - End (6 Ticks)", "multiplier": 30, "levelCoef": 7, "constant": 120, "dealDamage": true}
+          {"name": "Damage - Initial (2 Ticks)", "multiplier": 24, "levelCoef": 5, "constant": 100, "dealDamage": true, "is_tick": true, "tick_count": 2},
+          {"name": "Damage - Middle (2 Ticks)", "multiplier": 27, "levelCoef": 6, "constant": 110, "dealDamage": true, "is_tick": true, "tick_count": 2},
+          {"name": "Damage - End (6 Ticks)", "multiplier": 30, "levelCoef": 7, "constant": 120, "dealDamage": true, "is_tick": true, "tick_count": 6}
         ]
       },
       {
         "name": "Surf",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/cramorant/surf.png",
         "damages": [
@@ -2409,22 +2626,31 @@
       },
       {
         "name": "Dive",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/cramorant/dive.png",
         "damages": [
           {"name": "Damage", "multiplier": 45, "levelCoef": 9, "constant": 180, "dealDamage": true},
           {"name": "Damage - Additional (Next Boosted)", "multiplier": 38, "levelCoef": 8, "constant": 145, "dealDamage": true},
-          {"name": "Damage (Upgraded)", "multiplier": 50, "levelCoef": 10, "constant": 210, "dealDamage": true}
+          {"name": "Damage +", "multiplier": 50, "levelCoef": 10, "constant": 210, "dealDamage": true, "upgraded": true}
         ]
       },
       {
         "name": "Feather Dance",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/cramorant/feather_dance.png",
         "damages": []
       },
       {
         "name": "Hurricane",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/cramorant/hurricane.png",
         "damages": [
@@ -2433,11 +2659,13 @@
       },
       {
         "name": "Air Slash",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/cramorant/air_slash.png",
         "damages": [
-          {"name": "Damage - per Blade (5 blades)", "multiplier": 35, "levelCoef": 6, "constant": 150, "dealDamage": true},
-          {"name": "Healing - per Blade (Upgraded)", "multiplier": 30, "levelCoef": 0, "constant": 40, "heal": true}
+          {"name": "Damage - per Blade (5 blades)", "multiplier": 35, "levelCoef": 6, "constant": 150, "dealDamage": true, "is_tick": true, "tick_count": 5}
         ],
         "heals": [
           {
@@ -2445,16 +2673,19 @@
             "scaling": "sp_atk",
             "multiplier": 30,
             "levelCoef": 0,
-            "constant": 40
+            "constant": 40, "is_tick": true, "tick_count": 5
           }
         ]
       },
       {
         "name": "Gatling Gulp Missile (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/cramorant/gatling_gulp_missile.png",
         "damages": [
-          {"name": "Damage (10x)", "multiplier": 85, "levelCoef": 8, "constant": 330, "dealDamage": true}
+          {"name": "Damage (10x)", "multiplier": 85, "levelCoef": 8, "constant": 330, "dealDamage": true, "is_tick": true, "tick_count": 10}
         ],
         "shields": [
           {
@@ -8978,20 +9209,20 @@
     "style": "special",
     "stats": [
         {"level": 1, "hp": 3400, "atk": 20, "def": 90, "sp_atk": 90, "sp_def": 60, "crit": 0},
-        {"level": 2, "hp": 3556, "atk": 22, "def": 102, "sp_atk": 98, "sp_def": 72, "crit": 0},
-        {"level": 3, "hp": 3734, "atk": 25, "def": 115, "sp_atk": 107, "sp_def": 85, "crit": 0},
-        {"level": 4, "hp": 4640, "atk": 37, "def": 182, "sp_atk": 154, "sp_def": 152, "crit": 0},
-        {"level": 5, "hp": 4876, "atk": 40, "def": 200, "sp_atk": 166, "sp_def": 170, "crit": 0},
-        {"level": 6, "hp": 5148, "atk": 44, "def": 220, "sp_atk": 180, "sp_def": 190, "crit": 0},
-        {"level": 7, "hp": 5461, "atk": 48, "def": 243, "sp_atk": 196, "sp_def": 213, "crit": 0},
-        {"level": 8, "hp": 5820, "atk": 53, "def": 270, "sp_atk": 214, "sp_def": 240, "crit": 0},
-        {"level": 9, "hp": 6234, "atk": 58, "def": 301, "sp_atk": 236, "sp_def": 271, "crit": 0},
-        {"level": 10, "hp": 6710, "atk": 65, "def": 336, "sp_atk": 260, "sp_def": 306, "crit": 0},
-        {"level": 11, "hp": 7258, "atk": 72, "def": 377, "sp_atk": 288, "sp_def": 347, "crit": 0},
-        {"level": 12, "hp": 7887, "atk": 81, "def": 423, "sp_atk": 321, "sp_def": 393, "crit": 0},
-        {"level": 13, "hp": 8611, "atk": 91, "def": 477, "sp_atk": 358, "sp_def": 447, "crit": 0},
-        {"level": 14, "hp": 9442, "atk": 102, "def": 539, "sp_atk": 401, "sp_def": 509, "crit": 0},
-        {"level": 15, "hp": 10400, "atk": 115, "def": 610, "sp_atk": 450, "sp_def": 580, "crit": 0}
+        {"level": 2, "hp": 3544, "atk": 22, "def": 100, "sp_atk": 98, "sp_def": 70, "crit": 0},
+        {"level": 3, "hp": 3710, "atk": 25, "def": 111, "sp_atk": 107, "sp_def": 81, "crit": 0},
+        {"level": 4, "hp": 4551, "atk": 37, "def": 170, "sp_atk": 154, "sp_def": 138, "crit": 0},
+        {"level": 5, "hp": 4771, "atk": 40, "def": 185, "sp_atk": 166, "sp_def": 153, "crit": 0},
+        {"level": 6, "hp": 5023, "atk": 44, "def": 202, "sp_atk": 180, "sp_def": 170, "crit": 0},
+        {"level": 7, "hp": 5313, "atk": 48, "def": 222, "sp_atk": 196, "sp_def": 190, "crit": 0},
+        {"level": 8, "hp": 5648, "atk": 53, "def": 246, "sp_atk": 214, "sp_def": 212, "crit": 0},
+        {"level": 9, "hp": 6032, "atk": 58, "def": 272, "sp_atk": 236, "sp_def": 238, "crit": 0},
+        {"level": 10, "hp": 6474, "atk": 65, "def": 303, "sp_atk": 260, "sp_def": 268, "crit": 0},
+        {"level": 11, "hp": 6983, "atk": 72, "def": 338, "sp_atk": 288, "sp_def": 303, "crit": 0},
+        {"level": 12, "hp": 7567, "atk": 81, "def": 378, "sp_atk": 321, "sp_def": 342, "crit": 0},
+        {"level": 13, "hp": 8238, "atk": 91, "def": 425, "sp_atk": 358, "sp_def": 388, "crit": 0},
+        {"level": 14, "hp": 9011, "atk": 102, "def": 478, "sp_atk": 401, "sp_def": 440, "crit": 0},
+        {"level": 15, "hp": 9900, "atk": 115, "def": 540, "sp_atk": 450, "sp_def": 500, "crit": 0}
     ],
     "moves": [
       {
