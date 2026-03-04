@@ -413,3 +413,101 @@ footer {
   .hero h1 { font-size: 1.5rem; letter-spacing: 0; }
   .sidebar-info { grid-template-columns: 1fr; }
 }
+
+/* ── Image Upload ── */
+.label-optional {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.55;
+  font-size: 0.7rem;
+  margin-left: 4px;
+}
+
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.drop-zone:hover,
+.drop-zone.drag-over {
+  border-color: var(--violet);
+  background: var(--violet-dim);
+}
+
+.drop-zone-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 20px 16px;
+  pointer-events: none;
+}
+
+.drop-icon { font-size: 1.6rem; }
+
+.drop-text {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.drop-hint {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  opacity: 0.6;
+}
+
+.image-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.preview-item {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border-radius: var(--radius-sm);
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.preview-item img {
+  width: 76px;
+  height: 76px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  display: block;
+}
+
+.preview-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--red);
+  border: 2px solid var(--bg);
+  color: #fff;
+  font-size: 11px;
+  line-height: 16px;
+  text-align: center;
+  cursor: pointer;
+  padding: 0;
+  font-weight: 900;
+  transition: transform 0.15s, background 0.15s;
+}
+
+.preview-remove:hover {
+  transform: scale(1.15);
+  background: #ff7470;
+}

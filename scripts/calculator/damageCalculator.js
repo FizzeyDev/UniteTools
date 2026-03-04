@@ -11,7 +11,9 @@ function getBaseStats(pokemon, level) {
       sp_def: pokemon.customStats.sp_def
     };
   }
-  const base = pokemon?.stats?.[level - 1] || {};
+  // Mobs (timerBased or category==='mob') only have stats[0] — don't index by level
+  const statIndex = (pokemon?.timerBased || pokemon?.category === 'mob') ? 0 : level - 1;
+  const base = pokemon?.stats?.[statIndex] || {};
   return {
     hp: base.hp || 0,
     atk: base.atk || 0,
@@ -172,73 +174,38 @@ function applyDebuffs(pokemon, stats) {
     let defFlat = 0;
     let spDefFlat = 0;
 
-    // --- Réductions % de DEF ---
-    // Absol: Boosted (-15% Def)
     if (state.defenderAbsolBoosted) defMult *= 0.85;
-    // Cramorant: Boosted/Gulp Missile (-20% Def / -5% Sp.Def)
     if (state.defenderCramorantBoostedGulpMissile) { defMult *= 0.80; spDefMult *= 0.95; }
-    // Decidueye: Shadow Sneak (-60% Def)
     if (state.defenderDecidueyeShadowSneak) defMult *= 0.40;
-    // Decidueye: Shadow Sneak + (-80% Def)
     if (state.defenderDecidueyeShadowSneakPlus) defMult *= 0.20;
-    // Glaceon: Tail Whip (-30% Def / Sp.Def)
     if (state.defenderGlaceonTailWhip) { defMult *= 0.70; spDefMult *= 0.70; }
-    // Tsareena: Boosted (-20% Def)
     if (state.defenderTsareenaBoosted) defMult *= 0.80;
-    // Urshifu: Liquidation (-30% Def)
     if (state.defenderUrshifuLiquidation) defMult *= 0.70;
-    // Wigglytuff: Sing (-25% Def / Sp.Def)
     if (state.defenderWigglytuffSing) { defMult *= 0.75; spDefMult *= 0.75; }
-    // Umbreon: Fake Tears (-20% Def / Sp.Def)
     if (state.defenderUmbreonFakeTears) { defMult *= 0.80; spDefMult *= 0.80; }
-    // Mewtwo X: Unite (-20% Def)
     if (state.defenderMewtwoXUnite) defMult *= 0.80;
-    // Tinkaton: Thief (-10% Def / Sp.Def)
     if (state.defenderTinkatonThief) { defMult *= 0.90; spDefMult *= 0.90; }
-    // Tinkaton: Thief + (-25% Def / Sp.Def)
     if (state.defenderTinkatonThiefPlus) { defMult *= 0.75; spDefMult *= 0.75; }
 
-    // --- Réductions % de Sp.Def ---
-    // Gardevoir: Boosted (-10% Sp.Def)
     if (state.defenderGardevoirBoosted) spDefMult *= 0.90;
-    // Gardevoir: Psychic (-27% Sp.Def x3 stacks, auto-max si pas de stacks définis)
     if (state.defenderGardevoirPsychic) spDefMult *= Math.pow(0.73, Math.min(state.gardevoirPsychicStacks || 3, 3));
-    // Hoopa: Shadow Ball (-30% Sp.Def)
     if (state.defenderHoopaShadowBall) spDefMult *= 0.70;
-    // Mr. Mime: Psychic (-5% Sp.Def x8 stacks)
     if (state.defenderMimePsychic) spDefMult *= Math.pow(0.95, Math.min(state.mimePsychicStacks, 8));
-    // Slowbro: Oblivious (-4% Sp.Def x5 stacks)
     if (state.defenderSlowbroOblivious) spDefMult *= Math.pow(0.96, Math.min(state.slowbroObliviousStacks, 5));
-    // Sylveon: Hyper Voice (-20% Sp.Def x4 stacks)
     if (state.defenderSylveonHyperVoice) spDefMult *= Math.pow(0.80, Math.min(state.sylveonHypervoiceStacks, 4));
-    // Venusaur: Sludge Bomb (-40% Sp.Def)
     if (state.defenderVenusaurSludgeBomb) spDefMult *= 0.60;
-    // Mewtwo Y: Unite (-15% Sp.Def)
     if (state.defenderMewtwoYUnite) spDefMult *= 0.85;
-    // Psyduck: Tail Whip (-20% Sp.Def)
     if (state.defenderPsyduckTailWhip) spDefMult *= 0.80;
-    // Psyduck: Tail Whip Mysterious (-30% Sp.Def)
     if (state.defenderPsyduckTailWhipMysterious) spDefMult *= 0.70;
-    // Psyduck: Psychic + (-25% Sp.Def)
     if (state.defenderPsyduckPsychicPlus) spDefMult *= 0.75;
-    // Alolan Raichu: Stored Power + (-5% Sp.Def x3 stacks)
     if (state.defenderAlolanRaichuStoredPowerPlus) spDefMult *= Math.pow(0.95, Math.min(state.raichuStoredpowerStacks, 3));
-    // Latias: Dragon Breath (-30% Sp.Def)
     if (state.defenderLatiasDragonBreath) spDefMult *= 0.70;
-    // Empoleon: Aqua Jet Torrent (-60% Sp.Def)
     if (state.defenderEmpoleonAquaJetTorrent) spDefMult *= 0.40;
 
-    // --- Réductions flat de DEF ---
-    // Ceruledge: Psycho Cut (-10-(2*(Lv-1)) Def)
     if (state.defenderCeruledgePsychoCut) defFlat += 10 + 2 * (level - 1);
-    // Ceruledge: Psycho Cut + (-15-(3*(Lv-1)) Def)
     if (state.defenderCeruledgePsychoCutPlus) defFlat += 15 + 3 * (level - 1);
-
-    // --- Réductions flat de Sp.Def ---
-    // Gengar: Shadow Ball (-80-(5*(Lv-1)) Sp.Def)
     if (state.defenderGengarShadowBall) spDefFlat += 80 + 5 * (level - 1);
 
-    // Application
     def = Math.max(0, Math.floor(def * defMult) - defFlat);
     sp_def = Math.max(0, Math.floor(sp_def * spDefMult) - spDefFlat);
   }
@@ -269,7 +236,90 @@ function applyDefenderDamagePassives(damage, defenderId, defenderMaxHP) {
   return damage;
 }
 
-export function calculateDamage(dmg, atkStat, defStat, level, crit = false, pokemonId = null, extraCritMult = 1.0, globalDamageMult = 1.0, defenderMaxHP = null) {
+/**
+ * Calcule les dégâts d'un move.
+ *
+ * Champs HP-based supportés dans `dmg` (exclusifs des champs classiques) :
+ *
+ *   dmg.max_hp_percent      {number}  — X% des HP MAX du défenseur (ignore la défense)
+ *   dmg.max_hp_cap          {number}  — plafond optionnel
+ *
+ *   dmg.missing_hp_percent  {number}  — X% des HP MANQUANTS du défenseur (execute)
+ *   dmg.missing_hp_cap      {number}  — plafond optionnel (ex: 1000)
+ *
+ *   dmg.current_hp_percent  {number}  — X% des HP ACTUELS du défenseur
+ *   dmg.current_hp_cap      {number}  — plafond optionnel
+ *
+ * Exemples JSON :
+ *   { "max_hp_percent": 3, "dealDamage": true, "is_tick": true, "tick_count": 21 }
+ *   { "missing_hp_percent": 12, "missing_hp_cap": 1000, "dealDamage": true }
+ *   { "current_hp_percent": 10, "current_hp_cap": 500, "dealDamage": true }
+ *
+ * @param {object}  dmg               - entrée damage du JSON
+ * @param {number}  atkStat           - stat d'attaque de l'attaquant
+ * @param {number}  defStat           - stat de défense du défenseur
+ * @param {number}  level             - niveau de l'attaquant
+ * @param {boolean} crit              - coup critique ?
+ * @param {string}  pokemonId         - id de l'attaquant
+ * @param {number}  extraCritMult     - multiplicateur crit additionnel (Scope Lens…)
+ * @param {number}  globalDamageMult  - multiplicateur global (buffs, debuffs…)
+ * @param {number}  defenderMaxHP     - HP MAX du défenseur
+ * @param {number}  defenderCurrentHP - HP ACTUELS du défenseur (après slider %)
+ */
+export function calculateDamage(
+  dmg,
+  atkStat,
+  defStat,
+  level,
+  crit = false,
+  pokemonId = null,
+  extraCritMult = 1.0,
+  globalDamageMult = 1.0,
+  defenderMaxHP = null,
+  defenderCurrentHP = null
+) {
+
+  // ── Helper crit mutualisé ───────────────────────────────────────────────────
+  const applyCrit = (value) => {
+    if (!crit) return value;
+    let baseCritMult = 2.0;
+    if (pokemonId === "azumarill") baseCritMult = 1.7;
+    else if (pokemonId === "sirfetchd") baseCritMult = 1.6;
+    else if (pokemonId === "inteleon") baseCritMult = 2.5;
+    if (state.currentDefender?.pokemonId === "falinks") baseCritMult *= 0.5;
+    return Math.floor(value * baseCritMult * extraCritMult);
+  };
+
+  // ── % HP MAX du défenseur ───────────────────────────────────────────────────
+  if (dmg.max_hp_percent != null && defenderMaxHP != null) {
+    let raw = Math.floor(defenderMaxHP * dmg.max_hp_percent / 100);
+    if (dmg.max_hp_cap != null) raw = Math.min(raw, dmg.max_hp_cap);
+    let final = Math.floor(raw * globalDamageMult);
+    final = applyCrit(final);
+    return Math.max(1, final);
+  }
+
+  // ── % HP MANQUANTS du défenseur (execute) ───────────────────────────────────
+  if (dmg.missing_hp_percent != null && defenderMaxHP != null && defenderCurrentHP != null) {
+    const missingHP = Math.max(0, defenderMaxHP - defenderCurrentHP);
+    let raw = Math.floor(missingHP * dmg.missing_hp_percent / 100);
+    if (dmg.missing_hp_cap != null) raw = Math.min(raw, dmg.missing_hp_cap);
+    let final = Math.floor(raw * globalDamageMult);
+    final = applyCrit(final);
+    // 0 est valide : défenseur à 100% HP = 0 dégât execute
+    return Math.max(0, final);
+  }
+
+  // ── % HP ACTUELS du défenseur ───────────────────────────────────────────────
+  if (dmg.current_hp_percent != null && defenderCurrentHP != null) {
+    let raw = Math.floor(defenderCurrentHP * dmg.current_hp_percent / 100);
+    if (dmg.current_hp_cap != null) raw = Math.min(raw, dmg.current_hp_cap);
+    let final = Math.floor(raw * globalDamageMult);
+    final = applyCrit(final);
+    return Math.max(1, final);
+  }
+
+  // ── Dégâts classiques (stat-based) ─────────────────────────────────────────
   const atkScaling = Math.floor(atkStat * (dmg.multiplier / 100));
   const levelScaling = (level - 1) * dmg.levelCoef;
   let baseDamage = dmg.constant + atkScaling + levelScaling;
@@ -283,19 +333,7 @@ export function calculateDamage(dmg, atkStat, defStat, level, crit = false, poke
   const defReduction = 100 / (100 + effectiveDef * 0.165);
   let finalDamage = Math.floor(baseDamage * defReduction);
 
-  if (crit) {
-    let baseCritMult = 2.0;
-    if (pokemonId === "azumarill") baseCritMult = 1.7;
-    else if (pokemonId === "sirfetchd") baseCritMult = 1.6;
-    else if (pokemonId === "inteleon") baseCritMult = 2.5;
-
-    if (state.currentDefender?.pokemonId === "falinks") {
-      baseCritMult *= 0.5;
-    }
-
-    finalDamage = Math.floor(finalDamage * baseCritMult * extraCritMult);
-  }
-
+  finalDamage = applyCrit(finalDamage);
   finalDamage = Math.floor(finalDamage * globalDamageMult);
 
   finalDamage = applyDefenderDamagePassives(
@@ -330,7 +368,8 @@ export function getAutoAttackResults(atkStats, defStats, currentDefHP, globalDam
     state.currentAttacker.pokemonId,
     1.0,
     globalDamageMult,
-    defStats.hp
+    defStats.hp,
+    currentDefHP
   );
 
   let scopeCritBonus = 1.0;
@@ -353,7 +392,8 @@ export function getAutoAttackResults(atkStats, defStats, currentDefHP, globalDam
     state.currentAttacker.pokemonId,
     scopeCritBonus,
     globalDamageMult,
-    defStats.hp
+    defStats.hp,
+    currentDefHP
   );
 
   state.attackerItems.forEach(item => {
@@ -371,7 +411,8 @@ export function getAutoAttackResults(atkStats, defStats, currentDefHP, globalDam
         null,
         1.0,
         globalDamageMult,
-        defStats.hp
+        defStats.hp,
+        currentDefHP
       );
 
       const isEnemy = state.currentDefender?.category !== "mob";
@@ -402,7 +443,8 @@ export function getAutoAttackResults(atkStats, defStats, currentDefHP, globalDam
         null,
         1.0,
         globalDamageMult,
-        defStats.hp
+        defStats.hp,
+        currentDefHP
       );
 
       results.totalCritWithScope = results.crit + results.scopeExtra;

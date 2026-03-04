@@ -690,17 +690,17 @@ function injectCombatLogStyles() {
     }
 
     .dmg-tick-toggle, .heal-tick-toggle, .shield-tick-toggle {
-      cursor: pointer;
-      border-bottom: 1px dashed currentColor;
+      cursor: default;
       transition: opacity 0.15s;
     }
     .dmg-tick-toggle:hover, .heal-tick-toggle:hover, .shield-tick-toggle:hover {
-      opacity: 0.75;
+      opacity: 0.85;
     }
     .tick-badge {
-      font-size: 0.7rem;
-      opacity: 0.7;
+      font-size: 0.85em;
+      opacity: 0.85;
       margin-left: 3px;
+      vertical-align: super;
     }
 
     #attackerImage {

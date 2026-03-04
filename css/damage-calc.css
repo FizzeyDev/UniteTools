@@ -1588,23 +1588,31 @@ h1 {
 .dmg-ally-badge {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   background: var(--surface-3);
   border: 1px solid rgba(79, 195, 247, 0.2);
   border-radius: 20px;
-  padding: 2px 7px 2px 4px;
-  font-size: 0.82rem;
+  padding: 3px 9px 3px 5px;
+  font-size: 0.92rem;
   font-weight: 700;
   color: var(--blue);
 }
 
 .dmg-ally-badge img {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   object-fit: contain;
   background: var(--surface-2);
   flex-shrink: 0;
+}
+
+/* Tick badge (×N) next to damage/heal/shield values */
+.tick-badge {
+  font-size: 0.85em;
+  opacity: 0.85;
+  margin-left: 3px;
+  vertical-align: super;
 }
 
 .dmg-ally-badge.dmg-ally-heal { color: var(--green); border-color: rgba(76,175,130,0.25); }

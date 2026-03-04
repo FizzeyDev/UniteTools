@@ -31,7 +31,8 @@ import {
   applySylveonAttacker,
   applyTinkatonAttacker,
   applyTyranitarAttacker,
-  applyZeraoraAttacker
+  applyZeraoraAttacker,
+  applyCrustleAttacker
 } from './passiveEffectsAtk.js';
 
 import {
@@ -60,13 +61,6 @@ const movesGrid = document.getElementById("movesGrid");
 onAlliesChange(() => updateDamages());
 
 // ── Helpers niveau ────────────────────────────────────────────────────────────
-
-/**
- * Un move est visible si :
- * - pas de learnLevel (Auto-attack, Unite) → toujours visible
- * - learnLevel <= niveau actuel
- * - unlearn null OU niveau actuel < unlearn
- */
 function isMoveVisible(move, level) {
   if (move.learnLevel == null) return true;
   if (move.learnLevel > level) return false;
@@ -74,19 +68,11 @@ function isMoveVisible(move, level) {
   return true;
 }
 
-/**
- * Un move est en version upgradée si upgradeLevel est défini et atteint.
- */
+
 function isMoveUpgraded(move, level) {
   return move.upgradeLevel != null && level >= move.upgradeLevel;
 }
 
-/**
- * Filtre les damages/heals/shields selon la version.
- * - upgradé  → uniquement les entrées avec upgraded: true
- * - normal   → uniquement les entrées sans upgraded: true (ou sans le champ)
- * - si aucune entrée n'a le champ upgraded → on retourne tout (rétrocompatibilité)
- */
 function filterByUpgrade(items, upgraded) {
   if (!items?.length) return items || [];
   const hasUpgradedEntries = items.some(i => i.upgraded === true);
@@ -200,10 +186,29 @@ export function updateDamages() {
 
   const currentDefHP = Math.floor(defStats.hp * (state.defenderHPPercent / 100));
 
+  if (state.currentAttacker?.pokemonId === "crustle" && state.attackerShellSmashActive) {
+    const level = state.attackerLevel;
+    const baseStats = state.currentAttacker.stats[level - 1];
+    const rate = state.attackerShellSmashUpgraded ? 0.50 : 0.40;
+  }
+
   document.getElementById('resultsAttackerName').textContent = state.currentAttacker.displayName;
   document.getElementById('resultsDefenderName').textContent = state.currentDefender?.displayName || 'Aucun';
-  document.getElementById('attackerAtk').textContent    = atkStats.atk.toLocaleString();
-  document.getElementById('attackerSpAtk').textContent  = atkStats.sp_atk.toLocaleString();
+  if (state.currentAttacker?.pokemonId === "crustle" && state.attackerShellSmashActive) {
+    const level = state.attackerLevel;
+    const baseStats = state.currentAttacker.stats[level - 1];
+    const rate = level >= 11 ? 0.50 : 0.40;
+    const atkBonus   = Math.floor(baseStats.def    * rate);
+    const spAtkBonus = Math.floor(baseStats.sp_def * rate);
+    // Afficher avec le bonus en vert, comme les items
+    document.getElementById('attackerAtk').innerHTML =
+      `${atkStats.atk.toLocaleString()} <span style="color:#bb86fc;font-size:0.85em;">(+${atkBonus})</span>`;
+    document.getElementById('attackerSpAtk').innerHTML =
+      `${atkStats.sp_atk.toLocaleString()} <span style="color:#bb86fc;font-size:0.85em;">(+${spAtkBonus})</span>`;
+  } else {
+    document.getElementById('attackerAtk').textContent    = atkStats.atk.toLocaleString();
+    document.getElementById('attackerSpAtk').textContent  = atkStats.sp_atk.toLocaleString();
+  }
 
   const isCustom = state.currentDefender?.pokemonId === "custom-doll";
   if (isCustom) {
@@ -665,7 +670,8 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
     "mewtwo_y": applyMegaMewtwoYAttacker, mimikyu: applyMimikyuAttacker,
     rapidash: applyRapidashAttacker, sirfetchd: applySirfetchdAttacker,
     sylveon: applySylveonAttacker, tinkaton: applyTinkatonAttacker,
-    tyranitar: applyTyranitarAttacker, zeraora: applyZeraoraAttacker
+    tyranitar: applyTyranitarAttacker, zeraora: applyZeraoraAttacker,
+    crustle: applyCrustleAttacker
   };
   handlers[pokemonId]?.(atkStats, defStats, card);
 }
@@ -805,8 +811,8 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       if (infiltratorIgnore > 0)          effectiveDef = Math.floor(effectiveDef * (1 - infiltratorIgnore));
       if (defenderFlashFireReduction > 0) effectiveDef = Math.floor(effectiveDef / (1 - defenderFlashFireReduction));
 
-      let normal = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0,           globalDamageMult, defStats.hp);
-      let crit   = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, true,  state.currentAttacker.pokemonId, scopeCritBonus, globalDamageMult, defStats.hp);
+      let normal = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0,           globalDamageMult, defStats.hp, currentDefHP);
+      let crit   = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, true,  state.currentAttacker.pokemonId, scopeCritBonus, globalDamageMult, defStats.hp, currentDefHP);
 
       const muscleMult = getBuzzwoleMuscleMultiplier(move.name, dmg.name);
       normal = Math.floor(normal * muscleMult);
@@ -877,6 +883,7 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
 
       card.appendChild(line);
 
+
       if (state.currentDefender?.pokemonId === "falinks" && state.defenderFalinksMultiHit) {
         const capLine = document.createElement("div");
         capLine.className = "damage-line";
@@ -906,7 +913,8 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       visibleHeals.forEach(heal => {
         const line = document.createElement("div");
         line.className = "damage-line";
-        line.innerHTML = renderHealLine(heal, atkStats, state.attackerLevel, bigRootMult, rescueMult, curseMult);
+        const casterCurrentHP = Math.floor(atkStats.hp * (state.attackerHPPercent / 100));
+        line.innerHTML = renderHealLine(heal, atkStats, state.attackerLevel, bigRootMult, rescueMult, curseMult, casterCurrentHP);
         card.appendChild(line);
 
         const currentAllies = getAllies();
@@ -1075,17 +1083,37 @@ function attachMoveCardClickHandler(card, move) {
     const isCrit   = el.classList.contains('dmg-crit');
     const isHeal   = el.classList.contains('heal-tick-toggle');
     const isShield = el.classList.contains('shield-tick-toggle');
-    let currentTicks = maxTicks;
-    let expanded = false;
+    let currentTicks = 1; // commence toujours à 1
 
     const wrap = (val) => isCrit ? `(${val})` : val;
     const activeColor = isHeal ? '#4caf82' : isShield ? '#ffd740' : isCrit ? '#ef5350' : '#4fc3f7';
 
+    const isStealthRock = (move.name === "Stealth Rock" || move.name === "Stealth Rock+") && !isCrit;
+    const maxStackBonus = maxTicks === 10 ? 1.35 : 1.05;
+
+    const getStealthTotal = (n) => {
+      let sum = 0;
+      for (let i = 1; i <= n; i++) {
+        sum += Math.floor(base * (1 + Math.min((i - 1) * 0.15, maxStackBonus)));
+      }
+      return sum;
+    };
+
     const renderExpanded = () => {
-      const total = base * currentTicks;
       const atMax = currentTicks === maxTicks;
+      let displayTotal, titleHint;
+
+      if (isStealthRock) {
+        displayTotal = getStealthTotal(currentTicks);
+        const pct = Math.min((currentTicks - 1) * 0.15, maxStackBonus);
+        titleHint = `Hit ${currentTicks}: ${Math.ceil(base * (1 + pct)).toLocaleString()} (+${Math.round(pct * 100)}%) — Total: ${displayTotal.toLocaleString()}`;
+      } else {
+        displayTotal = base * currentTicks;
+        titleHint = `Par tick : ${base.toLocaleString()} — Max : ${maxTicks} ticks`;
+      }
+
       el.innerHTML = `
-        ${wrap(total.toLocaleString())}
+        ${wrap(displayTotal.toLocaleString())}
         <sup class="tick-badge" style="display:inline-flex;align-items:center;gap:2px;vertical-align:super;font-size:0.6em;line-height:1;">
           <button class="tick-ctrl tick-minus" style="width:15px;height:15px;border-radius:3px;border:none;background:#333;color:#ccc;cursor:pointer;font-size:11px;line-height:1;padding:0;flex-shrink:0;font-weight:bold;">−</button>
           <span style="min-width:18px;text-align:center;font-weight:900;color:${atMax ? activeColor : '#aaa'};">×${currentTicks}</span>
@@ -1093,24 +1121,13 @@ function attachMoveCardClickHandler(card, move) {
         </sup>
       `;
       el.style.color = atMax ? activeColor : '';
-      el.title = `Par tick : ${base.toLocaleString()} — Max : ${maxTicks} ticks`;
+      el.title = titleHint;
       el.querySelector('.tick-minus').addEventListener('click', (e) => { e.stopPropagation(); if (currentTicks > 1)        { currentTicks--; renderExpanded(); } });
       el.querySelector('.tick-plus' ).addEventListener('click', (e) => { e.stopPropagation(); if (currentTicks < maxTicks) { currentTicks++; renderExpanded(); } });
     };
 
-    const renderCollapsed = () => {
-      el.innerHTML = `${wrap(base.toLocaleString())}<sup class="tick-badge">×${maxTicks}</sup>`;
-      el.style.color = '';
-      el.title = `Cliquez pour afficher le total (${maxTicks} ticks)`;
-    };
-
-    renderCollapsed();
-    el.addEventListener('click', (e) => {
-      if (e.target.closest('.tick-ctrl')) return;
-      e.stopPropagation();
-      expanded = !expanded;
-      expanded ? (currentTicks = maxTicks, renderExpanded()) : renderCollapsed();
-    });
+    // Afficher les contrôles immédiatement
+    renderExpanded();
   });
 
   // ── Clic gauche = ajouter au log ──────────────────────────────────────────

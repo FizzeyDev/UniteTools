@@ -593,6 +593,54 @@ function applyZeraoraAttacker(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+function applyCrustleAttacker(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+
+  const passive = state.currentAttacker.passive;
+  const missingHpPercent = 100 - state.attackerHPPercent;
+  const stacks = Math.min(passive.stack.maxStacks, Math.floor(missingHpPercent / passive.stack.missingHpPercentPerStack));
+  const bonusPerStack = 2 * (level - 1) + 6;
+  const totalBonus = bonusPerStack * stacks;
+
+  const baseStats = state.currentAttacker.stats[level - 1];
+  const conversionRate = state.attackerShellSmashUpgraded ? 0.50 : 0.40;
+  const atkBonus   = Math.floor(baseStats.def    * conversionRate);
+  const spAtkBonus = Math.floor(baseStats.sp_def * conversionRate);
+
+  if (state.attackerShellSmashActive) {
+    // Appliquer les stats : def/sp_def → 0, atk/sp_atk += bonus
+    atkStats.atk    += atkBonus;
+    atkStats.sp_atk += spAtkBonus;
+    // La def tombe à 0 — géré dans damageDisplay via un flag
+  }
+
+  const line = document.createElement("div");
+  line.className = "global-bonus-line";
+  line.innerHTML = `
+    <div style="margin:12px 0;padding:10px;background:${ATK_BG};border-radius:8px;${ATK_BORDER};display:flex;align-items:center;gap:12px;">
+      <img src="assets/moves/crustle/shell_smash.png" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/moves/missing.png'">
+      <div style="flex:1;">
+        <strong style="color:${ATK_COLOR};">Shell Smash</strong>
+        ${level >= 11 ? `<span style="font-size:0.75rem;color:#ffd740;margin-left:6px;">⬆️ Upgraded (50%)</span>` : `<span style="font-size:0.75rem;color:#aaa;margin-left:6px;">(40% · upgrades at lvl 11)</span>`}<br>
+        <span style="font-size:0.85rem;color:#ccc;">Def/SpDef → 0 · Atk +${atkBonus} · SpAtk +${spAtkBonus}</span><br>
+        <button class="shell-smash-toggle" style="
+          margin-top:6px;padding:4px 14px;border-radius:6px;border:none;cursor:pointer;font-weight:bold;font-size:0.85rem;
+          background:${state.attackerShellSmashActive ? '#bb86fc' : '#444'};
+          color:${state.attackerShellSmashActive ? '#000' : '#ccc'};
+        ">${state.attackerShellSmashActive ? '✓ Active' : 'Activate'}</button>
+        ${stacks > 0 ? `<br><span style="font-size:0.8rem;color:#64b5f6;">Sturdy: ${stacks} stack(s) · Def/SpDef +${totalBonus} (as defender)</span>` : ''}
+      </div>
+    </div>
+  `;
+
+  line.querySelector('.shell-smash-toggle').onclick = () => {
+    state.attackerShellSmashActive = !state.attackerShellSmashActive;
+    updateDamages();
+  };
+
+  card.appendChild(line);
+}
+
 export {
   applyBuzzwoleAttacker,
   applyCeruledgeAttacker,
@@ -615,5 +663,6 @@ export {
   applySylveonAttacker,
   applyTinkatonAttacker,
   applyTyranitarAttacker,
-  applyZeraoraAttacker
+  applyZeraoraAttacker,
+  applyCrustleAttacker
 };

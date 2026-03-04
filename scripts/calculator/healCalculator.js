@@ -1,71 +1,61 @@
 /**
  * healCalculator.js
- * Calcule les soins (heals) des moves.
  *
- * Structure JSON attendue dans move.heals[] :
- * {
- *   "name":       "Heal",
- *   "scaling":    "sp_atk" | "atk" | "hp",   // stat de référence
- *   "multiplier": 90,                          // % de la stat
- *   "levelCoef":  0,                           // bonus flat par niveau
- *   "constant":   300,                         // bonus flat fixe
- *   "target":     "self" | "ally" | "both",    // optionnel, défaut "both"
- *                   "self"  → lanceur uniquement (pas de badge allié)
- *                   "ally"  → alliés uniquement (pas de valeur self affichée)
- *                   "both"  → lanceur + alliés (comportement par défaut)
- *   "is_tick":    true,                        // optionnel, valeur par tick
- *   "tick_count": 7,                           // nb de ticks si is_tick
- *   "notes":      "..."                        // optionnel
- * }
+ * Champs HP-based supportés (exclusifs des champs classiques) :
+ *   missing_hp_percent / missing_hp_cap  — X% HP manquants du lanceur
+ *   max_hp_percent     / max_hp_cap      — X% HP max du lanceur
+ *   current_hp_percent / current_hp_cap  — X% HP actuels du lanceur
  *
- * Formule : constant + floor(relevantStat * multiplier / 100) + (level - 1) * levelCoef
- * → Pas de réduction de défense (c'est un soin, pas un dégât).
+ * Formule classique : constant + floor(relevantStat * multiplier / 100) + (level-1) * levelCoef
  */
 
-/**
- * @param {object} heal       - entrée heal du JSON
- * @param {object} atkStats   - stats de l'attaquant { atk, sp_atk, hp, ... }
- * @param {number} level      - niveau de l'attaquant
- * @returns {number}
- */
-export function calculateHeal(heal, atkStats, level) {
-  let relevantStat;
+export function calculateHeal(heal, atkStats, level, casterCurrentHP = null) {
 
-  switch (heal.scaling) {
-    case "atk":
-      relevantStat = atkStats.atk;
-      break;
-    case "hp":
-      relevantStat = atkStats.hp;
-      break;
-    case "sp_atk":
-    default:
-      relevantStat = atkStats.sp_atk;
-      break;
+  // % HP MANQUANTS du lanceur
+  if (heal.missing_hp_percent != null && atkStats.hp != null) {
+    const currentHP = casterCurrentHP ?? atkStats.hp;
+    const missingHP = Math.max(0, atkStats.hp - currentHP);
+    let raw = Math.floor(missingHP * heal.missing_hp_percent / 100);
+    if (heal.missing_hp_cap != null) raw = Math.min(raw, heal.missing_hp_cap);
+    return Math.max(0, raw);
   }
 
-  const statPart    = Math.floor(relevantStat * (heal.multiplier || 0) / 100);
-  const levelPart   = (level - 1) * (heal.levelCoef || 0);
-  const constant    = heal.constant || 0;
+  // % HP MAX du lanceur
+  if (heal.max_hp_percent != null && atkStats.hp != null) {
+    let raw = Math.floor(atkStats.hp * heal.max_hp_percent / 100);
+    if (heal.max_hp_cap != null) raw = Math.min(raw, heal.max_hp_cap);
+    return Math.max(0, raw);
+  }
+
+  // % HP ACTUELS du lanceur
+  if (heal.current_hp_percent != null && atkStats.hp != null) {
+    const currentHP = casterCurrentHP ?? atkStats.hp;
+    let raw = Math.floor(currentHP * heal.current_hp_percent / 100);
+    if (heal.current_hp_cap != null) raw = Math.min(raw, heal.current_hp_cap);
+    return Math.max(0, raw);
+  }
+
+  // Heal classique (stat-based)
+  let relevantStat;
+  switch (heal.scaling) {
+    case "atk":    relevantStat = atkStats.atk;    break;
+    case "hp":     relevantStat = atkStats.hp;     break;
+    case "sp_atk":
+    default:       relevantStat = atkStats.sp_atk; break;
+  }
+
+  const statPart  = Math.floor(relevantStat * (heal.multiplier || 0) / 100);
+  const levelPart = (level - 1) * (heal.levelCoef || 0);
+  const constant  = heal.constant || 0;
 
   return Math.max(0, constant + statPart + levelPart);
 }
 
-/**
- * @param {object} heal         - entrée heal du JSON
- * @param {object} atkStats     - stats de l'attaquant
- * @param {number} level        - niveau de l'attaquant
- * @param {number} bigRootMult  - multiplicateur Big Root sur le caster (1.0 par défaut)
- * @param {number} rescueMult   - multiplicateur Rescue Hood sur l'allié (1.0 par défaut)
- * @param {number} curseMult    - réduction Curse Bangle/Incense (1.0 par défaut, ex: 0.70)
- * @returns {string} innerHTML
- */
-export function renderHealLine(heal, atkStats, level, bigRootMult = 1.0, rescueMult = 1.0, curseMult = 1.0) {
-  const base = calculateHeal(heal, atkStats, level);
+export function renderHealLine(heal, atkStats, level, bigRootMult = 1.0, rescueMult = 1.0, curseMult = 1.0, casterCurrentHP = null) {
+  const base = calculateHeal(heal, atkStats, level, casterCurrentHP);
   const self = Math.floor(base * bigRootMult * curseMult);
   const ally = Math.floor(base * rescueMult  * curseMult);
 
-  // "both" par défaut si target absent, pour ne pas casser l'existant
   const target    = heal.target || "both";
   const forSelf   = target === "self"  || target === "both";
   const forAllies = target === "ally"  || target === "both";
@@ -73,7 +63,6 @@ export function renderHealLine(heal, atkStats, level, bigRootMult = 1.0, rescueM
   const isTick    = !!heal.is_tick;
   const tickCount = heal.tick_count || 1;
 
-  // Indicateur visuel si le heal ne concerne que le lanceur
   const selfOnlyBadge = (target === "self")
     ? `<span class="dmg-target-badge dmg-target-self" title="Lanceur uniquement">🧬</span>`
     : "";
@@ -81,7 +70,6 @@ export function renderHealLine(heal, atkStats, level, bigRootMult = 1.0, rescueM
     ? `<span class="dmg-target-badge dmg-target-ally" title="Alliés uniquement">🤝</span>`
     : "";
 
-  // data-ally-heal n'est mis que si le heal touche les alliés
   const allyAttr = forAllies ? `data-ally-heal="${ally}"` : `data-no-allies="true"`;
 
   if (isTick) {
