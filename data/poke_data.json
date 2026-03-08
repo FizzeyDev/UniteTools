@@ -813,20 +813,20 @@
         "can_crit": "false",
         "image": "assets/moves/blastoise/surf.png",
         "damages": [
-          {"name": "Damage", "multiplier": 125, "levelCoef": 18, "constant": 800, "dealDamage": true}
+          {"name": "Damage", "multiplier": 106, "levelCoef": 15, "constant": 680, "dealDamage": true}
         ],
         "shields": [
           {
             "name": "Shield",
             "scaling": "sp_atk",
-            "multiplier": 243,
+            "multiplier": 206,
             "levelCoef": 0,
             "constant": 243
           },
           {
             "name": "Shield - Surf +",
             "scaling": "sp_atk",
-            "multiplier": 292,
+            "multiplier": 248,
             "levelCoef": 0,
             "constant": 290,
             "upgraded": true
@@ -1997,8 +1997,8 @@
         "can_crit": "true",
         "image": "assets/moves/basic_attack.png",
         "damages": [
-            {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
-            {"name": "Boosted", "multiplier": 130, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Boosted", "multiplier": 140, "levelCoef": 0, "constant": 0, "dealDamage": true}
         ]
       },
       {
@@ -2006,7 +2006,7 @@
         "can_crit": "false",
         "image": "assets/moves/cinderace/blaze.png",
         "damages": [
-            {"name": "Flare Damage", "multiplier": 90, "levelCoef": 0, "constant": 25, "dealDamage": true, "notes": "90% Atk + 0.6% Enemy Max HP x (Level - 1) + 25"}
+          {"name": "Flare Damage", "multiplier": 90, "levelCoef": 0, "constant": 25, "dealDamage": true, "notes": "90% Atk + 0.7% Enemy Max HP x (Level - 1) + 25"}
         ]
       },
       {
@@ -2017,8 +2017,8 @@
         "can_crit": "false",
         "image": "assets/moves/cinderace/ember.png",
         "damages": [
-            {"name": "Damage", "multiplier": 100, "levelCoef": 7, "constant": 135, "dealDamage": true},
-            {"name": "Burn (3 Ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 3}
+          {"name": "Damage", "multiplier": 115, "levelCoef": 7, "constant": 135, "dealDamage": true},
+          {"name": "Burn (3 Ticks)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
@@ -2672,15 +2672,15 @@
         "can_crit": "false",
         "image": "assets/moves/cramorant/air_slash.png",
         "damages": [
-          {"name": "Damage - per Blade (5 blades)", "multiplier": 35, "levelCoef": 6, "constant": 150, "dealDamage": true, "is_tick": true, "tick_count": 5}
+          {"name": "Damage - per Blade (5 blades)", "multiplier": 38, "levelCoef": 7, "constant": 165, "dealDamage": true, "is_tick": true, "tick_count": 5}
         ],
         "heals": [
           {
             "name": "Heal - per blade (5 blades)",
             "scaling": "sp_atk",
-            "multiplier": 30,
+            "multiplier": 33,
             "levelCoef": 0,
-            "constant": 40, "is_tick": true, "tick_count": 5
+            "constant": 44, "is_tick": true, "tick_count": 5, "upgraded": true
           }
         ]
       },
@@ -2692,7 +2692,7 @@
         "can_crit": "false",
         "image": "assets/moves/cramorant/gatling_gulp_missile.png",
         "damages": [
-          {"name": "Damage (10x)", "multiplier": 85, "levelCoef": 8, "constant": 330, "dealDamage": true, "is_tick": true, "tick_count": 10}
+          {"name": "Damage (10x)", "multiplier": 95, "levelCoef": 9, "constant": 370, "dealDamage": true, "is_tick": true, "tick_count": 10}
         ],
         "shields": [
           {
@@ -4482,11 +4482,11 @@
         "can_crit": "false",
         "image": "assets/moves/garchomp/livid_outrage.png",
         "damages": [
-          {"name": "Hit 1", "multiplier": 227, "levelCoef": 10, "constant": 330, "dealDamage": true},
-          {"name": "Hit 2", "multiplier": 267, "levelCoef": 11, "constant": 450, "dealDamage": true},
-          {"name": "Hit 3", "multiplier": 307, "levelCoef": 12, "constant": 570, "dealDamage": true},
-          {"name": "Hit 4", "multiplier": 307, "levelCoef": 13, "constant": 920, "dealDamage": true},
-          {"name": "Hit 5 (Throw)", "multiplier": 307, "levelCoef": 14, "constant": 1270, "dealDamage": true}
+          {"name": "Hit 1", "multiplier": 245, "levelCoef": 11, "constant": 356, "dealDamage": true},
+          {"name": "Hit 2", "multiplier": 288, "levelCoef": 12, "constant": 486, "dealDamage": true},
+          {"name": "Hit 3", "multiplier": 332, "levelCoef": 13, "constant": 615, "dealDamage": true},
+          {"name": "Hit 4", "multiplier": 332, "levelCoef": 14, "constant": 994, "dealDamage": true},
+          {"name": "Hit 5 (Throw)", "multiplier": 332, "levelCoef": 15, "constant": 1372, "dealDamage": true}
         ]
       }
     ]
@@ -4536,7 +4536,7 @@
         "can_crit": "false",
         "image": "assets/moves/gardevoir/confusion.png",
         "damages": [
-          {"name": "Damage", "multiplier": 83, "levelCoef": 19, "constant": 350, "dealDamage": true}
+          {"name": "Damage", "multiplier": 95, "levelCoef": 22, "constant": 402, "dealDamage": true}
         ]
       },
       {
@@ -4983,21 +4983,21 @@
     "role": "assassin",
     "style": "physical",
     "stats": [
-      {"level": 1, "hp": 3000, "atk": 146, "def": 50, "sp_atk": 20, "sp_def": 30, "crit": 0},
-      {"level": 2, "hp": 3035, "atk": 151, "def": 53, "sp_atk": 21, "sp_def": 32, "crit": 0},
-      {"level": 3, "hp": 3077, "atk": 157, "def": 56, "sp_atk": 23, "sp_def": 34, "crit": 0},
-      {"level": 4, "hp": 3127, "atk": 164, "def": 60, "sp_atk": 25, "sp_def": 36, "crit": 0},
-      {"level": 5, "hp": 3308, "atk": 191, "def": 75, "sp_atk": 32, "sp_def": 45, "crit": 15},
-      {"level": 6, "hp": 3380, "atk": 202, "def": 81, "sp_atk": 35, "sp_def": 49, "crit": 15},
-      {"level": 7, "hp": 3708, "atk": 250, "def": 108, "sp_atk": 49, "sp_def": 65, "crit": 15},
-      {"level": 8, "hp": 3812, "atk": 265, "def": 117, "sp_atk": 53, "sp_def": 70, "crit": 15},
-      {"level": 9, "hp": 3937, "atk": 283, "def": 127, "sp_atk": 58, "sp_def": 76, "crit": 30},
-      {"level": 10, "hp": 4086, "atk": 305, "def": 139, "sp_atk": 64, "sp_def": 83, "crit": 30},
-      {"level": 11, "hp": 4265, "atk": 331, "def": 154, "sp_atk": 71, "sp_def": 92, "crit": 30},
-      {"level": 12, "hp": 4480, "atk": 363, "def": 172, "sp_atk": 80, "sp_def": 103, "crit": 30},
-      {"level": 13, "hp": 4738, "atk": 401, "def": 193, "sp_atk": 91, "sp_def": 116, "crit": 30},
-      {"level": 14, "hp": 5048, "atk": 446, "def": 219, "sp_atk": 104, "sp_def": 131, "crit": 30},
-      {"level": 15, "hp": 5420, "atk": 500, "def": 250, "sp_atk": 119, "sp_def": 149, "crit": 30}
+      {"level": 1, "hp": 3200, "atk": 146, "def": 50, "sp_atk": 20, "sp_def": 64, "crit": 0},
+      {"level": 2, "hp": 3240, "atk": 151, "def": 53, "sp_atk": 21, "sp_def": 67, "crit": 0},
+      {"level": 3, "hp": 3288, "atk": 157, "def": 56, "sp_atk": 23, "sp_def": 70, "crit": 0},
+      {"level": 4, "hp": 3346, "atk": 164, "def": 60, "sp_atk": 25, "sp_def": 73, "crit": 0},
+      {"level": 5, "hp": 3556, "atk": 191, "def": 75, "sp_atk": 32, "sp_def": 86, "crit": 15},
+      {"level": 6, "hp": 3639, "atk": 202, "def": 81, "sp_atk": 35, "sp_def": 92, "crit": 15},
+      {"level": 7, "hp": 4019, "atk": 250, "def": 108, "sp_atk": 49, "sp_def": 116, "crit": 15},
+      {"level": 8, "hp": 4139, "atk": 265, "def": 117, "sp_atk": 53, "sp_def": 123, "crit": 15},
+      {"level": 9, "hp": 4283, "atk": 283, "def": 127, "sp_atk": 58, "sp_def": 132, "crit": 30},
+      {"level": 10, "hp": 4456, "atk": 305, "def": 139, "sp_atk": 64, "sp_def": 143, "crit": 30},
+      {"level": 11, "hp": 4664, "atk": 331, "def": 154, "sp_atk": 71, "sp_def": 156, "crit": 30},
+      {"level": 12, "hp": 4913, "atk": 363, "def": 172, "sp_atk": 80, "sp_def": 172, "crit": 30},
+      {"level": 13, "hp": 5211, "atk": 401, "def": 193, "sp_atk": 91, "sp_def": 190, "crit": 30},
+      {"level": 14, "hp": 5570, "atk": 446, "def": 219, "sp_atk": 104, "sp_def": 213, "crit": 30},
+      {"level": 15, "hp": 6000, "atk": 500, "def": 250, "sp_atk": 119, "sp_def": 240, "crit": 30}
     ],
     "passive": {
       "name": "Torrent",
@@ -5013,7 +5013,7 @@
         "image": "assets/moves/basic_attack.png",
         "damages": [
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Boosted (Ranged)", "multiplier": 120, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Boosted (Ranged)", "multiplier": 130, "levelCoef": 0, "constant": 0, "dealDamage": true},
           {"name": "Close Range Bonus", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+5% missing HP (basic), +10% missing HP (boosted)"}
         ]
       },
@@ -5022,7 +5022,7 @@
         "can_crit": "false",
         "image": "assets/moves/greninja/bubble.png",
         "damages": [
-          {"name": "Damage per Hit (x2)", "multiplier": 103, "levelCoef": 6, "constant": 190, "dealDamage": true}
+          {"name": "Damage per Hit (x2)", "multiplier": 113, "levelCoef": 7, "constant": 208, "dealDamage": true}
         ]
       },
       {
@@ -5121,7 +5121,10 @@
         "can_crit": "false",
         "image": "assets/moves/gyarados/dragon_breath.png",
         "damages": [
-          {"name": "Damage", "multiplier": 193, "levelCoef": 22, "constant": 325, "dealDamage": true}
+          {"name": "Damage - Basic", "multiplier": 124, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Damage - Boosted", "multiplier": 166, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Damage - Basic +", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Damage - Boosted +", "multiplier": 176, "levelCoef": 0, "constant": 0, "dealDamage": true}
         ]
       },
       {
@@ -5145,7 +5148,7 @@
         "can_crit": "false",
         "image": "assets/moves/gyarados/waterfall.png",
         "damages": [
-          {"name": "Damage (x3)", "multiplier": 141, "levelCoef": 7, "constant": 246, "dealDamage": true},
+          {"name": "Damage (x3)", "multiplier": 120, "levelCoef": 6, "constant": 208, "dealDamage": true},
           {"name": "Shield", "multiplier": 0, "levelCoef": 0, "constant": 0, "shield": true, "notes": "13% max HP + 260"}
         ]
       },
@@ -5225,9 +5228,12 @@
       {
         "name": "Dragon Breath",
         "can_crit": "false",
-        "image": "assets/moves/mega_gyarados/dragon_breath.png",
+        "image": "assets/moves/gyarados/dragon_breath.png",
         "damages": [
-          {"name": "Damage", "multiplier": 193, "levelCoef": 22, "constant": 325, "dealDamage": true}
+          {"name": "Damage - Basic", "multiplier": 124, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Damage - Boosted", "multiplier": 166, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Damage - Basic +", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Damage - Boosted +", "multiplier": 176, "levelCoef": 0, "constant": 0, "dealDamage": true}
         ]
       },
       {
@@ -6946,8 +6952,8 @@
         "can_crit": "false",
         "image": "assets/moves/mega_mewtwo_y/psystrike.png",
         "damages": [
-          {"name": "Per Wave (x5)", "multiplier": 23, "levelCoef": 2, "constant": 74, "dealDamage": true, "notes": "Damage increases with distance"},
-          {"name": "Final Hit", "multiplier": 76, "levelCoef": 7, "constant": 247, "dealDamage": true}
+          {"name": "Per Wave (x5)", "multiplier": 20, "levelCoef": 2, "constant": 66, "dealDamage": true, "notes": "Damage increases with distance"},
+          {"name": "Final Hit", "multiplier": 68, "levelCoef": 7, "constant": 222, "dealDamage": true}
         ]
       },
       {
@@ -6984,21 +6990,21 @@
     "role": "allrounder",
     "style": "physical",
     "stats": [
-      {"level": 1, "hp": 3150, "atk": 155, "def": 80, "sp_atk": 20, "sp_def": 70, "crit": 0},
-      {"level": 2, "hp": 3301, "atk": 164, "def": 91, "sp_atk": 23, "sp_def": 80, "crit": 0},
-      {"level": 3, "hp": 3467, "atk": 174, "def": 104, "sp_atk": 27, "sp_def": 91, "crit": 0},
-      {"level": 4, "hp": 3650, "atk": 185, "def": 118, "sp_atk": 31, "sp_def": 103, "crit": 0},
-      {"level": 5, "hp": 3851, "atk": 198, "def": 133, "sp_atk": 35, "sp_def": 117, "crit": 10},
-      {"level": 6, "hp": 4072, "atk": 212, "def": 150, "sp_atk": 40, "sp_def": 132, "crit": 10},
-      {"level": 7, "hp": 4315, "atk": 227, "def": 168, "sp_atk": 45, "sp_def": 149, "crit": 10},
-      {"level": 8, "hp": 4583, "atk": 244, "def": 188, "sp_atk": 51, "sp_def": 167, "crit": 10},
-      {"level": 9, "hp": 4879, "atk": 263, "def": 210, "sp_atk": 58, "sp_def": 187, "crit": 20},
-      {"level": 10, "hp": 5205, "atk": 283, "def": 234, "sp_atk": 65, "sp_def": 209, "crit": 20},
-      {"level": 11, "hp": 5564, "atk": 305, "def": 261, "sp_atk": 73, "sp_def": 234, "crit": 20},
-      {"level": 12, "hp": 5959, "atk": 330, "def": 291, "sp_atk": 82, "sp_def": 261, "crit": 20},
-      {"level": 13, "hp": 6394, "atk": 357, "def": 324, "sp_atk": 92, "sp_def": 291, "crit": 20},
-      {"level": 14, "hp": 6873, "atk": 387, "def": 360, "sp_atk": 103, "sp_def": 324, "crit": 20},
-      {"level": 15, "hp": 7400, "atk": 420, "def": 400, "sp_atk": 115, "sp_def": 360, "crit": 20}
+      {"level": 1, "hp": 3300, "atk": 155, "def": 80, "sp_atk": 20, "sp_def": 70, "crit": 0},
+      {"level": 2, "hp": 3439, "atk": 164, "def": 91, "sp_atk": 23, "sp_def": 80, "crit": 0},
+      {"level": 3, "hp": 3593, "atk": 174, "def": 104, "sp_atk": 27, "sp_def": 91, "crit": 0},
+      {"level": 4, "hp": 3762, "atk": 185, "def": 118, "sp_atk": 31, "sp_def": 103, "crit": 0},
+      {"level": 5, "hp": 3947, "atk": 198, "def": 133, "sp_atk": 35, "sp_def": 117, "crit": 10},
+      {"level": 6, "hp": 4151, "atk": 212, "def": 150, "sp_atk": 40, "sp_def": 132, "crit": 10},
+      {"level": 7, "hp": 4375, "atk": 227, "def": 168, "sp_atk": 45, "sp_def": 149, "crit": 10},
+      {"level": 8, "hp": 4622, "atk": 244, "def": 188, "sp_atk": 51, "sp_def": 167, "crit": 10},
+      {"level": 9, "hp": 4894, "atk": 263, "def": 210, "sp_atk": 58, "sp_def": 187, "crit": 20},
+      {"level": 10, "hp": 5193, "atk": 283, "def": 234, "sp_atk": 65, "sp_def": 209, "crit": 20},
+      {"level": 11, "hp": 5521, "atk": 305, "def": 261, "sp_atk": 73, "sp_def": 234, "crit": 20},
+      {"level": 12, "hp": 5883, "atk": 330, "def": 291, "sp_atk": 82, "sp_def": 261, "crit": 20},
+      {"level": 13, "hp": 6281, "atk": 357, "def": 324, "sp_atk": 92, "sp_def": 291, "crit": 20},
+      {"level": 14, "hp": 6718, "atk": 387, "def": 360, "sp_atk": 103, "sp_def": 324, "crit": 20},
+      {"level": 15, "hp": 7200, "atk": 420, "def": 400, "sp_atk": 115, "sp_def": 360, "crit": 20}
     ],
     "passive": {
       "name": "Disguise",
@@ -7073,7 +7079,7 @@
         "can_crit": "false",
         "image": "assets/moves/mimikyu/play_with_me.png",
         "damages": [
-          {"name": "Per Hit (up to 7)", "multiplier": 83, "levelCoef": 6, "constant": 170, "dealDamage": true}
+          {"name": "Per Hit (up to 7)", "multiplier": 76, "levelCoef": 6, "constant": 154, "dealDamage": true}
         ]
       }
     ]
@@ -8115,7 +8121,7 @@
         "damages": [
           {"name": "Slash", "multiplier": 97, "levelCoef": 12, "constant": 280, "dealDamage": true},
           {"name": "Dash", "multiplier": 97, "levelCoef": 12, "constant": 280, "dealDamage": true},
-          {"name": "Execute Bonus", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+20% missing HP (cap 1200 vs wild)"}
+          {"name": "Execute Bonus", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+15% missing HP (cap 1200 vs wild)"}
         ]
       },
       {
@@ -8139,7 +8145,7 @@
         "can_crit": "false",
         "image": "assets/moves/scyther/green_illusion_dive.png",
         "damages": [
-          {"name": "Initial, Dash & Copy Dash", "multiplier": 93, "levelCoef": 5, "constant": 260, "dealDamage": true}
+          {"name": "Initial, Dash & Copy Dash", "multiplier": 83, "levelCoef": 5, "constant": 230, "dealDamage": true}
         ]
       }
     ]
@@ -9929,7 +9935,7 @@
         "can_crit": "false",
         "image": "assets/moves/zapdos/high_voltage_siege.png",
         "damages": [
-          {"name": "Lightning Bolt (10x)", "multiplier": 32, "levelCoef": 0, "constant": 48, "dealDamage": true, "is_tick": true, "tick_count": 10}
+          {"name": "Lightning Bolt (7x)", "multiplier": 70, "levelCoef": 0, "constant": 48, "dealDamage": true, "is_tick": true, "tick_count": 7}
         ],
         "shields": [
           {"name": "Shield", "scaling": "hp", "multiplier": 20, "levelCoef": 0, "constant": 0}
