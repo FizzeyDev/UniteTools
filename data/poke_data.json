@@ -3050,7 +3050,7 @@
         "can_crit": "false",
         "image": "assets/moves/decidueye/leafage.png",
         "damages": [
-          {"name": "Damage", "multiplier": 124, "levelCoef": 0, "constant": 230, "dealDamage": true}
+          {"name": "Damage", "multiplier": 124, "levelCoef": 7, "constant": 230, "dealDamage": true}
         ]
       },
       {
@@ -3061,7 +3061,7 @@
         "can_crit": "false",
         "image": "assets/moves/decidueye/astonish.png",
         "damages": [
-          {"name": "Damage", "multiplier": 43, "levelCoef": 0, "constant": 80, "dealDamage": true}
+          {"name": "Damage", "multiplier": 43, "levelCoef": 2, "constant": 80, "dealDamage": true}
         ]
       },
       {
@@ -3072,10 +3072,10 @@
         "can_crit": "true",
         "image": "assets/moves/decidueye/razor_leaf.png",
         "damages": [
-          {"name": "Basic - Main Target", "multiplier": 80, "levelCoef": 0, "constant": 120, "dealDamage": true},
-          {"name": "Basic - Secondary Target", "multiplier": 36, "levelCoef": 0, "constant": 54, "dealDamage": true},
-          {"name": "Boosted - Main Target (per quill, 3 quills)", "multiplier": 30.4, "levelCoef": 0, "constant": 46, "dealDamage": true, "is_tick": true, "tick_count": 3},
-          {"name": "Boosted - Secondary Target (per quill, 3 quills)", "multiplier": 13.68, "levelCoef": 0, "constant": 21, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Basic - Main Target", "multiplier": 80, "levelCoef": 3, "constant": 120, "dealDamage": true},
+          {"name": "Basic - Secondary Target", "multiplier": 36, "levelCoef": 1, "constant": 54, "dealDamage": true},
+          {"name": "Boosted - Main Target (per quill, 3 quills)", "multiplier": 30.4, "levelCoef": 1, "constant": 46, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Boosted - Secondary Target (per quill, 3 quills)", "multiplier": 13.68, "levelCoef": 1, "constant": 21, "dealDamage": true, "is_tick": true, "tick_count": 3},
           {"name": "Enhanced+ Additional (Main Target)", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "2% of target's remaining HP (capped at 240)"},
           {"name": "Enhanced+ Additional (Secondary Target)", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "1% of target's remaining HP (capped at 120)"}
         ]
@@ -3088,8 +3088,8 @@
         "can_crit": "false",
         "image": "assets/moves/decidueye/spirit_shackle.png",
         "damages": [
-          {"name": "Damage - Min Charge", "multiplier": 248, "levelCoef": 0, "constant": 200, "dealDamage": true},
-          {"name": "Damage - Max Charge", "multiplier": 446.4, "levelCoef": 0, "constant": 360, "dealDamage": true},
+          {"name": "Damage - Min Charge", "multiplier": 248, "levelCoef": 5, "constant": 200, "dealDamage": true},
+          {"name": "Damage - Max Charge", "multiplier": 446.4, "levelCoef": 9, "constant": 360, "dealDamage": true},
           {"name": "Damage - Exiting Stitch Area", "multiplier": 99, "levelCoef": 2, "constant": 80, "dealDamage": true},
           {"name": "Enhanced+ Bonus", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "15% increased damage if target <50% HP"}
         ]
@@ -3102,7 +3102,7 @@
         "can_crit": "false",
         "image": "assets/moves/decidueye/leaf_storm.png",
         "damages": [
-          {"name": "Damage", "multiplier": 148, "levelCoef": 0, "constant": 215, "dealDamage": true}
+          {"name": "Damage", "multiplier": 148, "levelCoef": 6, "constant": 215, "dealDamage": true}
         ]
       },
       {
@@ -3113,7 +3113,7 @@
         "can_crit": "false",
         "image": "assets/moves/decidueye/shadow_sneak.png",
         "damages": [
-          {"name": "Damage", "multiplier": 56, "levelCoef": 0, "constant": 80, "dealDamage": true}
+          {"name": "Damage", "multiplier": 56, "levelCoef": 2, "constant": 80, "dealDamage": true}
         ]
       },
       {
@@ -3124,8 +3124,8 @@
         "can_crit": "false",
         "image": "assets/moves/decidueye/nock_nock.png",
         "damages": [
-          {"name": "Damage - per Quill (up to 30)", "multiplier": 70, "levelCoef": 0, "constant": 100, "dealDamage": true, "is_tick": true, "tick_count": 30},
-          {"name": "Damage - Large Quill", "multiplier": 280, "levelCoef": 0, "constant": 400, "dealDamage": true},
+          {"name": "Damage - per Quill (up to 30)", "multiplier": 70, "levelCoef": 2, "constant": 100, "dealDamage": true, "is_tick": true, "tick_count": 30},
+          {"name": "Damage - Large Quill", "multiplier": 280, "levelCoef": 8, "constant": 400, "dealDamage": true},
           {"name": "Large Quill Bonus", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "30% increased if target <50% HP"}
         ],
         "shields": [
@@ -3177,7 +3177,7 @@
         "can_crit": "false",
         "image": "assets/moves/delphox/blaze.png",
         "damages": [
-          {"name": "Damage - Fireball", "multiplier": 81, "levelCoef": 0, "constant": 325, "dealDamage": true, "notes": "Triggers below 50% HP, 15s CD"}
+          {"name": "Damage - Fireball", "multiplier": 81, "levelCoef": 18, "constant": 325, "dealDamage": true, "notes": "Triggers below 50% HP, 15s CD"}
         ]
       },
       {
@@ -3188,7 +3188,7 @@
         "can_crit": "false",
         "image": "assets/moves/delphox/ember.png",
         "damages": [
-          {"name": "Damage", "multiplier": 93, "levelCoef": 0, "constant": 540, "dealDamage": true}
+          {"name": "Damage", "multiplier": 93, "levelCoef": 29, "constant": 540, "dealDamage": true}
         ]
       },
       {
@@ -3199,8 +3199,8 @@
         "can_crit": "false",
         "image": "assets/moves/delphox/will_o_wisp.png",
         "damages": [
-          {"name": "Damage - Flames", "multiplier": 52, "levelCoef": 0, "constant": 300, "dealDamage": true},
-          {"name": "Damage - Explosions", "multiplier": 26, "levelCoef": 0, "constant": 150, "dealDamage": true}
+          {"name": "Damage - Flames", "multiplier": 52, "levelCoef": 16, "constant": 300, "dealDamage": true},
+          {"name": "Damage - Explosions", "multiplier": 26, "levelCoef": 8, "constant": 150, "dealDamage": true}
         ]
       },
       {
@@ -3211,10 +3211,10 @@
         "can_crit": "false",
         "image": "assets/moves/delphox/fire_blast.png",
         "damages": [
-          {"name": "Damage - Initial", "multiplier": 85.3, "levelCoef": 0, "constant": 438, "dealDamage": true},
-          {"name": "Damage - Initial +", "multiplier": 94.8, "levelCoef": 0, "constant": 486, "dealDamage": true, "upgraded": true},
-          {"name": "Damage - Explosion", "multiplier": 85.3, "levelCoef": 0, "constant": 438, "dealDamage": true},
-          {"name": "Damage - Explosion +", "multiplier": 94.8, "levelCoef": 0, "constant": 486, "dealDamage": true, "upgraded": true}
+          {"name": "Damage - Initial", "multiplier": 85.3, "levelCoef": 17, "constant": 438, "dealDamage": true},
+          {"name": "Damage - Initial +", "multiplier": 94.8, "levelCoef": 19, "constant": 486, "dealDamage": true, "upgraded": true},
+          {"name": "Damage - Explosion", "multiplier": 85.3, "levelCoef": 17, "constant": 438, "dealDamage": true},
+          {"name": "Damage - Explosion +", "multiplier": 94.8, "levelCoef": 19, "constant": 486, "dealDamage": true, "upgraded": true}
         ]
       },
       {
@@ -3225,7 +3225,7 @@
         "can_crit": "false",
         "image": "assets/moves/delphox/mystical_fire.png",
         "damages": [
-          {"name": "Damage", "multiplier": 110, "levelCoef": 0, "constant": 630, "dealDamage": true}
+          {"name": "Damage", "multiplier": 110, "levelCoef": 20, "constant": 630, "dealDamage": true}
         ]
       },
       {
@@ -3236,7 +3236,7 @@
         "can_crit": "false",
         "image": "assets/moves/delphox/fire_spin.png",
         "damages": [
-          {"name": "Damage - per Tick (searching)", "multiplier": 16, "levelCoef": 0, "constant": 90, "dealDamage": true, "is_tick": true, "tick_count": 9},
+          {"name": "Damage - per Tick (searching)", "multiplier": 16, "levelCoef": 2, "constant": 90, "dealDamage": true, "is_tick": true, "tick_count": 9},
           {"name": "Enhanced+ Bonus", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "15% increased damage from Delphox for 3s on trap"}
         ]
       },
@@ -3248,7 +3248,7 @@
         "can_crit": "false",
         "image": "assets/moves/delphox/flame_charge.png",
         "damages": [
-          {"name": "Damage - per Flame", "multiplier": 60, "levelCoef": 0, "constant": 312, "dealDamage": true, "is_tick": true, "tick_count": 3, "notes": "Subsequent flames deal 70% less"}
+          {"name": "Damage - per Flame", "multiplier": 60, "levelCoef": 13, "constant": 312, "dealDamage": true, "is_tick": true, "tick_count": 3, "notes": "Subsequent flames deal 70% less"}
         ]
       },
       {
@@ -3259,7 +3259,7 @@
         "can_crit": "false",
         "image": "assets/moves/delphox/fanciful_fireworks.png",
         "damages": [
-            {"name": "Damage - per Tick", "multiplier": 25, "levelCoef": 0, "constant": 150, "dealDamage": true, "is_tick": true, "tick_count": 16, "notes": "8s duration (ticks every 0.5s)"}
+            {"name": "Damage - per Tick", "multiplier": 25, "levelCoef": 3, "constant": 150, "dealDamage": true, "is_tick": true, "tick_count": 16, "notes": "8s duration (ticks every 0.5s)"}
         ],
         "shields": [
           {
@@ -3330,8 +3330,8 @@
         "can_crit": "false",
         "image": "assets/moves/dhelmise/payback.png",
         "damages": [
-          {"name": "Damage", "multiplier": 160, "levelCoef": 0, "constant": 240, "dealDamage": true},
-          {"name": "Damage - Additional (Revenge)", "multiplier": 80, "levelCoef": 0, "constant": 120, "dealDamage": true}
+          {"name": "Damage", "multiplier": 160, "levelCoef": 8, "constant": 240, "dealDamage": true},
+          {"name": "Damage - Additional (Revenge)", "multiplier": 80, "levelCoef": 4, "constant": 120, "dealDamage": true}
         ]
       },
       {
@@ -3342,7 +3342,7 @@
         "can_crit": "false",
         "image": "assets/moves/dhelmise/bulldoze.png",
         "damages": [
-          {"name": "Damage", "multiplier": 134, "levelCoef": 0, "constant": 200, "dealDamage": true}
+          {"name": "Damage", "multiplier": 134, "levelCoef": 6, "constant": 200, "dealDamage": true}
         ]
       },
       {
@@ -3353,8 +3353,8 @@
         "can_crit": "false",
         "image": "assets/moves/dhelmise/power_whip.png",
         "damages": [
-          {"name": "Damage", "multiplier": 154, "levelCoef": 0, "constant": 230, "dealDamage": true},
-          {"name": "Damage - Additional (Edge)", "multiplier": 154, "levelCoef": 0, "constant": 230, "dealDamage": true}
+          {"name": "Damage", "multiplier": 154, "levelCoef": 8, "constant": 230, "dealDamage": true},
+          {"name": "Damage - Additional (Edge)", "multiplier": 154, "levelCoef": 8, "constant": 230, "dealDamage": true}
         ],
         "shields": [
           {
@@ -3375,7 +3375,7 @@
         "image": "assets/moves/dhelmise/whirlpool.png",
         "damages": [
           {"name": "Damage", "multiplier": 273, "levelCoef": 14, "constant": 414, "dealDamage": true},
-          {"name": "Damage - Whirlpool (per Tick, up to 5)", "multiplier": 95, "levelCoef": 0, "constant": 144, "dealDamage": true, "is_tick": true, "tick_count": 5}
+          {"name": "Damage - Whirlpool (per Tick, up to 5)", "multiplier": 95, "levelCoef": 6, "constant": 144, "dealDamage": true, "is_tick": true, "tick_count": 5}
         ]
       },
       {
@@ -3386,8 +3386,7 @@
         "can_crit": "false",
         "image": "assets/moves/dhelmise/anchor_shot.png",
         "damages": [
-          {"name": "Damage", "multiplier": 260, "levelCoef": 0, "constant": 390, "dealDamage": true},
-          {"name": "Enhanced+ Bonus", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+50% damage taken debuff for 0.8s or duration of incapacitation"}
+          {"name": "Damage", "multiplier": 260, "levelCoef": 14, "constant": 390, "dealDamage": true}
         ]
       },
       {
@@ -3398,8 +3397,8 @@
         "can_crit": "false",
         "image": "assets/moves/dhelmise/heavy_slam.png",
         "damages": [
-          {"name": "Damage - First Hit", "multiplier": 180, "levelCoef": 0, "constant": 270, "dealDamage": true},
-          {"name": "Damage - Second Hit", "multiplier": 180, "levelCoef": 0, "constant": 270, "dealDamage": true}
+          {"name": "Damage - First Hit", "multiplier": 180, "levelCoef": 10, "constant": 270, "dealDamage": true},
+          {"name": "Damage - Second Hit", "multiplier": 180, "levelCoef": 10, "constant": 270, "dealDamage": true}
         ]
       },
       {
@@ -3410,9 +3409,9 @@
         "can_crit": "false",
         "image": "assets/moves/dhelmise/seaweed_snare.png",
         "damages": [
-          {"name": "Damage - First Hit", "multiplier": 114, "levelCoef": 0, "constant": 172, "dealDamage": true},
-          {"name": "Damage - Second Hit", "multiplier": 114, "levelCoef": 0, "constant": 172, "dealDamage": true},
-          {"name": "Damage - DoT (up to 9 Ticks)", "multiplier": 22, "levelCoef": 0, "constant": 34, "dealDamage": true, "is_tick": true, "tick_count": 9},
+          {"name": "Damage - First Hit", "multiplier": 114, "levelCoef": 6, "constant": 172, "dealDamage": true},
+          {"name": "Damage - Second Hit", "multiplier": 114, "levelCoef": 6, "constant": 172, "dealDamage": true},
+          {"name": "Damage - DoT (up to 9 Ticks)", "multiplier": 22, "levelCoef": 1, "constant": 34, "dealDamage": true, "is_tick": true, "tick_count": 9},
           {"name": "Healing", "multiplier": 0, "levelCoef": 0, "constant": 0, "heal": true, "notes": "150% of DoT damage"}
         ],
         "shields": [
@@ -3457,7 +3456,7 @@
         "damages": [
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
           {"name": "Boosted (No Gauge)", "multiplier": 130, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Boosted (Full Gauge)", "multiplier": 189, "levelCoef": 0, "constant": 110, "dealDamage": true, "notes": "Cannot crit"}
+          {"name": "Boosted (Full Gauge)", "multiplier": 189, "levelCoef": 6, "constant": 110, "dealDamage": true, "notes": "Cannot crit"}
         ]
       },
       {
@@ -3468,8 +3467,8 @@
         "can_crit": "false",
         "image": "assets/moves/dodrio/peck.png",
         "damages": [
-          {"name": "Damage (No Gauge)", "multiplier": 111.6, "levelCoef": 0, "constant": 216, "dealDamage": true},
-          {"name": "Damage (Full Gauge)", "multiplier": 186, "levelCoef": 0, "constant": 360, "dealDamage": true}
+          {"name": "Damage (No Gauge)", "multiplier": 111.6, "levelCoef": 11, "constant": 216, "dealDamage": true},
+          {"name": "Damage (Full Gauge)", "multiplier": 186, "levelCoef": 19, "constant": 360, "dealDamage": true}
         ]
       },
       {
@@ -3480,7 +3479,7 @@
         "can_crit": "false",
         "image": "assets/moves/dodrio/quick_attack.png",
         "damages": [
-          {"name": "Damage", "multiplier": 83, "levelCoef": 0, "constant": 190, "dealDamage": true}
+          {"name": "Damage", "multiplier": 83, "levelCoef": 6, "constant": 190, "dealDamage": true}
         ]
       },
       {
@@ -3491,10 +3490,10 @@
         "can_crit": "false",
         "image": "assets/moves/dodrio/tri_attack.png",
         "damages": [
-          {"name": "Damage (Melee)", "multiplier": 100, "levelCoef": 0, "constant": 140, "dealDamage": true},
-          {"name": "Damage - per Projectile (Ranged)", "multiplier": 90, "levelCoef": 0, "constant": 110, "dealDamage": true, "is_tick": true, "tick_count": 3  },
+          {"name": "Damage (Melee)", "multiplier": 100, "levelCoef": 6, "constant": 140, "dealDamage": true},
+          {"name": "Damage - per Projectile (Ranged)", "multiplier": 90, "levelCoef": 3, "constant": 110, "dealDamage": true, "is_tick": true, "tick_count": 3  },
           {"name": "Burn DoT - per Tick", "multiplier": 4.9, "levelCoef": 0, "constant": 7, "dealDamage": true, "is_tick": true, "tick_count": 4},
-          {"name": "Next Basic Bonus", "multiplier": 63.6, "levelCoef": 0, "constant": 39, "dealDamage": true, "notes": "Also heals 7% max HP (10% enhanced+)"}
+          {"name": "Next Basic Bonus", "multiplier": 63.6, "levelCoef": 2, "constant": 39, "dealDamage": true, "notes": "Also heals 7% max HP (10% enhanced+)"}
         ],
         "heals": [
           { "name": "Heal - Next Basic", "scaling": "hp", "multiplier": 7, "levelCoef": 0, "constant": 0 },
@@ -3509,9 +3508,9 @@
         "can_crit": "false",
         "image": "assets/moves/dodrio/drill_peck.png",
         "damages": [
-          {"name": "Damage - 3 Hits (No Gauge)", "multiplier": 78.8, "levelCoef": 0, "constant": 72, "dealDamage": true, "is_tick": true, "tick_count": 3},
-          {"name": "Damage - 5 Hits (Full Gauge)", "multiplier": 78.8, "levelCoef": 0, "constant": 72, "dealDamage": true, "is_tick": true, "tick_count": 5},
-          {"name": "Damage - Bonus (Full Gauge)", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "3% of enemy max HP (3 hits)"},
+          {"name": "Damage - 3 Hits (No Gauge)", "multiplier": 78.8, "levelCoef": 2, "constant": 72, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Damage - 5 Hits (Full Gauge)", "multiplier": 78.8, "levelCoef": 2, "constant": 72, "dealDamage": true, "is_tick": true, "tick_count": 5},
+          {"name": "Damage - Bonus (Full Gauge)", "max_hp_percent": 3, "dealDamage": true, "is_tick": true, "tick_count": 3},
           {"name": "Lifesteal (Enhanced+)", "multiplier": 0, "levelCoef": 0, "constant": 0, "heal": true, "notes": "30% of flat damage dealt"}
         ]
       },
@@ -3532,8 +3531,8 @@
         "can_crit": "false",
         "image": "assets/moves/dodrio/jump_kick.png",
         "damages": [
-          {"name": "Damage - Initial Kick", "multiplier": 66, "levelCoef": 0, "constant": 154, "dealDamage": true},
-          {"name": "Damage - Slam", "multiplier": 66, "levelCoef": 0, "constant": 154, "dealDamage": true}
+          {"name": "Damage - Initial Kick", "multiplier": 66, "levelCoef": 4, "constant": 154, "dealDamage": true},
+          {"name": "Damage - Slam", "multiplier": 66, "levelCoef": 4, "constant": 154, "dealDamage": true}
         ]
       },
       {
@@ -3544,7 +3543,7 @@
         "can_crit": "false",
         "image": "assets/moves/dodrio/triple_trample.png",
         "damages": [
-          {"name": "Damage (per contact)", "multiplier": 173, "levelCoef": 0, "constant": 390, "dealDamage": true}
+          {"name": "Damage (per contact)", "multiplier": 173, "levelCoef": 8, "constant": 390, "dealDamage": true}
         ],
         "shields": [
           {
@@ -3605,7 +3604,7 @@
         "can_crit": "false",
         "image": "assets/moves/dragapult/astonish.png",
         "damages": [
-          {"name": "Damage", "multiplier": 122, "levelCoef": 0, "constant": 290, "dealDamage": true}
+          {"name": "Damage", "multiplier": 122, "levelCoef": 16, "constant": 290, "dealDamage": true}
         ]
       },
       {
@@ -3625,10 +3624,10 @@
         "can_crit": "false",
         "image": "assets/moves/dragapult/dragon_breath.png",
         "damages": [
-          {"name": "Damage", "multiplier": 74, "levelCoef": 0, "constant": 196, "dealDamage": true},
-          {"name": "Damage +", "multiplier": 81, "levelCoef": 0, "constant": 216, "dealDamage": true, "upgraded": true},
-          {"name": "Damage - Burn (per tick)", "multiplier": 30, "levelCoef": 0, "constant": 80, "dealDamage": true, "is_tick": true, "tick_count": 7},
-          {"name": "Damage - Burn + (per tick)", "multiplier": 33, "levelCoef": 0, "constant": 88, "dealDamage": true, "upgraded": true, "is_tick": true, "tick_count": 7}
+          {"name": "Damage", "multiplier": 74, "levelCoef": 5, "constant": 196, "dealDamage": true},
+          {"name": "Damage +", "multiplier": 81, "levelCoef": 5, "constant": 216, "dealDamage": true, "upgraded": true},
+          {"name": "Damage - Burn (per tick)", "multiplier": 30, "levelCoef": 2, "constant": 80, "dealDamage": true, "is_tick": true, "tick_count": 7},
+          {"name": "Damage - Burn + (per tick)", "multiplier": 33, "levelCoef": 2, "constant": 88, "dealDamage": true, "upgraded": true, "is_tick": true, "tick_count": 7}
         ]
       },
       {
@@ -3639,12 +3638,12 @@
         "can_crit": "false",
         "image": "assets/moves/dragapult/shadow_ball.png",
         "damages": [
-          {"name": "Damage", "multiplier": 110, "levelCoef": 0, "constant": 265, "dealDamage": true},
-          {"name": "Damage +", "multiplier": 119, "levelCoef": 0, "constant": 300, "dealDamage": true, "upgraded": true},
-          {"name": "Damage - Mark Proc (1-3)", "multiplier": 22, "levelCoef": 0, "constant": 53, "dealDamage": true, "is_tick": true, "tick_count": 3},
-          {"name": "Damage - Mark Proc + (1-3)", "multiplier": 23.8, "levelCoef": 0, "constant": 60, "dealDamage": true, "upgraded": true, "is_tick": true, "tick_count": 3},
-          {"name": "Damage - Final Mark Proc Additional", "multiplier": 110, "levelCoef": 0, "constant": 265, "dealDamage": true},
-          {"name": "Damage - Final Mark Proc Additional +", "multiplier": 119, "levelCoef": 0, "constant": 300, "dealDamage": true, "upgraded": true}
+          {"name": "Damage", "multiplier": 110, "levelCoef": 5, "constant": 265, "dealDamage": true},
+          {"name": "Damage +", "multiplier": 119, "levelCoef": 6, "constant": 300, "dealDamage": true, "upgraded": true},
+          {"name": "Damage - Mark Proc (1-3)", "multiplier": 22, "levelCoef": 1, "constant": 53, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Damage - Mark Proc + (1-3)", "multiplier": 23.8, "levelCoef": 1, "constant": 60, "dealDamage": true, "upgraded": true, "is_tick": true, "tick_count": 3},
+          {"name": "Damage - Final Mark Proc Additional", "multiplier": 110, "levelCoef": 5, "constant": 265, "dealDamage": true},
+          {"name": "Damage - Final Mark Proc Additional +", "multiplier": 119, "levelCoef": 6, "constant": 300, "dealDamage": true, "upgraded": true}
         ],
         "heals": [
           { "name": "Heal - Fourth part of the mark", "scaling": "hp", "multiplier": 15, "levelCoef": 0, "constant": 0 }
@@ -3680,7 +3679,7 @@
         "can_crit": "false",
         "image": "assets/moves/dragapult/dreep_and_destroy.png",
         "damages": [
-          {"name": "Damage (per Dreepy)", "multiplier": 101, "levelCoef": 0, "constant": 180, "dealDamage": true, "is_tick": true, "tick_count": 2, "notes": "+10% of missing HP"},
+          {"name": "Damage (per Dreepy)", "multiplier": 101, "levelCoef": 4, "constant": 180, "dealDamage": true, "is_tick": true, "tick_count": 2, "notes": "+10% of missing HP"},
           {"name": "Damage - Additional (Same Target)", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "30% of full damage if both hit same target"}
         ],
         "shields": [
@@ -3735,7 +3734,7 @@
         "can_crit": "false",
         "image": "assets/moves/dragonite/twister.png",
         "damages": [
-            {"name": "Damage", "multiplier": 93, "levelCoef": 0, "constant": 210, "dealDamage": true}
+            {"name": "Damage", "multiplier": 93, "levelCoef": 7, "constant": 210, "dealDamage": true}
         ]
       },
       {
@@ -3746,7 +3745,7 @@
         "can_crit": "false",
         "image": "assets/moves/dragonite/dragon_breath.png",
         "damages": [
-            {"name": "Damage", "multiplier": 154, "levelCoef": 0, "constant": 350, "dealDamage": true}
+            {"name": "Damage", "multiplier": 154, "levelCoef": 11, "constant": 350, "dealDamage": true}
         ]
       },
       {
@@ -3766,7 +3765,7 @@
         "can_crit": "false",
         "image": "assets/moves/dragonite/extreme_speed.png",
         "damages": [
-          {"name": "Damage", "multiplier": 82, "levelCoef": 0, "constant": 150, "dealDamage": true}
+          {"name": "Damage", "multiplier": 82, "levelCoef": 4, "constant": 150, "dealDamage": true}
         ]
       },
       {
@@ -3777,10 +3776,13 @@
         "can_crit": "false",
         "image": "assets/moves/dragonite/hyper_beam.png",
         "damages": [
-          {"name": "Damage - Stage 0", "multiplier": 187, "levelCoef": 0, "constant": 350, "dealDamage": true, "notes": "+0% max HP"},
-          {"name": "Damage - Stage 1", "multiplier": 224.4, "levelCoef": 0, "constant": 420, "dealDamage": true, "notes": "+5% max HP"},
-          {"name": "Damage - Stage 2", "multiplier": 261.8, "levelCoef": 0, "constant": 490, "dealDamage": true, "notes": "+10% max HP"},
-          {"name": "Damage - Stage 3", "multiplier": 299.2, "levelCoef": 0, "constant": 560, "dealDamage": true, "notes": "+15% max HP"}
+          {"name": "Damage - Stage 0", "multiplier": 187, "levelCoef": 8, "constant": 350, "dealDamage": true},
+          {"name": "Damage - Stage 1", "multiplier": 224.4, "levelCoef": 10, "constant": 420, "dealDamage": true},
+          {"name": "Damage - Stage 1 (Additional)", "max_hp_percent": 5, "dealDamage": true},
+          {"name": "Damage - Stage 2", "multiplier": 261.8, "levelCoef": 11, "constant": 490, "dealDamage": true},
+          {"name": "Damage - Stage 2 (Additional)", "max_hp_percent": 10, "dealDamage": true},
+          {"name": "Damage - Stage 3", "multiplier": 299.2, "levelCoef": 13, "constant": 560, "dealDamage": true},
+          {"name": "Damage - Stage 3 (Additional)", "max_hp_percent": 15, "dealDamage": true}
         ]
       },
       {
@@ -3791,7 +3793,7 @@
         "can_crit": "false",
         "image": "assets/moves/dragonite/outrage.png",
         "damages": [
-          {"name": "Damage - Initial Stomp", "multiplier": 176, "levelCoef": 0, "constant": 330, "dealDamage": true},
+          {"name": "Damage - Initial Stomp", "multiplier": 176, "levelCoef": 7, "constant": 330, "dealDamage": true},
           {"name": "Damage - Boosted Attacks", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true}
         ]
       },
@@ -3803,7 +3805,7 @@
         "can_crit": "false",
         "image": "assets/moves/dragonite/draco_impact.png",
         "damages": [
-          {"name": "Damage", "multiplier": 203, "levelCoef": 0, "constant": 860, "dealDamage": true}
+          {"name": "Damage", "multiplier": 203, "levelCoef": 18, "constant": 860, "dealDamage": true}
         ]
       }
     ]
@@ -3848,7 +3850,7 @@
         "can_crit": "false",
         "image": "assets/moves/duraludon/laser_focus.png",
         "damages": [
-          {"name": "Bonus Damage (per attack, up to 3)", "multiplier": 27, "levelCoef": 0, "constant": 60, "dealDamage": true, "is_tick": true, "tick_count": 3}
+          {"name": "Bonus Damage (per attack, up to 3)", "multiplier": 27, "levelCoef": 3, "constant": 60, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
@@ -3859,7 +3861,7 @@
         "can_crit": "false",
         "image": "assets/moves/duraludon/metal_claw.png",
         "damages": [
-          {"name": "Damage", "multiplier": 94, "levelCoef": 0, "constant": 260, "dealDamage": true}
+          {"name": "Damage", "multiplier": 94, "levelCoef": 8, "constant": 260, "dealDamage": true}
         ]
       },
       {
@@ -3870,8 +3872,8 @@
         "can_crit": "true",
         "image": "assets/moves/duraludon/flash_cannon.png",
         "damages": [
-          {"name": "Damage - Rupture", "multiplier": 52.5, "levelCoef": 0, "constant": 60, "dealDamage": true},
-          {"name": "Damage - Cannon Basic", "multiplier": 105, "levelCoef": 0, "constant": 120, "dealDamage": true},
+          {"name": "Damage - Rupture", "multiplier": 52.5, "levelCoef": 2, "constant": 60, "dealDamage": true},
+          {"name": "Damage - Cannon Basic", "multiplier": 105, "levelCoef": 3, "constant": 120, "dealDamage": true},
           {"name": "Damage - Cannon Boosted", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "(Rupture Damage + 0.5% Max HP) * 3, can crit, capped 500 on wild"}
         ]
       },
@@ -3886,7 +3888,7 @@
           {"name": "Damage - No Charge", "multiplier": 32, "levelCoef": 1, "constant": 38, "dealDamage": true},
           {"name": "Damage - No Charge (per Mark - Max 400)", "multiplier": 45, "levelCoef": 1, "constant": 54, "dealDamage": true, "is_tick": true, "tick_count": 5},
           {"name": "Damage - No Charge (Final Ring - Max 600)", "multiplier": 59, "levelCoef": 1, "constant": 70, "dealDamage": true},
-          {"name": "Bonus Damage (After KO)", "multiplier": 15, "levelCoef": 0, "constant": 27, "dealDamage": true}
+          {"name": "Bonus Damage (After KO)", "multiplier": 15, "levelCoef": 1, "constant": 27, "dealDamage": true}
         ],
         "heals": [
           { "name": "Heal - On Ko (8% Map HP)", "scaling": "hp", "multiplier": 8, "levelCoef": 0, "constant": 0, "upgraded": true, "target": "self" }
@@ -3900,7 +3902,7 @@
         "can_crit": "false",
         "image": "assets/moves/duraludon/dragon_tail.png",
         "damages": [
-          {"name": "Damage", "multiplier": 79, "levelCoef": 0, "constant": 220, "dealDamage": true},
+          {"name": "Damage", "multiplier": 79, "levelCoef": 5, "constant": 220, "dealDamage": true},
           {"name": "Enhanced+ Mark Bonus", "multiplier": 50, "levelCoef": 0, "constant": 0, "dealDamage": true, "upgraded": true}
         ]
       },
@@ -3912,7 +3914,7 @@
         "can_crit": "false",
         "image": "assets/moves/duraludon/stealth_rock.png",
         "damages": [
-          {"name": "Damage - per Tick (up to 4)", "multiplier": 28, "levelCoef": 0, "constant": 80, "dealDamage": true, "is_tick": true, "tick_count": 4}
+          {"name": "Damage - per Tick (up to 4)", "multiplier": 28, "levelCoef": 2, "constant": 80, "dealDamage": true, "is_tick": true, "tick_count": 4}
         ],
         "shields": [
           {
@@ -3930,7 +3932,7 @@
         "can_crit": "false",
         "image": "assets/moves/duraludon/revolving_ruin.png",
         "damages": [
-          {"name": "Damage - per Hit", "multiplier": 163, "levelCoef": 0, "constant": 350, "dealDamage": true},
+          {"name": "Damage - per Hit", "multiplier": 163, "levelCoef": 6, "constant": 350, "dealDamage": true},
           {"name": "Damage - Burning Ring (per Tick)", "multiplier": 35, "levelCoef": 0, "constant": 63, "dealDamage": true, "is_tick": true, "tick_count": 20}
         ],
         "shields": [
@@ -3983,8 +3985,8 @@
         "image": "assets/moves/basic_attack.png",
         "damages": [
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true, "scaling": "physical"},
-          {"name": "Boosted", "multiplier": 73, "levelCoef": 0, "constant": 120, "dealDamage": true, "scaling": "special"},
-          {"name": "Cotton Fluff Bonus", "multiplier": 18.25, "levelCoef": 0, "constant": 30, "dealDamage": true, "scaling": "special"}
+          {"name": "Boosted", "multiplier": 73, "levelCoef": 6, "constant": 120, "dealDamage": true, "scaling": "special"},
+          {"name": "Cotton Fluff Bonus", "multiplier": 18.25, "levelCoef": 2, "constant": 30, "dealDamage": true, "scaling": "special"}
         ]
       },
       {
@@ -4006,41 +4008,53 @@
         "can_crit": "false",
         "image": "assets/moves/eldegoss/leafage.png",
         "damages": [
-          {"name": "Damage", "multiplier": 129, "levelCoef": 0, "constant": 210, "dealDamage": true}
+          {"name": "Damage", "multiplier": 129, "levelCoef": 11, "constant": 210, "dealDamage": true}
         ]
       },
       {
         "name": "Synthesis",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/eldegoss/synthesis.png",
         "damages": [],
         "heals": [
-          { "name": "Heal", "scaling": "sp_atk", "multiplier": 100, "levelCoef": 0, "constant": 350 }
+          { "name": "Heal", "scaling": "sp_atk", "multiplier": 100, "levelCoef": 5, "constant": 350 }
         ]
       },
       {
         "name": "Pollen Puff",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/eldegoss/pollen_puff.png",
         "damages": [
-          {"name": "Damage", "multiplier": 80, "levelCoef": 0, "constant": 155, "dealDamage": true},
-          {"name": "Enhanced+ DoT (every 0.5s, up to 4)", "multiplier": 9, "levelCoef": 0, "constant": 18, "dealDamage": true}
+          {"name": "Damage", "multiplier": 80, "levelCoef": 5, "constant": 155, "dealDamage": true},
+          {"name": "Damage - DoT + (every 0.5s, up to 4)", "multiplier": 9, "levelCoef": 1, "constant": 18, "dealDamage": true, "is_tick": true, "tick_count": 4}
         ],
         "heals": [
-          { "name": "Heal", "scaling": "sp_atk", "multiplier": 150, "levelCoef": 0, "constant": 300 }
+          { "name": "Heal", "scaling": "sp_atk", "multiplier": 150, "levelCoef": 13, "constant": 300 }
         ]
       },
       {
         "name": "Leaf Tornado",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/eldegoss/leaf_tornado.png",
         "damages": [
-          {"name": "Damage - First Hit", "multiplier": 106, "levelCoef": 0, "constant": 240, "dealDamage": true},
+          {"name": "Damage - First Hit", "multiplier": 106, "levelCoef": 6, "constant": 240, "dealDamage": true},
           {"name": "Damage - Second Hit", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "25% of first hit"}
         ]
       },
       {
         "name": "Cotton Guard",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/eldegoss/cotton_guard.png",
         "damages": [
@@ -4051,28 +4065,34 @@
             "name": "Shield",
             "scaling": "sp_atk",
             "multiplier": 172.5,
-            "levelCoef": 0,
+            "levelCoef": 23,
             "constant": 290
           }
         ]
       },
       {
         "name": "Cotton Spore",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/eldegoss/cotton_spore.png",
         "damages": [
-          {"name": "Damage", "multiplier": 148, "levelCoef": 0, "constant": 350, "dealDamage": true}
+          {"name": "Damage", "multiplier": 148, "levelCoef": 14, "constant": 350, "dealDamage": true}
         ]
       },
       {
         "name": "Cotton Cloud Crash (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/eldegoss/cotton_cloud_crash.png",
         "damages": [
-          {"name": "Damage", "multiplier": 200, "levelCoef": 0, "constant": 530, "dealDamage": true}
+          {"name": "Damage", "multiplier": 200, "levelCoef": 8, "constant": 530, "dealDamage": true}
         ],
         "heals": [
-          { "name": "Heal", "scaling": "sp_atk", "multiplier": 306, "levelCoef": 0, "constant": 636 }
+          { "name": "Heal", "scaling": "sp_atk", "multiplier": 306, "levelCoef": 13, "constant": 636 }
         ],
         "shields": [
           {
@@ -4109,81 +4129,117 @@
         {"level": 15, "hp": 8500, "atk": 115, "def": 520, "sp_atk": 670, "sp_def": 400, "crit": 20}
     ],
     "moves": [
-        {
-            "name": "Auto-attack",
-            "can_crit": "true",
-            "image": "assets/moves/basic_attack.png",
-            "damages": [
-                {"name": "Basic", "multiplier": 60, "levelCoef": 0, "constant": 120, "dealDamage": true},
-                {"name": "Boosted", "multiplier": 90, "levelCoef": 0, "constant": 180, "dealDamage": true}
-            ]
-        },
-        {
-            "name": "Water Gun",
-            "can_crit": "false",
-            "image": "assets/moves/empoleon/water_gun.png",
-            "damages": [
-                {"name": "Damage", "multiplier": 143, "levelCoef": 0, "constant": 358, "dealDamage": true},
-                {"name": "Damage (Torrent)", "multiplier": 214, "levelCoef": 0, "constant": 536, "dealDamage": true}
-            ]
-        },
-        {
-            "name": "Peck",
-            "can_crit": "false",
-            "image": "assets/moves/empoleon/peck.png",
-            "damages": [
-                {"name": "Damage", "multiplier": 130, "levelCoef": 0, "constant": 325, "dealDamage": true}
-            ]
-        },
-        {
-            "name": "Hydro Cannon",
-            "can_crit": "false",
-            "image": "assets/moves/empoleon/hydro_cannon.png",
-            "damages": [
-                {"name": "Damage", "multiplier": 235, "levelCoef": 0, "constant": 350, "dealDamage": true},
-                {"name": "Damage - Whirlpool (Torrent, up to 6)", "multiplier": 46, "levelCoef": 0, "constant": 70, "dealDamage": true},
-                {"name": "Healing - Whirlpool (Torrent)", "multiplier": 47, "levelCoef": 0, "constant": 128, "heal": true}
-            ]
-        },
-        {
-            "name": "Whirlpool",
-            "can_crit": "false",
-            "image": "assets/moves/empoleon/whirlpool.png",
-            "damages": [
-                {"name": "Damage (up to 4)", "multiplier": 62, "levelCoef": 0, "constant": 90, "dealDamage": true},
-                {"name": "Damage (Torrent, up to 4)", "multiplier": 74, "levelCoef": 0, "constant": 108, "dealDamage": true},
-                {"name": "Damage - Slash (Torrent)", "multiplier": 74, "levelCoef": 0, "constant": 108, "dealDamage": true},
-                {"name": "Enhanced+ Damage (up to 4)", "multiplier": 74, "levelCoef": 0, "constant": 108, "dealDamage": true},
-                {"name": "Enhanced+ Damage (Torrent, up to 4)", "multiplier": 88, "levelCoef": 0, "constant": 130, "dealDamage": true},
-                {"name": "Enhanced+ Damage - Slash (Torrent)", "multiplier": 88, "levelCoef": 0, "constant": 130, "dealDamage": true}
-            ]
-        },
-        {
-            "name": "Metal Claw",
-            "can_crit": "false",
-            "image": "assets/moves/empoleon/metal_claw.png",
-            "damages": [
-                {"name": "Damage", "multiplier": 207, "levelCoef": 0, "constant": 310, "dealDamage": true},
-                {"name": "Shield (Torrent)", "multiplier": 135, "levelCoef": 0, "constant": 352, "shield": true},
-                {"name": "Enhanced+ Shield (Torrent)", "multiplier": 162, "levelCoef": 0, "constant": 424, "shield": true}
-            ]
-        },
-        {
-            "name": "Aqua Jet",
-            "can_crit": "false",
-            "image": "assets/moves/empoleon/aqua_jet.png",
-            "damages": [
-                {"name": "Damage", "multiplier": 200, "levelCoef": 0, "constant": 300, "dealDamage": true}
-            ]
-        },
-        {
-            "name": "Sovereign Slide (Unite)",
-            "can_crit": "false",
-            "image": "assets/moves/empoleon/sovereign_slide.png",
-            "damages": [
-                {"name": "Damage", "multiplier": 352, "levelCoef": 0, "constant": 528, "dealDamage": true}
-            ]
-        }
+      {
+        "name": "Auto-attack",
+        "can_crit": "true",
+        "image": "assets/moves/basic_attack.png",
+        "damages": [
+          {"name": "Basic", "multiplier": 60, "levelCoef": 0, "constant": 120, "dealDamage": true},
+          {"name": "Boosted", "multiplier": 90, "levelCoef": 0, "constant": 180, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Water Gun",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/empoleon/water_gun.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 143, "levelCoef": 13, "constant": 358, "dealDamage": true},
+          {"name": "Damage (Torrent)", "multiplier": 214, "levelCoef": 20, "constant": 536, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Peck",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/empoleon/peck.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 130, "levelCoef": 12, "constant": 325, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Hydro Cannon",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/empoleon/hydro_cannon.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 235, "levelCoef": 13, "constant": 350, "dealDamage": true},
+          {"name": "Damage - Whirlpool (Torrent, up to 6)", "multiplier": 46, "levelCoef": 3, "constant": 70, "dealDamage": true, "is_tick": true, "tick_count": 6}
+        ],
+        "heals": [
+          { "name": "Healing - Whirlpool (Torrent)", "scaling": "sp_atk", "multiplier": 47, "levelCoef": 0, "constant": 128 }
+        ]
+      },
+      {
+        "name": "Whirlpool",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/empoleon/whirlpool.png",
+        "damages": [
+          {"name": "Damage (up to 4)", "multiplier": 62, "levelCoef": 4, "constant": 90, "dealDamage": true, "is_tick": true, "tick_count": 4},
+          {"name": "Damage + (up to 4)", "multiplier": 74, "levelCoef": 5, "constant": 108, "dealDamage": true, "is_tick": true, "tick_count": 4, "upgraded": true},
+          {"name": "Damage (Torrent, up to 4)", "multiplier": 74, "levelCoef": 5, "constant": 108, "dealDamage": true, "is_tick": true, "tick_count": 4},
+          {"name": "Damage + (Torrent, up to 4)", "multiplier": 88, "levelCoef": 6, "constant": 130, "dealDamage": true, "is_tick": true, "tick_count": 4, "upgraded": true},
+          {"name": "Damage - Slash (Torrent)", "multiplier": 74, "levelCoef": 5, "constant": 108, "dealDamage": true},
+          {"name": "Damage - Slash + (Torrent)", "multiplier": 88, "levelCoef": 6, "constant": 130, "dealDamage": true, "upgraded": true}
+        ]
+      },
+      {
+        "name": "Metal Claw",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/empoleon/metal_claw.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 207, "levelCoef": 11, "constant": 310, "dealDamage": true},
+          {"name": "Shield (Torrent)", "multiplier": 135, "levelCoef": 14, "constant": 352, "shield": true},
+          {"name": "Enhanced+ Shield (Torrent)", "multiplier": 162, "levelCoef": 17, "constant": 424, "shield": true}
+        ],
+        "shields": [
+          {"name": "Shield (Torrent)", "scaling": "sp_atk", "multiplier": 135, "levelCoef": 14, "constant": 352},
+          {"name": "Shield + (Torrent)", "scaling": "sp_atk", "multiplier": 162, "levelCoef": 17, "constant": 424, "upgraded": true}
+        ]
+      },
+      {
+        "name": "Aqua Jet",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/empoleon/aqua_jet.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 200, "levelCoef": 0, "constant": 300, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Sovereign Slide (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/empoleon/sovereign_slide.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 352, "levelCoef": 19, "constant": 528, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0
+          }
+        ]
+      }
     ]
   },
   {
@@ -4228,6 +4284,9 @@
       },
       {
         "name": "Swift",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/espeon/swift.png",
         "damages": [
@@ -4237,6 +4296,9 @@
       },
       {
         "name": "Psyshock",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/espeon/psyshock.png",
         "damages": [
@@ -4246,6 +4308,9 @@
       },
       {
         "name": "Stored Power",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/espeon/stored_power.png",
         "damages": [
@@ -4255,6 +4320,9 @@
       },
       {
         "name": "Growl",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/espeon/growl.png",
         "damages": [
@@ -4263,6 +4331,9 @@
       },
       {
         "name": "Psybeam",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/espeon/psybeam.png",
         "damages": [
@@ -4273,21 +4344,35 @@
       },
       {
         "name": "Future Sight",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/espeon/future_sight.png",
         "damages": [
           {"name": "Base Damage", "multiplier": 57.6, "levelCoef": 9, "constant": 338, "dealDamage": true},
-          {"name": "Missing HP Bonus", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+10% of target's missing HP (cap 1800 wild)"},
+          {"name": "Missing HP Bonus (cap 1800 on wild)", "missing_hp_percent": 10, "dealDamage": true, "notes": "+10% of target's missing HP (cap 1800 wild)"},
           {"name": "Bonus Damage to Target", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+15% damage from Espeon to locked target (enhanced)"}
         ]
       },
       {
         "name": "Psychic Solare (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/espeon/psychic_solare.png",
         "damages": [
-          {"name": "Damage", "multiplier": 87, "levelCoef": 11, "constant": 520, "dealDamage": true},
-          {"name": "Shield", "multiplier": 0, "levelCoef": 0, "constant": 0, "shield": true, "notes": "20% max HP shield"}
+          {"name": "Damage", "multiplier": 87, "levelCoef": 11, "constant": 520, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0
+          }
         ]
       }
     ]
