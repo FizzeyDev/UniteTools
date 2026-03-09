@@ -4000,6 +4000,9 @@
       },
       {
         "name": "Leafage",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/eldegoss/leafage.png",
         "damages": [
@@ -5121,9 +5124,9 @@
         "can_crit": "false",
         "image": "assets/moves/gyarados/dragon_breath.png",
         "damages": [
-          {"name": "Damage - Basic", "multiplier": 124, "levelCoef": 0, "constant": 0, "dealDamage": true}
-          {"name": "Damage - Boosted", "multiplier": 166, "levelCoef": 0, "constant": 0, "dealDamage": true}
-          {"name": "Damage - Basic +", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Damage - Basic", "multiplier": 124, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Damage - Boosted", "multiplier": 166, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Damage - Basic +", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true},
           {"name": "Damage - Boosted +", "multiplier": 176, "levelCoef": 0, "constant": 0, "dealDamage": true}
         ]
       },
@@ -5230,9 +5233,9 @@
         "can_crit": "false",
         "image": "assets/moves/gyarados/dragon_breath.png",
         "damages": [
-          {"name": "Damage - Basic", "multiplier": 124, "levelCoef": 0, "constant": 0, "dealDamage": true}
-          {"name": "Damage - Boosted", "multiplier": 166, "levelCoef": 0, "constant": 0, "dealDamage": true}
-          {"name": "Damage - Basic +", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Damage - Basic", "multiplier": 124, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Damage - Boosted", "multiplier": 166, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Damage - Basic +", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true},
           {"name": "Damage - Boosted +", "multiplier": 176, "levelCoef": 0, "constant": 0, "dealDamage": true}
         ]
       },
