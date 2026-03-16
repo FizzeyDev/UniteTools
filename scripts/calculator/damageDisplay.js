@@ -32,7 +32,8 @@ import {
   applyTinkatonAttacker,
   applyTyranitarAttacker,
   applyZeraoraAttacker,
-  applyCrustleAttacker
+  applyCrustleAttacker,
+  applyMoltresAttacker
 } from './passiveEffectsAtk.js';
 
 import {
@@ -671,7 +672,8 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
     rapidash: applyRapidashAttacker, sirfetchd: applySirfetchdAttacker,
     sylveon: applySylveonAttacker, tinkaton: applyTinkatonAttacker,
     tyranitar: applyTyranitarAttacker, zeraora: applyZeraoraAttacker,
-    crustle: applyCrustleAttacker
+    crustle: applyCrustleAttacker,
+    moltres: applyMoltresAttacker
   };
   handlers[pokemonId]?.(atkStats, defStats, card);
 }
@@ -811,8 +813,18 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       if (infiltratorIgnore > 0)          effectiveDef = Math.floor(effectiveDef * (1 - infiltratorIgnore));
       if (defenderFlashFireReduction > 0) effectiveDef = Math.floor(effectiveDef / (1 - defenderFlashFireReduction));
 
-      let normal = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0,           globalDamageMult, defStats.hp, currentDefHP);
-      let crit   = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, true,  state.currentAttacker.pokemonId, scopeCritBonus, globalDamageMult, defStats.hp, currentDefHP);
+      // ── Moltres : bonus Flame Body sur Incinerate / Heat Wave ────────────
+      let moltresBurnMult = 1.0;
+      if (state.currentAttacker?.pokemonId === "moltres" && state.attackerPassiveStacks > 0) {
+        const burnMoves = ["Incinerate", "Heat Wave"];
+        if (burnMoves.includes(move.name)) {
+          moltresBurnMult = 1 + 0.10 * state.attackerPassiveStacks;
+        }
+      }
+      const effectiveGlobalMult = globalDamageMult * moltresBurnMult;
+
+      let normal = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0,           effectiveGlobalMult, defStats.hp, currentDefHP);
+      let crit   = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, true,  state.currentAttacker.pokemonId, scopeCritBonus, effectiveGlobalMult, defStats.hp, currentDefHP);
 
       const muscleMult = getBuzzwoleMuscleMultiplier(move.name, dmg.name);
       normal = Math.floor(normal * muscleMult);

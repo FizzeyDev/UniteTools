@@ -608,10 +608,8 @@ function applyCrustleAttacker(atkStats, defStats, card) {
   const spAtkBonus = Math.floor(baseStats.sp_def * conversionRate);
 
   if (state.attackerShellSmashActive) {
-    // Appliquer les stats : def/sp_def → 0, atk/sp_atk += bonus
     atkStats.atk    += atkBonus;
     atkStats.sp_atk += spAtkBonus;
-    // La def tombe à 0 — géré dans damageDisplay via un flag
   }
 
   const line = document.createElement("div");
@@ -641,6 +639,48 @@ function applyCrustleAttacker(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── MOLTRES ───────────────────────────────────────────────────────────────────
+
+function applyMoltresAttacker(atkStats, defStats, card) {
+  const passive = state.currentAttacker.passive;
+  const stacks  = state.attackerPassiveStacks; // 0–5
+
+  // Calcul d'un tick de brûlure : sp_atk * ratio% + base
+  const burnPerTick = Math.floor(atkStats.sp_atk * passive.burnTickRatio / 100) + (passive.burnTickBase || 0);
+  // Les ticks actifs = stacks × 2 (1 tick toutes les 0.5s pendant 4s → 8 max, mais plafonné par les stacks)
+  const activeTicks = stacks * 2;
+  const burnTotal   = burnPerTick * activeTicks;
+
+  const line = document.createElement("div");
+  line.className = "global-bonus-line";
+  line.innerHTML = `
+    <div style="margin:12px 0;padding:10px;background:${ATK_BG};border-radius:8px;${ATK_BORDER};display:flex;align-items:center;gap:12px;">
+      <img src="${passive.image}" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/moves/missing.png'">
+      <div style="flex:1;">
+        <strong style="color:${ATK_COLOR};">Flame Body</strong><br>
+        Burn stacks: <button class="stack-btn minus">-</button>
+        <strong style="color:${ATK_COLOR};">${stacks}</strong>/${passive.burnMaxStacks}
+        <button class="stack-btn plus">+</button><br>
+        <span style="font-size:0.85rem;color:#ccc;">
+          Tick (×${passive.burnTickInterval}s) :
+          <strong style="color:#ff9944;">${burnPerTick.toLocaleString()}</strong>
+          ${stacks > 0 ? `— Total : <strong style="color:#ff9944;">${burnTotal.toLocaleString()}</strong> (${activeTicks} ticks)` : ''}
+        </span>
+        ${stacks > 0 ? `<br><span style="color:#ffd740;font-size:0.85rem;">+${stacks * 10}% dmg on Incinerate / Heat Wave</span>` : ''}
+      </div>
+    </div>
+  `;
+
+  line.querySelector('.minus').onclick = () => {
+    if (state.attackerPassiveStacks > 0) { state.attackerPassiveStacks--; updateDamages(); }
+  };
+  line.querySelector('.plus').onclick = () => {
+    if (state.attackerPassiveStacks < passive.burnMaxStacks) { state.attackerPassiveStacks++; updateDamages(); }
+  };
+
+  card.appendChild(line);
+}
+
 export {
   applyBuzzwoleAttacker,
   applyCeruledgeAttacker,
@@ -664,5 +704,6 @@ export {
   applyTinkatonAttacker,
   applyTyranitarAttacker,
   applyZeraoraAttacker,
-  applyCrustleAttacker
+  applyCrustleAttacker,
+  applyMoltresAttacker
 };

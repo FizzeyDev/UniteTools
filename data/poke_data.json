@@ -7265,6 +7265,138 @@
     ]
   },
   {
+    "pokemonId": "moltres",
+    "dex": 146,
+    "role": "all-rounder",
+    "style": "special",
+    "stats": [
+      {"level": 1,  "hp": 3400, "atk": 120, "def": 80,  "sp_atk": 100, "sp_def": 70,  "crit": 0},
+      {"level": 2,  "hp": 3557, "atk": 123, "def": 95,  "sp_atk": 115, "sp_def": 85,  "crit": 0},
+      {"level": 3,  "hp": 3729, "atk": 126, "def": 112, "sp_atk": 132, "sp_def": 101, "crit": 0},
+      {"level": 4,  "hp": 3918, "atk": 129, "def": 131, "sp_atk": 151, "sp_def": 119, "crit": 0},
+      {"level": 5,  "hp": 4126, "atk": 133, "def": 151, "sp_atk": 171, "sp_def": 138, "crit": 10},
+      {"level": 6,  "hp": 4355, "atk": 137, "def": 173, "sp_atk": 193, "sp_def": 159, "crit": 10},
+      {"level": 7,  "hp": 4607, "atk": 142, "def": 198, "sp_atk": 218, "sp_def": 182, "crit": 10},
+      {"level": 8,  "hp": 4885, "atk": 147, "def": 225, "sp_atk": 245, "sp_def": 208, "crit": 10},
+      {"level": 9,  "hp": 5191, "atk": 153, "def": 255, "sp_atk": 275, "sp_def": 237, "crit": 20},
+      {"level": 10, "hp": 5528, "atk": 159, "def": 288, "sp_atk": 308, "sp_def": 268, "crit": 20},
+      {"level": 11, "hp": 5900, "atk": 166, "def": 324, "sp_atk": 344, "sp_def": 303, "crit": 20},
+      {"level": 12, "hp": 6309, "atk": 173, "def": 364, "sp_atk": 384, "sp_def": 341, "crit": 20},
+      {"level": 13, "hp": 6759, "atk": 181, "def": 408, "sp_atk": 428, "sp_def": 383, "crit": 20},
+      {"level": 14, "hp": 7255, "atk": 190, "def": 457, "sp_atk": 477, "sp_def": 429, "crit": 20},
+      {"level": 15, "hp": 7800, "atk": 200, "def": 510, "sp_atk": 530, "sp_def": 480, "crit": 20}
+    ],
+    "passive": {
+      "name": "Flame Body",
+      "image": "assets/moves/moltres/flame_body.png",
+      "description": "Whenever the user deals damage with a Basic Attack, Boosted Attack, Wing Attack, or Sky Attack, the target is left with a burn and a burn counter (max 5 stacks, lasts 4s, ticks every 0.5s). If Incinerate or Heat Wave are used, the burn is cleansed and the counter is consumed, increasing the move's damage by 10% per stack.",
+      "burnTickRatio": 18,
+      "burnTickBase": 18,
+      "burnDmgType": "sp_atk",
+      "burnMaxStacks": 5,
+      "burnDuration": 4,
+      "burnTickInterval": 0.5,
+      "incinBonus": "10% per burn stack"
+    },
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "true",
+        "image": "assets/moves/basic_attack.png",
+        "damages": [
+          {"name": "Basic",   "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Boosted", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Wing Attack",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/moltres/wing_attack.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 50, "levelCoef": 5, "constant": 400, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Sky Attack",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/moltres/sky_attack.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 178.5, "levelCoef": 7, "constant": 525, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "sp_atk",
+            "multiplier": 130,
+            "levelCoef": 0,
+            "constant": 200,
+            "notes": "Granted on successful hit (boosted attack)",
+            "upgraded": true
+          }
+        ]
+      },
+      {
+        "name": "Incinerate",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/moltres/incinerate.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 42, "levelCoef": 5, "constant": 350, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Heat Wave",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/moltres/heat_wave.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 147, "levelCoef": 8, "constant": 434, "dealDamage": true}
+        ],
+        "heals": [
+          {
+            "name": "Healing per tick (4 ticks)",
+            "scaling": "hp",
+            "multiplier": 5,
+            "levelCoef": 0,
+            "constant": 0,
+            "is_tick": true,
+            "tick_count": 4
+          }
+        ]
+      },
+      {
+        "name": "Firebird Inferno (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/moltres/firebird_inferno.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 140, "levelCoef": 10, "constant": 700, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield - Unite",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
     "pokemonId": "mr_mime",
     "dex": 122,
     "role": "supporter",
