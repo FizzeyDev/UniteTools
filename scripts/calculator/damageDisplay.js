@@ -307,8 +307,6 @@ function applyItemsAndGlobalEffects(atkStats, defStats) {
   const attackerCard = document.querySelector('.attacker-stats');
   const defenderCard = document.querySelector('.defender-stats');
 
-  let choiceSpecsBonus = 0;
-  let hasChoiceSpecs   = false;
   let slickIgnore      = 0;
   let scopeCritBonus   = 1.0;
   let globalDamageMult = 1.0;
@@ -334,8 +332,7 @@ function applyItemsAndGlobalEffects(atkStats, defStats) {
     if (!item) return;
 
     if (item.name === "Choice Specs") {
-      hasChoiceSpecs = true;
-      choiceSpecsBonus = Math.floor(atkStats.sp_atk * parseFloat(item.level20.replace('%', '').trim()) / 100);
+      // handled in sidebar block below
     }
     if (item.name === "Slick Spoon" && state.attackerItemActivated[i]) {
       slickIgnore = parseFloat(item.level20.replace('%', '').trim()) / 100 || 0;
@@ -597,6 +594,32 @@ function applyItemsAndGlobalEffects(atkStats, defStats) {
     card.appendChild(line);
   });
 
+  // ── CHOICE SPECS ───────────────────────────────────────────────────────
+  {
+    const idx = state.attackerItems.findIndex(i => i?.name === "Choice Specs");
+    if (idx !== -1) {
+      const item         = state.attackerItems[idx];
+      const csConstant   = parseFloat(item.level20) || 0;
+      const csMultiplier = item.level20_multiplier
+        ? parseFloat(item.level20_multiplier.replace('%', '').trim()) / 100
+        : 0;
+      const specsBonus = csConstant + Math.floor(atkStats.sp_atk * csMultiplier);
+      const line = document.createElement("div");
+      line.className = "global-bonus-line";
+      line.innerHTML = `
+        <div style="margin:12px 0;padding:10px;background:#1a2030;border-radius:8px;border-left:4px solid #4fc3f7;display:flex;align-items:center;gap:12px;">
+          <img src="${item.image}" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/items/missing.png'">
+          <div style="flex:1;">
+            <strong style="color:#4fc3f7;">Choice Specs</strong><br>
+            <span style="font-size:0.85rem;color:#a0c4d8;">Additional damage on move hit (8s CD)</span><br>
+            <span style="color:#4fc3f7;font-family:'Exo 2',sans-serif;font-size:1.4rem;font-weight:900;">+${specsBonus.toLocaleString()}</span>
+          </div>
+        </div>
+      `;
+      attackerCard.appendChild(line);
+    }
+  }
+
   // ── VANGUARD BELL ──────────────────────────────────────────────────────
   ['attacker', 'defender'].forEach(side => {
     const items = side === 'attacker' ? state.attackerItems : state.defenderItems;
@@ -656,7 +679,7 @@ function applyItemsAndGlobalEffects(atkStats, defStats) {
     card.appendChild(line);
   });
 
-  return { choiceSpecsBonus, hasChoiceSpecs, slickIgnore, scopeCritBonus, globalDamageMult };
+  return { slickIgnore, scopeCritBonus, globalDamageMult };
 }
 
 function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
@@ -746,12 +769,11 @@ function getBuzzwoleMuscleMultiplier(moveName, damageName) {
 }
 
 function displayMoves(atkStats, defStats, effects, currentDefHP) {
-  const { choiceSpecsBonus, hasChoiceSpecs, slickIgnore, scopeCritBonus, globalDamageMult, infiltratorIgnore, defenderFlashFireReduction, defenderDamageMult } = effects;
+  const { slickIgnore, scopeCritBonus, globalDamageMult, infiltratorIgnore, defenderFlashFireReduction, defenderDamageMult } = effects;
   const aaResults = getAutoAttackResults(atkStats, defStats, currentDefHP, globalDamageMult);
   const level = state.attackerLevel;
 
   movesGrid.innerHTML = "";
-  let firstHit = true;
 
   state.currentAttacker.moves.forEach(move => {
 
@@ -846,11 +868,6 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       let displayedNormal = normal;
       let displayedCrit   = crit;
 
-      if (hasChoiceSpecs && firstHit && (dmg.scaling === "special" || state.currentAttacker.style === "special")) {
-        displayedNormal = Math.floor((displayedNormal + choiceSpecsBonus) * defenderDamageMult);
-        displayedCrit   = Math.floor((displayedCrit   + choiceSpecsBonus) * defenderDamageMult);
-      }
-
       const line      = document.createElement("div");
       line.className  = "damage-line";
       const canCrit   = move.can_crit === "true" || move.can_crit === true;
@@ -906,7 +923,6 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         card.appendChild(capLine);
       }
 
-      firstHit = false;
     });
 
     // ── HEALS ──────────────────────────────────────────────────────────────

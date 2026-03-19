@@ -193,7 +193,7 @@ function applyDebuffs(pokemon, stats) {
     if (state.defenderMimePsychic) spDefMult *= Math.pow(0.95, Math.min(state.mimePsychicStacks, 8));
     if (state.defenderSlowbroOblivious) spDefMult *= Math.pow(0.96, Math.min(state.slowbroObliviousStacks, 5));
     if (state.defenderSylveonHyperVoice) spDefMult *= Math.pow(0.80, Math.min(state.sylveonHypervoiceStacks, 4));
-    if (state.defenderVenusaurSludgeBomb) spDefMult *= 0.60;
+    if (state.defenderVenusaurSludgeBomb) spDefMult *= 0.50;
     if (state.defenderMewtwoYUnite) spDefMult *= 0.85;
     if (state.defenderPsyduckTailWhip) spDefMult *= 0.80;
     if (state.defenderPsyduckTailWhipMysterious) spDefMult *= 0.70;

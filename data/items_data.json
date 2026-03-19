@@ -187,7 +187,8 @@
       { "label": "Sp. Attack", "percent": false, "float": 0, "value": 44 }
     ],
     "description1": "When damaging an opposing Pokémon with a move: deals additional damage (8s CD).",
-    "level20": "40%",
+    "level20": "60",
+    "level20_multiplier": "40%",
     "activable": false,
     "activation_effect": null
   },

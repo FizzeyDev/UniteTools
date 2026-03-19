@@ -50,13 +50,13 @@ function applyChandelureAttacker(atkStats, defStats, card) {
       <img src="assets/moves/chandelure/infiltrator.png" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/moves/missing.png'">
       <div style="flex:1;">
         <strong style="color:${ATK_COLOR};">Infiltrator</strong><br>
-        Stacks: <button class="stack-btn minus">-</button> <strong style="color:${ATK_COLOR};">${state.attackerPassiveStacks}</strong>/8 <button class="stack-btn plus">+</button>
-        <br>→ Ignore ${(state.attackerPassiveStacks * 2.5).toFixed(1)}% Sp. Def
+        Stacks: <button class="stack-btn minus">-</button> <strong style="color:${ATK_COLOR};">${state.attackerPassiveStacks}</strong>/6 <button class="stack-btn plus">+</button>
+        <br>→ Ignore ${(state.attackerPassiveStacks * 5).toFixed(1)}% Sp. Def
       </div>
     </div>
   `;
   line.querySelector('.minus').onclick = () => { if (state.attackerPassiveStacks > 0) { state.attackerPassiveStacks--; updateDamages(); } };
-  line.querySelector('.plus').onclick = () => { if (state.attackerPassiveStacks < 8) { state.attackerPassiveStacks++; updateDamages(); } };
+  line.querySelector('.plus').onclick = () => { if (state.attackerPassiveStacks < 6) { state.attackerPassiveStacks++; updateDamages(); } };
   card.appendChild(line);
 }
 
