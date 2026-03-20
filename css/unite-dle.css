@@ -195,11 +195,11 @@ body {
   padding: 2px 8px; border-radius: 20px;
   letter-spacing: 0.05em; text-transform: uppercase; flex-shrink: 0;
 }
-.role-attaquant   { background: rgba(239,83,80,0.18);  color: var(--red); border: 1px solid rgba(239,83,80,0.35); }
-.role-défenseur   { background: rgba(79,195,247,0.14); color: var(--green); border: 1px solid rgba(79,195,247,0.35); }
-.role-all-rounder { background: rgba(159,83,236,0.18); color: purple; border: 1px solid rgba(159,83,236,0.35); }
-.role-rapide      { background: rgba(255,157,0,0.16);  color: cyan; border: 1px solid rgba(255,157,0,0.35); }
-.role-soutien     { background: rgba(76,175,130,0.18); color: yellow; border: 1px solid rgba(76,175,130,0.35); }
+.role-attaquant   { background: rgba(239,83,80,0.18);  color: #f88b89; border: 1px solid rgba(239,83,80,0.35); }
+.role-défenseur   { background: rgba(79,195,247,0.14); color: #7dd9f9; border: 1px solid rgba(79,195,247,0.35); }
+.role-all-rounder { background: rgba(159,83,236,0.18); color: #c49ef5; border: 1px solid rgba(159,83,236,0.35); }
+.role-rapide      { background: rgba(255,157,0,0.16);  color: #ffc055; border: 1px solid rgba(255,157,0,0.35); }
+.role-soutien     { background: rgba(76,175,130,0.18); color: #6ee7b2; border: 1px solid rgba(76,175,130,0.35); }
 
 /* ── Column labels ──────────────────────────── */
 .udle-col-labels {
@@ -348,6 +348,9 @@ body {
   font-size: 0.82rem; font-weight: 900;
   line-height: 1.2;
   word-break: break-word;
+  hyphens: auto;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 .card-arrow {
   font-size: 0.75rem; line-height: 1; margin-top: 1px;
@@ -392,30 +395,71 @@ body {
 
 /* ── Responsive ─────────────────────────────── */
 @media (max-width: 860px) {
-  :root { --card-w: 80px; --card-h: 68px; }
-  .udle-poke-id { width: 130px; }
-  .col-pokemon-lbl { width: 130px; }
+  :root { --card-w: 76px; --card-h: 68px; }
+  .udle-poke-id { width: 120px; }
+  .col-pokemon-lbl { width: 120px; }
   .card-value { font-size: 0.72rem; }
-  .card-label { font-size: 0.54rem; }
+  .card-label { font-size: 0.52rem; }
 }
 
+/* Tablette portrait / grand téléphone */
 @media (max-width: 640px) {
-  :root { --card-w: 62px; --card-h: 60px; }
-  .udle-poke-id { width: 110px; padding: 6px 8px; }
-  .udle-poke-id img { width: 32px; height: 32px; }
-  .udle-poke-id-name { font-size: 0.7rem; }
-  .col-pokemon-lbl { width: 110px; }
-  .udle-cards { gap: 4px; }
-  .udle-guess-row { gap: 6px; }
-  .card-value { font-size: 0.64rem; }
+  :root { --card-w: 52px; --card-h: 64px; }
+
+  .udle-wrapper { padding: 16px 8px 60px; }
+
+  /* Pokémon identity : image seule, pas de nom */
+  .udle-poke-id {
+    width: 52px;
+    min-width: 52px;
+    padding: 6px;
+    justify-content: center;
+  }
+  .udle-poke-id img { width: 36px; height: 36px; }
+  .udle-poke-id-name { display: none; }
+
+  /* Labels au-dessus : masquer le label Pokémon */
+  .col-pokemon-lbl { width: 52px; min-width: 52px; font-size: 0; }
+  .col-pokemon-lbl::after { content: '🎮'; font-size: 0.7rem; }
+
+  .udle-cards { gap: 3px; }
+  .udle-guess-row { gap: 4px; }
+
+  /* Labels colonnes : très petits, une ligne, pas de retour */
+  .udle-cards-labels {
+    gap: 3px;
+  }
+  .udle-cards-labels span {
+    font-size: 0.42rem;
+    letter-spacing: 0.02em;
+    min-width: var(--card-w);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 1px;
+  }
+
+  /* Cartes : label masqué, valeur plus petite */
   .card-label { display: none; }
-  .udle-cards-labels span { font-size: 0.5rem; }
+  .card-value { font-size: 0.62rem; line-height: 1.15; }
+  .card-arrow { font-size: 0.55rem; }
 }
 
-@media (max-width: 480px) {
-  :root { --card-w: 50px; --card-h: 54px; }
-  .udle-poke-id { width: 90px; }
-  .col-pokemon-lbl { width: 90px; }
-  .card-value { font-size: 0.58rem; }
-  .card-arrow { font-size: 0.6rem; }
+/* Petit téléphone */
+@media (max-width: 400px) {
+  :root { --card-w: 44px; --card-h: 58px; }
+  .udle-poke-id { width: 44px; min-width: 44px; }
+  .col-pokemon-lbl { width: 44px; min-width: 44px; }
+  .card-value { font-size: 0.54rem; }
+}
+
+/* Forcer les valeurs longues à tenir sur mobile */
+@media (max-width: 640px) {
+  .udle-flip-front {
+    overflow: hidden;
+  }
+  .card-value {
+    font-size: clamp(0.42rem, 1.8vw, 0.65rem);
+    line-height: 1.1;
+  }
 }

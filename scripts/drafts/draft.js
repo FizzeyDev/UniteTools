@@ -320,9 +320,8 @@ export async function startNextDraft(skipPublish = false) {
   const selectedMapBtn = document.querySelector(".fearless-map-btn.active");
   if (selectedMapBtn) state.selectedMap = selectedMapBtn.dataset.map;
 
-  // FIX: reset fearless tracking sets before new draft
-  fearlessTeamA.clear();
-  fearlessTeamB.clear();
+  // NE PAS vider fearlessTeamA/B ici — en fearless, les picks s'accumulent
+  // entre les drafts. Les sets sont clearés uniquement dans endFearlessSeries().
 
   resetDraftSlots();
   state.allImages.forEach(img => img.classList.remove("used", "fearless-blocked"));

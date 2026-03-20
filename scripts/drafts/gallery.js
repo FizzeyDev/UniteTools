@@ -76,6 +76,7 @@ function onPokemonClick(img) {
   slot.innerHTML = "";
   const clone = img.cloneNode(true);
   clone.style.cssText = "";
+  clone.dataset.file = img.dataset.file; // garantir que le clone garde le file pour undoLastPick
   slot.appendChild(clone);
   img.classList.add("used");
 
