@@ -4824,38 +4824,52 @@
         "can_crit": "true",
         "image": "assets/moves/basic_attack.png",
         "damages": [
-          {"name": "Basic", "multiplier": 40, "levelCoef": 0, "constant": 100, "dealDamage": true},
-          {"name": "Boosted", "multiplier": 84, "levelCoef": 8, "constant": 160, "dealDamage": true}
+          {"name": "Basic", "multiplier": 40, "levelCoef": 0, "constant": 100, "dealDamage": true, "scaling": "special"},
+          {"name": "Boosted", "multiplier": 84, "levelCoef": 8, "constant": 160, "dealDamage": true, "scaling": "special"}
         ]
       },
       {
         "name": "Will-o-Wisp",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/gengar/will_o_wisp.png",
         "damages": [
           {"name": "First Flame", "multiplier": 84, "levelCoef": 5, "constant": 100, "dealDamage": true},
-          {"name": "Burn DoT (3 ticks)", "multiplier": 28, "levelCoef": 2, "constant": 40, "dealDamage": true}
+          {"name": "Burn DoT (3 ticks)", "multiplier": 28, "levelCoef": 2, "constant": 40, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Shadow Ball",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/gengar/shadow_ball.png",
         "damages": [
-          {"name": "Damage", "multiplier": 115.2, "levelCoef": 32, "constant": 756, "dealDamage": true}
+          {"name": "Damage", "multiplier": 115.2, "levelCoef": 32, "constant": 756, "dealDamage": true},
+          {"name": "Damage +", "multiplier": 128, "levelCoef": 36, "constant": 840, "dealDamage": true, "upgraded": true},
+          {"name": "Sp.Def Reduc", "multiplier": 0, "levelCoef": 5, "constant": 80, "dealDamage": false}
         ]
       },
       {
         "name": "Sludge Bomb",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/gengar/sludge_bomb.png",
         "damages": [
           {"name": "Initial Damage", "multiplier": 106, "levelCoef": 6, "constant": 230, "dealDamage": true},
-          {"name": "Poison DoT (10 ticks)", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "1% max HP per 0.5s (cap 120/tick wild)"}
+          {"name": "Poison DoT (10 ticks)", "max_hp_percent": 1, "dealDamage": true, "is_tick": true, "tick_count": 10, "notes": "1% max HP per 0.5s (cap 120/tick wild)"}
         ]
       },
       {
         "name": "Lick",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/gengar/lick.png",
         "damages": [
@@ -4864,28 +4878,46 @@
       },
       {
         "name": "Dream Eater",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/gengar/dream_eater.png",
         "damages": [
           {"name": "Damage", "multiplier": 260, "levelCoef": 12, "constant": 550, "dealDamage": true},
-          {"name": "Healing", "multiplier": 56, "levelCoef": 9, "constant": 336, "heal": true}
+          {"name": "Damage +", "multiplier": 293, "levelCoef": 14, "constant": 620, "dealDamage": true, "upgraded": true}
+        ],
+        "heals": [
+          {"name": "Healing", "scaling": "sp_atk", "multiplier": 56, "levelCoef": 9, "constant": 336, "target": "self"},
+          {"name": "Healing +", "scaling": "sp_atk", "multiplier": 67, "levelCoef": 11, "constant": 404, "upgraded": true, "target": "self"}
         ]
       },
       {
         "name": "Hex",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/gengar/hex.png",
         "damages": [
           {"name": "Normal Damage", "multiplier": 105, "levelCoef": 3, "constant": 150, "dealDamage": true},
-          {"name": "Status Condition Bonus", "multiplier": 210, "levelCoef": 6, "constant": 300, "dealDamage": true, "notes": "Double damage on status-afflicted target"}
+          {"name": "Normal Damage +", "multiplier": 125, "levelCoef": 4, "constant": 200, "upgraded": true, "dealDamage": true},
+          {"name": "Status Condition Damage", "multiplier": 210, "levelCoef": 6, "constant": 300, "dealDamage": true, "notes": "Double damage on status-afflicted target"},
+          {"name": "Status Condition Damage +", "multiplier": 250, "levelCoef": 8, "constant": 400, "upgraded": true, "dealDamage": true, "notes": "Double damage on status-afflicted target"}
         ]
       },
       {
         "name": "Phantom Ambush (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/gengar/phantom_ambush.png",
         "damages": [
           {"name": "Damage", "multiplier": 263, "levelCoef": 12, "constant": 560, "dealDamage": true}
+        ],
+        "shields": [
+          {"name": "Shield - Unite Buffs", "scaling": "hp", "multiplier": 20, "levelCoef": 0, "constant": 0}
         ]
       }
     ]
@@ -4924,6 +4956,9 @@
       },
       {
         "name": "Swift",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/glaceon/swift.png",
         "damages": [
@@ -4932,6 +4967,9 @@
       },
       {
         "name": "Tail Whip",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/glaceon/tail_whip.png",
         "damages": [
@@ -4940,22 +4978,31 @@
       },
       {
         "name": "Icicle Spear",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/glaceon/icicle_spear.png",
         "damages": [
-          {"name": "Damage per Crystal", "multiplier": 37, "levelCoef": 4, "constant": 98, "dealDamage": true, "notes": "+5% per repeat hit (max +35%)"}
+          {"name": "Damage per Crystal", "multiplier": 37, "levelCoef": 4, "constant": 98, "dealDamage": true, "is_tick": true, "tick_count": 12, "notes": "+5% per repeat hit (max +35%, not implemented)"}
         ]
       },
       {
         "name": "Icy Wind",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "true",
         "image": "assets/moves/glaceon/icy_wind.png",
         "damages": [
-          {"name": "Ice Chunk Damage", "multiplier": 20, "levelCoef": 2, "constant": 35, "dealDamage": true}
+          {"name": "Ice Chunk Damage", "multiplier": 20, "levelCoef": 2, "constant": 35, "dealDamage": true, "is_tick": true, "tick_count": 8}
         ]
       },
       {
         "name": "Ice Shard",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "true",
         "image": "assets/moves/glaceon/ice_shard.png",
         "damages": [
@@ -4964,6 +5011,9 @@
       },
       {
         "name": "Freeze Dry",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/glaceon/freeze_dry.png",
         "damages": [
@@ -4972,6 +5022,9 @@
       },
       {
         "name": "Glacial Stage (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/glaceon/glacial_stage.png",
         "damages": [
@@ -5009,8 +5062,8 @@
         "image": "assets/moves/basic_attack.png",
         "damages": [
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true, "scaling": "physical"},
-          {"name": "Boosted (Ranged)", "multiplier": 57, "levelCoef": 6, "constant": 190, "dealDamage": true, "scaling": "special"},
-          {"name": "Boosted Additional (Melee)", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "3% target max HP (cap 500 wild)"}
+          {"name": "Boosted", "multiplier": 57, "levelCoef": 6, "constant": 190, "dealDamage": true, "scaling": "special"},
+          {"name": "Boosted Additional (Melee)", "max_hp_percent": 3, "dealDamage": true, "notes": "3% target max HP (cap 500 wild)"}
         ]
       },
       {
@@ -5018,41 +5071,68 @@
         "can_crit": "false",
         "image": "assets/moves/goodra/gooey.png",
         "damages": [
-          {"name": "Slime Damage", "multiplier": 60, "levelCoef": 6, "constant": 120, "dealDamage": true},
-          {"name": "Healing (Per Tick)", "multiplier": 0, "levelCoef": 3, "constant": 50, "heal": true, "notes": "+1.2% missing HP per tick"}
+          {"name": "Slime Damage", "multiplier": 60, "levelCoef": 6, "constant": 120, "dealDamage": true}
+        ],
+        "heals": [
+          {"name": "Healing (Per Tick)", "scaling": "sp_atk", "multiplier": 0, "levelCoef": 3, "constant": 50, "heal": true, "is_tick": true, "tick_count": 6, "target": "self"},
+          {"name": "Healing Additional (Per Tick)", "scaling": "hp", "multiplier": 1.2, "levelCoef": 0, "constant": 0, "heal": true, "is_tick": true, "tick_count": 6, "target": "self"}
         ]
       },
       {
         "name": "Bubble",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/goodra/bubble.png",
         "damages": [
-          {"name": "Damage", "multiplier": 128, "levelCoef": 20, "constant": 380, "dealDamage": true},
-          {"name": "Shield", "multiplier": 0, "levelCoef": 0, "constant": 0, "shield": true, "notes": "15% max HP"}
+          {"name": "Damage", "multiplier": 128, "levelCoef": 20, "constant": 380, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 15,
+            "levelCoef": 0,
+            "constant": 0,
+            "target": "self"
+          }
         ]
       },
       {
         "name": "Muddy Water",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/goodra/muddy_water.png",
         "damages": [
-          {"name": "Damage", "multiplier": 132, "levelCoef": 10, "constant": 250, "dealDamage": true},
-          {"name": "Defense & Sp. Def per Stack", "multiplier": 0, "levelCoef": 6, "constant": 72, "shield": true}
+          {"name": "Damage", "multiplier": 132, "levelCoef": 10, "constant": 250, "dealDamage": true}
         ]
       },
       {
         "name": "Dragon Pulse",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/goodra/dragon_pulse.png",
         "damages": [
-          {"name": "Damage (Center per hit)", "multiplier": 68, "levelCoef": 5, "constant": 230, "dealDamage": true},
-          {"name": "Damage (Side per hit)", "multiplier": 40.8, "levelCoef": 3, "constant": 138, "dealDamage": true},
-          {"name": "Healing (Center per hit)", "multiplier": 0, "levelCoef": 8, "constant": 30, "heal": true, "notes": "+10% missing HP"},
-          {"name": "Healing (Gooey Center per hit)", "multiplier": 0, "levelCoef": 8, "constant": 30, "heal": true, "notes": "+11% missing HP"}
+          {"name": "Damage (Center per hit)", "multiplier": 68, "levelCoef": 5, "constant": 230, "dealDamage": true, "is_tick": true, "tick_count": 4},
+          {"name": "Damage (Side per hit)", "multiplier": 40.8, "levelCoef": 3, "constant": 138, "dealDamage": true, "is_tick": true, "tick_count": 4}
+        ],
+        "heals": [
+          {"name": "Healing (Center per hit)", "scaling": "sp_atk", "multiplier": 0, "levelCoef": 8, "constant": 30, "notes": "+10% missing HP"},
+          {"name": "Healing + (Center per hit)", "scaling": "sp_atk", "multiplier": 0, "levelCoef": 8, "constant": 30, "upgraded": true, "notes": "+12% missing HP"},
+          {"name": "Healing (Gooey Center per hit)", "scaling": "sp_atk", "multiplier": 0, "levelCoef": 8, "constant": 30, "notes": "+11% missing HP"},
+          {"name": "Healing + (Gooey Center per hit)", "scaling": "sp_atk", "multiplier": 0, "levelCoef": 8, "constant": 30, "upgraded": true, "notes": "+13% missing HP"}
         ]
       },
       {
         "name": "Tackle",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/goodra/tackle.png",
         "damages": [
@@ -5061,6 +5141,9 @@
       },
       {
         "name": "Power Whip",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/goodra/power_whip.png",
         "damages": [
@@ -5069,19 +5152,35 @@
       },
       {
         "name": "Acid Spray",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/goodra/acid_spray.png",
         "damages": [
           {"name": "Damage (Initial)", "multiplier": 46, "levelCoef": 4, "constant": 150, "dealDamage": true},
-          {"name": "Damage (Dash x2)", "multiplier": 46, "levelCoef": 4, "constant": 150, "dealDamage": true}
+          {"name": "Damage (Dash x2)", "multiplier": 46, "levelCoef": 4, "constant": 150, "dealDamage": true, "is_tick": true, "tick_count": 2}
         ]
       },
       {
         "name": "Right as Rain (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/goodra/right_as_rain.png",
-        "damages": [
-          {"name": "Healing (13 ticks)", "multiplier": 0, "levelCoef": 0, "constant": 0, "heal": true, "notes": "4% max HP per tick"}
+        "heals": [
+          {"name": "Healing (13 ticks)", "scaling": "hp", "multiplier": 4, "levelCoef": 0, "constant": 0, "is_tick": true, "tick_count": 13}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 40,
+            "levelCoef": 0,
+            "constant": 0,
+            "target": "self"
+          }
         ]
       }
     ]
