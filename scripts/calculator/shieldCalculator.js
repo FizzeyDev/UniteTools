@@ -24,12 +24,6 @@
  * Si scaling === "hp", la stat de référence est les HP MAX de l'attaquant.
  */
 
-/**
- * @param {object} shield     - entrée shield du JSON
- * @param {object} atkStats   - stats de l'attaquant { atk, sp_atk, hp, ... }
- * @param {number} level      - niveau de l'attaquant
- * @returns {number}
- */
 export function calculateShield(shield, atkStats, level) {
   let relevantStat;
 
@@ -53,24 +47,14 @@ export function calculateShield(shield, atkStats, level) {
   return Math.max(0, constant + statPart + levelPart);
 }
 
-/**
- * Renvoie le HTML d'une ligne de shield à injecter dans une move-card.
- * @param {object} shield     - entrée shield du JSON
- * @param {object} atkStats
- * @param {number} level
- * @param {number} rescueMult - multiplicateur Rescue Hood (ex: 1.17), 1.0 par défaut
- * @returns {string} innerHTML
- */
 export function renderShieldLine(shield, atkStats, level, rescueMult = 1.0) {
   const amount = calculateShield(shield, atkStats, level);
   const boosted = rescueMult > 1.0 ? Math.floor(amount * rescueMult) : amount;
 
-  // "both" par défaut si target absent, pour ne pas casser l'existant
   const target    = shield.target || "both";
   const forSelf   = target === "self"  || target === "both";
   const forAllies = target === "ally"  || target === "both";
 
-  // Indicateurs visuels
   const selfOnlyBadge = (target === "self")
     ? `<span class="dmg-target-badge dmg-target-self" title="Lanceur uniquement">🧬</span>`
     : "";
@@ -81,7 +65,6 @@ export function renderShieldLine(shield, atkStats, level, rescueMult = 1.0) {
   const isTick    = !!shield.is_tick;
   const tickCount = shield.tick_count || 1;
 
-  // data-ally-shield n'est mis que si le shield touche les alliés
   const allyAttr = forAllies ? `data-ally-shield="${boosted}"` : `data-no-allies="true"`;
 
   if (isTick) {

@@ -11,7 +11,6 @@
 
 export function calculateHeal(heal, atkStats, level, casterCurrentHP = null) {
 
-  // % HP MANQUANTS du lanceur
   if (heal.missing_hp_percent != null && atkStats.hp != null) {
     const currentHP = casterCurrentHP ?? atkStats.hp;
     const missingHP = Math.max(0, atkStats.hp - currentHP);
@@ -20,14 +19,12 @@ export function calculateHeal(heal, atkStats, level, casterCurrentHP = null) {
     return Math.max(0, raw);
   }
 
-  // % HP MAX du lanceur
   if (heal.max_hp_percent != null && atkStats.hp != null) {
     let raw = Math.floor(atkStats.hp * heal.max_hp_percent / 100);
     if (heal.max_hp_cap != null) raw = Math.min(raw, heal.max_hp_cap);
     return Math.max(0, raw);
   }
 
-  // % HP ACTUELS du lanceur
   if (heal.current_hp_percent != null && atkStats.hp != null) {
     const currentHP = casterCurrentHP ?? atkStats.hp;
     let raw = Math.floor(currentHP * heal.current_hp_percent / 100);
@@ -35,7 +32,6 @@ export function calculateHeal(heal, atkStats, level, casterCurrentHP = null) {
     return Math.max(0, raw);
   }
 
-  // Heal classique (stat-based)
   let relevantStat;
   switch (heal.scaling) {
     case "atk":    relevantStat = atkStats.atk;    break;

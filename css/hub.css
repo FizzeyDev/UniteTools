@@ -1,0 +1,139 @@
+/* ══════════════════════════════════════════════
+   HUB PAGE — unite-dle.html (game selector)
+   ══════════════════════════════════════════════ */
+
+.hub-wrapper {
+  max-width: 740px;
+}
+
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 12px;
+}
+
+/* ── Card base ── */
+.hub-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 28px 24px 22px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  text-decoration: none;
+  color: var(--text);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.22s cubic-bezier(.22,1,.36,1),
+              border-color 0.22s,
+              box-shadow 0.22s;
+}
+.hub-card:hover {
+  transform: translateY(-5px) scale(1.01);
+}
+
+/* ── Glow accent per card type ── */
+.hub-card-glow {
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  filter: blur(48px);
+}
+.hub-card:hover .hub-card-glow { opacity: 1; }
+
+.hub-card--pokedle {
+  border-color: rgba(159,83,236,0.25);
+}
+.hub-card--pokedle:hover {
+  border-color: rgba(159,83,236,0.6);
+  box-shadow: 0 12px 48px rgba(159,83,236,0.18);
+}
+.hub-card--pokedle .hub-card-glow {
+  background: radial-gradient(circle, rgba(159,83,236,0.7) 0%, transparent 70%);
+}
+
+.hub-card--skindle {
+  border-color: rgba(255,157,0,0.25);
+}
+.hub-card--skindle:hover {
+  border-color: rgba(255,157,0,0.6);
+  box-shadow: 0 12px 48px rgba(255,157,0,0.18);
+}
+.hub-card--skindle .hub-card-glow {
+  background: radial-gradient(circle, rgba(255,157,0,0.7) 0%, transparent 70%);
+}
+
+/* ── Icon ── */
+.hub-card-icon {
+  font-size: 2.4rem;
+  line-height: 1;
+  filter: drop-shadow(0 4px 12px rgba(255,255,255,0.12));
+}
+
+/* ── Content ── */
+.hub-card-content { flex: 1; }
+.hub-card-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+.hub-card--pokedle .hub-card-title { color: #fff; }
+.hub-card--pokedle .hub-card-title-unite { color: var(--violet); }
+.hub-card--skindle .hub-card-title { color: #fff; }
+.hub-card--skindle .hub-card-title-unite { color: var(--orange); }
+
+.hub-card-desc {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+/* ── Badge ── */
+.hub-card-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.hub-badge--new {
+  background: rgba(159,83,236,0.18);
+  color: #c49ef5;
+  border: 1px solid rgba(159,83,236,0.35);
+}
+.hub-badge--hot {
+  background: rgba(255,157,0,0.18);
+  color: #ffc055;
+  border: 1px solid rgba(255,157,0,0.35);
+}
+
+/* ── Arrow ── */
+.hub-card-arrow {
+  position: absolute;
+  bottom: 22px;
+  right: 24px;
+  font-size: 1.3rem;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.2s, transform 0.2s;
+  color: var(--text-dim);
+}
+.hub-card:hover .hub-card-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}

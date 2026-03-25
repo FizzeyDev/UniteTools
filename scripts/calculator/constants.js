@@ -18,7 +18,6 @@ export const stackableItems = [
   "Accel Bracer", "Drive Lens", "Weakness Policy"
 ];
 
-// HP communs à Regice / Regirock / Registeel
 const HP_REGI_TRIO = [
   { time: "10:00", seconds: 600, hp:  5150 },
   { time:  "9:40", seconds: 580, hp:  6350 },
@@ -44,7 +43,6 @@ const HP_REGI_TRIO = [
   { time:  "0:10", seconds:  10, hp: 30350 },
 ];
 
-// Regieleki (Neutral)
 const HP_REGIELEKI_NEUTRAL = [
   { time: "10:00", seconds: 600, hp:  5150 },
   { time:  "9:40", seconds: 580, hp:  6350 },
@@ -70,7 +68,6 @@ const HP_REGIELEKI_NEUTRAL = [
   { time:  "0:10", seconds:  10, hp: 30350 },
 ];
 
-// Regieleki (Soldier / Ally or Enemy)
 const HP_REGIELEKI_SOLDIER = [
   { time: "10:00", seconds: 600, hp:  7500 },
   { time:  "9:40", seconds: 580, hp:  8740 },
@@ -96,7 +93,6 @@ const HP_REGIELEKI_SOLDIER = [
   { time:  "0:10", seconds:  10, hp: 33540 },
 ];
 
-// Regidrago
 const HP_REGIDRAGO = [
   { time: "10:00", seconds: 600, hp:  4290 },
   { time:  "9:40", seconds: 580, hp:  5490 },
@@ -122,7 +118,6 @@ const HP_REGIDRAGO = [
   { time:  "0:10", seconds:  10, hp: 28290 },
 ];
 
-// Groudon / Kyogre / Rayquaza (HP identiques)
 const HP_LEGENDARIES = [
   { time: "10:00", seconds: 600, hp:  8490 },
   { time:  "9:40", seconds: 580, hp: 10022 },
@@ -148,19 +143,9 @@ const HP_LEGENDARIES = [
   { time:  "0:10", seconds:  10, hp: 39130 },
 ];
 
-/**
- * Retourne les HP fixes pour un mob timer-based donné un temps restant en secondes.
- * Les HP sont fixes par palier — pas d'interpolation.
- * @param {Array} table  - table HP du mob
- * @param {number} secs  - secondes restantes (0-600)
- */
 export function getMobHPAtTimer(table, secs) {
   const s = Math.max(0, Math.min(600, secs));
 
-  // La table est triée décroissante (600 → 10).
-  // On parcourt à l'envers pour trouver le premier palier dont seconds >= s
-  // (le palier le plus bas qui est encore >= au timer actuel).
-  // Ex: à 7:00 (420s) → palier 7:10 (430s), pas 6:40 (400s).
   for (let i = table.length - 1; i >= 0; i--) {
     if (table[i].seconds >= s) {
       return table[i].hp;
@@ -169,8 +154,6 @@ export function getMobHPAtTimer(table, secs) {
 
   return table[0].hp;
 }
-
-// ─── Mob stats builder ───────────────────────────────────────────
 
 function makeMobStats(def = 250, sp_def = 250) {
   return [{ level: 1, hp: 0, atk: 0, def, sp_atk: 0, sp_def }];

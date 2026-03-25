@@ -122,7 +122,6 @@ export function updateHPDisplays() {
     state.defenderItemActivated
   );
 
-  // Pour les mobs timer-based, on écrase defStats.hp avec la valeur du timer
   if (state.currentDefender?.timerBased && state.currentDefender.hpTable) {
     defStats.hp = getMobHPAtTimer(state.currentDefender.hpTable, state.defenderTimer);
   }
@@ -248,21 +247,12 @@ export function setupLevelSliders() {
   updateSliderStyle(levelSliderDefender, 15);
 }
 
-// ── Timer pour les mobs timer-based ──────────────────────────────────────────
-
-/**
- * Convertit des secondes en string "M:SS"
- */
 function secsToTimer(secs) {
   const m = Math.floor(secs / 60);
   const s = secs % 60;
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
-/**
- * Affiche ou cache le bloc timer/niveau selon que le défenseur est timer-based ou non.
- * Appelé à chaque changement de défenseur.
- */
 export function updateDefenderSliderMode() {
   const defender = state.currentDefender;
   const isTimerBased = defender?.timerBased === true;
@@ -275,7 +265,6 @@ export function updateDefenderSliderMode() {
   if (isTimerBased) {
     levelBlock.style.display = 'none';
     timerBlock.style.display = 'block';
-    // Synchro affichage
     const timerSlider = document.getElementById('timerSliderDefender');
     const timerValue  = document.getElementById('timerValueDefender');
     if (timerSlider && timerValue) {
@@ -289,9 +278,6 @@ export function updateDefenderSliderMode() {
   }
 }
 
-/**
- * Initialise le slider timer (appelé une fois au démarrage).
- */
 export function setupTimerSlider() {
   const timerSlider = document.getElementById('timerSliderDefender');
   const timerValue  = document.getElementById('timerValueDefender');

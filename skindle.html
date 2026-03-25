@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unite Tools - Skindle</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/unite-dle.css" />
+  <link rel="stylesheet" href="css/skindle.css" />
+  <link rel="stylesheet" href="css/navbar.css" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-B7HW29S7HW');
+  </script>
+</head>
+<body>
+
+<div id="navbar-container"></div>
+
+<div class="udle-wrapper skindle-wrapper">
+
+  <header class="udle-header">
+    <a href="unite-dle.html" class="skindle-back-btn" id="skindle-back-btn">← Retour</a>
+    <div class="udle-logo">
+      <span class="logo-unite">Skin</span><span class="logo-dle">dle</span>
+    </div>
+    <p class="udle-subtitle" id="skindle-subtitle">Devine le Pokémon et son skin du jour !</p>
+    <div class="udle-counters">
+      <span class="udle-badge">
+        <span id="skindle-tries-poke-label">Essais Pokémon</span> : <b id="skindle-tries-poke">0</b>
+      </span>
+      <span class="udle-badge" id="skindle-skin-counter" style="display:none">
+        <span id="skindle-tries-skin-label">Essais Skin</span> : <b id="skindle-tries-skin">0</b>
+      </span>
+    </div>
+  </header>
+
+  <!-- End message -->
+  <div class="udle-endmsg" id="skindle-endmsg" style="display:none">
+    <div class="udle-endmsg-inner win" id="skindle-endmsg-inner"></div>
+  </div>
+
+  <!-- Zoom image area -->
+  <div class="skindle-image-area">
+    <div class="skindle-zoom-container" id="skindle-zoom-container">
+      <img id="skindle-img" src="" alt="Skin mystère" />
+    </div>
+    <div class="skindle-zoom-steps" id="skindle-zoom-steps"></div>
+  </div>
+
+  <!-- Phase 1: Guess the Pokémon -->
+  <div id="skindle-phase-poke">
+    <div class="skindle-phase-label">
+      <span class="skindle-phase-num" id="skindle-phase1-num">Phase 1</span>
+      <span class="skindle-phase-title" id="skindle-phase1-title">Devine le <b>Pokémon</b></span>
+    </div>
+
+    <div class="udle-search-wrap">
+      <div class="udle-search-box">
+        <input type="text" id="skindle-input-poke" class="udle-input"
+               placeholder="Tape un Pokémon UNITE…"
+               autocomplete="off" spellcheck="false" />
+        <span class="udle-search-icon">🔍</span>
+        <ul class="udle-suggestions" id="skindle-suggestions-poke"></ul>
+      </div>
+    </div>
+
+    <div class="skindle-guesses-poke" id="skindle-guesses-poke"></div>
+  </div>
+
+  <!-- Phase 2: Guess the skin name (hidden until pokemon found) -->
+  <div id="skindle-phase-skin" style="display:none">
+    <div class="skindle-phase-label skindle-phase-label--skin">
+      <span class="skindle-phase-num" id="skindle-phase2-num">Phase 2</span>
+      <span class="skindle-phase-title" id="skindle-phase2-title">Devine le nom du <b>Skin</b></span>
+    </div>
+
+    <div class="skindle-found-poke" id="skindle-found-poke"></div>
+
+    <div class="udle-search-wrap">
+      <div class="udle-search-box">
+        <input type="text" id="skindle-input-skin" class="udle-input"
+               placeholder="Tape le nom du skin…"
+               autocomplete="off" spellcheck="false" />
+        <span class="udle-search-icon">✨</span>
+        <ul class="udle-suggestions" id="skindle-suggestions-skin"></ul>
+      </div>
+    </div>
+
+    <div class="skindle-guesses-skin" id="skindle-guesses-skin"></div>
+  </div>
+
+  <!-- Legend -->
+  <div class="udle-legend">
+    <span class="udle-legend-item correct"  id="skindle-legend-correct">✔ Correct</span>
+    <span class="udle-legend-item wrong"    id="skindle-legend-wrong">✘ Incorrect</span>
+    <span class="udle-legend-item neutral"  id="skindle-legend-arrows">🔼 Trop bas | 🔽 Trop haut (année)</span>
+  </div>
+
+</div>
+
+<script src="./scripts/navbar.js"></script>
+<script src="scripts/unite_dle/unite-dle-data.js"></script>
+<script src="scripts/unite_dle/skindle-data.js"></script>
+<script src="scripts/unite_dle/skindle-zoom-ai.js"></script>
+<script src="scripts/unite_dle/skindle.js"></script>
+</body>
+</html>

@@ -15,10 +15,8 @@ import { state } from './state.js';
 
 const MAX_ALLIES = 4;
 
-// Tableau d'alliés : [{ pokemonId, displayName, image }, ...]
 let allies = [];
 
-// Callbacks enregistrés pour re-render quand la liste change
 const onChangeCallbacks = [];
 
 export function onAlliesChange(fn) {
@@ -39,15 +37,12 @@ export function resetAllies() {
   notifyChange();
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────────
-
 export function initAllyManager() {
   const addBtn = document.getElementById('allyAddBtn');
   if (addBtn) {
     addBtn.addEventListener('click', openAllyPicker);
   }
 
-  // Fermeture modal
   const closeBtn = document.querySelector('.ally-modal-close');
   if (closeBtn) closeBtn.addEventListener('click', closeAllyPicker);
 
@@ -58,7 +53,6 @@ export function initAllyManager() {
     });
   }
 
-  // Recherche dans le picker
   const search = document.getElementById('allyPickerSearch');
   if (search) {
     search.addEventListener('input', () => {
@@ -71,8 +65,6 @@ export function initAllyManager() {
   }
 }
 
-// ── Modal picker ──────────────────────────────────────────────────────────────
-
 function openAllyPicker() {
   if (allies.length >= MAX_ALLIES) return;
 
@@ -82,10 +74,8 @@ function openAllyPicker() {
 
   if (!modal || !grid) return;
 
-  // Reset search
   if (search) { search.value = ''; }
 
-  // Construire la grille
   grid.innerHTML = '';
   const currentAllyIds = new Set(allies.map(a => a.pokemonId));
 
@@ -114,8 +104,6 @@ function closeAllyPicker() {
   if (modal) modal.style.display = 'none';
 }
 
-// ── Gestion des alliés ────────────────────────────────────────────────────────
-
 function addAlly(pokemon) {
   if (allies.length >= MAX_ALLIES) return;
   if (allies.some(a => a.pokemonId === pokemon.pokemonId)) return;
@@ -136,17 +124,13 @@ function removeAlly(pokemonId) {
   notifyChange();
 }
 
-// ── Render de la rangée d'alliés ──────────────────────────────────────────────
-
 function renderAlliesRow() {
   const row    = document.getElementById('alliesRow');
   const addBtn = document.getElementById('allyAddBtn');
   if (!row) return;
 
-  // Retirer les slots existants (garder le bouton +)
   row.querySelectorAll('.ally-slot').forEach(el => el.remove());
 
-  // Insérer les slots avant le bouton +
   allies.forEach(ally => {
     const slot = document.createElement('div');
     slot.className = 'ally-slot';
@@ -169,27 +153,15 @@ function renderAlliesRow() {
     row.insertBefore(slot, addBtn);
   });
 
-  // Masquer le bouton + si max atteint
   if (addBtn) {
     addBtn.style.display = allies.length >= MAX_ALLIES ? 'none' : 'flex';
   }
 }
 
-// ── Injection des badges alliés sur une damage-line ───────────────────────────
-
-/**
- * Ajoute les badges alliés (heal ou shield) sur un élément .dmg-values
- * à l'intérieur d'une damage-line.
- *
- * @param {HTMLElement} valuesEl   - l'élément .dmg-values
- * @param {'heal'|'shield'} type   - type de valeur
- * @param {number} allyValue       - valeur calculée pour un allié (Rescue Hood etc.)
- */
 export function appendAllyBadges(valuesEl, type, allyValue) {
   if (!allies.length) return;
   if (!allyValue || allyValue <= 0) return;
 
-  // Wrapper pour les badges alliés
   let wrapper = valuesEl.querySelector('.dmg-ally-col');
   if (!wrapper) {
     wrapper = document.createElement('div');

@@ -9,85 +9,58 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/unite-dle.css" />
+  <link rel="stylesheet" href="css/hub.css" />
   <link rel="stylesheet" href="css/navbar.css" />
   <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
-    <script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
+  <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-B7HW29S7HW');
-    </script>
+  </script>
 </head>
 <body>
 
 <div id="navbar-container"></div>
 
-<div class="udle-wrapper">
+<div class="udle-wrapper hub-wrapper">
 
   <header class="udle-header">
     <div class="udle-logo">
       <span class="logo-unite">UNITE</span><span class="logo-dle">-dle</span>
     </div>
-    <p class="udle-subtitle" data-lang="udle_subtitle">Devine le Pokémon UNITE du jour !</p>
-    <div class="udle-counters">
-      <span class="udle-badge">
-        <span data-lang="udle_badge_tries">Essais</span> : <b id="udle-tries">0</b>
-      </span>
-      <span class="udle-badge">
-        <span data-lang="udle_badge_roster">Roster</span> : <b id="udle-total">—</b> Pokémon
-      </span>
-    </div>
+    <p class="udle-subtitle" data-lang="hub_subtitle">Devine le Pokémon UNITE du jour !</p>
   </header>
 
-  <div class="udle-endmsg" id="udle-endmsg" style="display:none">
-    <div class="udle-endmsg-inner" id="udle-endmsg-inner"></div>
-  </div>
+  <div class="hub-grid">
 
-  <div class="udle-search-wrap">
-    <div class="udle-search-box">
-      <input type="text" id="udle-input" class="udle-input"
-             data-lang-placeholder="udle_search_placeholder"
-             placeholder="Tape un Pokémon UNITE…"
-             autocomplete="off" spellcheck="false" />
-      <span class="udle-search-icon">🔍</span>
-      <ul class="udle-suggestions" id="udle-suggestions"></ul>
-    </div>
-  </div>
+    <a href="pokedle.html" class="hub-card hub-card--pokedle">
+      <div class="hub-card-glow"></div>
+      <div class="hub-card-icon">🎮</div>
+      <div class="hub-card-content">
+        <h2 class="hub-card-title" data-lang="hub_pokedle_title">Pokédle UNITE</h2>
+        <p class="hub-card-desc" data-lang="hub_pokedle_desc">Devine le Pokémon UNITE du jour grâce aux indices sur son rôle, sa portée, sa difficulté et plus encore.</p>
+        <span class="hub-card-badge hub-badge--new" data-lang="hub_pokedle_badge">Classique</span>
+      </div>
+      <div class="hub-card-arrow">→</div>
+    </a>
 
-  <div class="udle-col-labels" id="udle-col-labels" style="display:none">
-    <div class="udle-col-label col-pokemon-lbl" data-lang="udle_col_pokemon">Pokémon</div>
-    <div class="udle-cards-labels">
-      <span data-lang="udle_col_role">Rôle</span>
-      <span data-lang="udle_col_portee">Portée</span>
-      <span data-lang="udle_col_diff">Difficulté</span>
-      <span data-lang="udle_col_annee">Année</span>
-      <span data-lang="udle_col_stade">Stade joué</span>
-      <span data-lang="udle_col_evo">Niveaux évo.</span>
-      <span data-lang="udle_col_mega">Méga ?</span>
-      <span data-lang="udle_col_unite_cost">Coût Unite</span>
-    </div>
-  </div>
+    <a href="skindle.html" class="hub-card hub-card--skindle">
+      <div class="hub-card-glow"></div>
+      <div class="hub-card-icon">🔍</div>
+      <div class="hub-card-content">
+        <h2 class="hub-card-title" data-lang="hub_skindle_title">Skindle</h2>
+        <p class="hub-card-desc" data-lang="hub_skindle_desc">Un skin très zoomé s'affiche. Devine d'abord le Pokémon, puis le nom exact du skin. Le zoom se réduit à chaque essai !</p>
+        <span class="hub-card-badge hub-badge--hot" data-lang="hub_skindle_badge">Nouveau ✨</span>
+      </div>
+      <div class="hub-card-arrow">→</div>
+    </a>
 
-  <div class="udle-guesses" id="udle-guesses"></div>
-
-  <div class="udle-empty" id="udle-empty">
-    <div class="udle-empty-icon">🎮</div>
-    <p data-lang="udle_empty">Tape un nom pour commencer à jouer !</p>
-  </div>
-
-  <div class="udle-legend" id="udle-legend">
-    <span class="udle-legend-item correct"  data-lang="udle_legend_correct">✔ Correct</span>
-    <span class="udle-legend-item partial"  data-lang="udle_legend_partial">≈ Proche</span>
-    <span class="udle-legend-item wrong"    data-lang="udle_legend_wrong">✘ Incorrect</span>
-    <span class="udle-legend-item neutral"  data-lang="udle_legend_arrows">🔼 Trop bas | 🔽 Trop haut</span>
   </div>
 
 </div>
 
 <script src="./scripts/navbar.js"></script>
-<script src="scripts/unite_dle/unite-dle-data.js"></script>
-<script src="scripts/unite_dle/unite-dle.js"></script>
 </body>
 </html>

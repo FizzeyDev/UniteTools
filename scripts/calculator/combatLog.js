@@ -9,15 +9,11 @@
 import { state } from './state.js';
 import { getMobHPAtTimer } from './constants.js';
 
-// ── État du log ──────────────────────────────────────────────────────────────
-
 export const combatLog = {
-  entries: [],       // { moveName, moveImage, damages, heals, shields, timestamp }
-  allyName: null,    // null = pas d'allié affiché
+  entries: [],
+  allyName: null,
   allyImage: null,
 };
-
-// ── Accumulateur ─────────────────────────────────────────────────────────────
 
 export function getLogTotals() {
   let totalDmg = 0;
@@ -40,8 +36,6 @@ export function getLogTotals() {
 
   return { totalDmg, totalHealSelf, totalHealAlly, totalShieldSelf, totalShieldAlly };
 }
-
-// ── Rendu UI du panneau ───────────────────────────────────────────────────────
 
 let panelEl = null;
 
@@ -82,8 +76,6 @@ export function initCombatLog() {
   injectCombatLogStyles();
 }
 
-// ── Ajout d'une entrée depuis une move-card ────────────────────────────────────
-
 export function addMoveToLog(moveData) {
   combatLog.entries.push({
     ...moveData,
@@ -92,14 +84,10 @@ export function addMoveToLog(moveData) {
   renderLog();
 }
 
-// ── Suppression d'une entrée ──────────────────────────────────────────────────
-
 function removeEntry(index) {
   combatLog.entries.splice(index, 1);
   renderLog();
 }
-
-// ── Rendu principal ────────────────────────────────────────────────────────────
 
 export function renderLog() {
   if (!panelEl) return;
@@ -107,7 +95,6 @@ export function renderLog() {
   const seq = document.getElementById('clSequence');
   const totals = document.getElementById('clTotals');
 
-  // ── Séquence ──
   seq.innerHTML = '';
 
   if (combatLog.entries.length === 0) {
@@ -168,7 +155,6 @@ export function renderLog() {
     });
   }
 
-  // ── Totaux ──
   const { totalDmg, totalHealSelf, totalHealAlly, totalShieldSelf, totalShieldAlly } = getLogTotals();
 
   const defender = state.currentDefender;
@@ -176,7 +162,6 @@ export function renderLog() {
 
   if (defender) {
     if (defender.timerBased && defender.hpTable) {
-      // Mob timer-based : HP calculé depuis le timer courant
       defMaxHP = getMobHPAtTimer(defender.hpTable, state.defenderTimer);
     } else if (defender.pokemonId === 'custom-doll' && defender.customStats) {
       defMaxHP = defender.customStats.hp;
@@ -275,7 +260,6 @@ function buildChipTooltip(entry) {
   return parts.join('\n') || entry.moveName;
 }
 
-// ── Gestion de l'allié ────────────────────────────────────────────────────────
 
 let allyModal = null;
 
@@ -369,14 +353,10 @@ function closeAllyModal() {
   }
 }
 
-// ── Réinitialiser le log quand on change d'attaquant ──────────────────────────
-
 export function resetCombatLog() {
   combatLog.entries = [];
   renderLog();
 }
-
-// ── CSS injecté dynamiquement ─────────────────────────────────────────────────
 
 function injectCombatLogStyles() {
   if (document.getElementById('combatLogStyles')) return;
