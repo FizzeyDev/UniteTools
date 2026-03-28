@@ -633,6 +633,22 @@ function injectCombatLogStyles() {
       user-select: none;
     }
 
+    .dmg-wild-cap {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      margin-left: 6px;
+      padding: 1px 6px;
+      background: rgba(255, 152, 0, 0.12);
+      border: 1px solid rgba(255, 152, 0, 0.4);
+      border-radius: 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #ff9800;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
     .move-card::after {
       content: '＋ Combo';
       position: absolute;
@@ -648,6 +664,147 @@ function injectCombatLogStyles() {
     .move-card:hover::after {
       color: #c8b8ff;
     }
+
+    /* ── Line picker ─────────────────────────────────────────────────────── */
+    .cl-line-picker {
+      position: fixed;
+      z-index: 9999;
+      background: #1a1a2e;
+      border: 1px solid #444;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.75);
+      font-family: 'Exo 2', sans-serif;
+      font-size: 0.82rem;
+      min-width: 260px;
+      max-width: 340px;
+      overflow: hidden;
+      animation: pickerFadeIn 0.12s ease-out;
+    }
+
+    @keyframes pickerFadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .cl-picker-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      background: #12122a;
+      border-bottom: 1px solid #2a2a44;
+    }
+
+    .cl-picker-header img {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .cl-picker-header span {
+      flex: 1;
+      color: #d0c8ff;
+      font-weight: 700;
+      font-size: 0.88rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cl-picker-close {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.15s;
+      flex-shrink: 0;
+    }
+    .cl-picker-close:hover { color: #f44; }
+
+    .cl-picker-list {
+      padding: 6px 4px;
+      max-height: 300px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    /* cl-picker-row defined below with crit controls */
+
+    .cl-picker-row input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      accent-color: #c8b8ff;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .cl-picker-icon {
+      font-size: 0.88rem;
+      flex-shrink: 0;
+    }
+
+    .cl-picker-name {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cl-picker-val {
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .cl-picker-dmg   { color: #ff9999; }
+    .cl-picker-heal  { color: #4caf82; }
+    .cl-picker-shield { color: #64b5f6; }
+
+    .cl-picker-footer {
+      display: flex;
+      gap: 6px;
+      padding: 8px 10px;
+      background: #12122a;
+      border-top: 1px solid #2a2a44;
+    }
+
+    .cl-picker-btn {
+      border: none;
+      border-radius: 7px;
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      font-family: 'Exo 2', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .cl-picker-all {
+      background: #2a2a44;
+      color: #aaa;
+    }
+    .cl-picker-all:hover { background: #3a3a5a; color: #fff; }
+
+    .cl-picker-none {
+      background: #2a2a44;
+      color: #aaa;
+    }
+    .cl-picker-none:hover { background: #3a3a5a; color: #fff; }
+
+    .cl-picker-confirm {
+      flex: 1;
+      background: linear-gradient(135deg, #4a3a8a, #6a4aaa);
+      color: #fff;
+      font-size: 0.85rem;
+    }
+    .cl-picker-confirm:hover { background: linear-gradient(135deg, #5a4a9a, #7a5aba); }
 
     .move-card:hover {
       border-color: #5a5a9a !important;
@@ -667,6 +824,100 @@ function injectCombatLogStyles() {
       0%   { box-shadow: 0 0 0px rgba(200, 184, 255, 0); border-color: #5a5a9a; }
       40%  { box-shadow: 0 0 20px rgba(200, 184, 255, 0.7); border-color: #c8b8ff; }
       100% { box-shadow: 0 0 0px rgba(200, 184, 255, 0); }
+    }
+
+    /* ── Crit controls in line picker ── */
+    .cl-picker-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background 0.12s;
+      user-select: none;
+      flex-wrap: wrap;
+    }
+    .cl-picker-row:hover { background: #252545; }
+
+    .cl-crit-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .cl-counter-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .cl-crit-label {
+      font-size: 0.72rem;
+      color: #888;
+      white-space: nowrap;
+    }
+
+    /* Normal / Crit toggle buttons */
+    .cl-crit-toggle {
+      border: 1px solid #444;
+      border-radius: 5px;
+      background: #1e1e35;
+      color: #888;
+      font-size: 0.7rem;
+      font-family: 'Exo 2', sans-serif;
+      font-weight: 700;
+      padding: 2px 7px;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .cl-crit-toggle:hover { background: #2a2a4a; color: #ccc; }
+    .cl-crit-toggle.active {
+      background: #2a2a4a;
+      border-color: #6a5aaa;
+      color: #c8b8ff;
+    }
+    .cl-crit-toggle-crit.active {
+      background: rgba(239,83,80,0.15);
+      border-color: #ef5350;
+      color: #ef5350;
+    }
+
+    /* Multi-hit crit counter */
+    .cl-crit-btn {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1px solid #444;
+      background: #1e1e35;
+      color: #aaa;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.12s;
+      flex-shrink: 0;
+    }
+    .cl-crit-btn:hover { background: #2a2a4a; color: #fff; }
+
+    .cl-crit-count {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #aaa;
+      min-width: 14px;
+      text-align: center;
+    }
+    .cl-crit-max {
+      font-size: 0.72rem;
+      color: #555;
     }
 
     .dmg-tick-toggle, .heal-tick-toggle, .shield-tick-toggle {

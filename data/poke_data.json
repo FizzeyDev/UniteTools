@@ -68,7 +68,7 @@
         "image": "assets/moves/absol/pursuit.png",
         "damages": [
           {"name": "Normal", "multiplier": 132, "levelCoef": 13, "constant": 160, "dealDamage": true},
-          {"name": "Backstab", "multiplier": 198, "levelCoef": 19, "constant": 240, "dealDamage": true, "notes": "Par derrière"}
+          {"name": "Backstab", "multiplier": 198, "levelCoef": 19, "constant": 240, "dealDamage": true}
         ]
       },
       {
@@ -260,7 +260,7 @@
         "image": "assets/moves/aegislash/coup_de_grace.png",
         "damages": [
           {"name": "Base", "multiplier": 282, "levelCoef": 13, "constant": 640, "dealDamage": true},
-          {"name": "Missing HP Bonus", "missing_hp_percent": 12, "missing_hp_cap": 1000, "dealDamage": true, "notes": "+12% missing HP (cap 1000 vs wild)"}
+          {"name": "Missing HP Bonus", "missing_hp_percent": 12, "missing_hp_cap": 1000, "wild_cap": 1000, "dealDamage": true, "notes": "+12% missing HP (cap 1000 vs wild)"}
         ],
         "shields": [
           {
@@ -3777,11 +3777,11 @@
         "damages": [
           {"name": "Damage - Stage 0", "multiplier": 187, "levelCoef": 8, "constant": 350, "dealDamage": true},
           {"name": "Damage - Stage 1", "multiplier": 224.4, "levelCoef": 10, "constant": 420, "dealDamage": true},
-          {"name": "Damage - Stage 1 (Additional)", "max_hp_percent": 6, "dealDamage": true, "notes": "Capped at 1200 on wild"},
+          {"name": "Damage - Stage 1 (Additional)", "max_hp_percent": 6, "dealDamage": true, "wild_cap": 1200, "notes": "Capped at 1200 on wild"},
           {"name": "Damage - Stage 2", "multiplier": 261.8, "levelCoef": 11, "constant": 490, "dealDamage": true},
-          {"name": "Damage - Stage 2 (Additional)", "max_hp_percent": 12, "dealDamage": true, "notes": "Capped at 1800 on wild"},
+          {"name": "Damage - Stage 2 (Additional)", "max_hp_percent": 12, "dealDamage": true, "wild_cap": 1800, "notes": "Capped at 1800 on wild"},
           {"name": "Damage - Stage 3", "multiplier": 299.2, "levelCoef": 13, "constant": 560, "dealDamage": true},
-          {"name": "Damage - Stage 3 (Additional)", "max_hp_percent": 18, "dealDamage": true, "notes": "Capped at 2400 on wild"}
+          {"name": "Damage - Stage 3 (Additional)", "max_hp_percent": 18, "dealDamage": true, "wild_cap": 2400, "notes": "Capped at 2400 on wild"}
         ]
       },
       {

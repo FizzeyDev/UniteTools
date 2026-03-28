@@ -126,6 +126,22 @@ export function updateHPDisplays() {
     defStats.hp = getMobHPAtTimer(state.currentDefender.hpTable, state.defenderTimer);
   }
 
+  // Update level badges
+  const atkBadge = document.getElementById('hpLevelBadgeAttacker');
+  if (atkBadge) atkBadge.textContent = `Lv.${state.attackerLevel}`;
+
+  const defBadge = document.getElementById('hpLevelBadgeDefender');
+  if (defBadge) {
+    if (state.currentDefender?.timerBased) {
+      // Show timer instead of level for mob
+      const m = Math.floor(state.defenderTimer / 60);
+      const s = state.defenderTimer % 60;
+      defBadge.textContent = `${m}:${String(s).padStart(2, '0')}`;
+    } else {
+      defBadge.textContent = `Lv.${state.defenderLevel}`;
+    }
+  }
+
   if (!state.isEditingHP.attacker) {
     const currentAtkHP = Math.floor(atkStats.hp * (state.attackerHPPercent / 100));
     document.getElementById('hpValueAttacker').textContent = `${currentAtkHP.toLocaleString()} / ${atkStats.hp.toLocaleString()}`;
@@ -149,9 +165,9 @@ export function makeHPValueEditable(elementId, sliderId) {
 
     e.stopPropagation();
 
-    const [currentVal, maxVal] = element.textContent
+    const [currentVal,maxVal] = element.textContent
       .split(' / ')
-      .map(v => parseInt(v.replace(/,/g, '')));
+      .map(v => Number(v.replace(/[^\d]/g, '')));
 
     const input = document.createElement('input');
     input.type = 'number';
@@ -177,6 +193,7 @@ export function makeHPValueEditable(elementId, sliderId) {
       else state.defenderHPPercent = percent;
 
       slider.value = percent;
+      slider.style.setProperty('--value', percent);
       state.isEditingHP[side] = false;
       updateHPDisplays();
       updateDamages();
@@ -233,6 +250,7 @@ export function setupLevelSliders() {
     state.attackerLevel = parseInt(e.target.value);
     levelValueAttacker.textContent = state.attackerLevel;
     updateSliderStyle(levelSliderAttacker, state.attackerLevel);
+    updateHPDisplays();
     updateDamages();
   };
 
@@ -240,6 +258,7 @@ export function setupLevelSliders() {
     state.defenderLevel = parseInt(e.target.value);
     levelValueDefender.textContent = state.defenderLevel;
     updateSliderStyle(levelSliderDefender, state.defenderLevel);
+    updateHPDisplays();
     updateDamages();
   };
 
@@ -256,6 +275,13 @@ function secsToTimer(secs) {
 export function updateDefenderSliderMode() {
   const defender = state.currentDefender;
   const isTimerBased = defender?.timerBased === true;
+  const isMob = defender?.category === 'mob';
+
+  // Update mob class on defender-stats card for red HP bar
+  const defenderStatsCard = document.querySelector('.defender-stats');
+  if (defenderStatsCard) {
+    defenderStatsCard.classList.toggle('mob-defender', isMob);
+  }
 
   const levelBlock = document.getElementById('defenderLevelBlock');
   const timerBlock = document.getElementById('defenderTimerBlock');
@@ -293,17 +319,26 @@ export function setupTimerSlider() {
 }
 
 export function setupHPSliders() {
-  document.getElementById('hpSliderAttacker').addEventListener('input', (e) => {
+  const atkSlider = document.getElementById('hpSliderAttacker');
+  const defSlider = document.getElementById('hpSliderDefender');
+
+  atkSlider.addEventListener('input', (e) => {
     state.attackerHPPercent = parseInt(e.target.value);
+    e.target.style.setProperty('--value', state.attackerHPPercent);
     updateHPDisplays();
     updateDamages();
   });
 
-  document.getElementById('hpSliderDefender').addEventListener('input', (e) => {
-    state.defenderHPPercent = parseInt(e.target.value);
+  defSlider.addEventListener('input', (e) => {
+    state.defenderHPPercent = parseFloat(e.target.value);
+    e.target.style.setProperty('--value', state.defenderHPPercent);
     updateHPDisplays();
     updateDamages();
   });
+
+  // Init CSS custom property
+  atkSlider.style.setProperty('--value', 100);
+  defSlider.style.setProperty('--value', 100);
 }
 
 export function setupModals() {

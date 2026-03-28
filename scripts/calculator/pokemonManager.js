@@ -22,6 +22,7 @@ export function selectAttacker(id) {
   autoEquipSpecialItem('attacker', id);
 
   state.attackerHPPercent = 100;
+  state.attackerHPAbsolute = null;
   document.getElementById('hpSliderAttacker').value = 100;
 
   state.attackerPassiveStacks = 0;
@@ -84,6 +85,7 @@ export function selectDefender(id) {
   autoEquipSpecialItem('defender', id);
 
   state.defenderHPPercent = 100;
+  state.defenderHPAbsolute = null;
   document.getElementById('hpSliderDefender').value = 100;
 
   state.defenderStance = 'shield';

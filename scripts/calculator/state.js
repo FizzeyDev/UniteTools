@@ -22,7 +22,9 @@ export const state = {
   },
 
   attackerHPPercent: 100,
+  attackerHPAbsolute: null,
   defenderHPPercent: 100,
+  defenderHPAbsolute: null,
 
   attackerPassiveStacks: 0,
   defenderPassiveStacks: 0,

@@ -11,8 +11,8 @@ This website, Unite Tools, as many use:
 - Pokemon Unite Draft Simulator
 - Pokemon Unite Tierlist Creator
 - Pokemon Unite Dynamic Map [SOON]
-- Pokemon Unite Map Timing [BETA]
-- Pokemon Unite Damage Calcultator [BETA]
+- Pokemon Unite Map Timing
+- Pokemon Unite Damage Calcultator [WIP]
 
 ## About
 
@@ -22,7 +22,7 @@ Built with HTML/CSS and enhanced with a custom JavaScript script, the site is ho
 
 This is a personal passion project, maintained for fun, but it will be kept up to date with the latest additions and balance changes in Pokémon Unite — covering both casual and competitive formats.
 
-Supported languages: French, English, German, Spanish, Italian
+Supported languages: French, English
 
 ---
 

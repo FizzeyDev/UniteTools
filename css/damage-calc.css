@@ -582,8 +582,8 @@ h1 {
   background: linear-gradient(to right,
     var(--violet) 0%,
     var(--violet) calc((var(--value, 15) - 1) / 14 * 100%),
-    var(--surface-2) calc((var(--value, 15) - 1) / 14 * 100%),
-    var(--surface-2) 100%
+    #000 calc((var(--value, 15) - 1) / 14 * 100%),
+    #000 100%
   );
   height: 5px;
   border-radius: 3px;
@@ -595,8 +595,8 @@ h1 {
   background: linear-gradient(to right,
     var(--orange) 0%,
     var(--orange) calc((var(--value, 15) - 1) / 14 * 100%),
-    var(--surface-2) calc((var(--value, 15) - 1) / 14 * 100%),
-    var(--surface-2) 100%
+    #000 calc((var(--value, 15) - 1) / 14 * 100%),
+    #000 100%
   );
   height: 5px;
   border-radius: 3px;
@@ -606,69 +606,194 @@ h1 {
 .attacker-stats .slider-block input[type="range"]:not(.hp-slider)::-webkit-slider-thumb,
 .attacker .slider-block input[type="range"]:not(.hp-slider)::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 3px; height: 16px;
+  width: 4px; height: 16px;
   border-radius: 2px;
-  background: var(--violet);
-  border: none;
-  box-shadow: 0 0 6px rgba(159,83,236,0.5);
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.4);
+  box-shadow: 0 0 6px rgba(159,83,236,0.8), 0 0 0 1px rgba(159,83,236,0.4);
   cursor: pointer;
 }
 
 .defender-stats .slider-block input[type="range"]:not(.hp-slider)::-webkit-slider-thumb,
 .defender .slider-block input[type="range"]:not(.hp-slider)::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 3px; height: 16px;
+  width: 4px; height: 16px;
   border-radius: 2px;
-  background: var(--orange);
-  border: none;
-  box-shadow: 0 0 6px rgba(255,157,0,0.5);
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.4);
+  box-shadow: 0 0 6px rgba(255,157,0,0.8), 0 0 0 1px rgba(255,157,0,0.4);
   cursor: pointer;
 }
 
-/* ── HP track ── */
-.hp-slider::-webkit-slider-runnable-track {
-  background: linear-gradient(90deg, var(--red) 0%, var(--yellow) 30%, var(--green) 70%, var(--green) 100%);
-  height: 5px;
-  border-radius: 3px;
+/* ── HP track — custom styled (replaces native range) ── */
+
+/* Hide native slider track; use custom overlay via CSS custom property */
+.hp-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 14px;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  margin: 6px 0;
+  position: relative;
+  background: transparent;
+  /* Outer shell: dark border mimicking in-game HP bar */
+  border: 2px solid rgba(0,0,0,0.7);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.06);
 }
 
-/* ── HP thumbs ── */
+/* Attacker HP bar — blue/violet like player bar in-game */
+.attacker-stats .hp-slider::-webkit-slider-runnable-track {
+  height: 10px;
+  border-radius: 2px;
+  background:
+    linear-gradient(
+      to right,
+      /* filled portion: violet-blue gradient like player HP in UNITE */
+      #6ae0ff 0%,
+      #3fb8f0 calc(var(--value, 100) * 1%),
+      /* unfilled: pure black */
+      #000 calc(var(--value, 100) * 1%),
+      #000 100%
+    );
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+/* Defender HP bar — orange for playable Pokémon */
+.defender-stats .hp-slider::-webkit-slider-runnable-track {
+  height: 10px;
+  border-radius: 2px;
+  background:
+    linear-gradient(
+      to right,
+      #ffb733 0%,
+      #ff8c00 calc(var(--value, 100) * 1%),
+      #000 calc(var(--value, 100) * 1%),
+      #000 100%
+    );
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+/* Mob HP bar — red, when defender is a mob */
+.defender-stats.mob-defender .hp-slider::-webkit-slider-runnable-track,
+.hp-slider.mob-hp::-webkit-slider-runnable-track {
+  background:
+    linear-gradient(
+      to right,
+      #ff5555 0%,
+      #cc1111 calc(var(--value, 100) * 1%),
+      #000 calc(var(--value, 100) * 1%),
+      #000 100%
+    ) !important;
+}
+
+/* ── HP thumbs — white diamond/pill like in-game cursor ── */
 .attacker-stats .hp-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 3px; height: 16px;
-  border-radius: 2px;
-  background: var(--violet);
-  border: none;
-  box-shadow: 0 0 6px rgba(159,83,236,0.5);
+  width: 6px;
+  height: 18px;
+  border-radius: 3px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.5);
+  box-shadow: 0 0 0 2px rgba(106,224,255,0.6), 0 2px 4px rgba(0,0,0,0.8);
   cursor: pointer;
-}
-.defender-stats .hp-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 3px; height: 16px;
-  border-radius: 2px;
-  background: var(--orange);
-  border: none;
-  box-shadow: 0 0 6px rgba(255,157,0,0.5);
-  cursor: pointer;
+  margin-top: -4px;
 }
 
-/* ── Firefox ── */
-.slider-block input[type="range"]::-moz-range-thumb {
-  width: 3px; height: 16px;
-  border-radius: 2px;
-  border: none;
+.defender-stats .hp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 6px;
+  height: 18px;
+  border-radius: 3px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.5);
+  box-shadow: 0 0 0 2px rgba(255,157,0,0.7), 0 2px 4px rgba(0,0,0,0.8);
   cursor: pointer;
+  margin-top: -4px;
 }
-.attacker-stats .slider-block input[type="range"]:not(.hp-slider)::-moz-range-thumb,
-.attacker .slider-block input[type="range"]:not(.hp-slider)::-moz-range-thumb {
-  background: var(--violet); box-shadow: 0 0 6px rgba(159,83,236,0.5);
+
+/* ── Firefox — full support via -moz-range-track and -moz-range-thumb ── */
+.slider-block input[type="range"]::-moz-range-track {
+  height: 10px;
+  border-radius: 2px;
+  background: #000;
+  border: none;
 }
-.defender-stats .slider-block input[type="range"]:not(.hp-slider)::-moz-range-thumb,
-.defender .slider-block input[type="range"]:not(.hp-slider)::-moz-range-thumb {
-  background: var(--orange); box-shadow: 0 0 6px rgba(255,157,0,0.5);
+
+/* Level sliders Firefox */
+.attacker-stats .slider-block input[type="range"]:not(.hp-slider)::-moz-range-track,
+.attacker .slider-block input[type="range"]:not(.hp-slider)::-moz-range-track {
+  background: linear-gradient(to right,
+    var(--violet) 0%,
+    var(--violet) calc((var(--value, 15) - 1) / 14 * 100%),
+    #000 calc((var(--value, 15) - 1) / 14 * 100%),
+    #000 100%
+  );
 }
-.attacker-stats .hp-slider::-moz-range-thumb { background: var(--violet); }
-.defender-stats .hp-slider::-moz-range-thumb { background: var(--orange); }
+
+.defender-stats .slider-block input[type="range"]:not(.hp-slider)::-moz-range-track,
+.defender .slider-block input[type="range"]:not(.hp-slider)::-moz-range-track {
+  background: linear-gradient(to right,
+    var(--orange) 0%,
+    var(--orange) calc((var(--value, 15) - 1) / 14 * 100%),
+    #000 calc((var(--value, 15) - 1) / 14 * 100%),
+    #000 100%
+  );
+}
+
+/* HP slider Firefox tracks */
+.attacker-stats .hp-slider::-moz-range-track {
+  background: linear-gradient(to right,
+    #6ae0ff 0%, #3fb8f0 calc(var(--value, 100) * 1%),
+    #000 calc(var(--value, 100) * 1%), #000 100%
+  );
+  height: 10px;
+  border-radius: 2px;
+}
+
+.defender-stats .hp-slider::-moz-range-track {
+  background: linear-gradient(to right,
+    #ffb733 0%, #ff8c00 calc(var(--value, 100) * 1%),
+    #000 calc(var(--value, 100) * 1%), #000 100%
+  );
+  height: 10px;
+  border-radius: 2px;
+}
+
+.defender-stats.mob-defender .hp-slider::-moz-range-track,
+.hp-slider.mob-hp::-moz-range-track {
+  background: linear-gradient(to right,
+    #ff5555 0%, #cc1111 calc(var(--value, 100) * 1%),
+    #000 calc(var(--value, 100) * 1%), #000 100%
+  ) !important;
+}
+
+/* All Firefox thumbs */
+.slider-block input[type="range"]::-moz-range-thumb {
+  width: 6px;
+  height: 18px;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0.5);
+  cursor: pointer;
+  background: #fff;
+}
+
+.attacker-stats .slider-block input[type="range"]:not(.hp-slider)::-moz-range-thumb {
+  background: var(--violet);
+  box-shadow: 0 0 6px rgba(159,83,236,0.5);
+}
+.defender-stats .slider-block input[type="range"]:not(.hp-slider)::-moz-range-thumb {
+  background: var(--orange);
+  box-shadow: 0 0 6px rgba(255,157,0,0.5);
+}
+.attacker-stats .hp-slider::-moz-range-thumb {
+  box-shadow: 0 0 0 2px rgba(106,224,255,0.6), 0 2px 4px rgba(0,0,0,0.8);
+}
+.defender-stats .hp-slider::-moz-range-thumb {
+  box-shadow: 0 0 0 2px rgba(255,157,0,0.7), 0 2px 4px rgba(0,0,0,0.8);
+}
 
 .hp-display {
   text-align: center;
@@ -681,20 +806,68 @@ h1 {
   padding: 3px 0;
 }
 
-.hp-value {
+/* ── In-game style HP bar header ── */
+.hp-slider-block {
+  padding-bottom: 4px !important;
+}
+
+.hp-bar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 4px;
+}
+
+/* Level badge — styled like the in-game level circle */
+.hp-level-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  padding: 2px 7px;
+  background: linear-gradient(135deg, var(--violet) 0%, #7b3dbf 100%);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
   font-family: 'Exo 2', sans-serif;
-  font-size: 1.3rem;
-  text-align: center;
-  padding: 0.5rem;
-  background: var(--surface-2);
-  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  flex-shrink: 0;
+}
+
+.defender-level-badge {
+  background: linear-gradient(135deg, var(--orange) 0%, #c96800 100%);
+}
+
+/* Mob level badge — red */
+.mob-defender .defender-level-badge {
+  background: linear-gradient(135deg, #ff4444 0%, #aa1111 100%);
+}
+
+/* HP value display inline */
+.hp-value-inline {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--text);
+  background: var(--surface-2);
+  border-radius: 6px;
+  padding: 2px 8px;
   cursor: pointer;
   border: 1px solid var(--border);
   transition: border-color 0.2s;
+  white-space: nowrap;
+  flex: 1;
+  text-align: right;
 }
-.hp-value:hover { border-color: var(--violet); }
+.hp-value-inline:hover { border-color: var(--violet); }
+.defender-stats .hp-value-inline:hover { border-color: var(--orange); }
+
+/* hp-value replaced by hp-value-inline in the HP bar header */
 
 /* =============================================
    RESULTS CONTAINER

@@ -290,10 +290,13 @@ export function calculateDamage(
     return Math.floor(value * baseCritMult * extraCritMult);
   };
 
+  const isWild = state.currentDefender?.category === 'mob';
+
   // ── % HP MAX du défenseur ───────────────────────────────────────────────────
   if (dmg.max_hp_percent != null && defenderMaxHP != null) {
     let raw = Math.floor(defenderMaxHP * dmg.max_hp_percent / 100);
     if (dmg.max_hp_cap != null) raw = Math.min(raw, dmg.max_hp_cap);
+    if (isWild && dmg.wild_cap != null) raw = Math.min(raw, dmg.wild_cap);
     let final = Math.floor(raw * globalDamageMult);
     final = applyCrit(final);
     return Math.max(1, final);
@@ -304,9 +307,9 @@ export function calculateDamage(
     const missingHP = Math.max(0, defenderMaxHP - defenderCurrentHP);
     let raw = Math.floor(missingHP * dmg.missing_hp_percent / 100);
     if (dmg.missing_hp_cap != null) raw = Math.min(raw, dmg.missing_hp_cap);
+    if (isWild && dmg.wild_cap != null) raw = Math.min(raw, dmg.wild_cap);
     let final = Math.floor(raw * globalDamageMult);
     final = applyCrit(final);
-    // 0 est valide : défenseur à 100% HP = 0 dégât execute
     return Math.max(0, final);
   }
 
@@ -314,6 +317,7 @@ export function calculateDamage(
   if (dmg.current_hp_percent != null && defenderCurrentHP != null) {
     let raw = Math.floor(defenderCurrentHP * dmg.current_hp_percent / 100);
     if (dmg.current_hp_cap != null) raw = Math.min(raw, dmg.current_hp_cap);
+    if (isWild && dmg.wild_cap != null) raw = Math.min(raw, dmg.wild_cap);
     let final = Math.floor(raw * globalDamageMult);
     final = applyCrit(final);
     return Math.max(1, final);
@@ -341,6 +345,8 @@ export function calculateDamage(
     state.currentDefender?.pokemonId,
     defenderMaxHP
   );
+
+  if (isWild && dmg.wild_cap != null) finalDamage = Math.min(finalDamage, dmg.wild_cap);
 
   return Math.max(1, finalDamage);
 }

@@ -531,8 +531,11 @@
         <div class="stat-item">
           <span class="stat-label">HP</span>
           <!-- HP -->
-          <div class="slider-block">
-            <label>HP <span id="hpValueAttacker">0 / 0</span></label>
+          <div class="slider-block hp-slider-block">
+            <div class="hp-bar-header">
+              <span class="hp-level-badge" id="hpLevelBadgeAttacker">Lv.15</span>
+              <span id="hpValueAttacker" class="hp-value-inline">0 / 0</span>
+            </div>
             <input type="range" id="hpSliderAttacker" min="0" max="100" value="100" class="hp-slider">
           </div>
 
@@ -589,8 +592,11 @@
         <!-- HP avec slider (toujours visible) -->
         <div class="stat-item">
           <span class="stat-label">HP</span>
-          <div class="slider-block">
-            <label>HP <span id="hpValueDefender">0 / 0</span></label>
+          <div class="slider-block hp-slider-block">
+            <div class="hp-bar-header">
+              <span class="hp-level-badge defender-level-badge" id="hpLevelBadgeDefender">Lv.15</span>
+              <span id="hpValueDefender" class="hp-value-inline">0 / 0</span>
+            </div>
             <input type="range" id="hpSliderDefender" min="0" max="100" value="100" class="hp-slider">
           </div>
 

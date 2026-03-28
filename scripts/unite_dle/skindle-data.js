@@ -42,7 +42,7 @@ window.UNITE_SKINS = [
   { pokemon: "Dragapult",          skinName: "Performer",          file: "dragapult_performer.jpg" },
 
   // ── Galarian Rapidash ──
-  { pokemon: "Galarian Rapidash",  skinName: "Fairy-Tale",         file: "galarian-rapidash_fairy-tale.jpg" },
+  { pokemon: "Rapidash",  skinName: "Fairy-Tale",         file: "galarian-rapidash_fairy-tale.jpg" },
 
   // ── Gengar ──
   { pokemon: "Gengar",             skinName: "Neo Street",         file: "gengar_neo_street.jpg" },
