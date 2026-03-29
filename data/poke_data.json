@@ -5432,50 +5432,140 @@
         "damages": [
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
           {"name": "Boosted (Ranged)", "multiplier": 130, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Close Range Bonus", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+5% missing HP (basic), +10% missing HP (boosted)"}
+          {"name": "Basic Close Range Bonus", "missing_hp_percent": 5, "wild_cap": 500, "dealDamage": true, "notes": "+5% missing HP (basic)"},
+          {"name": "Boosted Close Range Bonus", "missing_hp_percent": 10, "wild_cap": 500, "dealDamage": true, "notes": "+10% missing HP (boosted)"}
         ]
       },
       {
         "name": "Bubble",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/greninja/bubble.png",
         "damages": [
-          {"name": "Damage per Hit (x2)", "multiplier": 113, "levelCoef": 7, "constant": 208, "dealDamage": true}
+          {"name": "Damage per Hit (x2)", "multiplier": 113, "levelCoef": 7, "constant": 208, "dealDamage": true, "is_tick": true, "tick_count": 2}
         ]
       },
       {
         "name": "Water Shuriken",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/greninja/water_shuriken.png",
         "damages": [
-          {"name": "Damage per Shuriken", "multiplier": 135, "levelCoef": 8, "constant": 210, "dealDamage": true},
-          {"name": "Healing per Unique Enemy", "multiplier": 15, "levelCoef": 2, "constant": 25, "heal": true}
+          {"name": "Damage per Shuriken", "multiplier": 135, "levelCoef": 8, "constant": 210, "dealDamage": true, "is_tick": true, "tick_count": 4},
+          {"name": "Damage per Shuriken +", "multiplier": 135, "levelCoef": 8, "constant": 210, "dealDamage": true, "is_tick": true, "tick_count": 5, "upgraded": true}
+          
+        ],
+        "heals": [
+          {"name": "Healing per Unique Enemy", "scaling": "atk", "multiplier": 15, "levelCoef": 2, "constant": 25, "target": "self"}
         ]
       },
       {
         "name": "Surf",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/greninja/surf.png",
         "damages": [
-          {"name": "Damage", "multiplier": 200, "levelCoef": 8, "constant": 370, "dealDamage": true},
-          {"name": "Bonus (<50% HP)", "multiplier": 100, "levelCoef": 4, "constant": 185, "dealDamage": true},
-          {"name": "Healing per Enemy Hit", "multiplier": 45.2, "levelCoef": 5, "constant": 82, "heal": true}
+          {"name": "Damage", "multiplier": 200, "levelCoef": 8, "constant": 370, "wild_cap": 1200, "dealDamage": true},
+          {"name": "Bonus (<50% HP)", "multiplier": 100, "levelCoef": 4, "constant": 185, "wild_cap": 600, "dealDamage": true}
+        ],
+        "heals": [
+          {"name": "Healing per Enemy hit", "scaling": "atk", "multiplier": 45.2, "levelCoef": 5, "constant": 82, "target": "self"},
+          {"name": "Healing per Enemy hit +", "scaling": "atk", "multiplier": 54.24, "levelCoef": 6, "constant": 150, "target": "self", "upgraded": true}
         ]
       },
       {
         "name": "Substitute",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/greninja/substitute.png",
         "damages": []
       },
       {
         "name": "Double Team",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/greninja/double_team.png",
-        "damages": []
+        "damages": [
+          {
+            "name": "Clone Auto-attack (Basic)",
+            "multiplier": 19.44,
+            "levelCoef": 0,
+            "constant": 0,
+            "dealDamage": true,
+            "notes": "19.44% of normal auto-attack"
+          },
+          {
+            "name": "Clone Auto-attack (Boosted)",
+            "multiplier": 25.27,
+            "levelCoef": 0,
+            "constant": 0,
+            "dealDamage": true,
+            "notes": "19.44% of boosted auto-attack"
+          },
+          {
+            "name": "Clone Bubble (per Hit x2)",
+            "multiplier": 21.97,
+            "levelCoef": 1.36,
+            "constant": 40.44,
+            "dealDamage": true,
+            "is_tick": true,
+            "tick_count": 2,
+            "notes": "19.44% of Bubble damage"
+          },
+          {
+            "name": "Clone Water Shuriken (per Shuriken)",
+            "multiplier": 26.24,
+            "levelCoef": 1.56,
+            "constant": 40.82,
+            "dealDamage": true,
+            "is_tick": true,
+            "tick_count": 4,
+            "notes": "19.44% of Water Shuriken damage"
+          },
+          {
+            "name": "Clone Water Shuriken + (per Shuriken)",
+            "multiplier": 26.24,
+            "levelCoef": 1.56,
+            "constant": 40.82,
+            "dealDamage": true,
+            "is_tick": true,
+            "tick_count": 5,
+            "upgraded": true,
+            "notes": "19.44% of Water Shuriken upgraded damage"
+          },
+          {
+            "name": "Clone Surf (Damage)",
+            "multiplier": 38.88,
+            "levelCoef": 1.56,
+            "constant": 71.93,
+            "dealDamage": true,
+            "notes": "19.44% of Surf damage"
+          },
+          {
+            "name": "Clone Surf (Bonus <50% HP)",
+            "multiplier": 19.44,
+            "levelCoef": 0.78,
+            "constant": 35.96,
+            "dealDamage": true,
+            "notes": "19.44% of Surf bonus damage"
+          }
+        ]
       },
       {
         "name": "Smokescreen",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/greninja/smokescreen.png",
         "damages": [
@@ -5484,10 +5574,23 @@
       },
       {
         "name": "Waterburst Shuriken (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/greninja/waterburst_shuriken.png",
         "damages": [
-          {"name": "Damage (x2)", "multiplier": 220, "levelCoef": 11, "constant": 420, "dealDamage": true}
+          {"name": "Damage (x2)", "multiplier": 220, "levelCoef": 11, "constant": 420, "dealDamage": true, "is_tick": true, "tick_count": 2}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0,
+            "target": "self"
+          }
         ]
       }
     ]
@@ -5520,12 +5623,15 @@
         "can_crit": "true",
         "image": "assets/moves/basic_attack.png",
         "damages": [
-          {"name": "Basic (Gyarados)", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Basic (Both)", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
           {"name": "Boosted (Gyarados)", "multiplier": 140, "levelCoef": 0, "constant": 0, "dealDamage": true}
         ]
       },
       {
         "name": "Flail",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/gyarados/flail.png",
         "damages": [
@@ -5536,58 +5642,94 @@
       },
       {
         "name": "Dragon Breath",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/gyarados/dragon_breath.png",
         "damages": [
-          {"name": "Damage - Basic", "multiplier": 124, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Damage - Boosted", "multiplier": 166, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Damage - Basic +", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Damage - Boosted +", "multiplier": 176, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Damage - Dragon Breath", "multiplier": 193, "levelCoef": 22, "constant": 325, "dealDamage": true},
+          {"name": "Damage - Dragon Breath +", "multiplier": 232, "levelCoef": 26, "constant": 390, "dealDamage": true, "upgraded": true},
+          {"name": "Auto Damage Buff - Basic", "multiplier": 124, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Auto Damage Buff - Basic +", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true, "upgraded": true},
+          {"name": "Auto Damage Buff - Boosted", "multiplier": 166, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Auto Damage Buff - Boosted +", "multiplier": 176, "levelCoef": 0, "constant": 0, "dealDamage": true, "upgraded": true}
         ]
       },
       {
         "name": "Aqua Tail",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/gyarados/aqua_tail.png",
         "damages": [
-          {"name": "Damage (x5)", "multiplier": 200, "levelCoef": 16, "constant": 405, "dealDamage": true},
+          {"name": "Damage (x5)", "multiplier": 200, "levelCoef": 16, "constant": 405, "dealDamage": true, "is_tick": true, "tick_count": 5},
           {"name": "Boosted Damage", "multiplier": 338, "levelCoef": 28, "constant": 680, "dealDamage": true},
+          {"name": "Boosted Damage - Additional", "missing_hp_percent": 20, "wild_cap": 1000, "dealDamage": true, "notes": "Only applies for upgraded move"},
           {"name": "Boosted Charged", "multiplier": 388.7, "levelCoef": 32, "constant": 782, "dealDamage": true}
         ]
       },
       {
         "name": "Splash",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/gyarados/splash.png",
         "damages": []
       },
       {
         "name": "Waterfall",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/gyarados/waterfall.png",
         "damages": [
-          {"name": "Damage (x3)", "multiplier": 120, "levelCoef": 6, "constant": 208, "dealDamage": true},
-          {"name": "Shield", "multiplier": 0, "levelCoef": 0, "constant": 0, "shield": true, "notes": "13% max HP + 260"}
+          {"name": "Damage (x3)", "multiplier": 120, "levelCoef": 6, "constant": 208, "dealDamage": true, "it_tick": true, "tick_count": 3}
+        ],
+        "shields": [
+          {"name": "Shield", "scaling": "hp", "multiplier": 13, "levelCoef": 0, "constant": 260, "target": "self", "notes": "13% max HP + 260"}
         ]
       },
       {
         "name": "Bounce",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/gyarados/bounce.png",
         "damages": [
-          {"name": "Damage", "multiplier": 178, "levelCoef": 14, "constant": 350, "dealDamage": true},
-          {"name": "Shield (Full Charge)", "multiplier": 234, "levelCoef": 0, "constant": 520, "shield": true}
+          {"name": "Damage", "multiplier": 178, "levelCoef": 14, "constant": 350, "dealDamage": true}
+        ],
+        "shields": [
+          {"name": "Shield", "scaling": "atk", "multiplier": 234, "levelCoef": 0, "constant": 520, "target": "self"},
+          {"name": "Shield +", "scaling": "atk", "multiplier": 304.2, "levelCoef": 0, "constant": 676, "target": "self", "upgraded": true}
         ]
       },
       {
         "name": "Dragon Current (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/gyarados/dragon_current.png",
         "damages": [
           {"name": "Damage (Base)", "multiplier": 162, "levelCoef": 12, "constant": 325, "dealDamage": true},
           {"name": "Damage (Whirlpool)", "multiplier": 243, "levelCoef": 17, "constant": 488, "dealDamage": true},
-          {"name": "Whirlpool DoT (x5)", "multiplier": 16.2, "levelCoef": 1, "constant": 33, "dealDamage": true},
+          {"name": "Whirlpool DoT (x5)", "multiplier": 16.2, "levelCoef": 1, "constant": 33, "dealDamage": true, "is_tick": true, "tick_count": 5},
           {"name": "Damage (Waterspout)", "multiplier": 324, "levelCoef": 23, "constant": 650, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0,
+            "target": "self"
+          }
         ]
       }
     ]
@@ -5635,6 +5777,9 @@
       },
       {
         "name": "Flail",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/mega_gyarados/flail.png",
         "damages": [
@@ -5645,39 +5790,67 @@
       },
       {
         "name": "Dragon Breath",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/gyarados/dragon_breath.png",
         "damages": [
-          {"name": "Damage - Basic", "multiplier": 124, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Damage - Boosted", "multiplier": 166, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Damage - Basic +", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Damage - Boosted +", "multiplier": 176, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Damage - Dragon Breath", "multiplier": 193, "levelCoef": 22, "constant": 325, "dealDamage": true},
+          {"name": "Damage - Dragon Breath +", "multiplier": 232, "levelCoef": 26, "constant": 390, "dealDamage": true, "upgraded": true},
+          {"name": "Auto Damage Buff - Basic", "multiplier": 124, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Auto Damage Buff - Basic +", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true, "upgraded": true},
+          {"name": "Auto Damage Buff - Boosted", "multiplier": 166, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Auto Damage Buff - Boosted +", "multiplier": 176, "levelCoef": 0, "constant": 0, "dealDamage": true, "upgraded": true},
+          {"name": "Auto Damage Buff (Mega) - Basic", "multiplier": 138, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Auto Damage Buff (Mega) - Basic +", "multiplier": 151, "levelCoef": 0, "constant": 0, "dealDamage": true, "upgraded": true}
         ]
       },
       {
         "name": "Splash",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/mega_gyarados/splash.png",
         "damages": []
       },
       {
         "name": "Waterfall",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
-        "image": "assets/moves/mega_gyarados/waterfall.png",
+        "image": "assets/moves/gyarados/waterfall.png",
         "damages": [
-          {"name": "Damage (x3)", "multiplier": 141, "levelCoef": 7, "constant": 246, "dealDamage": true},
-          {"name": "Shield", "multiplier": 0, "levelCoef": 0, "constant": 0, "shield": true, "notes": "13% max HP + 260 (on hit)"}
+          {"name": "Damage (x3)", "multiplier": 120, "levelCoef": 6, "constant": 208, "dealDamage": true, "it_tick": true, "tick_count": 3}
+        ],
+        "shields": [
+          {"name": "Shield", "scaling": "atk", "multiplier": 100, "levelCoef": 0, "constant": 0, "target": "self"}
         ]
       },
       {
         "name": "Dragon Current (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/mega_gyarados/dragon_current.png",
         "damages": [
           {"name": "Damage (Base)", "multiplier": 162, "levelCoef": 12, "constant": 325, "dealDamage": true},
           {"name": "Damage (Whirlpool)", "multiplier": 243, "levelCoef": 17, "constant": 488, "dealDamage": true},
-          {"name": "Whirlpool DoT (x5)", "multiplier": 16.2, "levelCoef": 1, "constant": 33, "dealDamage": true},
+          {"name": "Whirlpool DoT (x5)", "multiplier": 16.2, "levelCoef": 1, "constant": 33, "dealDamage": true, "it_tick": true, "tick_count": 5},
           {"name": "Damage (Waterspout)", "multiplier": 324, "levelCoef": 23, "constant": 650, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0,
+            "target": "self"
+          }
         ]
       }
     ]
@@ -5711,17 +5884,26 @@
         "image": "assets/moves/basic_attack.png",
         "damages": [
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Boosted", "multiplier": 150, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+4% max HP heal per enemy hit"}
+          {"name": "Boosted", "multiplier": 150, "levelCoef": 0, "constant": 0, "dealDamage": true}
+        ],
+        "heals": [
+          {"name": "Healing per Enemy Hit", "scaling": "hp", "multiplier": 4, "levelCoef": 0, "constant": 0, "it_tick": true, "tick_count": 5, "target": "self"}
         ]
       },
       {
         "name": "Safeguard",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/hooh/safeguard.png",
         "damages": []
       },
       {
         "name": "Sacred Fire",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/hooh/sacred_fire.png",
         "damages": [
@@ -5730,16 +5912,24 @@
       },
       {
         "name": "Fire Spin",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/hooh/fire_spin.png",
         "damages": [
           {"name": "Damage (Vortex)", "multiplier": 41, "levelCoef": 1, "constant": 40, "dealDamage": true},
-          {"name": "Damage (Heatwave)", "multiplier": 205, "levelCoef": 4, "constant": 208, "dealDamage": true},
-          {"name": "Shield", "multiplier": 0, "levelCoef": 0, "constant": 0, "shield": true, "notes": "30% max HP"}
+          {"name": "Damage (Heatwave)", "multiplier": 205, "levelCoef": 4, "constant": 208, "dealDamage": true}
+        ],
+        "shields": [
+          {"name": "Shield", "scaling": "hp", "multiplier": 33, "levelCoef": 0, "constant": 0, "target": "self", "notes": "33% max HP"}
         ]
       },
       {
         "name": "Tailwind",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/hooh/tailwind.png",
         "damages": [
@@ -5748,28 +5938,52 @@
       },
       {
         "name": "Flamethrower",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/hooh/flamethrower.png",
         "damages": [
-          {"name": "Damage (per tick)", "multiplier": 35, "levelCoef": 2, "constant": 48, "dealDamage": true},
-          {"name": "Healing (per tick on hit)", "multiplier": 24, "levelCoef": 0, "constant": 24, "heal": true},
-          {"name": "Burn Damage", "multiplier": 20, "levelCoef": 0, "constant": 20, "dealDamage": true}
+          {"name": "Damage (per tick)", "multiplier": 35, "levelCoef": 2, "constant": 48, "dealDamage": true, "is_tick": true, "tick_count": 16},
+          {"name": "Burn Damage", "multiplier": 20, "levelCoef": 0, "constant": 20, "dealDamage": true, "is_tick": true, "tick_count": 6}
+        ],
+        "heals": [
+          {"name": "Healing (per tick on hit)", "scaling": "atk", "multiplier": 24, "levelCoef": 0, "constant": 24, "is_tick": true, "tick_count": 16, "target": "self"}
         ]
       },
       {
         "name": "Sky Attack",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/hooh/sky_attack.png",
         "damages": [
           {"name": "Damage", "multiplier": 150, "levelCoef": 19, "constant": 500, "dealDamage": true},
           {"name": "Damage (Ground)", "multiplier": 20, "levelCoef": 0, "constant": 30, "dealDamage": true}
+        ],
+        "heals": [
+          {"name": "Healing", "scaling": "atk", "multiplier": 77, "levelCoef": 0, "constant": 110, "upgraded": true, "target": "self"}
         ]
       },
       {
         "name": "Rekindling Flame (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/hooh/rekindling_flame.png",
-        "damages": []
+        "damages": [],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0,
+            "target": "self"
+          }
+        ]
       }
     ]
   },
