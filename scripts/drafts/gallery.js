@@ -84,18 +84,24 @@ function onPokemonClick(img) {
     (step.team === "teamA" ? fearlessTeamA : fearlessTeamB).add(img.dataset.file);
   }
 
-  if (window._mpPublishPick) window._mpPublishPick(state.currentStep, img.dataset.file);
-
   state.currentStep++;
   updateTurn();
   highlightCurrentSlot();
 
-  if (state.currentStep >= state.currentDraftOrder.length) {
+  const isDraftDone = state.currentStep >= state.currentDraftOrder.length;
+
+  if (isDraftDone) {
+    // Appeler endDraft AVANT de publier le pick pour éviter que le SSE
+    // revienne et tente de sync pendant/après endDraft()
     endDraft();
   } else if (document.getElementById("enable-timer").checked) {
     state.timeLeft = parseInt(document.getElementById("timer-value").value) || 20;
     document.getElementById("bubble-timer").textContent = `${state.timeLeft}s`;
   }
+
+  // Publier après endDraft pour que localStatus soit déjà "recap"
+  // quand le SSE du pick reviendra
+  if (window._mpPublishPick) window._mpPublishPick(state.currentStep - 1, img.dataset.file);
 }
 
 function _showToast() {

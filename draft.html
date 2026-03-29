@@ -110,9 +110,10 @@
 
   <!-- ── Start / Reset / Undo ─────────────────────── -->
   <div class="start-reset-controls">
-    <button id="start-draft" class="draft-btn" data-lang="start_draft" disabled>Start Draft</button>
-    <button id="reset-draft" class="draft-btn" data-lang="reset" style="display:none;">Reset</button>
+    <button id="start-draft" class="draft-btn" data-lang="start_draft" disabled>▶ Start Draft</button>
+    <button id="reset-draft" class="draft-btn" data-lang="reset" style="display:none;">↺ Reset</button>
   </div>
+  <div id="mp-start-hint" class="mp-start-hint" style="display:none;"></div>
   <button id="backBtn" style="display:none;">⏪ Undo</button>
 
   <!-- ════════════════════════════════════════════════
@@ -150,7 +151,7 @@
         <span id="cbar-mode"  class="cbar-mode"></span>
         <span id="cbar-timer" class="cbar-timer" style="display:none;"></span>
         <span class="cbar-spacer"></span>
-        <span id="cbar-label" class="cbar-label">Masquer</span>
+        <span id="cbar-label" class="cbar-label">Hide</span>
       </button>
 
       <!-- Info : map + turn + timer + switches -->
@@ -159,20 +160,34 @@
         <div id="turn-display" style="display:none;"></div>
         <div id="mp-turn-indicator" class="mp-turn-indicator" style="display:none;"></div>
 
-        <label class="switch">
-          <input type="checkbox" id="enable-timer">
-          <span class="slider"></span>
-          <span class="switch-label" data-lang="enable_timer">Timer</span>
-        </label>
-        <div id="timer-settings">
-          <input type="number" id="timer-value" value="20" min="5" max="120">
-        </div>
+        <div class="draft-settings-panel">
+          <div class="draft-setting-row" id="timer-row">
+            <label class="setting-toggle-label" for="enable-timer">
+              <span class="setting-icon">⏱</span>
+              <span class="setting-name">Timer</span>
+              <span class="switch compact">
+                <input type="checkbox" id="enable-timer">
+                <span class="slider"></span>
+              </span>
+            </label>
+            <div id="timer-settings" style="display:none;">
+              <input type="number" id="timer-value" value="20" min="5" max="120">
+              <span class="timer-unit">sec</span>
+            </div>
+          </div>
 
-        <label class="switch">
-          <input type="checkbox" id="fearless-checkbox">
-          <span class="slider"></span>
-          <span class="switch-label">Fearless</span>
-        </label>
+          <div class="draft-setting-row" id="fearless-row">
+            <label class="setting-toggle-label" for="fearless-checkbox">
+              <span class="setting-icon">⚡</span>
+              <span class="setting-name">Fearless</span>
+              <span class="switch compact">
+                <input type="checkbox" id="fearless-checkbox">
+                <span class="slider"></span>
+              </span>
+            </label>
+            <span class="setting-hint">No repeat picks across games</span>
+          </div>
+        </div>
 
         <div id="bubble-timer" style="display:none;">20s</div>
       </div>
@@ -261,8 +276,12 @@
         </div>
       </div>
       <div class="fearless-action-btns">
+        <button id="swap-sides-btn" class="draft-btn draft-btn-swap" style="display:none;">🔄 Swap Sides</button>
         <button id="next-draft-btn" class="draft-btn">▶ Next Draft</button>
         <button id="end-series-btn" class="draft-btn draft-btn-danger">✕ End Series</button>
+      </div>
+      <div id="mp-recap-wait-msg" class="mp-recap-wait-msg" style="display:none;">
+        ⏳ Waiting for host to start the next draft…
       </div>
     </div>
   </div>
@@ -282,7 +301,7 @@
     });
     // Timer settings visibility
     document.getElementById('enable-timer').addEventListener('change', function() {
-      document.getElementById('timer-settings').style.display = this.checked ? 'block' : 'none';
+      document.getElementById('timer-settings').style.display = this.checked ? 'flex' : 'none';
     });
     // Fearless map re-select
     document.addEventListener('click', function(e) {
@@ -296,7 +315,7 @@
       const col = document.getElementById('center-col');
       const isCollapsed = col.classList.toggle('info-collapsed');
       document.getElementById('cbar-arrow').textContent = isCollapsed ? '▼' : '▲';
-      document.getElementById('cbar-label').textContent = isCollapsed ? 'Afficher' : 'Masquer';
+      document.getElementById('cbar-label').textContent = isCollapsed ? 'Show' : 'Hide';
     });
   </script>
 </body>

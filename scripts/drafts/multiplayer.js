@@ -45,7 +45,7 @@ export const mpState = {
   enabled: false,
   roomId: null,
   playerRole: null,     // "teamA" | "teamB" | "spectator"
-  isHost: false,        // first player to create the room
+  isHost: false,        // true only for the player who CREATED the room (permanent)
   sseConnection: null,
   spectatorCount: 0,
   localStatus: "idle",  // "idle" | "drafting" | "recap" | "lobby"
@@ -173,8 +173,7 @@ export async function switchRole(newRole) {
   }
 
   mpState.playerRole = newRole;
-  // Update the host flag: host = whoever is in teamA
-  mpState.isHost = newRole === "teamA";
+  // NOTE: mpState.isHost is permanent — it never changes after room creation.
 
   // Notify UI
   window.dispatchEvent(new CustomEvent("mp:roleChanged", { detail: { role: newRole } }));
@@ -206,8 +205,16 @@ export async function publishDraftStart(fearlessMode, map) {
 
 export async function publishDraftEnd() {
   if (!mpState.enabled || !mpState.roomId) return;
-  mpState.localStatus = "recap";
+  // localStatus already set to "recap" by endDraft() before this call
   await dbUpdate(`rooms/${mpState.roomId}`, { status: "recap" });
+}
+
+/**
+ * Broadcast the current sidesSwapped state so all players know before the next draft starts.
+ */
+export async function publishSideSwap(sidesSwapped) {
+  if (!mpState.enabled || !mpState.roomId) return;
+  await dbUpdate(`rooms/${mpState.roomId}`, { sidesSwapped: sidesSwapped });
 }
 
 /**
@@ -224,7 +231,7 @@ export async function publishReturnToLobby() {
   });
 }
 
-export async function publishNextDraft(map, fearlessMode) {
+export async function publishNextDraft(map, fearlessMode, sidesSwapped = false) {
   if (!mpState.enabled || !mpState.roomId) return;
   const data = await dbGet(`rooms/${mpState.roomId}`);
   const nextCount = (data?.draftCount || 1) + 1;
@@ -235,6 +242,7 @@ export async function publishNextDraft(map, fearlessMode) {
     picks: {},
     map: map || null,
     fearlessMode: fearlessMode || false,
+    sidesSwapped: sidesSwapped || false,
     draftCount: nextCount,
   });
 }
@@ -273,9 +281,21 @@ function _onRoomUpdate(data) {
   const rs = data.status;
   const ls = mpState.localStatus;
 
+  // ── sidesSwapped sync (recap phase, non-host mirrors host's choice) ───────────
+  if (rs === "recap" && ls === "recap") {
+    if (typeof data.sidesSwapped === "boolean" && data.sidesSwapped !== state.sidesSwapped) {
+      state.sidesSwapped = data.sidesSwapped;
+      const swapBtn = document.getElementById("swap-sides-btn");
+      if (swapBtn) {
+        swapBtn.textContent = state.sidesSwapped ? "🔄 Sides Swapped ✓" : "🔄 Swap Sides";
+        swapBtn.classList.toggle("active", state.sidesSwapped);
+      }
+    }
+    return; // always ignore recap→recap bounces except for sidesSwapped sync above
+  }
+
   // ── Waiting/lobby ──────────────────────────────────────────────────────────
   if (rs === "waiting" && (ls === "drafting" || ls === "recap")) {
-    // Host published return-to-lobby
     mpState.localStatus = "idle";
     window.dispatchEvent(new CustomEvent("mp:returnToLobby", { detail: data }));
     return;
@@ -287,6 +307,7 @@ function _onRoomUpdate(data) {
     state.selectedMode      = data.mode;
     state.selectedMap       = data.map;
     state.fearlessMode      = data.fearlessMode || false;
+    state.sidesSwapped      = data.sidesSwapped || false;
     state.currentDraftOrder = [...draftOrders[data.mode]];
     state.currentStep       = 0;
 
@@ -305,21 +326,27 @@ function _onRoomUpdate(data) {
   // ── Pick sync during draft ─────────────────────────────────────────────────
   if (rs === "drafting" && ls === "drafting") {
     const remoteStep = data.currentStep || 0;
-    if (remoteStep > state.currentStep) _syncPicks(data, remoteStep);
+    if (remoteStep > state.currentStep && mpState.localStatus === "drafting") {
+      _syncPicks(data, remoteStep);
+    }
     return;
   }
 
-  // ── Draft ending ───────────────────────────────────────────────────────────
+  // ── Draft ending — only fire for players still in "drafting" state ─────────
   if (rs === "recap" && ls === "drafting") {
     mpState.localStatus = "recap";
     window.dispatchEvent(new CustomEvent("mp:draftEnd"));
     return;
   }
+  // If ls is already "recap", ignore the bounce (host already handled it locally)
 }
 
 // ─── Pick synchronisation ─────────────────────────────────────────────────────
 
 function _syncPicks(data, remoteStep) {
+  // Ne pas sync si la draft est déjà terminée localement
+  if (mpState.localStatus === "recap") return;
+
   const picks = data.picks || {};
   for (let i = state.currentStep; i < remoteStep; i++) {
     const pick = picks[i];

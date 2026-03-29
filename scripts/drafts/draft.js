@@ -1,5 +1,5 @@
 import { state, fearlessTeamA, fearlessTeamB } from "./state.js";
-import { mapImages, draftOrders } from "./constants.js";
+import { mapImages, draftOrders, swapDraftOrder } from "./constants.js";
 import { updateTurn, highlightCurrentSlot, resetDraftSlots, createRecapSlots, getAllBanSlots, getAllPickSlots } from "./ui.js";
 import { setupTimer } from "./timer.js";
 import { publishPick, publishDraftEnd, publishReturnToLobby, publishNextDraft, mpState } from "./multiplayer.js";
@@ -18,9 +18,8 @@ export function startDraft() {
     state.selectedMap = maps[Math.floor(Math.random() * maps.length)];
   }
 
-  state.fearlessMode = mpState.enabled
-    ? (state.fearlessMode || false)
-    : document.getElementById("fearless-checkbox").checked;
+  // Toujours lire la checkbox — en MP, publishDraftStart va broadcaster la valeur
+  state.fearlessMode = document.getElementById("fearless-checkbox").checked;
 
   state.currentDraftOrder = [...draftOrders[state.selectedMode]];
   state.currentStep = 0;
@@ -35,7 +34,8 @@ export function startDraft() {
 
   document.getElementById("start-draft").style.display = "none";
   document.getElementById("reset-draft").style.display = "inline-block";
-  document.getElementById("backBtn").style.display = "inline-block";
+  // Undo is disabled in MP (desyncs would break the room)
+  document.getElementById("backBtn").style.display = mpState.enabled ? "none" : "inline-block";
 
   _showGallery();
   _hideRecap();
@@ -69,6 +69,9 @@ export async function endDraft() {
   // Hide gallery first so it never flashes over the recap
   _hideGallery();
 
+  // Set localStatus immediately so any SSE bounce doesn't re-trigger
+  if (mpState.enabled) mpState.localStatus = "recap";
+
   // Show recap
   if (state.fearlessMode) {
     _showFearlessRecap();
@@ -76,14 +79,15 @@ export async function endDraft() {
     _showFinalRecap();
   }
 
-  // Publish to Firebase. Non-host players receive mp:draftEnd and call endDraft(),
-  // but the _draftEnding guard will block double execution on the host side.
-  if (mpState.enabled && (mpState.isHost || mpState.playerRole === "teamA")) {
+  // Publish to Firebase — whoever triggers endDraft locally publishes the status change.
+  // The _draftEnding guard (set above) prevents re-entry when the SSE bounces back.
+  // Non-triggering players receive mp:draftEnd via SSE and call endDraft() themselves.
+  if (mpState.enabled) {
     await publishDraftEnd();
   }
 
   // Reset guard after delay so the next draft can end properly
-  setTimeout(() => { _draftEnding = false; }, 2000);
+  setTimeout(() => { _draftEnding = false; }, 3000);
 }
 
 // ─── Recap builders ───────────────────────────────────────────────────────────
@@ -94,20 +98,38 @@ function _showFinalRecap() {
   document.getElementById("fearless-controls").style.display = "none";
 
   if (mpState.enabled) {
-    // In MP mode: show "Next Draft" to return to lobby, hide reset/toggle
+    // In MP mode: same flow as fearless — host picks map/sides then launches directly
     document.getElementById("reset-draft").style.display    = "none";
     document.getElementById("mp-toggle-btn").style.display  = "none";
-    // Re-use next-draft-btn as "Return to Lobby"
-    const btn = document.getElementById("next-draft-btn");
-    btn.textContent = "🔄 Next Draft";
-    btn.style.display = "inline-block";
-    // Show fearless-action-btns wrapper so button is visible
     document.getElementById("fearless-controls").style.display = "flex";
-    document.getElementById("fearless-map-reselect").style.display = "none";
-    document.getElementById("end-series-btn").style.display = "none";
+    document.getElementById("fearless-series").style.display   = "block";
+    document.getElementById("fearless-map-reselect").style.display = "block";
+    // Pre-select current map
+    document.querySelectorAll(".fearless-map-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.map === state.selectedMap);
+    });
+    const nextBtn = document.getElementById("next-draft-btn");
+    nextBtn.textContent = "\u25b6 Next Draft";
+    nextBtn.style.display = mpState.isHost ? "inline-block" : "none";
+    const swapBtn = document.getElementById("swap-sides-btn");
+    if (swapBtn) swapBtn.style.display = mpState.isHost ? "inline-block" : "none";
+    const endBtn = document.getElementById("end-series-btn");
+    endBtn.textContent = "\u2715 Disconnect";
+    endBtn.style.display = mpState.isHost ? "inline-block" : "none";
+    const waitMsg = document.getElementById("mp-recap-wait-msg");
+    if (waitMsg) waitMsg.style.display = mpState.isHost ? "none" : "block";
   } else {
     document.getElementById("reset-draft").style.display    = "inline-block";
     document.getElementById("mp-toggle-btn").style.display  = "flex";
+    // Show swap-sides button and next-draft in solo mode too
+    const swapBtn = document.getElementById("swap-sides-btn");
+    if (swapBtn) swapBtn.style.display = "inline-block";
+    const nextBtn = document.getElementById("next-draft-btn");
+    nextBtn.textContent = "▶ New Draft";
+    nextBtn.style.display = "inline-block";
+    document.getElementById("fearless-controls").style.display = "flex";
+    document.getElementById("fearless-map-reselect").style.display = "block";
+    document.getElementById("end-series-btn").style.display = "none";
   }
 }
 
@@ -122,13 +144,23 @@ function _showFearlessRecap() {
     btn.classList.toggle("active", btn.dataset.map === state.selectedMap);
   });
 
-  // In MP mode: show "Next Draft" for all players (not just host),
-  // but "End Series" only for host/teamA
+  // In MP mode: show "Next Draft" for host only, waiting msg for others
   if (mpState.enabled) {
     document.getElementById("mp-toggle-btn").style.display = "none";
-    document.getElementById("next-draft-btn").style.display = "inline-block";
-    document.getElementById("end-series-btn").style.display =
-      (mpState.isHost || mpState.playerRole === "teamA") ? "inline-block" : "none";
+    const nextBtn = document.getElementById("next-draft-btn");
+    const endBtn  = document.getElementById("end-series-btn");
+    const swapBtn = document.getElementById("swap-sides-btn");
+    const waitMsg = document.getElementById("mp-recap-wait-msg");
+    nextBtn.textContent = "▶ Next Draft";
+
+    nextBtn.style.display = mpState.isHost ? "inline-block" : "none";
+    endBtn.style.display  = mpState.isHost ? "inline-block" : "none";
+    if (swapBtn) swapBtn.style.display = mpState.isHost ? "inline-block" : "none";
+    if (waitMsg) waitMsg.style.display = mpState.isHost ? "none" : "block";
+  } else {
+    // Solo fearless: always show swap button
+    const swapBtn = document.getElementById("swap-sides-btn");
+    if (swapBtn) swapBtn.style.display = "inline-block";
   }
 }
 
@@ -258,6 +290,7 @@ export function softResetDraft() {
   state.currentStep  = 0;
   state.selectedMode = null;
   state.selectedMap  = null;
+  state.sidesSwapped = false;
 
   document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active", "disabled"));
   document.querySelectorAll(".map-btn").forEach(b => b.classList.remove("active"));
@@ -275,6 +308,8 @@ export function softResetDraft() {
   document.getElementById("mp-toggle-btn").style.display  = "flex";
   const mpInd = document.getElementById("mp-turn-indicator");
   if (mpInd) mpInd.style.display = "none";
+  const swapBtn = document.getElementById("swap-sides-btn");
+  if (swapBtn) { swapBtn.style.display = "none"; swapBtn.classList.remove("active"); swapBtn.textContent = "🔄 Swap Sides"; }
 
   _hideGallery();
   _hideRecap();
@@ -309,7 +344,7 @@ export async function returnToLobby() {
     document.getElementById("start-draft").disabled = false;
   }
 
-  if (mpState.enabled && (mpState.isHost || mpState.playerRole === "teamA")) {
+  if (mpState.enabled && mpState.isHost) {
     await publishReturnToLobby();
   }
 }
@@ -320,13 +355,19 @@ export async function startNextDraft(skipPublish = false) {
   const selectedMapBtn = document.querySelector(".fearless-map-btn.active");
   if (selectedMapBtn) state.selectedMap = selectedMapBtn.dataset.map;
 
+  // Apply side swap if requested
+  if (state.sidesSwapped) {
+    state.currentDraftOrder = swapDraftOrder([...draftOrders[state.selectedMode]]);
+  } else {
+    state.currentDraftOrder = [...draftOrders[state.selectedMode]];
+  }
+
   // NE PAS vider fearlessTeamA/B ici — en fearless, les picks s'accumulent
   // entre les drafts. Les sets sont clearés uniquement dans endFearlessSeries().
 
   resetDraftSlots();
   state.allImages.forEach(img => img.classList.remove("used", "fearless-blocked"));
   state.currentStep = 0;
-  state.currentDraftOrder = [...draftOrders[state.selectedMode]];
 
   document.getElementById("map-display").innerHTML =
     `<img src="${mapImages[state.selectedMap]}" alt="${state.selectedMap}">`;
@@ -337,16 +378,27 @@ export async function startNextDraft(skipPublish = false) {
   _hideRecap();
   _showGallery();
   document.getElementById("fearless-controls").style.display = "none";
-  document.getElementById("backBtn").style.display = "inline-block";
+  document.getElementById("backBtn").style.display = mpState.enabled ? "none" : "inline-block";
+  // Reset end-series-btn text in case it was relabelled
+  const endBtn = document.getElementById("end-series-btn");
+  if (endBtn) endBtn.textContent = "✕ End Series";
+  // Capture sidesSwapped BEFORE resetting — we still need to publish it
+  const sidesSwappedToPublish = state.sidesSwapped;
+  // Reset swap-sides button (swap was applied, now reset for next round)
+  state.sidesSwapped = false;
+  const swapBtn = document.getElementById("swap-sides-btn");
+  if (swapBtn) { swapBtn.style.display = "none"; swapBtn.classList.remove("active"); swapBtn.textContent = "🔄 Swap Sides"; }
+  const waitMsg = document.getElementById("mp-recap-wait-msg");
+  if (waitMsg) waitMsg.style.display = "none";
 
   setupTimer();
   updateTurn();
   highlightCurrentSlot();
   if (mpState.enabled) _updateMpTurnIndicator();
 
-  if (mpState.enabled && !skipPublish && (mpState.isHost || mpState.playerRole === "teamA")) {
+  if (mpState.enabled && !skipPublish && mpState.isHost) {
     const fearless = document.getElementById("fearless-checkbox")?.checked ?? state.fearlessMode;
-    await publishNextDraft(state.selectedMap, fearless);
+    await publishNextDraft(state.selectedMap, fearless, sidesSwappedToPublish);
   }
 }
 

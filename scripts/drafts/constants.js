@@ -1,3 +1,14 @@
+/**
+ * Returns a new draft order with teamA and teamB swapped.
+ * Used for "swap sides" between drafts.
+ */
+export function swapDraftOrder(order) {
+  return order.map(step => ({
+    ...step,
+    team: step.team === "teamA" ? "teamB" : "teamA",
+  }));
+}
+
 export const mapImages = {
   groudon: "assets/maps/spawn/groudon.png",
   kyogre:  "assets/maps/spawn/kyogre.png",

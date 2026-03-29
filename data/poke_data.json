@@ -2232,7 +2232,6 @@
             "multiplier": 0,
             "levelCoef": 0,
             "constant": 0,
-            "target": "self",
             "notes": "25% Missing Hp"
           }
         ],
