@@ -6021,6 +6021,9 @@
       },
       {
         "name": "Astonish",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/hoopa/astonish.png",
         "damages": [
@@ -6029,15 +6032,24 @@
       },
       {
         "name": "Phantom Force",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/hoopa/phantom_force.png",
         "damages": [
           {"name": "Damage", "multiplier": 110, "levelCoef": 14, "constant": 320, "dealDamage": true},
-          {"name": "Damage per Flame (x2)", "multiplier": 55, "levelCoef": 7, "constant": 160, "dealDamage": true}
+          {"name": "Damage per Flame (x2)", "multiplier": 55, "levelCoef": 7, "constant": 160, "dealDamage": true, "is_tick": true, "tick_count": 2}
+        ],
+        "heals": [
+          {"name": "Heal - Trick TP (Only Ally)", "scaling": "hp", "multiplier": 15, "target":"ally"}
         ]
       },
       {
         "name": "Shadow Ball",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/hoopa/shadow_ball.png",
         "damages": [
@@ -6047,6 +6059,9 @@
       },
       {
         "name": "Confusion",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/hoopa/confusion.png",
         "damages": [
@@ -6056,6 +6071,9 @@
       },
       {
         "name": "Hyperspace Hole",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/hoopa/hyperspace_hole.png",
         "damages": [
@@ -6064,6 +6082,9 @@
       },
       {
         "name": "Trick",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/hoopa/trick.png",
         "damages": [
@@ -6081,6 +6102,9 @@
       },
       {
         "name": "Rings Unbound (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/hoopa/rings_unbound.png",
         "damages": [],
@@ -6090,20 +6114,27 @@
             "scaling": "hp",
             "multiplier": 20,
             "levelCoef": 0,
-            "constant": 0
+            "constant": 0,
+            "target": "self"
           }
         ]
       },
       {
         "name": "Hyperspace Fury",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/hoopa/hyperspace_fury.png",
         "damages": [
-          {"name": "Damage (7x)", "multiplier": 15, "levelCoef": 2, "constant": 40, "dealDamage": true}
+          {"name": "Damage (7x)", "multiplier": 15, "levelCoef": 2, "constant": 40, "dealDamage": true, "is_tick": true, "tick_count": 7}
         ]
       },
       {
         "name": "Psybeam",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/hoopa/psybeam.png",
         "damages": [
@@ -6146,12 +6177,18 @@
       },
       {
         "name": "Tearful Look",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/inteleon/tearful_look.png",
         "damages": []
       },
       {
         "name": "Fell Stinger",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "true",
         "image": "assets/moves/inteleon/fell_stinger.png",
         "damages": [
@@ -6160,6 +6197,9 @@
       },
       {
         "name": "Acrobatics",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/inteleon/acrobatics.png",
         "damages": [
@@ -6168,35 +6208,58 @@
       },
       {
         "name": "Water Gun",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "true",
         "image": "assets/moves/inteleon/water_gun.png",
         "damages": [
-          {"name": "Damage (x3)", "multiplier": 27, "levelCoef": 3, "constant": 94, "dealDamage": true}
+          {"name": "Damage (x3)", "multiplier": 27, "levelCoef": 3, "constant": 94, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Snipe Shot",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "true",
         "image": "assets/moves/inteleon/snipe_shot.png",
         "damages": [
-          {"name": "Damage (Close)", "multiplier": 58, "levelCoef": 4, "constant": 172, "dealDamage": true},
-          {"name": "Damage (Mid)", "multiplier": 85, "levelCoef": 8, "constant": 256, "dealDamage": true},
-          {"name": "Damage (Far)", "multiplier": 114, "levelCoef": 10, "constant": 344, "dealDamage": true}
+          {"name": "Damage (Close)", "multiplier": 58, "levelCoef": 4, "constant": 172, "dealDamage": true, "sp_def_ignore": 0.15},
+          {"name": "Damage (Mid)",   "multiplier": 85, "levelCoef": 8, "constant": 256, "dealDamage": true, "sp_def_ignore": 0.20},
+          {"name": "Damage (Far)",   "multiplier": 114, "levelCoef": 10, "constant": 344, "dealDamage": true, "sp_def_ignore": 0.25}
         ]
       },
       {
         "name": "Liquidation",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "true",
         "image": "assets/moves/inteleon/liquidation.png",
         "damages": [
-          {"name": "Damage per Bullet (x8)", "multiplier": 15, "levelCoef": 1, "constant": 46, "dealDamage": true}
+          {"name": "Damage per Bullet (x8)", "multiplier": 15, "levelCoef": 1, "constant": 46, "dealDamage": true, "is_tick": true, "tick_count": 8},
+          {"name": "Damage per Bullet + (x10)", "multiplier": 15, "levelCoef": 1, "constant": 46, "dealDamage": true, "is_tick": true, "tick_count": 10, "upgraded": true}
         ]
       },
       {
         "name": "Azure Spy Vision (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/inteleon/azure_spy_vision.png",
-        "damages": []
+        "damages": [],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0,
+            "target": "self"
+          }
+        ]
       }
     ]
   },
@@ -6234,14 +6297,17 @@
         "image": "assets/moves/basic_attack.png",
         "damages": [
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true, "scaling": "physical"},
-          {"name": "Boosted (x3)", "multiplier": 20, "levelCoef": 3, "constant": 60, "dealDamage": true, "scaling": "special", "notes": "+3.5% max HP heal per tick"}
+          {"name": "Boosted (x3)", "multiplier": 20, "levelCoef": 3, "constant": 60, "dealDamage": true, "scaling": "special", "is_tick": true, "tick_count": 3}
         ],
         "heals": [
-          { "name": "Heal - Per tick (max 3 per boosted)", "scaling": "hp", "multiplier": 3.5, "levelCoef": 0, "constant": 0 }
+          { "name": "Heal - Per tick (max 3 per boosted)", "scaling": "hp", "multiplier": 3.5, "levelCoef": 0, "constant": 0, "is_tick": true, "tick_count": 3 }
         ]
       },
       {
         "name": "Whirlpool",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/lapras/whirlpool.png",
         "damages": [
@@ -6250,31 +6316,46 @@
       },
       {
         "name": "Water Pulse",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/lapras/water_pulse.png",
         "damages": [
           {"name": "Damage (First Pulse)", "multiplier": 74, "levelCoef": 11, "constant": 230, "dealDamage": true},
-          {"name": "Damage (Subsequent)", "multiplier": 45, "levelCoef": 6, "constant": 130, "dealDamage": true}
+          {"name": "Damage (Subsequent)", "multiplier": 45, "levelCoef": 6, "constant": 130, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Damage + (Subsequent)", "multiplier": 45, "levelCoef": 6, "constant": 130, "dealDamage": true, "is_tick": true, "tick_count": 4, "upgraded": true}
         ]
       },
       {
         "name": "Perish Song",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/lapras/perish_song.png",
         "damages": [
-          {"name": "Damage", "multiplier": 82.8, "levelCoef": 9, "constant": 282, "dealDamage": true}
+          {"name": "Damage (x3)", "multiplier": 82.8, "levelCoef": 9, "constant": 282, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Additional Damage", "multiplier": 82.8, "levelCoef": 9, "constant": 282, "dealDamage": true, "notes": "Only applie if all Perish Song use hit the same target"},
+          {"name": "Additional True Damage", "max_hp_percent": 40, "dealDamage": true, "notes": "Only if the Additional Damage would bring an enemy Pokémon below 10% of their max HP"}
         ]
       },
       {
         "name": "Ice Shard",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/lapras/ice_shard.png",
         "damages": [
-          {"name": "Damage per Chunk (x5)", "multiplier": 19, "levelCoef": 2, "constant": 70, "dealDamage": true}
+          {"name": "Damage per Chunk (x5)", "multiplier": 19, "levelCoef": 2, "constant": 70, "dealDamage": true, "is_tick": true, "tick_count": 5}
         ]
       },
       {
         "name": "Bubble Beam",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/lapras/bubble_beam.png",
         "damages": [
@@ -6293,21 +6374,28 @@
             "scaling": "sp_atk",
             "multiplier": 207,
             "levelCoef": 0,
-            "constant": 690
+            "constant": 690,
+            "upgraded": true
           }
         ]
       },
       {
         "name": "Ice Beam",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/lapras/ice_beam.png",
         "damages": [
           {"name": "Damage - Beam", "multiplier": 36, "levelCoef": 3, "constant": 120, "dealDamage": true},
-          {"name": "Damage - Frozen Ground", "multiplier": 27, "levelCoef": 3, "constant": 95, "dealDamage": true}
+          {"name": "Damage - Frozen Ground", "multiplier": 27, "levelCoef": 3, "constant": 95, "dealDamage": true, "is_tick": true, "tick_count": 7}
         ]
       },
       {
         "name": "Lapras Express (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/lapras/lapras_express.png",
         "damages": [

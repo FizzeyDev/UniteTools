@@ -837,6 +837,14 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       if (infiltratorIgnore > 0)          effectiveDef = Math.floor(effectiveDef * (1 - infiltratorIgnore));
       if (defenderFlashFireReduction > 0) effectiveDef = Math.floor(effectiveDef / (1 - defenderFlashFireReduction));
 
+      // ── Per-damage Def / Sp. Def penetration (e.g. Inteleon Snipe Shot) ──
+      if (dmg.def_ignore != null && relevantDef === defStats.def) {
+        effectiveDef = Math.floor(effectiveDef * (1 - dmg.def_ignore));
+      }
+      if (dmg.sp_def_ignore != null && relevantDef === defStats.sp_def) {
+        effectiveDef = Math.floor(effectiveDef * (1 - dmg.sp_def_ignore));
+      }
+
       // ── Moltres : bonus Flame Body sur Incinerate / Heat Wave ────────────
       let moltresBurnMult = 1.0;
       if (state.currentAttacker?.pokemonId === "moltres" && state.attackerPassiveStacks > 0) {

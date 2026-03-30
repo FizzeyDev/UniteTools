@@ -1,5 +1,14 @@
 import { state } from './state.js';
-import { mobIds, registeel, regirock, regice, regieleki, regieleki2, regidrago, kyogre, groudon, rayquaza, substituteDoll, customDoll } from './constants.js';
+import {
+  mobIds,
+  registeel, regirock, regice, regieleki, regieleki2, regidrago,
+  kyogre, groudon, rayquaza,
+  natu, bunnelby,
+  baltoyJungle, baltoyCenter, baltoyLane,
+  indeedee, swablu, altaria,
+  escavalier, accelgor,
+  substituteDoll, customDoll
+} from './constants.js';
 
 export function getPokemonCategory(id) {
   if (id === 'substitute-doll' || id === 'custom-doll') return 'other';
@@ -76,6 +85,17 @@ export async function loadData() {
     state.allPokemon.push(kyogre);
     state.allPokemon.push(groudon);
     state.allPokemon.push(rayquaza);
+
+    state.allPokemon.push(natu);
+    state.allPokemon.push(bunnelby);
+    state.allPokemon.push(baltoyJungle);
+    state.allPokemon.push(baltoyCenter);
+    state.allPokemon.push(baltoyLane);
+    state.allPokemon.push(indeedee);
+    state.allPokemon.push(swablu);
+    state.allPokemon.push(altaria);
+    state.allPokemon.push(escavalier);
+    state.allPokemon.push(accelgor);
 
     state.allPokemon.sort((a, b) => a.pokemonId.localeCompare(b.pokemonId));
 
