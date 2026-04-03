@@ -4,12 +4,22 @@ import { updateTowers } from "./towers.js";
 import { initializeAltariaLane } from "./altaria.js";
 
 const playBtn      = document.getElementById("play-btn");
+const resetBtn     = document.getElementById("reset-btn");
 const minutesInput = document.getElementById("minutes");
 const secondsInput = document.getElementById("seconds");
 const timeSlider   = document.getElementById("time-slider");
 const mapImg       = document.getElementById("map-img");
 const spawnsContainer = document.getElementById("spawns-container");
 const towersContainer = document.getElementById("towers-container");
+const phaseLabel   = document.getElementById("phase-label");
+
+function updatePhaseLabel(t) {
+  if (!phaseLabel) return;
+  if (t > 420)      { phaseLabel.textContent = "🟢 Early Game";  phaseLabel.style.color = "var(--green)";  phaseLabel.style.borderColor = "rgba(76,175,130,0.3)"; }
+  else if (t > 240) { phaseLabel.textContent = "🟡 Mid Game";    phaseLabel.style.color = "var(--yellow)"; phaseLabel.style.borderColor = "rgba(255,215,64,0.3)"; }
+  else if (t > 0)   { phaseLabel.textContent = "🔴 Late Game";   phaseLabel.style.color = "var(--red)";    phaseLabel.style.borderColor = "rgba(239,83,80,0.3)"; }
+  else              { phaseLabel.textContent = "⚫ Game Over";   phaseLabel.style.color = "var(--text-dim)"; phaseLabel.style.borderColor = "var(--border)"; }
+}
 
 export function updateDisplay() {
   const m = Math.floor(state.currentTime / 60).toString().padStart(2, "0");
@@ -17,6 +27,7 @@ export function updateDisplay() {
   minutesInput.value = m;
   secondsInput.value = s;
   timeSlider.value = state.currentTime;
+  updatePhaseLabel(state.currentTime);
   updateSpawns();
   updateTowers();
 }
@@ -51,6 +62,7 @@ export function resetAll() {
       s.killed  = false;
       s.killedTime = null;
       s.permanentDelete = false;
+      s._trackerId = null;
     });
   });
 
@@ -58,9 +70,13 @@ export function resetAll() {
 
   state.midState = { nextSpawnTime: 480, active: null, pending: null };
   state.altariaState = {
-    bot: { sequenceKey: null, seqIndex: -1, pending: null, active: null },
-    top: { sequenceKey: null, seqIndex: -1, pending: null, active: null },
+    bot:    { sequenceKey: null, seqIndex: -1, pending: null, active: null },
+    top:    { sequenceKey: null, seqIndex: -1, pending: null, active: null },
+    center: { pending: null, active: null },
   };
+
+  // Clear tracker on reset
+  if (window.trackerClearAll) window.trackerClearAll();
 }
 
 export function loadSpawns(mapName) {
@@ -71,7 +87,7 @@ export function loadSpawns(mapName) {
         ...p,
         originalName: p.name,
         originalImg: p.spawns?.[0]?.img || p.img,
-        spawns: p.spawns?.map(s => ({ ...s, element: null, killed: false, killedTime: null })) || [],
+        spawns: p.spawns?.map(s => ({ ...s, element: null, killed: false, killedTime: null, _trackerId: null })) || [],
       }));
 
       state.towers = data.towers.map(t => ({ ...t, element: null }));
@@ -79,6 +95,12 @@ export function loadSpawns(mapName) {
       const altaria = state.spawns.find(p => p.name === "Altaria");
       if (altaria?.isSpecial) {
         ["top", "bot"].forEach(lane => initializeAltariaLane(lane, altaria));
+
+        if (mapName === "rayquaza") {
+          state.altariaState.center = { pending: { time: 480 }, active: null };
+        } else {
+          state.altariaState.center = { pending: null, active: null };
+        }
       }
 
       spawnsContainer.innerHTML = "";
@@ -91,6 +113,17 @@ export function loadSpawns(mapName) {
 playBtn.addEventListener("click", () =>
   state.timerRunning ? stopTimer() : startTimer()
 );
+
+if (resetBtn) {
+  resetBtn.addEventListener("click", () => {
+    if (state.currentMap) {
+      const mapName = state.currentMap;
+      // visual reset first
+      resetAll();
+      loadSpawns(mapName);
+    }
+  });
+}
 
 timeSlider.addEventListener("input", e => {
   state.currentTime = +e.target.value;

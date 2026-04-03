@@ -6453,6 +6453,9 @@
       },
       {
         "name": "Confusion",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/latias/confusion.png",
         "damages": [
@@ -6461,24 +6464,36 @@
       },
       {
         "name": "Mist Ball",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/latias/mist_ball.png",
         "damages": [
           {"name": "Damage - Projectile", "multiplier": 54, "levelCoef": 12, "constant": 294, "dealDamage": true},
-          {"name": "Damage - Mist Zone (x2)", "multiplier": 18, "levelCoef": 4, "constant": 98, "dealDamage": true}
+          {"name": "Damage - Mist Zone (x2)", "multiplier": 18, "levelCoef": 4, "constant": 98, "dealDamage": true, "is_tick": true, "tick_count": 2}
         ]
       },
       {
         "name": "Dragon Cheer",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/latias/dragon_cheer.png",
         "damages": [
-          {"name": "Extra Damage", "multiplier": 0, "levelCoef": 50, "constant": 150, "dealDamage": true},
-          {"name": "Shield", "multiplier": 135, "levelCoef": 0, "constant": 360, "shield": true}
+          {"name": "Extra Damage", "multiplier": 0, "levelCoef": 50, "constant": 150, "dealDamage": true}
+        ],
+        "shields": [
+          {"name": "Shield", "scaling": "sp_atk", "multiplier": 135, "levelCoef": 0, "constant": 360},
+          {"name": "Shield +", "scaling": "sp_atk", "multiplier": 162, "levelCoef": 0, "constant": 432, "upgraded": true}
         ]
       },
       {
         "name": "Swift",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/latias/swift.png",
         "damages": [
@@ -6487,16 +6502,24 @@
       },
       {
         "name": "Dragon Pulse",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/latias/dragon_pulse.png",
         "damages": [
           {"name": "Damage", "multiplier": 120, "levelCoef": 0, "constant": 420, "dealDamage": true},
-          {"name": "Damage - Projectile (per)", "multiplier": 39, "levelCoef": 5, "constant": 114, "dealDamage": true},
-          {"name": "Healing", "multiplier": 144, "levelCoef": 16, "constant": 225, "heal": true}
+          {"name": "Damage - Projectile (per)", "multiplier": 39, "levelCoef": 5, "constant": 114, "dealDamage": true, "is_tick": true, "tick_count": 6}
+        ],
+        "heals": [
+          {"name": "Healing", "scaling": "sp_atk", "multiplier": 144, "levelCoef": 16, "constant": 225, "target": "self"}
         ]
       },
       {
         "name": "Dragon Breath",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/latias/dragon_breath.png",
         "damages": [
@@ -6505,11 +6528,24 @@
       },
       {
         "name": "Mist Blast (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/latias/mist_blast.png",
         "damages": [
           {"name": "Damage", "multiplier": 250, "levelCoef": 15, "constant": 460, "dealDamage": true},
           {"name": "Damage - Area (if last)", "multiplier": 125, "levelCoef": 7, "constant": 230, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0,
+            "target": "self"
+          }
         ]
       }
     ]
@@ -6547,6 +6583,9 @@
       },
       {
         "name": "Confusion",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/latios/confusion.png",
         "damages": [
@@ -6555,6 +6594,9 @@
       },
       {
         "name": "Luster Purge",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/latios/luster_purge.png",
         "damages": [
@@ -6563,6 +6605,9 @@
       },
       {
         "name": "Telekinesis",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/latios/telekinesis.png",
         "damages": [
@@ -6571,6 +6616,9 @@
       },
       {
         "name": "Swift",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/latios/swift.png",
         "damages": [
@@ -6579,28 +6627,49 @@
       },
       {
         "name": "Dragon Pulse",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "true",
         "image": "assets/moves/latios/dragon_pulse.png",
         "damages": [
           {"name": "Damage - Boosted Attack", "multiplier": 128, "levelCoef": 4, "constant": 340, "dealDamage": true},
-          {"name": "Damage - Projectile (per)", "multiplier": 35.7, "levelCoef": 5, "constant": 108, "dealDamage": true}
+          {"name": "Damage - Projectile (per)", "multiplier": 35.7, "levelCoef": 5, "constant": 108, "dealDamage": true, "is_tick": true, "tick_count": 6},
+          { "name": "Damage - Additional +", "missing_hp_percent": 3, "missing_hp_cap": 300, "dealDamage": true, "is_tick": true, "tick_count": 6, "notes": "3% missing HP, only at lvl 11" }
         ]
       },
       {
         "name": "Draco Meteor",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/latios/draco_meteor.png",
         "damages": [
-          {"name": "Damage per Comet", "multiplier": 109, "levelCoef": 24, "constant": 364, "dealDamage": true}
+          {"name": "Damage per Comet", "multiplier": 109, "levelCoef": 24, "constant": 364, "dealDamage": true, "is_tick": true, "tick_count": 6},
+          { "name": "Damage - Additional +", "missing_hp_percent": 3, "missing_hp_cap": 300, "dealDamage": true, "is_tick": true, "tick_count": 6, "notes": "3% missing HP, only at lvl 11" }
         ]
       },
       {
         "name": "Eon Blast (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/latios/eon_blast.png",
         "damages": [
           {"name": "Damage", "multiplier": 250, "levelCoef": 15, "constant": 460, "dealDamage": true},
           {"name": "Damage - Area (if last)", "multiplier": 125, "levelCoef": 7, "constant": 230, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0,
+            "target": "self"
+          }
         ]
       }
     ]
@@ -6639,24 +6708,41 @@
       },
       {
         "name": "Swift",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/leafeon/swift.png",
         "damages": [
-          {"name": "Damage - First Star", "multiplier": 92, "levelCoef": 14, "constant": 270, "dealDamage": true}
+          {"name": "Damage - First Star", "multiplier": 92, "levelCoef": 14, "constant": 270, "dealDamage": true},
+          {"name": "Subsequent hit - Star (x2)", "multiplier": 27.6, "levelCoef": 14, "constant": 81, "dealDamage": true, "is_tick": true, "tick_count": 2}
         ]
       },
       {
         "name": "Razor Leaf",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/leafeon/razor_leaf.png",
         "damages": [
-          {"name": "Damage (Outgoing First Leaf)", "multiplier": 80, "levelCoef": 8, "constant": 190, "dealDamage": true},
+          {"name": "Damage (Outgoing - First Leaf)", "multiplier": 80, "levelCoef": 8, "constant": 190, "dealDamage": true},
+          {"name": "Subsequent hit - Leaf (x4)", "multiplier": 24, "levelCoef": 8, "constant": 57, "dealDamage": true, "is_tick": true, "tick_count": 4},
+          {"name": "Damage (Return First Leaf if <1s)", "multiplier": 80, "levelCoef": 8, "constant": 190, "dealDamage": true},
+          {"name": "Subsequent hit - Leaf Return (<1s) (x4)", "multiplier": 24, "levelCoef": 8, "constant": 57, "dealDamage": true, "is_tick": true, "tick_count": 4},
           {"name": "Damage (Return First Leaf if >=1s)", "multiplier": 132, "levelCoef": 13, "constant": 315, "dealDamage": true},
-          {"name": "Shield", "multiplier": 100, "levelCoef": 0, "constant": 300, "shield": true}
+          {"name": "Subsequent hit - Leaf Return (>=1s) (x4)", "multiplier": 39.6, "levelCoef": 13, "constant": 95, "dealDamage": true, "is_tick": true, "tick_count": 4}
+        ],
+        "shields": [
+          {"name": "Shield", "scaling": "atk", "multiplier": 100, "levelCoef": 0, "constant": 300},
+          {"name": "Shield +", "scaling": "atk", "multiplier": 150, "levelCoef": 0, "constant": 450, "upgraded": true}
         ]
       },
       {
         "name": "Solar Blade",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/leafeon/solar_blade.png",
         "damages": [
@@ -6668,6 +6754,9 @@
       },
       {
         "name": "Quick Attack",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/leafeon/quick_attack.png",
         "damages": [
@@ -6676,6 +6765,9 @@
       },
       {
         "name": "Aerial Ace",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/leafeon/aerial_ace.png",
         "damages": [
@@ -6684,15 +6776,21 @@
       },
       {
         "name": "Leaf Blade",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/leafeon/leaf_blade.png",
         "damages": [
-          {"name": "Damage (Inner x3)", "multiplier": 18.5, "levelCoef": 2, "constant": 125, "dealDamage": true},
-          {"name": "Damage (Outer x3)", "multiplier": 37, "levelCoef": 3, "constant": 250, "dealDamage": true}
+          {"name": "Damage (Inner x3)", "multiplier": 18.5, "levelCoef": 2, "constant": 125, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Damage (Outer x3)", "multiplier": 37, "levelCoef": 3, "constant": 250, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Emerald Two-Step (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/leafeon/emerald_two_step.png",
         "damages": [

@@ -18,5 +18,6 @@ export const state = {
   altariaState: {
     bot: { sequenceKey: null, seqIndex: -1, pending: null, active: null },
     top: { sequenceKey: null, seqIndex: -1, pending: null, active: null },
+    center: { pending: null, active: null },
   },
 };

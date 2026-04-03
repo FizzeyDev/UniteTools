@@ -1196,116 +1196,60 @@
     {
       "name": "Altaria",
       "isSpecial": true,
+      "gif": "assets/maps/gifs/altaria.gif",
+      "img": "assets/maps/spawn/altaria.png",
+      "size": 70,
       "lanes": {
-        "bot": {
-          "x": 49.8,
-          "y": 77
-        },
-        "top": {
-          "x": 49.8,
-          "y": 34
-        }
+        "bot": { "x": 49.8, "y": 77 },
+        "top": { "x": 49.8, "y": 34 }
       },
       "t1Positions": {
         "top": {
-          "left": {
-            "x": 36.7,
-            "y": 35
-          },
-          "right": {
-            "x": 62.0,
-            "y": 35
-          }
+          "left":  { "x": 36.7, "y": 35 },
+          "right": { "x": 62.0, "y": 35 }
         },
         "bot": {
-          "left": {
-            "x": 35.1,
-            "y": 75
-          },
-          "right": {
-            "x": 63.7,
-            "y": 75
-          }
+          "left":  { "x": 35.1, "y": 75 },
+          "right": { "x": 63.7, "y": 75 }
         }
       },
       "t2Positions": {
         "top": {
-          "left": {
-            "x": 26.8,
-            "y": 41
-          },
-          "right": {
-            "x": 72.8,
-            "y": 41
-          }
+          "left":  { "x": 26.8, "y": 41 },
+          "right": { "x": 72.8, "y": 41 }
         },
         "bot": {
-          "left": {
-            "x": 26.8,
-            "y": 70
-          },
-          "right": {
-            "x": 72.8,
-            "y": 70
-          }
+          "left":  { "x": 26.8, "y": 70 },
+          "right": { "x": 72.8, "y": 70 }
         }
       },
+      "centerPosition": { "x": 49.8, "y": 54 },
+      "centerInfo": "<p>First spawn at <strong>8:00</strong>. Respawns <strong>90 seconds after KO</strong>.</p><p>Does <strong>not</strong> despawn at 2:30 on this map.</p>",
       "spawnLists": {
-        "0": [
-          530,
-          440,
-          350,
-          260,
-          170,
-          80
-        ],
-        "1": [
-          465,
-          375,
-          285,
-          195,
-          105,
-          15
-        ],
-        "2": [
-          450,
-          360,
-          270,
-          180,
-          90
-        ]
+        "0": [530, 440, 350, 260, 170, 80],
+        "1": [465, 375, 285, 195, 105, 15],
+        "2": [450, 360, 270, 180, 90],
+        "3": [440, 350, 260, 170, 80],
+        "4": [440, 350, 260, 170, 80]
       },
-      "img": "assets/maps/spawn/altaria.png",
-      "size": 70,
-      "delete": true,
       "spawnInfos": {
         "0": [
-          "<p>Start spawning at <strong>8:50</strong>.</p>"
+          "<p>Start spawning at <strong>8:50</strong>.</p><p>Timings: <strong>8:50 / 7:20 / 5:50 / 4:20 / 2:50 / 1:20</strong></p><p>Spawns in the <strong>center</strong> of the lane.</p>"
         ],
         "1": [
-          "<p>Start spawning when one first tower is destroyed.</p>"
+          "<p>One T1 goal broken — spawns <strong>25 seconds earlier</strong> and closer to the broken goal.</p><p>Timings: <strong>7:45 / 6:15 / 4:45 / 3:15 / 1:45 / 0:15</strong></p>"
         ],
         "2": [
-          "<p>Start spawning when both first tower are destroyed.</p>"
+          "<p>Both T1 goals broken — spawns <strong>10 seconds earlier</strong> and back in the middle.</p><p>Timings: <strong>7:30 / 6:00 / 4:30 / 3:00 / 1:30</strong></p>"
+        ],
+        "3": [
+          "<p>Both T1 + one T2 goal broken — spawns <strong>10 seconds earlier</strong>, closer to the broken T2.</p>"
+        ],
+        "4": [
+          "<p>Both T1 + both T2 broken — spawns in the <strong>middle</strong>.</p>"
         ]
-      }
-    },
-    {
-      "name": "Mid Altaria",
-      "gif": "assets/maps/gifs/altaria.gif",
-      "spawns": [
-        {
-          "time": 480,
-          "time_dispawn": 150,
-          "time_before_respawn": 90,
-          "img": "assets/maps/spawn/altaria.png",
-          "xPercent": 49.8,
-          "yPercent": 54,
-          "size": 70,
-          "delete": false,
-          "info": "<p>Spawn at <strong>8:00</strong> and respawn every <strong>1:30</strong>.</p><p>Dispawn at <strong>2:30</strong>.</p>"
-        }
-      ]
+      },
+      "spawns": []
     }
   ]
 }

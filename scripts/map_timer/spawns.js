@@ -2,6 +2,7 @@ import { state } from "./state.js";
 import { attachTooltip, hideTooltip } from "./tooltip.js";
 import { updateAltariaSpawns } from "./altaria.js";
 import { scaledSize } from "./scale.js";
+import { addMobKill, removeMobEntry, markMobRespawned } from "./tracker.js";
 
 const spawnsContainer = document.getElementById("spawns-container");
 
@@ -49,6 +50,13 @@ export function updateSitrusSpawn(pokemon) {
           spawn.killed = true;
           spawn.killedTime = state.currentTime;
           if (!before5) spawn.permanentDelete = true;
+
+          const respawnTime = before5 && !spawn.permanentDelete
+            ? state.currentTime - (spawn.time_before_respawn || 60)
+            : null;
+          const tid = addMobKill("Sitrus Berry", spawn.img, state.currentTime, respawnTime);
+          spawn._trackerId = tid;
+
           if (spawn.element && spawnsContainer.contains(spawn.element)) spawnsContainer.removeChild(spawn.element);
           spawn.element = null;
           hideTooltip();
@@ -69,6 +77,7 @@ export function updateSitrusSpawn(pokemon) {
     ) {
       spawn.killed = false;
       spawn.killedTime = null;
+      if (spawn._trackerId) { markMobRespawned(spawn._trackerId); spawn._trackerId = null; }
 
       const img = makeSpawnImg(spawn.img, spawn.xPercent, spawn.yPercent, spawn.size || 40, "sitrus");
 
@@ -82,7 +91,8 @@ export function updateSitrusSpawn(pokemon) {
         if (!spawn.killed) {
           spawn.killed = true;
           spawn.killedTime = state.currentTime;
-          if (!before5) spawn.permanentDelete = true;
+          const tid = addMobKill("Sitrus Berry", spawn.img, state.currentTime, null);
+          spawn._trackerId = tid;
           if (spawn.element && spawnsContainer.contains(spawn.element)) spawnsContainer.removeChild(spawn.element);
           spawn.element = null;
           hideTooltip();
@@ -133,6 +143,19 @@ export function updateGeneralSpawn(pokemon) {
         if (!spawn.killed) {
           spawn.killed = true;
           spawn.killedTime = state.currentTime;
+
+          // Calculate respawn time for tracker
+          const respawnAt = spawn.time_before_respawn > 0
+            ? state.currentTime - spawn.time_before_respawn
+            : null;
+          const tid = addMobKill(
+            displayName,
+            pokemon.gif || pokemon.originalImg,
+            state.currentTime,
+            respawnAt
+          );
+          spawn._trackerId = tid;
+
           if (spawn.delete) {
             if (spawn.element && spawnsContainer.contains(spawn.element)) spawnsContainer.removeChild(spawn.element);
             spawn.element = null;
@@ -156,6 +179,7 @@ export function updateGeneralSpawn(pokemon) {
         state.currentTime <= spawn.killedTime - spawn.time_before_respawn) {
       spawn.killed = false;
       spawn.killedTime = null;
+      if (spawn._trackerId) { markMobRespawned(spawn._trackerId); spawn._trackerId = null; }
       if (spawn.element) {
         spawn.element.style.opacity = 1;
         spawn.element.style.filter  = "none";
@@ -185,6 +209,17 @@ export function spawnMid(pokemonName) {
     if (!state.midState.active) return;
     state.midState.active.killed = true;
     state.midState.active.killedTime = state.currentTime;
+
+    // Track it
+    const respawnAt = state.currentTime - 90;
+    const tid = addMobKill(
+      pokemonName,
+      pokemon.gif || pokemon.img,
+      state.currentTime,
+      respawnAt > 150 ? respawnAt : null
+    );
+    state.midState.active._trackerId = tid;
+
     if (spawnsContainer.contains(state.midState.active.element)) {
       spawnsContainer.removeChild(state.midState.active.element);
     }
@@ -194,7 +229,7 @@ export function spawnMid(pokemonName) {
   });
 
   spawnsContainer.appendChild(img);
-  state.midState.active = { name: pokemonName, element: img, killed: false, killedTime: null };
+  state.midState.active = { name: pokemonName, element: img, killed: false, killedTime: null, _trackerId: null };
 }
 
 export function scheduleNextMidSpawn(prevPokemon) {

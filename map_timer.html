@@ -7,31 +7,42 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./css/map_timer.css">
   <link rel="stylesheet" href="./css/navbar.css">
-  <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
-    <script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
+  <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-B7HW29S7HW');
-    </script>
+  </script>
 </head>
 <body>
   <div id="navbar-container"></div>
 
+  <div class="top-right-controls">
+    <button id="tracker-btn" class="ctrl-btn tracker-ctrl-btn" title="Tracker (T)">
+      <span class="ctrl-icon">📋</span>
+      <span class="ctrl-label">Tracker</span>
+      <span id="tracker-badge" class="tracker-badge hidden">0</span>
+    </button>
+    <button id="how-to-use-btn" class="ctrl-btn htu-ctrl-btn" title="Help (H)">
+      <span class="ctrl-icon">❓</span>
+      <span class="ctrl-label">Help</span>
+    </button>
+  </div>
+
   <h1 data-lang="map_timer_h1">Pokémon Unite — Map Timer</h1>
 
   <div class="map-switch">
-    <button class="active" data-map="groudon" data-lang="map_timer_map_groudon">Map Groudon</button>
-    <button data-map="kyogre" data-lang="map_timer_map_kyogre">Map Kyogre</button>
-    <button data-map="rayquaza" data-lang="map_timer_map_rayquaza">Map Rayquaza <span style="font-size:0.7em;opacity:0.5;">[WIP]</span></button>
+    <button class="active" data-map="groudon">Map Groudon</button>
+    <button data-map="kyogre">Map Kyogre</button>
+    <button data-map="rayquaza">Map Rayquaza <span style="font-size:0.7em;opacity:0.5;"></span></button>
   </div>
 
   <div class="timer-section">
     <div class="middle-bubble">
       <div class="timer-top">
-        <button id="play-btn" data-lang="map_timer_play">▶ Play</button>
+        <button id="play-btn">▶ Play</button>
+        <button id="reset-btn" class="reset-btn" title="Reset (R)">↺ Reset</button>
       </div>
 
       <div id="timer-display">
@@ -41,6 +52,7 @@
       </div>
 
       <input type="range" id="time-slider" min="0" max="600" value="600">
+      <div id="phase-label" class="timer-phase-label">🟢 Early Game</div>
     </div>
   </div>
 
@@ -53,9 +65,7 @@
   </div>
 
   <div id="pokemon-tooltip" class="pokemon-tooltip">
-    <div class="gif-container">
-      <img id="tooltip-gif" src="" alt="">
-    </div>
+    <div class="gif-container"><img id="tooltip-gif" src="" alt=""></div>
     <div class="separator"></div>
     <div class="info-content">
       <h3 id="tooltip-name"></h3>
@@ -63,11 +73,123 @@
     </div>
   </div>
 
-  <footer>
-    <p data-lang="map_timer_footer">Created by Fizzey — Pokémon Unite Map Timer</p>
-  </footer>
+  <!-- Tracker Panel -->
+  <div id="tracker-panel" class="tracker-panel" aria-hidden="true">
+    <div class="tracker-header">
+      <div class="tracker-tabs">
+        <button class="tracker-tab active" data-tab="mobs">⚔️ Mobs <span id="mobs-count" class="tab-count">0</span></button>
+        <button class="tracker-tab" data-tab="towers">🗼 Towers <span id="towers-count" class="tab-count">0</span></button>
+      </div>
+      <button id="tracker-close" class="tracker-close" aria-label="Close">✕</button>
+    </div>
+    <div class="tracker-body">
+      <div id="tracker-mobs" class="tracker-section active">
+        <div id="tracker-mobs-empty" class="tracker-empty">
+          <span class="tracker-empty-icon">👻</span>
+          <p>No mobs defeated yet.</p>
+          <p class="tracker-hint">Click a Pokémon on the map to track it.</p>
+        </div>
+        <div id="tracker-mobs-list" class="tracker-list"></div>
+      </div>
+      <div id="tracker-towers" class="tracker-section">
+        <div id="tracker-towers-empty" class="tracker-empty">
+          <span class="tracker-empty-icon">🏛️</span>
+          <p>No towers destroyed yet.</p>
+          <p class="tracker-hint">Click a tower on the map to track it.</p>
+        </div>
+        <div id="tracker-towers-list" class="tracker-list"></div>
+      </div>
+    </div>
+    <div class="tracker-footer">
+      <button id="tracker-clear" class="tracker-clear-btn">🗑 Clear all</button>
+      <span class="tracker-kbd">Press <kbd>T</kbd> to toggle</span>
+    </div>
+  </div>
+  <div id="tracker-overlay" class="tracker-overlay"></div>
+
+  <!-- How To Use Modal -->
+  <div id="how-to-use-modal" class="htu-overlay" aria-hidden="true">
+    <div class="htu-modal" role="dialog" aria-modal="true" aria-labelledby="htu-title">
+      <button class="htu-close" id="htu-close-btn" aria-label="Close">✕</button>
+      <h2 id="htu-title">How to use the Map Timer</h2>
+      <div class="htu-body">
+        <div class="htu-section">
+          <div class="htu-icon">🗺️</div>
+          <div><h3>Choose a map</h3><p>Use the buttons at the top to switch between <strong>Groudon</strong>, <strong>Kyogre</strong> and <strong>Rayquaza</strong> maps. The timer and all spawns reset automatically.</p></div>
+        </div>
+        <div class="htu-section">
+          <div class="htu-icon">⏱️</div>
+          <div><h3>Control the timer</h3><p>Press <strong>▶ Play</strong> to start the countdown from 10:00. Drag the slider or edit the fields to jump to any time. Press <kbd>Space</kbd> to play/pause, <kbd>R</kbd> to reset.</p></div>
+        </div>
+        <div class="htu-section">
+          <div class="htu-icon">🟢</div>
+          <div><h3>Pokémon spawns</h3><p>Icons appear at the correct game time. <strong>Click</strong> to mark as defeated — it greys out and the respawn timer starts automatically.</p></div>
+        </div>
+        <div class="htu-section">
+          <div class="htu-icon">🗼</div>
+          <div><h3>Goal zones</h3><p><strong>Click</strong> a tower to mark it destroyed. Some Pokémon only appear depending on which goals are broken, so keep them updated.</p></div>
+        </div>
+        <div class="htu-section">
+          <div class="htu-icon">📋</div>
+          <div><h3>Tracker</h3><p>Click the <strong>Tracker</strong> button (top-right) or press <kbd>T</kbd> to open the kill tracker. See when mobs were killed and when they respawn. Switch between <strong>Mobs</strong> and <strong>Towers</strong> tabs.</p></div>
+        </div>
+        <div class="htu-section">
+          <div class="htu-icon">💬</div>
+          <div><h3>Tooltips</h3><p><strong>Hover</strong> any icon for ~1 second to see HP, spawn rules, and interactions.</p></div>
+        </div>
+        <div class="htu-section">
+          <div class="htu-icon">⌨️</div>
+          <div><h3>Keyboard shortcuts</h3><p><kbd>Space</kbd> Play/Pause &nbsp;·&nbsp; <kbd>R</kbd> Reset &nbsp;·&nbsp; <kbd>T</kbd> Tracker &nbsp;·&nbsp; <kbd>H</kbd> Help &nbsp;·&nbsp; <kbd>Esc</kbd> Close</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer><p>Created by Fizzey — Pokémon Unite Map Timer</p></footer>
 
   <script type="module" src="./scripts/map_timer/main.js"></script>
   <script src="./scripts/navbar.js"></script>
+  <script>
+    // How To Use
+    const htuBtn   = document.getElementById("how-to-use-btn");
+    const htuModal = document.getElementById("how-to-use-modal");
+    const htuClose = document.getElementById("htu-close-btn");
+    const openHTU  = () => { htuModal.classList.add("open"); htuModal.setAttribute("aria-hidden","false"); };
+    const closeHTU = () => { htuModal.classList.remove("open"); htuModal.setAttribute("aria-hidden","true"); };
+    htuBtn.addEventListener("click", openHTU);
+    htuClose.addEventListener("click", closeHTU);
+    htuModal.addEventListener("click", e => { if(e.target===htuModal) closeHTU(); });
+
+    // Tracker
+    const trackerPanel   = document.getElementById("tracker-panel");
+    const trackerOverlay = document.getElementById("tracker-overlay");
+    const openTracker  = () => { trackerPanel.classList.add("open"); trackerOverlay.classList.add("show"); };
+    const closeTracker = () => { trackerPanel.classList.remove("open"); trackerOverlay.classList.remove("show"); };
+    document.getElementById("tracker-btn").addEventListener("click", openTracker);
+    document.getElementById("tracker-close").addEventListener("click", closeTracker);
+    trackerOverlay.addEventListener("click", closeTracker);
+    document.getElementById("tracker-clear").addEventListener("click", () => window.trackerClearAll?.());
+
+    // Tabs
+    document.querySelectorAll(".tracker-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tracker-tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".tracker-section").forEach(s => s.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById("tracker-"+tab.dataset.tab).classList.add("active");
+      });
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener("keydown", e => {
+      const tag = document.activeElement?.tagName;
+      if(tag==="INPUT"||tag==="TEXTAREA") return;
+      if(e.key==="Escape")  { closeHTU(); closeTracker(); }
+      if(e.key===" ")       { e.preventDefault(); document.getElementById("play-btn")?.click(); }
+      if(e.key==="r"||e.key==="R") document.getElementById("reset-btn")?.click();
+      if(e.key==="t"||e.key==="T") trackerPanel.classList.contains("open") ? closeTracker() : openTracker();
+      if(e.key==="h"||e.key==="H") htuModal.classList.contains("open") ? closeHTU() : openHTU();
+    });
+  </script>
 </body>
 </html>

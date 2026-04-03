@@ -2,6 +2,7 @@ import { state } from "./state.js";
 import { attachTooltip } from "./tooltip.js";
 import { updateDisplay } from "./timer.js";
 import { scaledSize } from "./scale.js";
+import { addTowerKill } from "./tracker.js";
 
 const towersContainer = document.getElementById("towers-container");
 
@@ -46,6 +47,7 @@ export function updateTowers() {
         img.src = tower.imgBroken;
         img.classList.add("destroyed");
         img.style.pointerEvents = "none";
+        addTowerKill(tower.name || tower.id, tower.img, state.currentTime);
         updateDisplay();
       });
 
