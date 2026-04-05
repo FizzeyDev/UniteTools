@@ -48,6 +48,7 @@ export const state = {
   attackerStance: 'shield',
   defenderStance: 'shield',
   attackerFlashFireActive: false,
+  attackerGreninjaSmokescreenActive: false,
   defenderFlashFireActive: false,
   attackerMoldBreakerActive: false,
   attackerGyaradosEvolve: true,

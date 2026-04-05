@@ -8,6 +8,7 @@ import { t } from './i18n.js';
 import { resetItems } from './itemManager.js';
 import { initCombatLog, initAllySelector } from './combatLog.js';
 import { initAllyManager } from './allyManager.js';
+import { initHowToUse } from './howToUse.js';
 
 document.querySelectorAll('.reset-items-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -55,6 +56,7 @@ async function initApp() {
   initCombatLog();
   initAllySelector();
   initAllyManager();
+  initHowToUse();
 }
 
 if (document.readyState === 'loading') {

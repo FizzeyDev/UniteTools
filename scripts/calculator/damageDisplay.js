@@ -56,6 +56,11 @@ import {
   applyFalinksDefender
 } from './passiveEffectsDef.js';
 
+import {
+  applyAttackerMoveEffects,
+  applyGreninjaSmokescreenStatBuff
+} from './moveEffectsAtk.js';
+
 
 const movesGrid = document.getElementById("movesGrid");
 
@@ -197,20 +202,23 @@ export function updateDamages() {
 
   document.getElementById('resultsAttackerName').textContent = state.currentAttacker.displayName;
   document.getElementById('resultsDefenderName').textContent = state.currentDefender?.displayName || 'Aucun';
+
+  // ── Move Effects : mutations de stats AVANT affichage et calcul ───────────
+  applyGreninjaSmokescreenStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+
   if (state.currentAttacker?.pokemonId === "crustle" && state.attackerShellSmashActive) {
     const level = state.attackerLevel;
     const baseStats = state.currentAttacker.stats[level - 1];
     const rate = level >= 11 ? 0.50 : 0.40;
     const atkBonus   = Math.floor(baseStats.def    * rate);
     const spAtkBonus = Math.floor(baseStats.sp_def * rate);
-    // Afficher avec le bonus en vert, comme les items
     document.getElementById('attackerAtk').innerHTML =
       `${atkStats.atk.toLocaleString()} <span style="color:#bb86fc;font-size:0.85em;">(+${atkBonus})</span>`;
     document.getElementById('attackerSpAtk').innerHTML =
       `${atkStats.sp_atk.toLocaleString()} <span style="color:#bb86fc;font-size:0.85em;">(+${spAtkBonus})</span>`;
   } else {
-    document.getElementById('attackerAtk').textContent    = atkStats.atk.toLocaleString();
-    document.getElementById('attackerSpAtk').textContent  = atkStats.sp_atk.toLocaleString();
+    document.getElementById('attackerAtk').textContent   = atkStats.atk.toLocaleString();
+    document.getElementById('attackerSpAtk').textContent = atkStats.sp_atk.toLocaleString();
   }
 
   const isCustom = state.currentDefender?.pokemonId === "custom-doll";
@@ -251,6 +259,13 @@ export function updateDamages() {
 
   const itemEffects = applyItemsAndGlobalEffects(atkStats, defStats);
   applyPassiveEffects(atkStats, defStats);
+
+  // ── Move Effects UI (blocs dans la card attaquant, après passives) ──────────
+  const attackerCardForMoves = document.querySelector('.attacker-stats');
+  if (attackerCardForMoves && state.currentAttacker) {
+    applyAttackerMoveEffects(state.currentAttacker.pokemonId, atkStats, defStats, attackerCardForMoves);
+  }
+
   updateDefenderStatsUI(defStats);
 
   let defenderDamageMult = 1.0;
@@ -770,6 +785,46 @@ function getBuzzwoleMuscleMultiplier(moveName, damageName) {
   return 1;
 }
 
+/**
+ * Ajoute un tooltip au survol du nom d'une damage-line affichant la formule de calcul.
+ * constant + floor(stat × multiplier%) + (lvl-1) × levelCoef
+ */
+function addFormulaTooltip(lineEl, dmg, relevantAtk, attacker, level) {
+  const nameEl = lineEl.querySelector('.dmg-name');
+  if (!nameEl) return;
+
+  const statLabel = dmg.scaling === 'physical' ? 'ATK'
+                  : dmg.scaling === 'special'  ? 'Sp.ATK'
+                  : attacker?.style === 'special' ? 'Sp.ATK' : 'ATK';
+
+  const parts = [];
+  if (dmg.constant)   parts.push(`${dmg.constant}`);
+  if (dmg.multiplier) parts.push(`⌊${statLabel}(${relevantAtk}) × ${dmg.multiplier}%⌋`);
+  if (dmg.levelCoef)  parts.push(`(lvl-1)×${dmg.levelCoef}`);
+
+  const formula = parts.length ? parts.join(' + ') : '—';
+
+  const notes = [];
+  if (dmg.wild_cap)      notes.push(`🔒 Wild cap : ${dmg.wild_cap.toLocaleString()}`);
+  if (dmg.def_ignore)    notes.push(`🛡 Def ignore : ${Math.round(dmg.def_ignore * 100)}%`);
+  if (dmg.sp_def_ignore) notes.push(`🛡 Sp.Def ignore : ${Math.round(dmg.sp_def_ignore * 100)}%`);
+  if (dmg.notes)         notes.push(`ℹ️ ${dmg.notes}`);
+
+  const tooltip = document.createElement('div');
+  tooltip.className = 'formula-tooltip';
+  tooltip.innerHTML = `
+    <div class="formula-tooltip-inner">
+      <div class="formula-title">Formule</div>
+      <code>${formula}</code>
+      ${notes.map(n => `<div class="formula-note">${n}</div>`).join('')}
+    </div>
+  `;
+
+  nameEl.style.position = 'relative';
+  nameEl.style.cursor = 'help';
+  nameEl.appendChild(tooltip);
+}
+
 function displayMoves(atkStats, defStats, effects, currentDefHP) {
   const { slickIgnore, scopeCritBonus, globalDamageMult, infiltratorIgnore, defenderFlashFireReduction, defenderDamageMult } = effects;
   const aaResults = getAutoAttackResults(atkStats, defStats, currentDefHP, globalDamageMult);
@@ -929,6 +984,8 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
 
       card.appendChild(line);
 
+      // ── Tooltip formule au hover ─────────────────────────────────────────
+      addFormulaTooltip(line, dmg, relevantAtk, state.currentAttacker, level);
 
       if (state.currentDefender?.pokemonId === "falinks" && state.defenderFalinksMultiHit) {
         const capLine = document.createElement("div");

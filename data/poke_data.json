@@ -5450,7 +5450,7 @@
         "name": "Water Shuriken",
         "learnLevel": 7,
         "unlearn": null,
-        "upgradeLevel": 13,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/greninja/water_shuriken.png",
         "damages": [
@@ -5466,7 +5466,7 @@
         "name": "Surf",
         "learnLevel": 7,
         "unlearn": null,
-        "upgradeLevel": 13,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/greninja/surf.png",
         "damages": [
@@ -5491,7 +5491,7 @@
         "name": "Double Team",
         "learnLevel": 5,
         "unlearn": null,
-        "upgradeLevel": 11,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/greninja/double_team.png",
         "damages": [
@@ -5564,7 +5564,7 @@
         "name": "Smokescreen",
         "learnLevel": 5,
         "unlearn": null,
-        "upgradeLevel": 11,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/greninja/smokescreen.png",
         "damages": [

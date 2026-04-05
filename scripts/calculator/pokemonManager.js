@@ -28,6 +28,7 @@ export function selectAttacker(id) {
   state.attackerPassiveStacks = 0;
   state.attackerStance = 'shield';
   state.attackerFlashFireActive = false;
+  state.attackerGreninjaSmokescreenActive = false;
 
   state.attackerRegisteelBuff = false;
   state.attackerGroudonBuff = false;

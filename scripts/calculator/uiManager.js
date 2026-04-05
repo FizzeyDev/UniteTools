@@ -186,18 +186,26 @@ export function makeHPValueEditable(elementId, sliderId) {
     input.select();
 
     const save = () => {
-      let val = Math.max(0, Math.min(parseInt(input.value) || 0, maxVal));
-      const percent = Math.round((val / maxVal) * 100);
+      let val = parseInt(input.value) || 0;
+      val = Math.max(0, Math.min(val, maxVal));
 
-      if (side === 'attacker') state.attackerHPPercent = percent;
-      else state.defenderHPPercent = percent;
+      const percent = (val / maxVal) * 100;
 
+      if (side === 'attacker') {
+          state.attackerHPPercent = percent;   // float maintenant
+      } else {
+          state.defenderHPPercent = percent;
+      }
+
+      const slider = document.getElementById(sliderId);
       slider.value = percent;
       slider.style.setProperty('--value', percent);
+
       state.isEditingHP[side] = false;
+      
       updateHPDisplays();
       updateDamages();
-    };
+  };
 
     input.addEventListener('blur', save);
     input.addEventListener('keydown', e => {
