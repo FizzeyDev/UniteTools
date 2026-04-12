@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title data-lang="patch_title">Patch Tracker - Pokémon Unite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="css/navbar.css"/>
+  <link rel="stylesheet" href="css/patch.css"/>
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+  <div class="wrap">
+
+    <header class="hdr">
+      <div class="hdr-icon">⚡</div>
+      <div class="hdr-text">
+        <h1 data-lang="patch_title">Patch Tracker</h1>
+        <p data-lang="patch_subtitle">Pokémon Unite — Complete update history</p>
+      </div>
+    </header>
+
+    <!-- Stats banner — injected by JS -->
+    <div class="stats" id="stats"></div>
+
+    <div class="controls">
+
+      <div class="tabs">
+        <button class="tab-btn active" data-view="patches" data-lang="patch_tab_patches">Patches</button>
+        <button class="tab-btn"        data-view="pokemon"  data-lang="patch_tab_pokemon">By Pokémon</button>
+      </div>
+
+      <div class="search-row">
+        <div class="search-wrap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" stroke="white" stroke-width="2"/>
+            <path d="m16.5 16.5 3.5 3.5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <input id="searchInput" class="search-input" type="text"
+                 data-lang-placeholder="patch_search_placeholder"
+                 placeholder="Search a Pokémon, a version…"
+                 autocomplete="off"/>
+        </div>
+      </div>
+
+      <!-- Filter bar — injected by JS -->
+      <div class="filter-bar" id="filterBar"></div>
+
+    </div>
+
+    <!-- Main content — injected by JS -->
+    <main id="mainContent">
+      <div class="empty" data-lang="patch_loading">Loading data…</div>
+    </main>
+
+  </div>
+
+  <div id="overlay"></div>
+
+  <div id="modal" role="dialog" aria-modal="true" aria-labelledby="modalPokeName">
+    <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+    <div id="modalBody"></div>
+  </div>
+
+  <script src="./scripts/navbar.js"></script>
+  <script src="./scripts/patchs/patch_tracker.js"></script>
+</body>
+</html>

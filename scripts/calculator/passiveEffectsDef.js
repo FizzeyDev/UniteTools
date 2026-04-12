@@ -46,6 +46,56 @@ function applyArmarougeDefender(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+function applyArticunoDefender(atkStats, defStats, card) {
+  const snowCloakState = state.defenderSnowCloakState || "none"; // "none" | "low" | "high"
+
+  // La réduction de dégâts est appliquée via defenderDamageMult dans damageDisplay.js
+  // On n'impacte plus defStats.def / defStats.sp_def ici
+
+  const labels = {
+    none: { label: "Inactive",                          color: "#7f8c8d", desc: "No reduction"      },
+    low:  { label: "Ice Shard / Ice Beam (10%)",        color: "#4fc3f7", desc: "−10% damage taken" },
+    high: { label: "Icy Wind / Blizzard / Unite (20%)", color: "#81d4fa", desc: "−20% damage taken" },
+  };
+  const current = labels[snowCloakState];
+
+  const line = document.createElement("div");
+  line.className = "global-bonus-line";
+  line.innerHTML = `
+    <div style="margin:12px 0;padding:10px;background:${DEF_BG};border-radius:8px;${DEF_BORDER};display:flex;align-items:center;gap:12px;">
+      <img src="assets/moves/articuno/snow_cloak.png" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/moves/missing.png'">
+      <div style="flex:1;">
+        <strong style="color:${DEF_COLOR};">Snow Cloak</strong><br>
+        Status: <strong style="color:${current.color};">${current.label}</strong><br>
+        <span style="font-size:0.85em;color:#aaa;">${current.desc}</span><br>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+          <button class="snowcloak-btn" data-state="none"
+            style="padding:6px 10px;border:none;border-radius:6px;cursor:pointer;font-size:0.85em;
+            background:${snowCloakState === 'none' ? '#7f8c8d' : '#444'};color:white;">
+            Off
+          </button>
+          <button class="snowcloak-btn" data-state="low"
+            style="padding:6px 10px;border:none;border-radius:6px;cursor:pointer;font-size:0.85em;
+            background:${snowCloakState === 'low' ? '#4fc3f7' : '#444'};color:white;">
+            −10% (Move 2)
+          </button>
+          <button class="snowcloak-btn" data-state="high"
+            style="padding:6px 10px;border:none;border-radius:6px;cursor:pointer;font-size:0.85em;
+            background:${snowCloakState === 'high' ? '#81d4fa' : '#444'};color:white;">
+            −20% (Move 1 / Unite)
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  line.querySelectorAll('.snowcloak-btn').forEach(btn => {
+    btn.onclick = () => { state.defenderSnowCloakState = btn.dataset.state; updateDamages(); };
+  });
+
+  card.appendChild(line);
+}
+
 function applyZardxDefender(atkStats, defStats, card) {
   const passive = state.currentDefender.passive;
   const line = document.createElement("div");
@@ -515,6 +565,7 @@ function applyFalinksDefender(atkStats, defStats, card) {
 export {
   applyAegislashDefender,
   applyArmarougeDefender,
+  applyArticunoDefender,
   applyZardxDefender,
   applyMegaGyaradosDefender,
   applyGyaradosDefender,

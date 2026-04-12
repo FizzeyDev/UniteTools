@@ -39,6 +39,7 @@ import {
 import {
   applyAegislashDefender,
   applyArmarougeDefender,
+  applyArticunoDefender,
   applyZardxDefender,
   applyMegaGyaradosDefender,
   applyGyaradosDefender,
@@ -279,6 +280,13 @@ export function updateDamages() {
   if (state.defenderDhelmiseAnchorShotPlus) defenderDamageMult *= 1.50;
   if (state.currentDefender?.pokemonId === "dragonite" && state.defenderMultiscaleActive) defenderDamageMult *= 0.70;
   if (state.defenderMimeActive)            defenderDamageMult *= 0.90;
+
+  // ── Snow Cloak : réduction via defenderDamageMult ────────────────────────
+  if (state.currentDefender?.pokemonId === "articuno") {
+    const snowCloakState = state.defenderSnowCloakState || "none";
+    if (snowCloakState === "low")  defenderDamageMult *= (1 - 0.10);
+    if (snowCloakState === "high") defenderDamageMult *= (1 - 0.20);
+  }
 
   const finalEffects = {
     ...itemEffects,
@@ -721,6 +729,7 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
 function applyDefenderPassive(pokemonId, atkStats, defStats, card) {
   const handlers = {
     aegislash: applyAegislashDefender, armarouge: applyArmarougeDefender,
+    articuno: applyArticunoDefender,
     "mega-charizard-x": applyZardxDefender, "mega-gyarados": applyMegaGyaradosDefender,
     gyarados: applyGyaradosDefender, crustle: applyCrustleDefender,
     dragonite: applyDragoniteDefender, lapras: applyLaprasDefender,
@@ -946,22 +955,41 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       const isTick    = !!dmg.is_tick;
       const tickCount = dmg.tick_count || 1;
 
+      // ── Sérialisation tick_scaling pour le dataset ──────────────────────
+      const tickScalingAttr = dmg.tick_scaling
+        ? `data-tick-scaling='${JSON.stringify(dmg.tick_scaling)}'`
+        : '';
+
       if (isTick) {
-        const normalTotal = displayedNormal * tickCount;
-        const critTotal   = displayedCrit   * tickCount;
+        // Pour tick_scaling : le total affiché est la somme pondérée de chaque wave
+        const computeScaledTotal = (base, scaling, n) => {
+          let sum = 0;
+          for (let i = 0; i < n; i++) {
+            sum += Math.floor(base * (scaling[i] ?? scaling[scaling.length - 1]));
+          }
+          return sum;
+        };
+
+        const normalTotal = dmg.tick_scaling
+          ? computeScaledTotal(displayedNormal, dmg.tick_scaling, tickCount)
+          : displayedNormal * tickCount;
+        const critTotal = dmg.tick_scaling
+          ? computeScaledTotal(displayedCrit, dmg.tick_scaling, tickCount)
+          : displayedCrit * tickCount;
+
         if (canCrit) {
           line.innerHTML = `
             <span class="dmg-name">${dmg.name}${dmg.notes ? `<br><i>${dmg.notes}</i>` : ""}${wildCapBadge}</span>
             <div class="dmg-values">
-              <span class="dmg-normal dmg-tick-toggle" data-base="${displayedNormal}" data-total="${normalTotal}" data-ticks="${tickCount}" title="Cliquez pour afficher le total (${tickCount} ticks)">${displayedNormal.toLocaleString()}<sup class="tick-badge">×${tickCount}</sup></span>
-              <span class="dmg-crit dmg-tick-toggle"   data-base="${displayedCrit}"   data-total="${critTotal}"   data-ticks="${tickCount}" title="Cliquez pour afficher le total crit (${tickCount} ticks)">(${displayedCrit.toLocaleString()}<sup class="tick-badge">×${tickCount}</sup>)</span>
+              <span class="dmg-normal dmg-tick-toggle" data-base="${displayedNormal}" data-total="${normalTotal}" data-ticks="${tickCount}" ${tickScalingAttr} title="Cliquez pour afficher le total (${tickCount} ticks)">${displayedNormal.toLocaleString()}<sup class="tick-badge">×${tickCount}</sup></span>
+              <span class="dmg-crit dmg-tick-toggle"   data-base="${displayedCrit}"   data-total="${critTotal}"   data-ticks="${tickCount}" ${tickScalingAttr} title="Cliquez pour afficher le total crit (${tickCount} ticks)">(${displayedCrit.toLocaleString()}<sup class="tick-badge">×${tickCount}</sup>)</span>
             </div>
           `;
         } else {
           line.innerHTML = `
             <span class="dmg-name">${dmg.name}${dmg.notes ? `<br><i>${dmg.notes}</i>` : ""}${wildCapBadge}</span>
             <div class="dmg-values">
-              <span class="dmg-normal dmg-tick-toggle" data-base="${displayedNormal}" data-total="${normalTotal}" data-ticks="${tickCount}" title="Cliquez pour afficher le total (${tickCount} ticks)">${displayedNormal.toLocaleString()}<sup class="tick-badge">×${tickCount}</sup></span>
+              <span class="dmg-normal dmg-tick-toggle" data-base="${displayedNormal}" data-total="${normalTotal}" data-ticks="${tickCount}" ${tickScalingAttr} title="Cliquez pour afficher le total (${tickCount} ticks)">${displayedNormal.toLocaleString()}<sup class="tick-badge">×${tickCount}</sup></span>
             </div>
           `;
         }
@@ -1215,6 +1243,10 @@ function collectLineItems(card) {
       }
       const critVal = canCrit ? (isTick ? critBase * tickCount : critBase) : null;
 
+      // tick_scaling dispo ?
+      const tickScalingRaw = isTick ? dmgNormal.dataset.tickScaling : null;
+      const tickScaling    = tickScalingRaw ? JSON.parse(tickScalingRaw) : null;
+
       items.push({
         type: 'damage', name, value: val,
         canCrit,
@@ -1223,6 +1255,7 @@ function collectLineItems(card) {
         critPerTick:   (isTick && canCrit) ? critBase : null,
         isTick,
         tickCount,
+        tickScaling,
       });
     }
 
@@ -1309,15 +1342,13 @@ function openLinePicker(card, move, allItems) {
     closeActivePicker();
   });
 
-  // Liste des lignes avec checkboxes + crit controls
   const list = document.createElement('div');
   list.className = 'cl-picker-list';
   const checkboxes = [];
 
-  // État par item damage : { isCrit, hitCount, critCount }
   const critStates = allItems.map(item => ({
     isCrit: false,
-    hitCount:  item.isTick ? item.tickCount : 1,  // commence au max
+    hitCount:  item.isTick ? item.tickCount : 1,
     critCount: 0,
   }));
 
@@ -1334,7 +1365,6 @@ function openLinePicker(card, move, allItems) {
     checkboxes.push(cb);
     cb.addEventListener('click', (e) => e.stopPropagation());
 
-    // Valeur affichée (sera mise à jour si on change le mode crit)
     const valSpan = document.createElement('span');
     valSpan.className = `cl-picker-val ${typeClass}`;
 
@@ -1351,7 +1381,6 @@ function openLinePicker(card, move, allItems) {
     row.appendChild(nameSpan);
     row.appendChild(valSpan);
 
-    // Toggle checkbox sur clic du label (mais pas sur les boutons crit)
     row.addEventListener('click', (e) => {
       if (e.target === cb || e.target.closest('.cl-crit-controls')) return;
       e.stopPropagation();
@@ -1366,28 +1395,38 @@ function openLinePicker(card, move, allItems) {
       }
 
       if (item.isTick && item.tickCount > 1) {
-        // Multi-hit : hitCount hits dont critCount crits
         const hc = critStates[idx].hitCount;
         const cc = Math.min(critStates[idx].critCount, hc);
         const nc = hc - cc;
-        const total = nc * item.normalPerTick + cc * item.critPerTick;
-        critStates[idx]._resolvedValue = total;
-        valSpan.textContent = total.toLocaleString();
+
+        // Utilise tick_scaling si présent
+        if (item.tickScaling) {
+          let total = 0;
+          for (let i = 0; i < hc; i++) {
+            const scale = item.tickScaling[i] ?? item.tickScaling[item.tickScaling.length - 1];
+            const isTickCrit = i < cc; // les cc premiers ticks sont des crits
+            const base = isTickCrit ? item.critPerTick : item.normalPerTick;
+            total += Math.floor(base * scale);
+          }
+          critStates[idx]._resolvedValue = total;
+          valSpan.textContent = total.toLocaleString();
+        } else {
+          const total = nc * item.normalPerTick + cc * item.critPerTick;
+          critStates[idx]._resolvedValue = total;
+          valSpan.textContent = total.toLocaleString();
+        }
       } else {
-        // Simple : normal ou crit
         const v = critStates[idx].isCrit ? item.critValue : item.value;
         critStates[idx]._resolvedValue = v;
         valSpan.textContent = v.toLocaleString();
       }
     };
 
-    // Controls crit
     if (item.type === 'damage' && item.canCrit) {
       const critCtrl = document.createElement('div');
       critCtrl.className = 'cl-crit-controls';
 
       if (item.isTick && item.tickCount > 1) {
-        // Mode multi-hit : deux compteurs Hits + Crits sur deux lignes
         const maxHits = item.tickCount;
         critStates[idx].hitCount  = maxHits;
         critStates[idx].critCount = 0;
@@ -1412,15 +1451,14 @@ function openLinePicker(card, move, allItems) {
         const critMaxRef  = critCtrl.querySelector('.cl-hit-max-ref');
 
         const refreshColors = () => {
-          hitCountEl.style.color  = critStates[idx].hitCount  < maxHits           ? '#ff9d00' : '#aaa';
-          critCountEl.style.color = critStates[idx].critCount > 0                 ? '#ef5350' : '#aaa';
+          hitCountEl.style.color  = critStates[idx].hitCount  < maxHits ? '#ff9d00' : '#aaa';
+          critCountEl.style.color = critStates[idx].critCount > 0       ? '#ef5350' : '#aaa';
         };
 
         critCtrl.querySelector('.cl-hit-minus').addEventListener('click', (e) => {
           e.stopPropagation();
           if (critStates[idx].hitCount > 0) {
             critStates[idx].hitCount--;
-            // Les crits ne peuvent pas dépasser les hits
             if (critStates[idx].critCount > critStates[idx].hitCount) {
               critStates[idx].critCount = critStates[idx].hitCount;
               critCountEl.textContent = critStates[idx].critCount;
@@ -1464,7 +1502,6 @@ function openLinePicker(card, move, allItems) {
         });
 
       } else {
-        // Mode simple : toggle Normal / Crit
         critCtrl.innerHTML = `
           <button class="cl-crit-toggle" data-mode="normal">Normal</button>
           <button class="cl-crit-toggle cl-crit-toggle-crit" data-mode="crit">Crit</button>
@@ -1491,7 +1528,6 @@ function openLinePicker(card, move, allItems) {
 
   picker.appendChild(list);
 
-  // Footer
   const footer = document.createElement('div');
   footer.className = 'cl-picker-footer';
 
@@ -1519,7 +1555,21 @@ function openLinePicker(card, move, allItems) {
             const hc = critStates[idx].hitCount;
             const cc = Math.min(critStates[idx].critCount, hc);
             const nc = hc - cc;
-            selectedValue = nc * item.normalPerTick + cc * item.critPerTick;
+
+            // Utilise tick_scaling si présent
+            if (item.tickScaling) {
+              let total = 0;
+              for (let i = 0; i < hc; i++) {
+                const scale = item.tickScaling[i] ?? item.tickScaling[item.tickScaling.length - 1];
+                const isTickCrit = i < cc;
+                const base = isTickCrit ? item.critPerTick : item.normalPerTick;
+                total += Math.floor(base * scale);
+              }
+              selectedValue = total;
+            } else {
+              selectedValue = nc * item.normalPerTick + cc * item.critPerTick;
+            }
+
             const hitLabel  = hc < item.tickCount ? `${hc}/${item.tickCount}hits` : `${item.tickCount}hits`;
             const critPart  = cc > 0 ? ` ${cc}💥` : '';
             critLabel = `(${hitLabel}${critPart})`;
@@ -1545,12 +1595,10 @@ function openLinePicker(card, move, allItems) {
   footer.appendChild(confirmBtn);
   picker.appendChild(footer);
 
-  // Stopper toute propagation depuis le picker vers les cards en dessous
   picker.addEventListener('click', (e) => e.stopPropagation());
 
   document.body.appendChild(picker);
 
-  // Positionnement
   const cardRect = card.getBoundingClientRect();
   const pickerH  = picker.offsetHeight;
   const pickerW  = picker.offsetWidth;
@@ -1562,7 +1610,6 @@ function openLinePicker(card, move, allItems) {
   picker.style.top  = `${top}px`;
   picker.style.left = `${left}px`;
 
-  // Fermeture au clic extérieur
   requestAnimationFrame(() => {
     const outsideHandler = (e) => {
       if (!picker.contains(e.target)) {
@@ -1576,7 +1623,6 @@ function openLinePicker(card, move, allItems) {
 
 function attachMoveCardClickHandler(card, move) {
 
-  // ── Tick toggles avec contrôles +/- ──────────────────────────────────────
   card.querySelectorAll('.heal-tick-toggle, .shield-tick-toggle, .dmg-tick-toggle').forEach(el => {
     const base     = parseInt(el.dataset.base,  10);
     const maxTicks = parseInt(el.dataset.ticks, 10);
@@ -1585,26 +1631,49 @@ function attachMoveCardClickHandler(card, move) {
     const isShield = el.classList.contains('shield-tick-toggle');
     let currentTicks = 1;
 
+    // ── tick_scaling : tableau de multiplicateurs par wave ──────────────
+    const tickScalingRaw = el.dataset.tickScaling;
+    const tickScaling    = tickScalingRaw ? JSON.parse(tickScalingRaw) : null;
+    const hasTickScaling = !!tickScaling;
+
     const wrap = (val) => isCrit ? `(${val})` : val;
     const activeColor = isHeal ? '#4caf82' : isShield ? '#ffd740' : isCrit ? '#ef5350' : '#4fc3f7';
 
     const isStealthRock = (move.name === "Stealth Rock" || move.name === "Stealth Rock+") && !isCrit;
     const maxStackBonus = maxTicks === 10 ? 1.35 : 1.05;
 
-    const getStealthTotal = (n) => {
-      let sum = 0;
-      for (let i = 1; i <= n; i++) {
-        sum += Math.floor(base * (1 + Math.min((i - 1) * 0.15, maxStackBonus)));
+    // ── Calcul du total selon le mode actif ─────────────────────────────
+    const getScaledTotal = (n) => {
+      if (hasTickScaling) {
+        // Somme des dégâts de chaque wave avec son multiplicateur
+        let sum = 0;
+        for (let i = 0; i < n; i++) {
+          sum += Math.floor(base * (tickScaling[i] ?? tickScaling[tickScaling.length - 1]));
+        }
+        return sum;
       }
-      return sum;
+      if (isStealthRock) {
+        let sum = 0;
+        for (let i = 1; i <= n; i++) {
+          sum += Math.floor(base * (1 + Math.min((i - 1) * 0.15, maxStackBonus)));
+        }
+        return sum;
+      }
+      // Ticks uniformes
+      return base * n;
     };
 
     const renderExpanded = () => {
       const atMax = currentTicks === maxTicks;
       let displayTotal, titleHint;
 
-      if (isStealthRock) {
-        displayTotal = getStealthTotal(currentTicks);
+      if (hasTickScaling) {
+        displayTotal = getScaledTotal(currentTicks);
+        const scalePct = tickScaling[currentTicks - 1] ?? tickScaling[tickScaling.length - 1];
+        const waveVal  = Math.floor(base * scalePct);
+        titleHint = `Wave ${currentTicks}: ${waveVal.toLocaleString()} (×${scalePct}) — Total: ${displayTotal.toLocaleString()}`;
+      } else if (isStealthRock) {
+        displayTotal = getScaledTotal(currentTicks);
         const pct = Math.min((currentTicks - 1) * 0.15, maxStackBonus);
         titleHint = `Hit ${currentTicks}: ${Math.ceil(base * (1 + pct)).toLocaleString()} (+${Math.round(pct * 100)}%) — Total: ${displayTotal.toLocaleString()}`;
       } else {
@@ -1629,11 +1698,9 @@ function attachMoveCardClickHandler(card, move) {
     renderExpanded();
   });
 
-  // ── Clic gauche = picker ou ajout direct ─────────────────────────────────
   card.addEventListener('click', (e) => {
     if (e.target.closest('.heal-tick-toggle, .shield-tick-toggle, .dmg-tick-toggle, .tick-ctrl')) return;
 
-    // Si le picker de cette card est déjà ouvert, le fermer
     if (activePicker && activePicker._sourceCard === card) {
       closeActivePicker();
       return;
@@ -1642,7 +1709,6 @@ function attachMoveCardClickHandler(card, move) {
     const allItems = collectLineItems(card);
     if (allItems.length === 0) return;
 
-    // Une seule ligne sans crit possible → ajout direct sans picker
     if (allItems.length === 1 && !allItems[0].canCrit) {
       const { damages, heals, shields } = itemsToLogEntry(allItems);
       addMoveToLog({ moveName: move.name, moveImage: move.image, damages, heals, shields });
@@ -1650,7 +1716,6 @@ function attachMoveCardClickHandler(card, move) {
       return;
     }
 
-    // Plusieurs lignes OU ligne avec crit → ouvrir le picker
     openLinePicker(card, move, allItems);
     if (activePicker) activePicker._sourceCard = card;
   });

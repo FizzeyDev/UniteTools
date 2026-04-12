@@ -581,6 +581,106 @@
     ]
   },
   {
+    "pokemonId": "articuno",
+    "dex": 144,
+    "role": "defender",
+    "style": "special",
+    "stats": [
+      {"level": 1, "hp": 3740, "atk": 20, "def": 114, "sp_atk": 96, "sp_def": 118, "crit": 0},
+      {"level": 2, "hp": 3964, "atk": 23, "def": 131, "sp_atk": 109, "sp_def": 132, "crit": 0},
+      {"level": 3, "hp": 4210, "atk": 27, "def": 150, "sp_atk": 123, "sp_def": 147, "crit": 0},
+      {"level": 4, "hp": 4481, "atk": 31, "def": 172, "sp_atk": 139, "sp_def": 163, "crit": 0},
+      {"level": 5, "hp": 4778, "atk": 36, "def": 195, "sp_atk": 156, "sp_def": 181, "crit": 0},
+      {"level": 6, "hp": 5106, "atk": 41, "def": 220, "sp_atk": 175, "sp_def": 201, "crit": 0},
+      {"level": 7, "hp": 5466, "atk": 46, "def": 248, "sp_atk": 196, "sp_def": 223, "crit": 0},
+      {"level": 8, "hp": 5863, "atk": 53, "def": 279, "sp_atk": 219, "sp_def": 248, "crit": 0},
+      {"level": 9, "hp": 6298, "atk": 59, "def": 313, "sp_atk": 245, "sp_def": 274, "crit": 0},
+      {"level": 10, "hp": 6778, "atk": 67, "def": 350, "sp_atk": 273, "sp_def": 303, "crit": 0},
+      {"level": 11, "hp": 7306, "atk": 75, "def": 391, "sp_atk": 303, "sp_def": 336, "crit": 0},
+      {"level": 12, "hp": 7886, "atk": 84, "def": 436, "sp_atk": 337, "sp_def": 371, "crit": 0},
+      {"level": 13, "hp": 8525, "atk": 93, "def": 485, "sp_atk": 374, "sp_def": 410, "crit": 0},
+      {"level": 14, "hp": 9227, "atk": 104, "def": 540, "sp_atk": 415, "sp_def": 453, "crit": 0},
+      {"level": 15, "hp": 10000, "atk": 116, "def": 600, "sp_atk": 460, "sp_def": 500, "crit": 0}
+    ],
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "false",
+        "image": "assets/moves/basic_attack.png",
+        "damages": [
+          {"name": "Basic Attack", "multiplier": 50, "levelCoef": 0, "constant": 200, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Icy Wind",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/articuno/icy_wind.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 90, "levelCoef": 0, "constant": 350, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Ice Shard",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/articuno/ice_shard.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 48, "levelCoef": 0, "constant": 240, "dealDamage": true},
+          {"name": "Damage - Frozen Target", "multiplier": 72, "levelCoef": 0, "constant": 360, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Blizzard",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/articuno/blizzard.png",
+        "damages": [
+          {"name": "Damage per Hit (6x)", "multiplier": 52, "levelCoef": 0, "constant": 156, "dealDamage": true, "is_tick": true, "tick_count": 6},
+          {"name": "Damage per Hit (8x)", "multiplier": 52, "levelCoef": 0, "constant": 156, "dealDamage": true, "is_tick": true, "tick_count": 8, "upgraded": true}
+        ]
+      },
+      {
+        "name": "Ice Beam",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/articuno/ice_beam.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 99, "levelCoef": 0, "constant": 496, "dealDamage": true},
+          {"name": "Damage - Frozen Target", "multiplier": 148.5, "levelCoef": 0, "constant": 744, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Ice Wing Whiteout (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/articuno/ice_wing_whiteout.png",
+        "damages": [
+          {"name": "Damage per Wave (5x)", "multiplier": 68, "levelCoef": 0, "constant": 340, "dealDamage": true, "is_tick": true, "tick_count": 5, "tick_scaling": [1.00, 1.05, 1.10, 1.15, 2.00], "notes": "Wave 2: +5%, Wave 3: +10%, Wave 4: +15%, Wave 5: +100%"}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 40,
+            "levelCoef": 0,
+            "constant": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
     "pokemonId": "azumarill",
     "dex": 184,
     "role": "all-rounder",
@@ -6836,6 +6936,9 @@
       },
       {
         "name": "Quick Attack",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/lucario/quick_attack.png",
         "damages": [
@@ -6844,6 +6947,9 @@
       },
       {
         "name": "Extreme Speed",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/lucario/extreme_speed.png",
         "damages": [
@@ -6854,6 +6960,9 @@
       },
       {
         "name": "Power-Up Punch",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/lucario/power_up_punch.png",
         "damages": [
@@ -6864,6 +6973,9 @@
       },
       {
         "name": "Meteor Mash",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/lucario/meteor_mash.png",
         "damages": [
@@ -6872,6 +6984,9 @@
       },
       {
         "name": "Bone Rush",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/lucario/bone_rush.png",
         "damages": [
@@ -6880,15 +6995,21 @@
       },
       {
         "name": "Close Combat",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/lucario/close_combat.png",
         "damages": [
-          {"name": "Damage per Hit (11)", "multiplier": 50, "levelCoef": 2, "constant": 60, "dealDamage": true},
+          {"name": "Damage per Hit (x11)", "multiplier": 50, "levelCoef": 2, "constant": 60, "dealDamage": true},
           {"name": "Heal per Hit", "multiplier": 11.5, "levelCoef": 0, "constant": 23, "heal": true}
         ]
       },
       {
         "name": "Aura Cannon (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/lucario/aura_cannon.png",
         "damages": [
