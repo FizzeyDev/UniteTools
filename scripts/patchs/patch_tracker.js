@@ -1,5 +1,37 @@
 const IMG_BASE = 'assets/pokemon/';
 
+/* ── Info modal styles ───────────────────────────────────────────────────── */
+(function injectInfoStyles() {
+  const s = document.createElement('style');
+  s.textContent = `
+    .info-modal-body { color: #c0c8d8; font-size: 0.88rem; line-height: 1.6; }
+    .info-header { display:flex; align-items:center; gap:12px; margin-bottom:20px;
+      padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .info-section { margin-bottom:18px; }
+    .info-section-title { font-size:0.9rem; font-weight:700; color:#e0e0e0;
+      margin:0 0 8px; letter-spacing:0.03em; }
+    .info-section p { margin:4px 0; }
+    .info-list { margin:4px 0; padding-left:18px; }
+    .info-list li { margin-bottom:4px; }
+    .info-shortcuts { display:grid; grid-template-columns:auto 1fr; gap:6px 12px;
+      background:rgba(0,0,0,0.2); border-radius:8px; padding:12px; }
+    .shortcut-row { display:contents; }
+    .shortcut-row kbd { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+      border-radius:4px; padding:2px 7px; font-family:monospace; font-size:0.8rem;
+      color:#e0e0e0; white-space:nowrap; align-self:center; }
+    .shortcut-row span { align-self:center; color:#9aabb8; font-size:0.82rem; }
+    .info-legend { display:flex; flex-direction:column; gap:6px; margin-bottom:6px; }
+    .info-legend span.pill { margin-right:8px; }
+    .info-disclaimer { background:rgba(255,180,0,0.05); border:1px solid rgba(255,180,0,0.15);
+      border-radius:8px; padding:12px; }
+    .info-disclaimer h3 { color:#ffd740; }
+    .info-disclaimer a { color:#4fc3f7; }
+    .info-trigger:hover { border-color:rgba(255,255,255,0.3) !important;
+      background:rgba(255,255,255,0.05) !important; }
+  `;
+  document.head.appendChild(s);
+})();
+
 function t(key, fallback = key) {
   return (window.LANG && window.LANG[key]) ? window.LANG[key] : fallback;
 }
@@ -96,6 +128,20 @@ function getTrend(name) {
 function renderStats() {
   let tb = 0, tn = 0;
   PATCHES.forEach(p => { tb += p.buffs.length; tn += p.nerfs.length; });
+
+  // Most buffed / most nerfed
+  const buffCount = {}, nerfCount = {};
+  POKEMON.forEach(p => {
+    buffCount[p.name] = 0;
+    nerfCount[p.name] = 0;
+  });
+  PATCHES.forEach(p => {
+    p.buffs.forEach(n => { if (buffCount[n] !== undefined) buffCount[n]++; });
+    p.nerfs.forEach(n => { if (nerfCount[n] !== undefined) nerfCount[n]++; });
+  });
+  const mostBuffed = Object.entries(buffCount).sort((a,b) => b[1]-a[1])[0];
+  const mostNerfed = Object.entries(nerfCount).sort((a,b) => b[1]-a[1])[0];
+
   document.getElementById('stats').innerHTML = `
     <div class="stat-card">
       <div class="stat-val v-accent">${PATCHES.length}</div>
@@ -113,7 +159,126 @@ function renderStats() {
       <div class="stat-val v-accent">${POKEMON.length}</div>
       <div class="stat-lbl" data-lang="patch_stat_pokemon">${t('patch_stat_pokemon','Tracked Pokémon')}</div>
     </div>
+    ${mostBuffed ? `<div class="stat-card" title="${mostBuffed[0]} - ${mostBuffed[1]} buffs" style="cursor:pointer;" onclick="openModal('${mostBuffed[0]}')">
+      <div class="stat-val v-buff" style="font-size:0.85rem;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${tagSprite(mostBuffed[0])} ${mostBuffed[0]}</div>
+      <div class="stat-lbl">▲ Most buffed (${mostBuffed[1]})</div>
+    </div>` : ''}
+    ${mostNerfed ? `<div class="stat-card" title="${mostNerfed[0]} - ${mostNerfed[1]} nerfs" style="cursor:pointer;" onclick="openModal('${mostNerfed[0]}')">
+      <div class="stat-val v-nerf" style="font-size:0.85rem;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${tagSprite(mostNerfed[0])} ${mostNerfed[0]}</div>
+      <div class="stat-lbl">▼ Most nerfed (${mostNerfed[1]})</div>
+    </div>` : ''}
+    <button class="stat-card info-trigger" id="infoBtn" title="How to use" style="cursor:pointer;border:1px dashed rgba(255,255,255,0.15);background:transparent;">
+      <div class="stat-val" style="font-size:1.3rem;">?</div>
+      <div class="stat-lbl">How to use</div>
+    </button>
   `;
+
+  document.getElementById('infoBtn').addEventListener('click', openInfoModal);
+}
+
+/* ── Info / How-to-use modal ─────────────────────────────────────────────── */
+function openInfoModal() {
+  const infoModal = document.getElementById('infoModal');
+  if (infoModal) { infoModal.classList.add('open'); return; }
+
+  // Create modal on first open
+  const el = document.createElement('div');
+  el.id = 'infoModal';
+  el.setAttribute('role', 'dialog');
+  el.setAttribute('aria-modal', 'true');
+  el.setAttribute('aria-label', 'How to use');
+  el.innerHTML = `
+    <button class="modal-close" id="infoModalClose" aria-label="Close">✕</button>
+    <div class="info-modal-body">
+      <div class="info-header">
+        <span style="font-size:1.6rem;">⚡</span>
+        <div>
+          <h2 style="margin:0;font-size:1.2rem;color:#e0e0e0;">Pokémon Unite - Patch Tracker</h2>
+          <p style="margin:0;font-size:0.8rem;color:#6a8587;">Community tool · Unofficial</p>
+        </div>
+      </div>
+
+      <section class="info-section">
+        <h3 class="info-section-title">📋 What is this?</h3>
+        <p>This tool lets you browse every balance patch in Pokémon Unite history. You can see which Pokémon were buffed, nerfed or tweaked in each update, filter by role or change type, search by name or version, and view the full history of any individual Pokémon.</p>
+      </section>
+
+      <section class="info-section">
+        <h3 class="info-section-title">🗂️ Views</h3>
+        <ul class="info-list">
+          <li><strong>Patches</strong> - chronological list of all patches, grouped by year. Click a card to expand it and see all changes.</li>
+          <li><strong>By Pokémon</strong> - grid of all tracked Pokémon sorted by buff/nerf count. Click any card to see its full patch history.</li>
+        </ul>
+      </section>
+
+      <section class="info-section">
+        <h3 class="info-section-title">⌨️ Keyboard shortcuts</h3>
+        <div class="info-shortcuts">
+          <div class="shortcut-row"><kbd>/</kbd><span>Focus the search bar</span></div>
+          <div class="shortcut-row"><kbd>Esc</kbd><span>Close modal / clear search</span></div>
+          <div class="shortcut-row"><kbd>1</kbd><span>Switch to Patches view</span></div>
+          <div class="shortcut-row"><kbd>2</kbd><span>Switch to By Pokémon view</span></div>
+          <div class="shortcut-row"><kbd>Enter</kbd><span>Open focused patch / Pokémon</span></div>
+          <div class="shortcut-row"><kbd>B</kbd><span>Filter Buffs</span></div>
+          <div class="shortcut-row"><kbd>N</kbd><span>Filter Nerfs</span></div>
+          <div class="shortcut-row"><kbd>T</kbd><span>Filter Tweaks</span></div>
+          <div class="shortcut-row"><kbd>A</kbd><span>Reset filter to All</span></div>
+          <div class="shortcut-row"><kbd>?</kbd><span>Open this help panel</span></div>
+        </div>
+      </section>
+
+      <section class="info-section">
+        <h3 class="info-section-title">🔍 Search tips</h3>
+        <ul class="info-list">
+          <li>Search by <strong>Pokémon name</strong> (e.g. <em>Charizard</em>) to find all patches it appeared in.</li>
+          <li>Search by <strong>version number</strong> (e.g. <em>1.22</em>) to filter patches.</li>
+          <li>Search by <strong>patch name</strong> (e.g. <em>Balance</em>) to find seasonal patches.</li>
+          <li>Click any Pokémon tag inside a patch to open its full history modal.</li>
+        </ul>
+      </section>
+
+      <section class="info-section">
+        <h3 class="info-section-title">📊 Legend</h3>
+        <div class="info-legend">
+          <span class="pill pill-buff">▲ Buff</span> <span>The Pokémon received a positive balance change.</span>
+          <span class="pill pill-nerf">▼ Nerf</span> <span>The Pokémon received a negative balance change.</span>
+          <span class="pill pill-tweak">● Tweak</span> <span>A neutral adjustment (rework, number change with unclear impact).</span>
+          <span class="pill pill-misc">⚙ QoL</span> <span>Patch with no Pokémon balance changes (bug fixes, shop updates, etc).</span>
+        </div>
+        <p style="margin-top:8px;font-size:0.8rem;color:#6a8587;">The <strong>balance bar</strong> on Pokémon cards shows buff % vs nerf %. The <strong>trend arrow</strong> (↑ ↓ -) reflects the last 5 patches only.</p>
+      </section>
+
+      <section class="info-section info-disclaimer">
+        <h3 class="info-section-title">⚠️ Disclaimer</h3>
+        <p>This tracker is <strong>community-maintained and unofficial</strong>. Some data may be incomplete, inaccurate or missing - especially for older patches. Buff/nerf/tweak categorisation is subjective and based on available information at the time of entry.</p>
+        <p>For official and authoritative patch notes, always refer to the <a href="https://community.pokemon.com/en-us/categories/pokemon-unite" target="_blank" rel="noopener">official Pokémon Unite community forum</a>.</p>
+      </section>
+    </div>
+  `;
+
+  el.style.cssText = `
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.95);
+    background:#1a2332;border:1px solid rgba(255,255,255,0.1);border-radius:12px;
+    padding:24px;width:min(600px,92vw);max-height:85vh;overflow-y:auto;
+    z-index:1001;opacity:0;transition:opacity 0.2s,transform 0.2s;
+  `;
+  document.body.appendChild(el);
+
+  requestAnimationFrame(() => {
+    el.style.opacity = '1';
+    el.style.transform = 'translate(-50%,-50%) scale(1)';
+  });
+
+  document.getElementById('infoModalClose').addEventListener('click', closeInfoModal);
+}
+
+function closeInfoModal() {
+  const el = document.getElementById('infoModal');
+  if (el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translate(-50%,-50%) scale(0.95)';
+    setTimeout(() => el.remove(), 200);
+  }
 }
 
 function buildFilterBar() {
@@ -321,7 +486,7 @@ function pokeCardHTML(p) {
     ? `<span class="trend trend-up">↑</span>`
     : trend < 0
     ? `<span class="trend trend-down">↓</span>`
-    : `<span class="trend trend-stable">—</span>`;
+    : `<span class="trend trend-stable">-</span>`;
 
   const total    = p.buffs + p.nerfs;
   const barPct   = total > 0 ? Math.round(p.buffs / total * 100) : 50;
@@ -437,7 +602,7 @@ function buildTimelineHTML(history) {
     const typeLabel = h.types.map(tp => t('patch_badge_'+tp, tp)).join(' + ');
     return `
     <g style="cursor:default;">
-      <title>${h.version} — ${h.patchName} (${typeLabel})</title>
+      <title>${h.version} - ${h.patchName} (${typeLabel})</title>
       <circle cx="${x}" cy="${DOT_Y}" r="${DOT_R}" fill="${c.fill}" stroke="${c.stroke}" stroke-width="1.5"/>
       <text x="${x}" y="${DOT_Y+4}" text-anchor="middle" font-size="9" font-weight="700" fill="${c.text}" font-family="Exo 2,sans-serif">${c.symbol}</text>
       <text x="${x}" y="${LABEL_Y}" text-anchor="start" font-size="9" fill="#6a8587" font-family="Rajdhani,sans-serif"
@@ -475,7 +640,56 @@ function closeModal() {
 }
 document.getElementById('overlay').addEventListener('click', closeModal);
 document.getElementById('modalClose').addEventListener('click', closeModal);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', e => {
+  const tag = document.activeElement.tagName;
+  const typing = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+  const modalOpen = document.getElementById('modal').classList.contains('open');
+  const infoOpen  = !!document.getElementById('infoModal');
+
+  if (e.key === 'Escape') {
+    if (infoOpen)  { closeInfoModal(); return; }
+    if (modalOpen) { closeModal(); return; }
+    const si = document.getElementById('searchInput');
+    if (document.activeElement === si) {
+      si.value = ''; search = '';
+      view === 'patches' ? renderPatches() : renderPoke();
+    }
+    return;
+  }
+
+  if (typing || modalOpen || infoOpen) return;
+
+  switch (e.key) {
+    case '/':
+      e.preventDefault();
+      document.getElementById('searchInput').focus();
+      break;
+    case '?':
+      openInfoModal();
+      break;
+    case '1':
+      if (!e.ctrlKey && !e.metaKey) activateTab('patches');
+      break;
+    case '2':
+      if (!e.ctrlKey && !e.metaKey) activateTab('pokemon');
+      break;
+    case 'a': case 'A': setFilter('all');   break;
+    case 'b': case 'B': setFilter('buff');  break;
+    case 'n': case 'N': setFilter('nerf');  break;
+    case 't': case 'T': setFilter('tweak'); break;
+  }
+});
+
+function activateTab(tabView) {
+  const btn = document.querySelector(`.tab-btn[data-view="${tabView}"]`);
+  if (btn) btn.click();
+}
+
+function setFilter(f) {
+  filter = f;
+  buildFilterBar();
+  view === 'patches' ? renderPatches() : renderPoke();
+}
 
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {

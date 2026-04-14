@@ -418,7 +418,7 @@
   "map_timer_htu_reset_desc": "Switching maps or pressing the map button again resets everything to the start of the game.",
   "_comment": "Add these keys to your existing lang/en.json (merge with existing content)",
 
-  "patch_title": "Patch Tracker",
+  "patch_title": "Patch Tracker - Beta",
   "patch_subtitle": "Complete update history for Pokémon Unite · 2023 → 2026",
   "patch_stat_patches": "Patches",
   "patch_stat_buffs": "Total Buffs",

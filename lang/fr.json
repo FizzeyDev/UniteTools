@@ -418,7 +418,7 @@
   "map_timer_htu_reset_desc": "Changer de carte ou recliquer sur le bouton de la carte remet tout à zéro depuis le début de la partie.",
   "_comment": "Ajoute ces clés dans ton lang/fr.json existant (fusionne avec le contenu déjà présent)",
 
-  "patch_title": "Patch Tracker",
+  "patch_title": "Patch Tracker - Beta",
   "patch_subtitle": "Historique complet des mises à jour Pokémon Unite · 2023 → 2026",
   "patch_stat_patches": "Patches",
   "patch_stat_buffs": "Buffs totaux",
