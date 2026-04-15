@@ -1,5 +1,5 @@
 /**
- * altaria.js — Altaria spawn logic (FIX position après kill)
+ * altaria.js - Altaria spawn logic (FIX position après kill)
  */
 
 import { state } from "./state.js";

@@ -1,4 +1,4 @@
-import { state, fearlessTeamA, fearlessTeamB } from "./state.js";
+import { state, fearlessTeamA, fearlessTeamB, allStarPicked } from "./state.js";
 import { highlightCurrentSlot, updateTurn, findNextBanSlot, findNextPickSlot } from "./ui.js";
 import { endDraft } from "./draft.js";
 
@@ -82,6 +82,9 @@ function onPokemonClick(img) {
 
   if (state.fearlessMode && step.type === "pick") {
     (step.team === "teamA" ? fearlessTeamA : fearlessTeamB).add(img.dataset.file);
+  }
+  if (state.allStarMode && step.type === "pick") {
+    allStarPicked.add(img.dataset.file);
   }
 
   state.currentStep++;

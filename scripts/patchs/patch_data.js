@@ -4,10 +4,10 @@
  * Static data layer for the Patch Tracker.
  *
  * Contains three exported-as-globals objects:
- *   POKEMON_IMAGES  — name → filename (Serebii sprites)
- *   PATCH_LINKS     — version → official community.pokemon.com URL
- *   PATCHES         — full patch history array
- *   POKEMON         — Pokémon roster with role/type meta
+ *   POKEMON_IMAGES  - name → filename (Serebii sprites)
+ *   PATCH_LINKS     - version → official community.pokemon.com URL
+ *   PATCHES         - full patch history array
+ *   POKEMON         - Pokémon roster with role/type meta
  *
  * HOW TO UPDATE
  * ─────────────────────────────────────────────────────────────────────────────

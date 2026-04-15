@@ -535,7 +535,7 @@ function applyFalinksDefender(atkStats, defStats, card) {
           </button>
         </div>
         <div style="margin-top:6px;font-size:0.85em;">
-          Active Target : <strong style="color:${t.color};">${t.label}</strong> — ${t.desc}
+          Active Target : <strong style="color:${t.color};">${t.label}</strong> - ${t.desc}
         </div>
       </div>
 

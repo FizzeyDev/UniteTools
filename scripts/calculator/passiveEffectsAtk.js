@@ -664,7 +664,7 @@ function applyMoltresAttacker(atkStats, defStats, card) {
         <span style="font-size:0.85rem;color:#ccc;">
           Tick (×${passive.burnTickInterval}s) :
           <strong style="color:#ff9944;">${burnPerTick.toLocaleString()}</strong>
-          ${stacks > 0 ? `— Total : <strong style="color:#ff9944;">${burnTotal.toLocaleString()}</strong> (${activeTicks} ticks)` : ''}
+          ${stacks > 0 ? `- Total : <strong style="color:#ff9944;">${burnTotal.toLocaleString()}</strong> (${activeTicks} ticks)` : ''}
         </span>
         ${stacks > 0 ? `<br><span style="color:#ffd740;font-size:0.85rem;">+${stacks * 10}% dmg on Incinerate / Heat Wave</span>` : ''}
       </div>

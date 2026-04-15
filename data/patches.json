@@ -1,6 +1,29 @@
 {
   "patches": [
     {
+      "version": "1.22.1.9",
+      "name": "Revival Stars",
+      "date": "2026-04-16",
+      "buffs": [
+        "Snorlax",
+        "Azumarill",
+        "Ninetales",
+        "Zeraora",
+        "Espeon",
+        "Zoroark",
+        "Clefable"
+      ],
+      "nerfs": [
+        "Blastoise",
+        "Mega-Charizard X",
+        "Ceruledge",
+        "Greninja",
+        "Psyduck"
+      ],
+      "tweaks": [],
+      "notes": "All-Stars Draft Pick, Shop update, Event update, Bug fixes, Text fixes"
+    },
+    {
       "version": "1.22.1.8",
       "name": "Long-Range Tactics Part 2",
       "date": "2026-03-19",
@@ -88,7 +111,7 @@
         "Charizard",
         "Comfey",
         "Darkrai",
-        "Galarian Rapidash",
+        "Rapidash",
         "Garchomp",
         "Psyduck",
         "Tinkaton",
@@ -143,7 +166,7 @@
         "Tyranitar"
       ],
       "nerfs": [
-        "Alolan Raichu",
+        "Raichu",
         "Clefable",
         "Darkrai",
         "Latias",
@@ -197,7 +220,7 @@
         "Venusaur"
       ],
       "tweaks": [
-        "Alolan Raichu",
+        "Raichu",
         "Mega-Lucario"
       ],
       "notes": "Shop Updates, Event Updates, Bug Fixes, Map Adjustments"
@@ -251,7 +274,7 @@
       "nerfs": [
         "Charizard",
         "Ho-Oh",
-        "Galarian Rapidash",
+        "Rapidash",
         "Latios",
         "Zacian"
       ],
@@ -265,7 +288,7 @@
       "name": "August Balance",
       "date": "2025-08-19",
       "buffs": [
-        "Alolan Raichu",
+        "Raichu",
         "Comfey",
         "Latias",
         "Miraidon",
@@ -292,7 +315,7 @@
         "Lapras"
       ],
       "nerfs": [
-        "Galarian Rapidash",
+        "Rapidash",
         "Ho-Oh"
       ],
       "tweaks": [],
@@ -349,7 +372,7 @@
       "date": "2025-06-05",
       "buffs": [
         "Cinderace",
-        "Galarian Rapidash",
+        "Rapidash",
         "Greedent",
         "Lucario",
         "Mew",
@@ -381,7 +404,7 @@
         "Garchomp"
       ],
       "nerfs": [
-        "Alolan Raichu",
+        "Raichu",
         "Gyarados",
         "Zacian"
       ],
@@ -396,12 +419,12 @@
         "Buzzwole",
         "Dragapult",
         "Dragonite",
-        "Galarian Rapidash",
+        "Rapidash",
         "Venusaur"
       ],
       "nerfs": [
         "Absol",
-        "Alolan Raichu",
+        "Raichu",
         "Gengar",
         "Goodra",
         "Leafeon",
@@ -488,7 +511,7 @@
       "date": "2025-02-13",
       "buffs": [],
       "nerfs": [
-        "Galarian Rapidash"
+        "Rapidash"
       ],
       "tweaks": [],
       "notes": "Matchmaking adjustments"
@@ -525,7 +548,7 @@
         "Zacian"
       ],
       "nerfs": [
-        "Alolan Ninetales",
+        "Ninetales",
         "Greedent",
         "Psyduck",
         "Umbreon"
@@ -667,7 +690,7 @@
       "name": "October Balance",
       "date": "2024-10-17",
       "buffs": [
-        "Alolan Ninetales",
+        "Ninetales",
         "Blastoise",
         "Lucario",
         "Machamp",
@@ -958,7 +981,7 @@
       "name": "Solo Challenge Update",
       "date": "2023-12-05",
       "buffs": [
-        "Alolan Ninetales",
+        "Ninetales",
         "Cramorant",
         "Dragapult",
         "Greninja",
@@ -1034,7 +1057,7 @@
         "Tsareena"
       ],
       "nerfs": [
-        "Alolan Ninetales",
+        "Ninetales",
         "Mewtwo X",
         "Mewtwo Y",
         "Umbreon"
@@ -1104,14 +1127,14 @@
       "releaseDate": "2025-06-19"
     },
     {
-      "name": "Alolan Ninetales",
+      "name": "Ninetales",
       "role": "Attacker",
       "type": "ranged",
       "releaseVersion": "1.1.1",
       "releaseDate": "2021-07-21"
     },
     {
-      "name": "Alolan Raichu",
+      "name": "Raichu",
       "role": "Speedster",
       "type": "ranged",
       "releaseVersion": "1.5.1.4",
@@ -1300,7 +1323,7 @@
       "releaseDate": "2023-07-20"
     },
     {
-      "name": "Galarian Rapidash",
+      "name": "Rapidash",
       "role": "Speedster",
       "type": "melee",
       "releaseVersion": "1.17.2.8",

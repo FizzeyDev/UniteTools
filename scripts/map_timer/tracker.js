@@ -1,5 +1,5 @@
 /**
- * tracker.js — Kill & tower event tracker
+ * tracker.js - Kill & tower event tracker
  * Exposes: addMobKill(name, img, killedTime, respawnTime), addTowerKill(name, img, killedTime)
  *          removeMobEntry(id), respawnedMobEntry(id)
  *          window.trackerClearAll()
@@ -106,7 +106,7 @@ export function removeTowerEntry(id) {
   updateBadge();
 }
 
-/** Mark a mob as respawned — highlight the row green then remove it after a moment */
+/** Mark a mob as respawned - highlight the row green then remove it after a moment */
 export function markMobRespawned(id) {
   const entry = mobEntries.find(e => e.id === id);
   if (!entry) return;

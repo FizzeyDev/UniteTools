@@ -49,7 +49,8 @@ document.getElementById("start-draft").addEventListener("click", async () => {
   startDraft();
   if (mpState.enabled && mpState.isHost) {
     const fearless = document.getElementById("fearless-checkbox").checked;
-    await publishDraftStart(fearless, state.selectedMap);
+    const allStar  = document.getElementById("allstar-checkbox").checked;
+    await publishDraftStart(fearless, state.selectedMap, allStar);
   }
 });
 
@@ -73,7 +74,7 @@ document.getElementById("next-draft-btn").addEventListener("click", async () => 
     if (mpState.isHost) {
       await startNextDraft(false);
     }
-    // Non-host players wait for mp:nextDraft event — do nothing here
+    // Non-host players wait for mp:nextDraft event - do nothing here
   } else {
     // Local mode: start next draft directly
     await startNextDraft(false);
@@ -191,12 +192,15 @@ window.addEventListener("mp:nextDraft", (e) => {
   state.selectedMode  = data.mode;
   state.selectedMap   = data.map;
   state.fearlessMode  = data.fearlessMode || false;
+  state.allStarMode   = data.allStarMode  || false;
   state.sidesSwapped  = data.sidesSwapped === true; // explicit boolean, never undefined
   state.currentStep   = 0;
   state.currentDraftOrder = [...draftOrders[data.mode]];
-  // Sync checkbox so startNextDraft lit la bonne valeur fearless
+  // Sync checkboxes so startNextDraft lit la bonne valeur
   const cb = document.getElementById("fearless-checkbox");
   if (cb) cb.checked = state.fearlessMode;
+  const cbAs = document.getElementById("allstar-checkbox");
+  if (cbAs) cbAs.checked = state.allStarMode;
   startNextDraft(true); // skipPublish = true, host already published
   _forceShowGallery();
 });
@@ -229,12 +233,15 @@ function _launchDraftForPlayer(data) {
   state.selectedMode      = data.mode;
   state.selectedMap       = data.map;
   state.fearlessMode      = data.fearlessMode || false;
+  state.allStarMode       = data.allStarMode  || false;
   state.currentDraftOrder = [...draftOrders[data.mode]];
   state.currentStep       = 0;
 
-  // Sync the checkbox so startDraft() reads the correct value
+  // Sync the checkboxes so startDraft() reads the correct values
   const cb = document.getElementById("fearless-checkbox");
   if (cb) cb.checked = state.fearlessMode;
+  const cbAs = document.getElementById("allstar-checkbox");
+  if (cbAs) cbAs.checked = state.allStarMode;
 
   document.querySelectorAll(".mode-btn").forEach(b =>
     b.classList.toggle("active", b.dataset.mode === data.mode));

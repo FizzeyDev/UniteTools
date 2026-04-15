@@ -307,7 +307,7 @@ export function updateDamages() {
     line.className = "global-bonus-line";
     line.innerHTML = `
       <div style="margin:12px 0;padding:8px 12px;background:#2a1f0f;border-radius:8px;border-left:4px solid #ff9d00;font-size:0.9rem;">
-        <strong style="color:#ff9d00;">${t('calc_js_rough_skin')}</strong> — ${t('calc_js_rough_skin_desc')}<strong>${reflectDamage.toLocaleString()}</strong> dmg on AA contact
+        <strong style="color:#ff9d00;">${t('calc_js_rough_skin')}</strong> - ${t('calc_js_rough_skin_desc')}<strong>${reflectDamage.toLocaleString()}</strong> dmg on AA contact
       </div>
     `;
     defenderCard.appendChild(line);
@@ -811,7 +811,7 @@ function addFormulaTooltip(lineEl, dmg, relevantAtk, attacker, level) {
   if (dmg.multiplier) parts.push(`⌊${statLabel}(${relevantAtk}) × ${dmg.multiplier}%⌋`);
   if (dmg.levelCoef)  parts.push(`(lvl-1)×${dmg.levelCoef}`);
 
-  const formula = parts.length ? parts.join(' + ') : '—';
+  const formula = parts.length ? parts.join(' + ') : '-';
 
   const notes = [];
   if (dmg.wild_cap)      notes.push(`🔒 Wild cap : ${dmg.wild_cap.toLocaleString()}`);
@@ -1671,14 +1671,14 @@ function attachMoveCardClickHandler(card, move) {
         displayTotal = getScaledTotal(currentTicks);
         const scalePct = tickScaling[currentTicks - 1] ?? tickScaling[tickScaling.length - 1];
         const waveVal  = Math.floor(base * scalePct);
-        titleHint = `Wave ${currentTicks}: ${waveVal.toLocaleString()} (×${scalePct}) — Total: ${displayTotal.toLocaleString()}`;
+        titleHint = `Wave ${currentTicks}: ${waveVal.toLocaleString()} (×${scalePct}) - Total: ${displayTotal.toLocaleString()}`;
       } else if (isStealthRock) {
         displayTotal = getScaledTotal(currentTicks);
         const pct = Math.min((currentTicks - 1) * 0.15, maxStackBonus);
-        titleHint = `Hit ${currentTicks}: ${Math.ceil(base * (1 + pct)).toLocaleString()} (+${Math.round(pct * 100)}%) — Total: ${displayTotal.toLocaleString()}`;
+        titleHint = `Hit ${currentTicks}: ${Math.ceil(base * (1 + pct)).toLocaleString()} (+${Math.round(pct * 100)}%) - Total: ${displayTotal.toLocaleString()}`;
       } else {
         displayTotal = base * currentTicks;
-        titleHint = `Par tick : ${base.toLocaleString()} — Max : ${maxTicks} ticks`;
+        titleHint = `Par tick : ${base.toLocaleString()} - Max : ${maxTicks} ticks`;
       }
 
       el.innerHTML = `

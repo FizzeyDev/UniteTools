@@ -83,7 +83,7 @@
       <span>🟠</span>
       <span id="mp-indicator-teamB" class="mp-indicator offline"></span>
     </div>
-    <!-- Role selector — visible once inside a room -->
+    <!-- Role selector - visible once inside a room -->
     <div id="mp-role-selector" class="mp-role-selector" style="display:none;">
       <span class="mp-role-label">Your role:</span>
       <button class="mp-role-btn" data-role="teamA">🟣 Purple</button>
@@ -180,12 +180,26 @@
             <label class="setting-toggle-label" for="fearless-checkbox">
               <span class="setting-icon">⚡</span>
               <span class="setting-name">Fearless</span>
+              <button class="setting-help-btn" type="button" data-tooltip="Each Pokémon picked by a team cannot be picked again by that same team in future drafts of the series. The opposing team can still use it.">?</button>
               <span class="switch compact">
                 <input type="checkbox" id="fearless-checkbox">
                 <span class="slider"></span>
               </span>
             </label>
-            <span class="setting-hint">No repeat picks across games</span>
+            <span class="setting-hint">No repeat picks per team</span>
+          </div>
+
+          <div class="draft-setting-row" id="allstar-row">
+            <label class="setting-toggle-label" for="allstar-checkbox">
+              <span class="setting-icon">🌟</span>
+              <span class="setting-name">All-Star</span>
+              <button class="setting-help-btn" type="button" data-tooltip="Once any Pokémon is picked by either team, it becomes unavailable for both teams in all future drafts of the series. Stronger than Fearless!">?</button>
+              <span class="switch compact">
+                <input type="checkbox" id="allstar-checkbox">
+                <span class="slider"></span>
+              </span>
+            </label>
+            <span class="setting-hint">No repeat picks globally</span>
           </div>
         </div>
 
@@ -287,7 +301,7 @@
   </div>
 
   <footer>
-    <p>Created by Fizzey — Pokémon Unite Draft Simulator</p>
+    <p>Created by Fizzey - Pokémon Unite Draft Simulator</p>
   </footer>
 
   <script src="scripts/navbar.js"></script>
@@ -316,6 +330,32 @@
       const isCollapsed = col.classList.toggle('info-collapsed');
       document.getElementById('cbar-arrow').textContent = isCollapsed ? '▼' : '▲';
       document.getElementById('cbar-label').textContent = isCollapsed ? 'Show' : 'Hide';
+    });
+
+    // ── Fearless / All-Star mutual exclusion ──────────────────────────────────
+    document.getElementById('fearless-checkbox').addEventListener('change', function() {
+      if (this.checked) document.getElementById('allstar-checkbox').checked = false;
+    });
+    document.getElementById('allstar-checkbox').addEventListener('change', function() {
+      if (this.checked) document.getElementById('fearless-checkbox').checked = false;
+    });
+
+    // ── Setting help tooltips ─────────────────────────────────────────────────
+    document.querySelectorAll('.setting-help-btn').forEach(btn => {
+      let tip = null;
+      btn.addEventListener('mouseenter', function() {
+        tip = document.createElement('div');
+        tip.className = 'setting-tooltip';
+        tip.textContent = this.dataset.tooltip;
+        document.body.appendChild(tip);
+        const r = this.getBoundingClientRect();
+        tip.style.left = Math.min(r.left, window.innerWidth - 260) + 'px';
+        tip.style.top  = (r.bottom + 8) + 'px';
+      });
+      btn.addEventListener('mouseleave', function() {
+        if (tip) { tip.remove(); tip = null; }
+      });
+      btn.addEventListener('click', e => e.preventDefault());
     });
   </script>
 </body>

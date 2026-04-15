@@ -344,7 +344,7 @@
   }
 
   /* ═══════════════════════════════════════════
-     PHASE 1 — GUESS POKEMON
+     PHASE 1 - GUESS POKEMON
   ═══════════════════════════════════════════ */
 
   function makePokeGuess(poke) {
@@ -410,7 +410,7 @@
   }
 
   /* ═══════════════════════════════════════════
-     PHASE 2 — OPEN SKIN PHASE
+     PHASE 2 - OPEN SKIN PHASE
   ═══════════════════════════════════════════ */
 
   function openSkinPhase(silent) {
@@ -432,7 +432,7 @@
   }
 
   /* ═══════════════════════════════════════════
-     PHASE 2 — GUESS SKIN
+     PHASE 2 - GUESS SKIN
   ═══════════════════════════════════════════ */
 
   function makeSkinGuess(name) {
@@ -513,7 +513,7 @@
       </div>
       <p>${bodyLine}</p>
       <p class="udle-next-label">${t('skindle_next_label')}</p>
-      <div class="udle-countdown" id="skindle-countdown">—</div>
+      <div class="udle-countdown" id="skindle-countdown">-</div>
     `;
   }
 

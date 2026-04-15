@@ -13,7 +13,7 @@ const SECTIONS = [
       'Select any Pokémon in the left grid (attacker) and right grid (defender).',
       'Use the <kbd>search bar</kbd> to filter Pokémon by name.',
       'Use the <kbd>category tabs</kbd> (Playable / Wild / Other) to switch between playable Pokémon, wild mobs, and special targets.',
-      'The <strong>Substitute Doll</strong> and <strong>Custom Doll</strong> are special targets — Custom Doll lets you set HP, DEF and Sp.Def manually by clicking the values.',
+      'The <strong>Substitute Doll</strong> and <strong>Custom Doll</strong> are special targets - Custom Doll lets you set HP, DEF and Sp.Def manually by clicking the values.',
     ]
   },
   {
@@ -22,7 +22,7 @@ const SECTIONS = [
     color: '#4fc3f7',
     items: [
       'Click an item slot to open the item picker. All items are at <strong>level 40</strong> (tournament format).',
-      'Stackable items (Attack Weight, Drive Lens…) show a counter — adjust stacks to see the bonus.',
+      'Stackable items (Attack Weight, Drive Lens…) show a counter - adjust stacks to see the bonus.',
       'Some items have an <strong>Activate</strong> button to toggle their effect on/off (e.g. X-Attack, Slick Spoon).',
       'Click <strong>Reset Items</strong> to clear all slots at once.',
     ]
@@ -57,7 +57,7 @@ const SECTIONS = [
     items: [
       'Expand the <strong>Universal Offensive Buffs/Debuffs</strong> sections (click the header) to toggle ally buffs and enemy debuffs on the attacker.',
       'Expand the <strong>Defensive Buffs/Debuffs</strong> sections on the defender side similarly.',
-      'Some debuffs are stackable — a counter appears when you check the box.',
+      'Some debuffs are stackable - a counter appears when you check the box.',
       'Passive effects and Move Effects are shown as colored blocks under the Pokémon stats card.',
     ]
   },
@@ -76,7 +76,7 @@ const SECTIONS = [
     title: 'Combat Log',
     color: '#9f53ec',
     items: [
-      'Click any move card to open a line picker — select which damage/heal/shield values to log, choose crit or normal.',
+      'Click any move card to open a line picker - select which damage/heal/shield values to log, choose crit or normal.',
       'The Combat Log accumulates damage to track combos. Use <strong>Clear</strong> to reset.',
       'For crittable moves, toggle between Normal and Crit per line before confirming.',
     ]

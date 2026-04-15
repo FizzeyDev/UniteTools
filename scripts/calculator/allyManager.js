@@ -317,13 +317,13 @@ function renderAllyPanelContent(panel, ally) {
   }
   refreshStats();
 
-  // Items — titre
+  // Items - titre
   const itemsTitle = document.createElement('div');
   itemsTitle.className = 'acp-section-title';
   itemsTitle.textContent = 'Items';
   panel.appendChild(itemsTitle);
 
-  // Items — grille
+  // Items - grille
   const itemsGrid = document.createElement('div');
   itemsGrid.className = 'acp-items-grid';
   panel.appendChild(itemsGrid);

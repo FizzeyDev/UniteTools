@@ -166,7 +166,7 @@
       </div>
       <p>${bodyLine}</p>
       <p class="udle-next-label">${t('udle_next_label')}</p>
-      <div class="udle-countdown" id="udle-countdown">—</div>
+      <div class="udle-countdown" id="udle-countdown">-</div>
     `;
   }
 
@@ -301,7 +301,7 @@
     const cards = document.createElement('div');
     cards.className = 'udle-cards';
 
-    const evoLabel  = g.evo_niveaux ? `Lvl ${g.evo_niveaux}` : '—';
+    const evoLabel  = g.evo_niveaux ? `Lvl ${g.evo_niveaux}` : '-';
     const megaLabel = g.mega ? t('udle_mega_yes') : t('udle_mega_no');
 
     const defs    = [

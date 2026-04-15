@@ -2,9 +2,9 @@
  * healCalculator.js
  *
  * Champs HP-based supportés (exclusifs des champs classiques) :
- *   missing_hp_percent / missing_hp_cap  — X% HP manquants du lanceur
- *   max_hp_percent     / max_hp_cap      — X% HP max du lanceur
- *   current_hp_percent / current_hp_cap  — X% HP actuels du lanceur
+ *   missing_hp_percent / missing_hp_cap  - X% HP manquants du lanceur
+ *   max_hp_percent     / max_hp_cap      - X% HP max du lanceur
+ *   current_hp_percent / current_hp_cap  - X% HP actuels du lanceur
  *
  * Formule classique : constant + floor(relevantStat * multiplier / 100) + (level-1) * levelCoef
  */

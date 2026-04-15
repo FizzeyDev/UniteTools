@@ -11,7 +11,7 @@ function getBaseStats(pokemon, level) {
       sp_def: pokemon.customStats.sp_def
     };
   }
-  // Mobs (timerBased or category==='mob') only have stats[0] — don't index by level
+  // Mobs (timerBased or category==='mob') only have stats[0] - don't index by level
   const statIndex = (pokemon?.timerBased || pokemon?.category === 'mob') ? 0 : level - 1;
   const base = pokemon?.stats?.[statIndex] || {};
   return {
@@ -241,14 +241,14 @@ function applyDefenderDamagePassives(damage, defenderId, defenderMaxHP) {
  *
  * Champs HP-based supportés dans `dmg` (exclusifs des champs classiques) :
  *
- *   dmg.max_hp_percent      {number}  — X% des HP MAX du défenseur (ignore la défense)
- *   dmg.max_hp_cap          {number}  — plafond optionnel
+ *   dmg.max_hp_percent      {number}  - X% des HP MAX du défenseur (ignore la défense)
+ *   dmg.max_hp_cap          {number}  - plafond optionnel
  *
- *   dmg.missing_hp_percent  {number}  — X% des HP MANQUANTS du défenseur (execute)
- *   dmg.missing_hp_cap      {number}  — plafond optionnel (ex: 1000)
+ *   dmg.missing_hp_percent  {number}  - X% des HP MANQUANTS du défenseur (execute)
+ *   dmg.missing_hp_cap      {number}  - plafond optionnel (ex: 1000)
  *
- *   dmg.current_hp_percent  {number}  — X% des HP ACTUELS du défenseur
- *   dmg.current_hp_cap      {number}  — plafond optionnel
+ *   dmg.current_hp_percent  {number}  - X% des HP ACTUELS du défenseur
+ *   dmg.current_hp_cap      {number}  - plafond optionnel
  *
  * Exemples JSON :
  *   { "max_hp_percent": 3, "dealDamage": true, "is_tick": true, "tick_count": 21 }

@@ -98,7 +98,7 @@ export function renderLog() {
   seq.innerHTML = '';
 
   if (combatLog.entries.length === 0) {
-    seq.innerHTML = '<span class="cl-empty">Cliquez sur un move pour l\'ajouter au combo...</span>';
+    seq.innerHTML = '<span class="cl-empty">Click on a move to add hit to the combo...</span>';
   } else {
     combatLog.entries.forEach((entry, index) => {
       const chip = document.createElement('div');

@@ -27,7 +27,7 @@ function moveBadge(name, level = null) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// GRENINJA — Smokescreen (Level 13)
+// GRENINJA - Smokescreen (Level 13)
 // Increases BASE Attack by 20% for 2s when exiting stealth.
 // Only available at level ≥ 13. Affects raw base stat only (not item bonuses).
 // ─────────────────────────────────────────────────────────────────────────────

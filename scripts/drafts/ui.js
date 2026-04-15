@@ -1,4 +1,4 @@
-import { state, fearlessTeamA, fearlessTeamB } from "./state.js";
+import { state, fearlessTeamA, fearlessTeamB, allStarPicked } from "./state.js";
 import { mpState } from "./multiplayer.js";
 
 export function updateDynamicContent() {
@@ -57,7 +57,21 @@ export function highlightCurrentSlot() {
 
 export function updateFearlessRestrictions() {
   state.allImages.forEach(img => img.classList.remove("fearless-blocked"));
-  if (!state.fearlessMode || state.currentStep >= state.currentDraftOrder.length) return;
+  if (state.currentStep >= state.currentDraftOrder.length) return;
+
+  // All-Star mode: picks from either team are blocked for everyone
+  if (state.allStarMode) {
+    const step = state.currentDraftOrder[state.currentStep];
+    if (step.type !== "pick") return;
+    state.allImages.forEach(img => {
+      if (allStarPicked.has(img.dataset.file) && !img.classList.contains("used"))
+        img.classList.add("fearless-blocked");
+    });
+    return;
+  }
+
+  // Fearless mode: team-specific restriction
+  if (!state.fearlessMode) return;
   const step = state.currentDraftOrder[state.currentStep];
   if (step.type !== "pick") return;
   const teamSet = step.team === "teamA" ? fearlessTeamA : fearlessTeamB;

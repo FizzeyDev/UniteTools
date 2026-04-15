@@ -304,7 +304,7 @@ body {
   gap: 3px;
 }
 
-/* Back face — grey pending */
+/* Back face - grey pending */
 .udle-flip-back {
   background: var(--surface-2);
   border: 1.5px solid var(--border);
@@ -317,7 +317,7 @@ body {
   color: var(--surface-3);
 }
 
-/* Front face — coloured result */
+/* Front face - coloured result */
 .udle-flip-front {
   /* colour set by JS via classes */
   border: 1.5px solid transparent;

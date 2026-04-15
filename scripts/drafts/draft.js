@@ -1,4 +1,4 @@
-import { state, fearlessTeamA, fearlessTeamB } from "./state.js";
+import { state, fearlessTeamA, fearlessTeamB, allStarPicked } from "./state.js";
 import { mapImages, draftOrders, swapDraftOrder } from "./constants.js";
 import { updateTurn, highlightCurrentSlot, resetDraftSlots, createRecapSlots, getAllBanSlots, getAllPickSlots } from "./ui.js";
 import { setupTimer } from "./timer.js";
@@ -18,8 +18,9 @@ export function startDraft() {
     state.selectedMap = maps[Math.floor(Math.random() * maps.length)];
   }
 
-  // Toujours lire la checkbox — en MP, publishDraftStart va broadcaster la valeur
+  // Toujours lire la checkbox - en MP, publishDraftStart va broadcaster la valeur
   state.fearlessMode = document.getElementById("fearless-checkbox").checked;
+  state.allStarMode  = document.getElementById("allstar-checkbox").checked;
 
   state.currentDraftOrder = [...draftOrders[state.selectedMode]];
   state.currentStep = 0;
@@ -73,13 +74,13 @@ export async function endDraft() {
   if (mpState.enabled) mpState.localStatus = "recap";
 
   // Show recap
-  if (state.fearlessMode) {
+  if (state.fearlessMode || state.allStarMode) {
     _showFearlessRecap();
   } else {
     _showFinalRecap();
   }
 
-  // Publish to Firebase — whoever triggers endDraft locally publishes the status change.
+  // Publish to Firebase - whoever triggers endDraft locally publishes the status change.
   // The _draftEnding guard (set above) prevents re-entry when the SSE bounces back.
   // Non-triggering players receive mp:draftEnd via SSE and call endDraft() themselves.
   if (mpState.enabled) {
@@ -98,7 +99,7 @@ function _showFinalRecap() {
   document.getElementById("fearless-controls").style.display = "none";
 
   if (mpState.enabled) {
-    // In MP mode: same flow as fearless — host picks map/sides then launches directly
+    // In MP mode: same flow as fearless - host picks map/sides then launches directly
     document.getElementById("reset-draft").style.display    = "none";
     document.getElementById("mp-toggle-btn").style.display  = "none";
     document.getElementById("fearless-controls").style.display = "flex";
@@ -362,7 +363,7 @@ export async function startNextDraft(skipPublish = false) {
     state.currentDraftOrder = [...draftOrders[state.selectedMode]];
   }
 
-  // NE PAS vider fearlessTeamA/B ici — en fearless, les picks s'accumulent
+  // NE PAS vider fearlessTeamA/B ici - en fearless, les picks s'accumulent
   // entre les drafts. Les sets sont clearés uniquement dans endFearlessSeries().
 
   resetDraftSlots();
@@ -382,7 +383,7 @@ export async function startNextDraft(skipPublish = false) {
   // Reset end-series-btn text in case it was relabelled
   const endBtn = document.getElementById("end-series-btn");
   if (endBtn) endBtn.textContent = "✕ End Series";
-  // Capture sidesSwapped BEFORE resetting — we still need to publish it
+  // Capture sidesSwapped BEFORE resetting - we still need to publish it
   const sidesSwappedToPublish = state.sidesSwapped;
   // Reset swap-sides button (swap was applied, now reset for next round)
   state.sidesSwapped = false;
@@ -398,7 +399,8 @@ export async function startNextDraft(skipPublish = false) {
 
   if (mpState.enabled && !skipPublish && mpState.isHost) {
     const fearless = document.getElementById("fearless-checkbox")?.checked ?? state.fearlessMode;
-    await publishNextDraft(state.selectedMap, fearless, sidesSwappedToPublish);
+    const allStar  = document.getElementById("allstar-checkbox")?.checked ?? state.allStarMode;
+    await publishNextDraft(state.selectedMap, fearless, sidesSwappedToPublish, allStar);
   }
 }
 
@@ -408,6 +410,7 @@ export function endFearlessSeries() {
   softResetDraft();
   fearlessTeamA.clear();
   fearlessTeamB.clear();
+  allStarPicked.clear();
   state.draftCount = 0;
   document.getElementById("series-recaps").innerHTML = "";
   document.getElementById("fearless-series").style.display = "none";
@@ -447,18 +450,24 @@ export function updateCollapseBar() {
     mapBadge.className   = `cbar-map map-${map}`;
   }
 
-  // Mode / fearless label
+  // Mode / fearless / allstar label
   const modeLabels = {
     classic:    "Tournament 3 Bans",
     tournament: "Tournament 2 Bans",
     swap:       "Swap Ban",
     reban:      "Reban",
   };
-  if (state.fearlessMode && state.draftCount > 0) {
-    modeEl.textContent = `⚡ Fearless — Draft #${state.draftCount + 1}`;
+  if (state.allStarMode && state.draftCount > 0) {
+    modeEl.textContent = `🌟 All-Star - Draft #${state.draftCount + 1}`;
+    modeEl.style.color = "var(--yellow)";
+  } else if (state.allStarMode) {
+    modeEl.textContent = `🌟 All-Star - ${modeLabels[state.selectedMode] || state.selectedMode || ""}`;
+    modeEl.style.color = "var(--yellow)";
+  } else if (state.fearlessMode && state.draftCount > 0) {
+    modeEl.textContent = `⚡ Fearless - Draft #${state.draftCount + 1}`;
     modeEl.style.color = "var(--violet)";
   } else if (state.fearlessMode) {
-    modeEl.textContent = `⚡ Fearless — ${modeLabels[state.selectedMode] || state.selectedMode || ""}`;
+    modeEl.textContent = `⚡ Fearless - ${modeLabels[state.selectedMode] || state.selectedMode || ""}`;
     modeEl.style.color = "var(--violet)";
   } else {
     modeEl.textContent = modeLabels[state.selectedMode] || state.selectedMode || "";

@@ -3,6 +3,7 @@ export const state = {
   selectedMode: null,
   selectedMap: null,
   fearlessMode: false,
+  allStarMode: false,
   currentStep: 0,
   currentDraftOrder: [],
   allImages: [],
@@ -17,3 +18,5 @@ export const state = {
 
 export const fearlessTeamA = new Set();
 export const fearlessTeamB = new Set();
+// All-Star: tracks picks from BOTH teams across drafts (shared pool)
+export const allStarPicked = new Set();

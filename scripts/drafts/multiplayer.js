@@ -118,6 +118,7 @@ export async function joinRoom(roomId, asSpectator = false) {
   state.currentDraftOrder = [...draftOrders[data.mode]];
   state.currentStep       = data.currentStep || 0;
   state.fearlessMode      = data.fearlessMode || false;
+  state.allStarMode       = data.allStarMode  || false;
 
   _subscribeToRoom(roomId);
   return { role, data };
@@ -173,7 +174,7 @@ export async function switchRole(newRole) {
   }
 
   mpState.playerRole = newRole;
-  // NOTE: mpState.isHost is permanent — it never changes after room creation.
+  // NOTE: mpState.isHost is permanent - it never changes after room creation.
 
   // Notify UI
   window.dispatchEvent(new CustomEvent("mp:roleChanged", { detail: { role: newRole } }));
@@ -190,12 +191,13 @@ export async function publishPick(stepIndex, monFile) {
   });
 }
 
-export async function publishDraftStart(fearlessMode, map) {
+export async function publishDraftStart(fearlessMode, map, allStarMode = false) {
   if (!mpState.enabled || !mpState.roomId) return;
   mpState.localStatus = "drafting";
   await dbUpdate(`rooms/${mpState.roomId}`, {
     status: "drafting",
     fearlessMode: fearlessMode || false,
+    allStarMode: allStarMode || false,
     map: map || null,
     currentStep: 0,
     picks: {},
@@ -231,7 +233,7 @@ export async function publishReturnToLobby() {
   });
 }
 
-export async function publishNextDraft(map, fearlessMode, sidesSwapped = false) {
+export async function publishNextDraft(map, fearlessMode, sidesSwapped = false, allStarMode = false) {
   if (!mpState.enabled || !mpState.roomId) return;
   const data = await dbGet(`rooms/${mpState.roomId}`);
   const nextCount = (data?.draftCount || 1) + 1;
@@ -242,6 +244,7 @@ export async function publishNextDraft(map, fearlessMode, sidesSwapped = false) 
     picks: {},
     map: map || null,
     fearlessMode: fearlessMode || false,
+    allStarMode: allStarMode || false,
     sidesSwapped: sidesSwapped || false,
     draftCount: nextCount,
   });
@@ -307,6 +310,7 @@ function _onRoomUpdate(data) {
     state.selectedMode      = data.mode;
     state.selectedMap       = data.map;
     state.fearlessMode      = data.fearlessMode || false;
+    state.allStarMode       = data.allStarMode  || false;
     state.sidesSwapped      = data.sidesSwapped || false;
     state.currentDraftOrder = [...draftOrders[data.mode]];
     state.currentStep       = 0;
@@ -332,7 +336,7 @@ function _onRoomUpdate(data) {
     return;
   }
 
-  // ── Draft ending — only fire for players still in "drafting" state ─────────
+  // ── Draft ending - only fire for players still in "drafting" state ─────────
   if (rs === "recap" && ls === "drafting") {
     mpState.localStatus = "recap";
     window.dispatchEvent(new CustomEvent("mp:draftEnd"));

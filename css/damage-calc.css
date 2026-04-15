@@ -530,7 +530,7 @@ h1 {
 .item-grid-item.equipped-elsewhere { display: none; }
 
 /* =============================================
-   SLIDERS — Level + HP
+   SLIDERS - Level + HP
    ============================================= */
 
 .slider-block {
@@ -625,7 +625,7 @@ h1 {
   cursor: pointer;
 }
 
-/* ── HP track — custom styled (replaces native range) ── */
+/* ── HP track - custom styled (replaces native range) ── */
 
 /* Hide native slider track; use custom overlay via CSS custom property */
 .hp-slider {
@@ -644,7 +644,7 @@ h1 {
   box-shadow: inset 0 1px 3px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.06);
 }
 
-/* Attacker HP bar — blue/violet like player bar in-game */
+/* Attacker HP bar - blue/violet like player bar in-game */
 .attacker-stats .hp-slider::-webkit-slider-runnable-track {
   height: 10px;
   border-radius: 2px;
@@ -661,7 +661,7 @@ h1 {
   box-shadow: inset 0 -1px 0 rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 
-/* Defender HP bar — orange for playable Pokémon */
+/* Defender HP bar - orange for playable Pokémon */
 .defender-stats .hp-slider::-webkit-slider-runnable-track {
   height: 10px;
   border-radius: 2px;
@@ -676,7 +676,7 @@ h1 {
   box-shadow: inset 0 -1px 0 rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 
-/* Mob HP bar — red, when defender is a mob */
+/* Mob HP bar - red, when defender is a mob */
 .defender-stats.mob-defender .hp-slider::-webkit-slider-runnable-track,
 .hp-slider.mob-hp::-webkit-slider-runnable-track {
   background:
@@ -689,7 +689,7 @@ h1 {
     ) !important;
 }
 
-/* ── HP thumbs — white diamond/pill like in-game cursor ── */
+/* ── HP thumbs - white diamond/pill like in-game cursor ── */
 .attacker-stats .hp-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 6px;
@@ -714,7 +714,7 @@ h1 {
   margin-top: -4px;
 }
 
-/* ── Firefox — full support via -moz-range-track and -moz-range-thumb ── */
+/* ── Firefox - full support via -moz-range-track and -moz-range-thumb ── */
 .slider-block input[type="range"]::-moz-range-track {
   height: 10px;
   border-radius: 2px;
@@ -819,7 +819,7 @@ h1 {
   margin-bottom: 4px;
 }
 
-/* Level badge — styled like the in-game level circle */
+/* Level badge - styled like the in-game level circle */
 .hp-level-badge {
   display: inline-flex;
   align-items: center;
@@ -843,7 +843,7 @@ h1 {
   background: linear-gradient(135deg, var(--orange) 0%, #c96800 100%);
 }
 
-/* Mob level badge — red */
+/* Mob level badge - red */
 .mob-defender .defender-level-badge {
   background: linear-gradient(135deg, #ff4444 0%, #aa1111 100%);
 }
@@ -1754,7 +1754,7 @@ h1 {
   white-space: nowrap;
 }
 
-/* ── Heal/Shield values in damage lines — ally columns ── */
+/* ── Heal/Shield values in damage lines - ally columns ── */
 .dmg-ally-col {
   display: flex;
   flex-direction: row;
@@ -1821,7 +1821,7 @@ h1 {
   font-variant-numeric: tabular-nums;
 }
 
-/* Slider timer — sens inversé visuellement (10:00 à gauche, 0:00 à droite) */
+/* Slider timer - sens inversé visuellement (10:00 à gauche, 0:00 à droite) */
 .timer-slider {
   width: 100%;
   accent-color: var(--yellow);
@@ -1847,7 +1847,7 @@ h1 {
 .tick-ctrl:hover { background: #666 !important; }
 .tick-ctrl:active { background: #888 !important; transform: scale(0.9); }
 /* ═══════════════════════════════════════════════════════════════
-   HOW TO USE — Button
+   HOW TO USE - Button
    ═══════════════════════════════════════════════════════════════ */
 .how-to-use-btn {
   position: fixed;
@@ -1892,7 +1892,7 @@ h1 {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   HOW TO USE — Overlay & Modal
+   HOW TO USE - Overlay & Modal
    ═══════════════════════════════════════════════════════════════ */
 .htu-overlay {
   position: fixed;
