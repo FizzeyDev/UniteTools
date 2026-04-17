@@ -743,13 +743,13 @@
         "can_crit": "true",
         "image": "assets/moves/azumarill/whirlpool.png",
         "damages": [
-          {"name": "Damage per Hit", "multiplier": 34, "levelCoef": 2, "constant": 60, "dealDamage": true, "is_tick": true, "tick_count": 20}
+          {"name": "Damage per Hit", "multiplier": 68, "levelCoef": 4, "constant": 120, "dealDamage": true, "is_tick": true, "tick_count": 10}
         ],
         "heals": [
-          { "name": "Heal - Per Hit (Wild)", "scaling": "atk", "multiplier": 6, "levelCoef": 0, "constant": 10, "is_tick": true, "tick_count": 20 },
-          { "name": "Heal - Per Hit (Wild) +", "scaling": "atk", "multiplier": 8, "levelCoef": 0, "constant": 15, "is_tick": true, "tick_count": 20, "upgraded": true },
-          { "name": "Heal - Per Hit (PLayer)", "scaling": "atk", "multiplier": 18, "levelCoef": 0, "constant": 30, "is_tick": true, "tick_count": 20 },
-          { "name": "Heal - Per Hit (PLayer) +", "scaling": "atk", "multiplier": 24, "levelCoef": 0, "constant": 45, "is_tick": true, "tick_count": 20, "upgraded": true }
+          { "name": "Heal - Per Hit (Wild)", "scaling": "atk", "multiplier": 7, "levelCoef": 0, "constant": 11, "is_tick": true, "tick_count": 10 },
+          { "name": "Heal - Per Hit (Wild) +", "scaling": "atk", "multiplier": 9, "levelCoef": 0, "constant": 17, "is_tick": true, "tick_count": 10, "upgraded": true },
+          { "name": "Heal - Per Hit (Player)", "scaling": "atk", "multiplier": 21, "levelCoef": 0, "constant": 33, "is_tick": true, "tick_count": 10 },
+          { "name": "Heal - Per Hit (Player) +", "scaling": "atk", "multiplier": 27, "levelCoef": 0, "constant": 51, "is_tick": true, "tick_count": 10, "upgraded": true }
         ]
       },
       {
@@ -777,7 +777,7 @@
         "can_crit": "true",
         "image": "assets/moves/azumarill/play_rough.png",
         "damages": [
-          {"name": "Damage per Hit (3 hits)", "multiplier": 39, "levelCoef": 4, "constant": 60, "dealDamage": true, "is_tick": true, "tick_count": 3 }
+          {"name": "Damage per Hit (3 hits)", "multiplier": 42, "levelCoef": 4, "constant": 66, "dealDamage": true, "is_tick": true, "tick_count": 3 }
         ]
       },
       {
@@ -874,9 +874,9 @@
         "can_crit": "false",
         "image": "assets/moves/blastoise/hydro_pump.png",
         "damages": [
-          {"name": "Damage (3 hits)", "multiplier": 43, "levelCoef": 9, "constant": 306, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Damage (3 hits)", "multiplier": 40, "levelCoef": 9, "constant": 332, "dealDamage": true, "is_tick": true, "tick_count": 3},
           {"name": "During Rapid Spin", "multiplier": 78, "levelCoef": 16, "constant": 560, "dealDamage": true},
-          {"name": "Damage + (3 hits)", "multiplier": 54, "levelCoef": 10, "constant": 362, "dealDamage": true, "is_tick": true, "tick_count": 3, "upgraded": true},
+          {"name": "Damage + (3 hits)", "multiplier": 50, "levelCoef": 9, "constant": 332, "dealDamage": true, "is_tick": true, "tick_count": 3, "upgraded": true},
           {"name": "During Rapid Spin +", "multiplier": 100, "levelCoef": 17, "constant": 665, "dealDamage": true, "upgraded": true}
         ]
       },
@@ -1480,7 +1480,7 @@
         "can_crit": "false",
         "image": "assets/moves/ceruledge/bitter_blade.png",
         "damages": [
-          {"name": "Damage", "multiplier": 266, "levelCoef": 36, "constant": 363, "dealDamage": true},
+          {"name": "Damage", "multiplier": 253, "levelCoef": 34, "constant": 344, "dealDamage": true},
           {"name": "Healing", "multiplier": 0, "levelCoef": 0, "constant": 0, "heal": true, "notes": "50% of damage dealt (70% upgraded); excess becomes shield; half vs wild"}
         ]
       },
@@ -2239,7 +2239,7 @@
         "image": "assets/moves/clefable/heal_pulse.png",
         "damages": [],
         "heals": [
-          { "name": "Heal", "scaling": "sp_atk", "multiplier": 90, "levelCoef": 0, "constant": 300 }
+          { "name": "Heal", "scaling": "sp_atk", "multiplier": 103, "levelCoef": 0, "constant": 345 }
         ]
       },
       {
@@ -2326,7 +2326,7 @@
         "heals": [
           {
             "name": "Heal",
-            "missing_hp_percent": 25,
+            "missing_hp_percent": 30,
             "missing_hp_cap": null,
             "scaling": "hp",
             "multiplier": 0,
@@ -4435,9 +4435,9 @@
         "can_crit": "false",
         "image": "assets/moves/espeon/psybeam.png",
         "damages": [
-          {"name": "Initial Hit", "multiplier": 91, "levelCoef": 13, "constant": 540, "dealDamage": true},
-          {"name": "Max HP Bonus", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+6% of first target's max HP (cap 1000 wild / 2000 player)"},
-          {"name": "Bonus vs Unable to Act", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+5% max HP if initial target unable to act (enhanced)"}
+          {"name": "Initial Hit", "multiplier": 100, "levelCoef": 14, "constant": 591, "dealDamage": true},
+          {"name": "Max HP Bonus", "max_hp_percent": 6, "wild_cap": 1000, "dealDamage": true, "notes": "+6% of first target's max HP (cap 1000 wild / 2000 player)"},
+          {"name": "Bonus vs Unable to Act", "max_hp_percent": 5, "dealDamage": true, "notes": "+5% max HP if initial target unable to act (enhanced)"}
         ]
       },
       {
@@ -4449,7 +4449,7 @@
         "image": "assets/moves/espeon/future_sight.png",
         "damages": [
           {"name": "Base Damage", "multiplier": 57.6, "levelCoef": 9, "constant": 338, "dealDamage": true},
-          {"name": "Missing HP Bonus (cap 1800 on wild)", "missing_hp_percent": 10, "dealDamage": true, "notes": "+10% of target's missing HP (cap 1800 wild)"},
+          {"name": "Missing HP Bonus (cap 1800 on wild)", "missing_hp_percent": 12, "wild_cap": 1800, "dealDamage": true, "notes": "+10% of target's missing HP (cap 1800 wild)"},
           {"name": "Bonus Damage to Target", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+15% damage from Espeon to locked target (enhanced)"}
         ]
       },
@@ -4461,7 +4461,7 @@
         "can_crit": "false",
         "image": "assets/moves/espeon/psychic_solare.png",
         "damages": [
-          {"name": "Damage", "multiplier": 87, "levelCoef": 11, "constant": 520, "dealDamage": true}
+          {"name": "Damage", "multiplier": 91, "levelCoef": 12, "constant": 546, "dealDamage": true}
         ],
         "shields": [
           {
@@ -5570,12 +5570,12 @@
         "can_crit": "false",
         "image": "assets/moves/greninja/surf.png",
         "damages": [
-          {"name": "Damage", "multiplier": 200, "levelCoef": 8, "constant": 370, "wild_cap": 1200, "dealDamage": true},
-          {"name": "Bonus (<50% HP)", "multiplier": 100, "levelCoef": 4, "constant": 185, "wild_cap": 600, "dealDamage": true}
+          {"name": "Damage", "multiplier": 180, "levelCoef": 8, "constant": 330, "wild_cap": 1200, "dealDamage": true},
+          {"name": "Bonus (<50% HP)", "multiplier": 90, "levelCoef": 4, "constant": 165, "wild_cap": 600, "dealDamage": true}
         ],
         "heals": [
-          {"name": "Healing per Enemy hit", "scaling": "atk", "multiplier": 45.2, "levelCoef": 5, "constant": 82, "target": "self"},
-          {"name": "Healing per Enemy hit +", "scaling": "atk", "multiplier": 54.24, "levelCoef": 6, "constant": 150, "target": "self", "upgraded": true}
+          {"name": "Healing per Enemy hit", "scaling": "atk", "multiplier": 41, "levelCoef": 5, "constant": 75, "target": "self"},
+          {"name": "Healing per Enemy hit +", "scaling": "atk", "multiplier": 49, "levelCoef": 6, "constant": 138, "target": "self", "upgraded": true}
         ]
       },
       {
@@ -8738,6 +8738,9 @@
       },
       {
         "name": "Powder Snow",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/ninetales/powder_snow.png",
         "damages": [
@@ -8746,51 +8749,91 @@
       },
       {
         "name": "Icy Wind",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/ninetales/icy_wind.png",
         "damages": [
-          {"name": "Damage (x2)", "multiplier": 61, "levelCoef": 7, "constant": 240, "dealDamage": true}
+          {"name": "Damage (x2)", "multiplier": 61, "levelCoef": 7, "constant": 240, "dealDamage": true, "is_tick": true, "tick_count": 2}
         ]
       },
       {
         "name": "Avalanche",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/ninetales/avalanche.png",
         "damages": [
-          {"name": "Wind or Wall", "multiplier": 36, "levelCoef": 8, "constant": 190, "dealDamage": true}
+          {"name": "Wind or Wall", "multiplier": 40, "levelCoef": 9, "constant": 208, "dealDamage": true}
         ]
       },
       {
         "name": "Dazzling Gleam",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/ninetales/dazzling_gleam.png",
         "damages": [
-          {"name": "Damage", "multiplier": 60, "levelCoef": 10, "constant": 320, "dealDamage": true}
+          {"name": "Damage", "multiplier": 66, "levelCoef": 11, "constant": 352, "dealDamage": true},
+          {"name": "Damage", "multiplier": 67, "levelCoef": 11, "constant": 418, "dealDamage": true, "upgraded": true}
         ]
       },
       {
         "name": "Blizzard",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/ninetales/blizzard.png",
         "damages": [
           {"name": "Initial Blast", "multiplier": 39, "levelCoef": 4, "constant": 250, "dealDamage": true},
+          {"name": "Initial Blast +", "multiplier": 41, "levelCoef": 6, "constant": 270, "dealDamage": true, "upgraded": true},
           {"name": "Second Hit", "multiplier": 78, "levelCoef": 8, "constant": 500, "dealDamage": true},
-          {"name": "Area (8 Ticks)", "multiplier": 17, "levelCoef": 2, "constant": 110, "dealDamage": true}
+          {"name": "Second Hit +", "multiplier": 82, "levelCoef": 12, "constant": 540, "dealDamage": true, "upgraded": true},
+          {"name": "Area (x8)", "multiplier": 17, "levelCoef": 2, "constant": 110, "dealDamage": true, "is_tick": true, "tick_count": 8},
+          {"name": "Area + (x8)", "multiplier": 18, "levelCoef": 3, "constant": 115, "dealDamage": true, "is_tick": true, "tick_count": 8, "upgraded": true}
         ]
       },
       {
         "name": "Aurora Veil",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/ninetales/aurora_veil.png",
-        "damages": []
+        "damages": [],
+        "heals": [
+          {
+            "name": "Heal - per Boosted",
+            "scaling": "sp_atk",
+            "multiplier": 10,
+            "levelCoef": 2,
+            "constant": 40
+          }
+        ]
       },
       {
         "name": "Snow Globe (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/ninetales/snow_globe.png",
         "damages": [
-          {"name": "Unfrozen", "multiplier": 156.8, "levelCoef": 30, "constant": 1064, "dealDamage": true},
-          {"name": "Frozen", "multiplier": 224, "levelCoef": 32, "constant": 1520, "dealDamage": true}
+          {"name": "Unfrozen", "multiplier": 159, "levelCoef": 32, "constant": 1150, "dealDamage": true},
+          {"name": "Frozen", "multiplier": 242, "levelCoef": 35, "constant": 1640, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0
+          }
         ]
       }
     ]
@@ -11477,60 +11520,106 @@
       },
       {
         "name": "Agility",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/zeraora/agility.png",
         "damages": []
       },
       {
         "name": "Slash",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/zeraora/slash.png",
         "damages": [
-          {"name": "Damage - per Hit (3 Hits)", "multiplier": 70, "levelCoef": 5, "constant": 190, "dealDamage": true}
+          {"name": "Damage - per Hit (3 Hits)", "multiplier": 70, "levelCoef": 5, "constant": 190, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Volt Switch",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/zeraora/volt_switch.png",
         "damages": [
-          {"name": "Damage - Initial Dash", "multiplier": 72, "levelCoef": 4, "constant": 228, "dealDamage": true},
-          {"name": "Damage - Return Dash", "multiplier": 108, "levelCoef": 6, "constant": 342, "dealDamage": true}
+          {"name": "Damage - Initial Dash", "multiplier": 81, "levelCoef": 4, "constant": 255, "dealDamage": true},
+          {"name": "Damage - Initial Dash +", "multiplier": 100, "levelCoef": 5, "constant": 297, "dealDamage": true, "upgraded": true},
+          {"name": "Damage - Return Dash", "multiplier": 120, "levelCoef": 7, "constant": 383, "dealDamage": true},
+          {"name": "Damage - Return Dash +", "multiplier": 147, "levelCoef": 9, "constant": 444, "dealDamage": true, "upgraded": true}
         ]
       },
       {
         "name": "Spark",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "true",
         "image": "assets/moves/zeraora/spark.png",
         "damages": [
-          {"name": "Damage - Jump", "multiplier": 45, "levelCoef": 2, "constant": 90, "dealDamage": true}
+          {"name": "Damage - Jump", "multiplier": 45, "levelCoef": 2, "constant": 90, "dealDamage": true},
+          {"name": "Damage - Additional", "multiplier": 110, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "If an auto attack is used before the leap ends"}
+        ],
+        "heals": [
+          {"name": "Heal", "scaling": "hp", "multiplier": 15, "levelCoef": 0, "constant": 0, "upgraded": true, "notes": "If leaping to an opposing Pokémon with an auto attack before reaching them with the dash."}
         ]
       },
       {
         "name": "Discharge",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/zeraora/discharge.png",
         "damages": [
-          {"name": "Damage - per Tick (6 Ticks)", "multiplier": 41, "levelCoef": 2, "constant": 70, "dealDamage": true},
+          {"name": "Damage - per Tick (6 Ticks)", "multiplier": 41, "levelCoef": 2, "constant": 70, "dealDamage": true, "is_tick": true, "tick_count": 6},
           {"name": "Damage - Aura (Final Tick)", "multiplier": 82, "levelCoef": 4, "constant": 140, "dealDamage": true},
           {"name": "Damage - Pull", "multiplier": 41, "levelCoef": 2, "constant": 70, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "atk",
+            "multiplier": 105,
+            "levelCoef": 0,
+            "constant": 200
+          }
         ]
       },
       {
         "name": "Wild Charge",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/zeraora/wild_charge.png",
         "damages": [
-          {"name": "Damage - Initial Hit", "multiplier": 164, "levelCoef": 10, "constant": 530, "dealDamage": true}
+          {"name": "Damage - Initial Hit", "multiplier": 178, "levelCoef": 10, "constant": 572, "dealDamage": true},
+          {"name":"Damage - Subsequent Hit", "multiplier": 89, "levelCoef": 5, "constant": 286, "dealDamage": true, "is_tick": true, "tick_count": 6}
         ]
       },
       {
         "name": "Plasma Gale (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/zeraora/plasma_gale.png",
         "damages": [
           {"name": "Damage - Trail", "multiplier": 99, "levelCoef": 6, "constant": 270, "dealDamage": true},
           {"name": "Damage - Area", "multiplier": 198, "levelCoef": 11, "constant": 540, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0
+          }
         ]
       }
     ]
@@ -11569,6 +11658,9 @@
       },
       {
         "name": "Slash",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/zoroark/slash.png",
         "damages": [
@@ -11577,6 +11669,9 @@
       },
       {
         "name": "Fury Swipes",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/zoroark/fury_swipes.png",
         "damages": [
@@ -11585,44 +11680,78 @@
       },
       {
         "name": "Shadow Claw",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/zoroark/shadow_claw.png",
         "damages": [
-          {"name": "Damage", "multiplier": 91, "levelCoef": 11, "constant": 270, "dealDamage": true}
+          {"name": "Damage", "multiplier": 100, "levelCoef": 12, "constant": 297, "dealDamage": true}
         ]
       },
       {
         "name": "Cut",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/zoroark/cut.png",
         "damages": [
           {"name": "Damage", "multiplier": 85, "levelCoef": 11, "constant": 250, "dealDamage": true}
+        ],
+        "heals": [
+          {"name": "Healing", "scaling": "atk", "multiplier": 53, "levelCoef": 7, "constant": 158},
+          {"name": "Healing +", "scaling": "atk", "multiplier": 62, "levelCoef": 8, "constant": 185, "upgraded": true}
         ]
       },
       {
         "name": "Night Slash",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/zoroark/night_slash.png",
         "damages": [
-          {"name": "Damage - Dash", "multiplier": 65, "levelCoef": 10, "constant": 225, "dealDamage": true},
-          {"name": "Damage - Final Slash", "multiplier": 155, "levelCoef": 15, "constant": 500, "dealDamage": true}
+          {"name": "Damage - Dash", "multiplier": 65, "levelCoef": 10, "constant": 225, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Boosted after dash", "multiplier": 130, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Damage - Final Slash", "multiplier": 186, "levelCoef": 18, "constant": 600, "dealDamage": true},
+          {"name": "Damage - Final Slash (Additional)", "missing_hp_percent": 10, "wild_cap": 1000, "dealDamage": true}
+        ],
+        "heals": [
+          {"name": "Healing", "scaling": "atk", "multiplier": 72, "levelCoef": 11, "constant": 228}
         ]
       },
       {
         "name": "Feint Attack",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/zoroark/feint_attack.png",
         "damages": [
-          {"name": "Damage - Dash", "multiplier": 100, "levelCoef": 10, "constant": 300, "dealDamage": true},
-          {"name": "Damage - Leap", "multiplier": 250, "levelCoef": 25, "constant": 750, "dealDamage": true}
+          {"name": "Damage - Dash", "multiplier": 100, "levelCoef": 10, "constant": 300, "dealDamage": true, "is_tick": true},
+          {"name": "Damage - Leap", "multiplier": 250, "levelCoef": 25, "constant": 750, "dealDamage": true},
+          {"name": "Damage - Leap (Additional)", "missing_hp_percent": 15, "wild_cap": 1200, "dealDamage": true}
         ]
       },
       {
         "name": "Nightfall Daze (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/zoroark/nightfall_daze.png",
         "damages": [
-          {"name": "Damage - per Shockwave", "multiplier": 158, "levelCoef": 9, "constant": 430, "dealDamage": true}
+          {"name": "Damage - per Shockwave (x3)", "multiplier": 158, "levelCoef": 9, "constant": 430, "dealDamage": true, "is_tick": true, "tick_count": 3}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0
+          }
         ]
       }
     ]
