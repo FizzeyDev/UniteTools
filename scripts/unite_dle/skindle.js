@@ -109,6 +109,12 @@
   const zoomContainer  = document.getElementById('skindle-zoom-container');
   const zoomStepsEl    = document.getElementById('skindle-zoom-steps');
 
+  // Prevent drag & long-press interactions on the image
+  imgEl.addEventListener('dragstart',   e => e.preventDefault());
+  imgEl.addEventListener('contextmenu', e => e.preventDefault());
+  zoomContainer.addEventListener('dragstart',   e => e.preventDefault());
+  zoomContainer.addEventListener('contextmenu', e => e.preventDefault());
+
   const inputPokeEl    = document.getElementById('skindle-input-poke');
   const suggPokeEl     = document.getElementById('skindle-suggestions-poke');
   const guessesPokeEl  = document.getElementById('skindle-guesses-poke');
@@ -198,8 +204,9 @@
   function applyZoom(animate = true) {
     const level = ZOOM_LEVELS[zoomStep];
     if (!animate) imgEl.style.transition = 'none';
-    imgEl.style.transform      = `scale(${level.scale})`;
-    imgEl.style.objectPosition = `${zoomOffset.x}% ${zoomOffset.y}%`;
+    imgEl.style.transformOrigin = `${zoomOffset.x}% ${zoomOffset.y}%`;
+    imgEl.style.transform       = `scale(${level.scale})`;
+    imgEl.style.objectPosition  = '50% 50%';
     if (!animate) {
       void imgEl.offsetHeight;
       imgEl.style.transition = '';
@@ -229,10 +236,6 @@
     }
   }
 
-  /* ═══════════════════════════════════════════
-     INIT
-  ═══════════════════════════════════════════ */
-
   function init() {
     if (countdown) { clearInterval(countdown); countdown = null; }
 
@@ -252,6 +255,7 @@
     };
 
     imgEl.src = secret.img;
+    imgEl.draggable = false;
     imgEl.onerror = function () {
       this.src = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png';
       zoomContainer.style.background = 'var(--surface-3)';
@@ -287,20 +291,7 @@
       restoreState(saved);
       return;
     }
-
-    if (typeof window.detectPokemonZoomOffset === 'function') {
-      window.detectPokemonZoomOffset(secret.img, seed, dateStr, secret.id)
-        .then(offset => {
-          zoomOffset = offset;
-          applyZoom(false);
-        })
-        .catch(() => {});
-    }
   }
-
-  /* ═══════════════════════════════════════════
-     RESTORE STATE
-  ═══════════════════════════════════════════ */
 
   function restoreState(saved) {
     zoomStep   = saved.zoomStep;
@@ -342,10 +333,6 @@
       }
     }
   }
-
-  /* ═══════════════════════════════════════════
-     PHASE 1 - GUESS POKEMON
-  ═══════════════════════════════════════════ */
 
   function makePokeGuess(poke) {
     if (pokeGameOver) return;
@@ -409,10 +396,6 @@
     guessesPokeEl.insertBefore(row, guessesPokeEl.firstChild);
   }
 
-  /* ═══════════════════════════════════════════
-     PHASE 2 - OPEN SKIN PHASE
-  ═══════════════════════════════════════════ */
-
   function openSkinPhase(silent) {
     phaseSkin.style.display   = 'block';
     skinCounter.style.display = 'inline-flex';
@@ -430,10 +413,6 @@
       phaseSkin.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
-
-  /* ═══════════════════════════════════════════
-     PHASE 2 - GUESS SKIN
-  ═══════════════════════════════════════════ */
 
   function makeSkinGuess(name) {
     name = name.trim();
@@ -488,10 +467,6 @@
     if (!silent) row.style.animation = 'udle-fadein 0.3s ease';
     guessessSkinEl.insertBefore(row, guessessSkinEl.firstChild);
   }
-
-  /* ═══════════════════════════════════════════
-     END GAME
-  ═══════════════════════════════════════════ */
 
   function scoreEmoji(totalTries) {
     if (totalTries <= 2) return '🥇';
@@ -555,10 +530,6 @@
     tick();
     countdown = setInterval(tick, 1000);
   }
-
-  /* ═══════════════════════════════════════════
-     SUGGESTIONS
-  ═══════════════════════════════════════════ */
 
   function openPokeSugg(q) {
     q = q.trim().toLowerCase();
@@ -637,10 +608,6 @@
     el.innerHTML = '';
   }
 
-  /* ═══════════════════════════════════════════
-     MISC UTILS
-  ═══════════════════════════════════════════ */
-
   function shakeInput(inputEl) {
     inputEl.classList.add('skindle-shake');
     setTimeout(() => inputEl.classList.remove('skindle-shake'), 400);
@@ -648,10 +615,6 @@
     setTimeout(() => { inputEl.style.borderColor = ''; }, 600);
     inputEl.value = '';
   }
-
-  /* ═══════════════════════════════════════════
-     EVENT LISTENERS
-  ═══════════════════════════════════════════ */
 
   inputPokeEl.addEventListener('input',   () => openPokeSugg(inputPokeEl.value));
   inputPokeEl.addEventListener('focus',   () => openPokeSugg(inputPokeEl.value));
@@ -691,10 +654,6 @@
     applyStaticTranslations();
     renderZoomSteps();
   });
-
-  /* ═══════════════════════════════════════════
-     BOOTSTRAP
-  ═══════════════════════════════════════════ */
 
   function waitAndInit() {
     if (window.UNITE_SKINS && window.UNITE_POKEMON) {
