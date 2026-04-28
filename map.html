@@ -36,10 +36,20 @@
 
     <!-- Draw tools -->
     <div class="tool-group">
-      <button class="tool-btn" data-tool="cursor" title="Select / Move (cursor)" style="font-size:14px;">↖</button>
+      <button class="tool-btn" data-tool="cursor" title="Select / Move" style="font-size:14px;">↖</button>
       <button class="tool-btn active" data-tool="draw"   title="Freehand (D)">✏</button>
       <button class="tool-btn"        data-tool="arrow"  title="Arrow">➜</button>
+      <button class="tool-btn"        data-tool="shape"  title="Shapes">⬡</button>
       <button class="tool-btn"        data-tool="eraser" title="Eraser (E)">⌫</button>
+    </div>
+
+    <!-- Shape type selector (shown only when shape tool active) -->
+    <div class="shape-options" id="shape-options" style="display:none;">
+      <button class="shape-type-btn active" data-shape="circle"   title="Circle">⬤</button>
+      <button class="shape-type-btn"        data-shape="square"   title="Rectangle">▬</button>
+      <button class="shape-type-btn"        data-shape="triangle" title="Triangle">▲</button>
+      <button class="shape-type-btn"        data-shape="diamond"  title="Diamond">◆</button>
+      <button class="shape-type-btn"        data-shape="line"     title="Line">╱</button>
     </div>
 
     <!-- Colors -->
@@ -131,9 +141,11 @@
       <!-- Viewport: this element is panned & zoomed via CSS transform -->
       <div id="viewport">
         <div class="canvas-wrapper" id="canvas-wrapper">
+          <!-- draggable="false" prevents browser native image drag -->
           <img id="map-img"
                src="assets/maps/map_groudon.webp"
                alt="Map"
+               draggable="false"
                onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMWEyYTJiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzZhODU4NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk1hcCBJbWFnZSBOb3QgRm91bmQ8L3RleHQ+PC9zdmc+'">
           <canvas id="draw-canvas"></canvas>
           <div id="sprites-layer"></div>
@@ -155,7 +167,7 @@
       <div class="right-panel-inner">
         <div class="rp-title">Selected</div>
         <div class="rp-sprite-preview" id="rp-preview">
-          <img src="" id="rp-img" alt="">
+          <img src="" id="rp-img" alt="" draggable="false">
           <span class="rp-sprite-name" id="rp-name">—</span>
         </div>
         <div>
@@ -180,13 +192,13 @@
 
   <!-- Drag ghost -->
   <div class="drag-ghost" id="drag-ghost">
-    <img id="drag-ghost-img" src="" alt="">
+    <img id="drag-ghost-img" src="" alt="" draggable="false">
   </div>
 
   <!-- Toast -->
   <div class="toast" id="toast"></div>
 
-  <!-- Scripts: order matters — app.js first (defines App), then modules, then navbar -->
+  <!-- Scripts: order matters — data.js first, then app.js (defines App), then modules -->
   <script src="./scripts/map/data.js"></script>
   <script src="./scripts/map/app.js"></script>
   <script src="./scripts/map/viewport.js"></script>
@@ -196,7 +208,15 @@
   <script src="./scripts/navbar.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
-  lucide.createIcons();
+    lucide.createIcons();
+
+    document.querySelectorAll('.shape-type-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.shape-type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        App.setCurrentShape && App.setCurrentShape(btn.dataset.shape);
+      });
+    });
   </script>
 </body>
 </html>

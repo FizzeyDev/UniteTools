@@ -1,38 +1,30 @@
 /* ============================================================
    app.js — Bootstrap, shared state, toolbar wiring, keyboard
-   Must be loaded FIRST (defines the App namespace).
    ============================================================ */
 
-// ── Global shared state ──────────────────────────────────────
 const App = {
-  // DOM refs (filled below)
   mapImg: null,
 
-  // UI state
-  currentCat:  'pokemon',
-  currentRole: 'all-roles',
+  currentCat:      'pokemon',
+  currentRole:     'all-roles',
   currentItemType: 'all',
-  searchQ:     '',
-  currentTool: 'draw',
-  drawColor:   '#4fc3f7',
-  strokeSize:  4,
-  currentTeam: 'purple',
-  showNames:   false,
+  searchQ:         '',
+  currentTool:     'draw',
+  drawColor:       '#4fc3f7',
+  strokeSize:      4,
+  currentTeam:     'purple',
+  showNames:       false,
 
-  // Drawing state
   drawPaths:   [],
   currentPath: null,
 
-  // Sprite state
   placedSprites:  [],
   selectedSprite: null,
 
-  // Viewport (set by viewport.js)
   zoom: 1,
-  clientToCanvas: null,  // function(clientX, clientY) → {x, y}
+  clientToCanvas: null,
   getZoom: null,
 
-  // Methods filled by other modules
   renderPanel:            null,
   redrawAll:              null,
   resizeCanvas:           null,
@@ -42,11 +34,11 @@ const App = {
   selectSprite:           null,
   removeSelectedSprite:   null,
   clearSprites:           null,
+  setCurrentShape:        null,
 };
 
 window.App = App;
 
-/* ── Wait for DOM ─────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   App.mapImg = document.getElementById('map-img');
 
@@ -57,12 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.classList.add('active');
       App.mapImg.src = MAPS[btn.dataset.map];
       App.mapImg.onload = () => {
-        setTimeout(() => {
-          App.resizeCanvas();
-          App.centreMap();
-        }, 60);
+        setTimeout(() => { App.resizeCanvas(); App.centreMap(); }, 60);
       };
-      // Clear everything when switching maps
       App.drawPaths = [];
       App.redrawAll && App.redrawAll();
       App.clearSprites && App.clearSprites();
@@ -76,12 +64,36 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.classList.add('active');
       App.currentTool = btn.dataset.tool;
 
-      const cursors = { cursor:'default', draw:'crosshair', arrow:'crosshair', eraser:'cell' };
+      // Canvas cursor
+      const cursors = { cursor: 'default', draw: 'crosshair', arrow: 'crosshair', eraser: 'cell', shape: 'crosshair' };
       document.getElementById('draw-canvas').style.cursor = cursors[App.currentTool] || 'crosshair';
 
-      // In cursor mode sprites can be moved; otherwise they still receive clicks for select/delete
+      // Sprites layer: ALWAYS pointer-events auto so sprites are always clickable.
+      // In draw/arrow/shape modes the canvas sits on top and captures events,
+      // BUT we set z-index so canvas is above sprites only when drawing.
       const spritesLayer = document.getElementById('sprites-layer');
-      spritesLayer.style.pointerEvents = App.currentTool === 'cursor' ? 'auto' : 'none';
+      const drawCanvas   = document.getElementById('draw-canvas');
+
+      if (App.currentTool === 'cursor') {
+        // cursor mode: sprites on top, canvas below
+        spritesLayer.style.zIndex    = '20';
+        spritesLayer.style.pointerEvents = 'auto';
+        drawCanvas.style.zIndex      = '10';
+        drawCanvas.style.pointerEvents = 'none';
+      } else {
+        // draw/arrow/shape/eraser: canvas on top captures drawing events,
+        // sprites still respond (eraser needs to click sprites too via bubbling)
+        spritesLayer.style.zIndex    = '10';
+        spritesLayer.style.pointerEvents = 'none';
+        drawCanvas.style.zIndex      = '20';
+        drawCanvas.style.pointerEvents = 'auto';
+      }
+
+      // Show/hide shape options
+      const shapeOptions = document.getElementById('shape-options');
+      if (shapeOptions) {
+        shapeOptions.style.display = App.currentTool === 'shape' ? 'flex' : 'none';
+      }
     });
   });
 
@@ -109,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast('Canvas cleared');
   });
 
-  /* ── Team toggle ── */
+  /* ── Team ── */
   document.querySelectorAll('.team-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.team-btn').forEach(b => b.classList.remove('active'));
@@ -121,17 +133,12 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ── Keyboard shortcuts ── */
   document.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT') return;
-    if (e.code === 'Space') return; // handled by viewport.js
-
+    if (e.code === 'Space') return;
     switch (e.key) {
-      case 'd': case 'D':
-        document.querySelector('[data-tool="draw"]').click(); break;
-      case 'e': case 'E':
-        document.querySelector('[data-tool="eraser"]').click(); break;
-      case 'Escape':
-        App.selectSprite(null); break;
-      case 'Delete': case 'Backspace':
-        App.removeSelectedSprite(); break;
+      case 'd': case 'D': document.querySelector('[data-tool="draw"]').click(); break;
+      case 'e': case 'E': document.querySelector('[data-tool="eraser"]').click(); break;
+      case 'Escape':      App.selectSprite && App.selectSprite(null); break;
+      case 'Delete': case 'Backspace': App.removeSelectedSprite && App.removeSelectedSprite(); break;
       case 'z': case 'Z':
         if (e.ctrlKey || e.metaKey) {
           e.preventDefault();
@@ -143,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ── Toast ── */
   let toastTimeout;
-  window.showToast = function(msg) {
+  window.showToast = function (msg) {
     clearTimeout(toastTimeout);
     const toast = document.getElementById('toast');
     toast.textContent = msg;
@@ -151,12 +158,9 @@ document.addEventListener('DOMContentLoaded', () => {
     toastTimeout = setTimeout(() => toast.classList.remove('show'), 2000);
   };
 
-  /* ── Init: render panel & centre map ── */
-  setTimeout(() => {
-    App.renderPanel && App.renderPanel();
-  }, 0);
+  /* ── Init ── */
+  setTimeout(() => { App.renderPanel && App.renderPanel(); }, 0);
 
-  // Centre map once image is loaded
   App.mapImg.addEventListener('load', () => {
     setTimeout(() => {
       App.resizeCanvas && App.resizeCanvas();

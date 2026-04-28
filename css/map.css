@@ -114,7 +114,32 @@ body.sidebar-collapsed { margin-left: 0; }
 .tool-btn:hover { background: var(--surface-3); color: var(--text); }
 .tool-btn.active { background: var(--blue-dim); color: var(--blue); }
 .tool-btn[data-tool="eraser"].active { background: rgba(239,83,80,0.15); color: var(--red); }
-.tool-btn[data-tool="draw"].active { background: rgba(159,83,236,0.15); color: var(--violet); }
+.tool-btn[data-tool="draw"].active   { background: rgba(159,83,236,0.15); color: var(--violet); }
+.tool-btn[data-tool="shape"].active  { background: rgba(79,195,247,0.15); color: var(--blue); }
+
+/* Shape options bar */
+.shape-options {
+  display: flex;
+  gap: 3px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  flex-shrink: 0;
+}
+.shape-type-btn {
+  width: 28px; height: 28px;
+  border-radius: 5px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+.shape-type-btn:hover { background: var(--surface-3); color: var(--text); }
+.shape-type-btn.active { background: var(--blue-dim); color: var(--blue); }
 
 /* Color picker row */
 .color-row { display: flex; gap: 5px; align-items: center; }
@@ -355,6 +380,9 @@ body.sidebar-collapsed { margin-left: 0; }
   object-fit: contain;
   pointer-events: none;
   display: block;
+  /* Prevent browser native image drag */
+  user-select: none;
+  -webkit-user-drag: none;
 }
 .sprite-item .sprite-label {
   position: absolute;
@@ -380,9 +408,8 @@ body.sidebar-collapsed { margin-left: 0; }
   position: relative;
   overflow: hidden;
   background: var(--bg);
-  /* pan cursor when pan tool active */
 }
-.canvas-area.panning { cursor: grabbing !important; }
+.canvas-area.panning  { cursor: grabbing !important; }
 .canvas-area.pan-ready { cursor: grab !important; }
 
 /* The viewport container that pans & zooms */
@@ -397,15 +424,18 @@ body.sidebar-collapsed { margin-left: 0; }
 /* Canvas wrapper stays relative inside viewport */
 .canvas-wrapper {
   position: absolute;
-  /* positioned absolutely within viewport, centered on load */
 }
 
 #map-img {
   display: block;
   border-radius: var(--radius);
   box-shadow: 0 8px 60px rgba(0,0,0,0.8);
+  /* Prevent ALL forms of native image dragging */
   user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
   pointer-events: none;
+  draggable: false;
 }
 
 #draw-canvas {
@@ -413,6 +443,9 @@ body.sidebar-collapsed { margin-left: 0; }
   top: 0; left: 0;
   border-radius: var(--radius);
   z-index: 10;
+  /* Prevent context menu / native drag on canvas */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 #sprites-layer {
@@ -421,7 +454,7 @@ body.sidebar-collapsed { margin-left: 0; }
   width: 100%;
   height: 100%;
   z-index: 20;
-  pointer-events: none;
+  pointer-events: none; /* default; toggled by tool selection in app.js */
 }
 
 /* Placed sprite */
@@ -432,6 +465,7 @@ body.sidebar-collapsed { margin-left: 0; }
   pointer-events: auto;
   transition: filter 0.15s;
   user-select: none;
+  -webkit-user-select: none;
 }
 .placed-sprite:hover { filter: drop-shadow(0 0 6px rgba(79,195,247,0.8)); }
 .placed-sprite.selected { filter: drop-shadow(0 0 8px rgba(255,215,64,0.9)); }
@@ -440,6 +474,8 @@ body.sidebar-collapsed { margin-left: 0; }
   object-fit: contain;
   display: block;
   pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 .placed-sprite .sprite-team-ring {
   position: absolute;
@@ -449,9 +485,9 @@ body.sidebar-collapsed { margin-left: 0; }
   pointer-events: none;
 }
 .placed-sprite.team-purple .sprite-team-ring { border-color: var(--violet); }
-.placed-sprite.team-orange .sprite-team-ring { border-color: var(--orange); }
+.placed-sprite.team-orange  .sprite-team-ring { border-color: var(--orange); }
 
-/* Delete button on selected */
+/* Delete button on selected sprite */
 .placed-sprite .sprite-delete {
   position: absolute;
   top: -8px; right: -8px;
@@ -598,8 +634,8 @@ body.sidebar-collapsed { margin-left: 0; }
   text-align: center;
   transition: all 0.15s;
 }
-.rp-team-btn.purple.active { background: rgba(159,83,236,0.2); border-color: var(--violet); color: var(--violet); }
-.rp-team-btn.orange.active { background: rgba(255,157,0,0.15); border-color: var(--orange); color: var(--orange); }
+.rp-team-btn.purple.active  { background: rgba(159,83,236,0.2); border-color: var(--violet); color: var(--violet); }
+.rp-team-btn.orange.active  { background: rgba(255,157,0,0.15); border-color: var(--orange); color: var(--orange); }
 .rp-team-btn.neutral.active { background: var(--surface-3); border-color: rgba(255,255,255,0.2); color: var(--text); }
 
 .rp-delete-btn {
@@ -656,7 +692,12 @@ body.sidebar-collapsed { margin-left: 0; }
   transform: translate(-50%, -50%);
   display: none;
 }
-.drag-ghost img { width: 48px; height: 48px; object-fit: contain; }
+.drag-ghost img {
+  width: 48px; height: 48px;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
 
 /* ── Toast ── */
 .toast {

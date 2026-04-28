@@ -9423,6 +9423,9 @@
       },
       {
         "name": "Confusion",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/rapidash/confusion.png",
         "damages": [
@@ -9431,6 +9434,9 @@
       },
       {
         "name": "Tackle",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/rapidash/tackle.png",
         "damages": [
@@ -9439,6 +9445,9 @@
       },
       {
         "name": "Dazzling Gleam",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/rapidash/dazzling_gleam.png",
         "damages": [
@@ -9447,15 +9456,21 @@
       },
       {
         "name": "Fairy Wind",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/rapidash/fairy_wind.png",
         "damages": [
-          {"name": "First 2 Hits (per Hit)", "multiplier": 104, "levelCoef": 13, "constant": 145, "dealDamage": true},
+          {"name": "First 2 Hits (pet Hit)", "multiplier": 104, "levelCoef": 13, "constant": 145, "dealDamage": true, "is_tick": true, "tick_count": 2},
           {"name": "Third Hit", "multiplier": 170, "levelCoef": 22, "constant": 260, "dealDamage": true}
         ]
       },
       {
         "name": "Smart Strike",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/rapidash/smart_strike.png",
         "damages": [
@@ -9464,16 +9479,31 @@
       },
       {
         "name": "Agility",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/rapidash/agility.png",
         "damages": []
       },
       {
         "name": "Triad Blitz (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/rapidash/triad_blitz.png",
         "damages": [
-          {"name": "Per Hit", "multiplier": 100, "levelCoef": 8, "constant": 200, "dealDamage": true}
+          {"name": "Per Hit (x4)", "multiplier": 100, "levelCoef": 8, "constant": 200, "dealDamage": true, "is_tick": true, "tick_count": 4}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0, "target": "self"
+          }
         ]
       }
     ]
@@ -9512,6 +9542,9 @@
       },
       {
         "name": "Thief",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 4,
         "can_crit": "false",
         "image": "assets/moves/sableye/thief.png",
         "damages": [
@@ -9520,6 +9553,9 @@
       },
       {
         "name": "Astonish",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/sableye/astonish.png",
         "damages": [
@@ -9529,14 +9565,20 @@
       },
       {
         "name": "Knock Off",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/sableye/knock_off.png",
         "damages": [
-          {"name": "Per Hit", "multiplier": 56, "levelCoef": 6, "constant": 240, "dealDamage": true}
+          {"name": "Per Hit (x3)", "multiplier": 56, "levelCoef": 6, "constant": 240, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Shadow Sneak",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 6,
         "can_crit": "false",
         "image": "assets/moves/sableye/shadow_sneak.png",
         "damages": [
@@ -9545,14 +9587,20 @@
       },
       {
         "name": "Feint Attack",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/sableye/feint_attack.png",
         "damages": [
-          {"name": "Per Tick (9 Ticks)", "multiplier": 33, "levelCoef": 2, "constant": 80, "dealDamage": true}
+          {"name": "Per Tick (x9)", "multiplier": 33, "levelCoef": 2, "constant": 80, "dealDamage": true, "is_tick": true, "tick_count": 9}
         ]
       },
       {
         "name": "Confuse Ray",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/sableye/confuse_ray.png",
         "damages": [
@@ -9561,10 +9609,22 @@
       },
       {
         "name": "Chaos Glower (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/sableye/chaos_glower.png",
         "damages": [
           {"name": "Damage", "multiplier": 184, "levelCoef": 16, "constant": 790, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0, "target": "self"
+          }
         ]
       }
     ]
@@ -9612,6 +9672,9 @@
       },
       {
         "name": "Fury Cutter",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 5,
         "can_crit": "false",
         "image": "assets/moves/scizor/fury_cutter.png",
         "damages": [
@@ -9621,6 +9684,9 @@
       },
       {
         "name": "Quick Attack",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 7,
         "can_crit": "false",
         "image": "assets/moves/scizor/quick_attack.png",
         "damages": [
@@ -9629,15 +9695,40 @@
       },
       {
         "name": "Bullet Punch",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/scizor/bullet_punch.png",
         "damages": [
           {"name": "Initial Punch", "multiplier": 114, "levelCoef": 9, "constant": 220, "dealDamage": true},
-          {"name": "Subsequent Punches", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "30% of initial punch"}
+          {"name": "Subsequent Punches", "multiplier": 34, "levelCoef": 3, "constant": 66, "dealDamage": true, "is_tick": true, "tick_count": 4, "notes": "30% of initial punch"}
+        ],
+        "heals": [
+          {
+            "name": "Heal - per Hit (x5 max)",
+            "scaling": "atk",
+            "multiplier": 23.5,
+            "levelCoef": 2,
+            "constant": 48,
+            "is_tick": true, "tick_count": 5, "target": "self"
+          }
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "atk",
+            "multiplier": 100,
+            "levelCoef": 0, "upgraded": true,
+            "constant": 300, "target": "self"
+          }
         ]
       },
       {
         "name": "Double Hit",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/scizor/double_hit.png",
         "damages": [
@@ -9646,6 +9737,9 @@
       },
       {
         "name": "Swords Dance",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/scizor/swords_dance.png",
         "damages": [
@@ -9654,11 +9748,23 @@
       },
       {
         "name": "Red Illusion Dive (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/scizor/red_illusion_dive.png",
         "damages": [
-          {"name": "Initial, Ground Punch & Copy Contact", "multiplier": 129, "levelCoef": 6, "constant": 290, "dealDamage": true},
-          {"name": "Main Target & Grab", "multiplier": 38.7, "levelCoef": 2, "constant": 87, "dealDamage": true}
+          {"name": "Initial, Ground Punch & Copy Contact", "multiplier": 129, "levelCoef": 6, "constant": 290, "dealDamage": true, "is_tick": true, "tick_count": 7},
+          {"name": "Main Target & Grab", "multiplier": 38.7, "levelCoef": 2, "constant": 87, "dealDamage": true, "is_tick": true, "tick_count": 5}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0, "target": "self"
+          }
         ]
       }
     ]
@@ -9706,6 +9812,9 @@
       },
       {
         "name": "Fury Cutter",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 5,
         "can_crit": "false",
         "image": "assets/moves/scyther/fury_cutter.png",
         "damages": [
@@ -9715,6 +9824,9 @@
       },
       {
         "name": "Quick Attack",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 7,
         "can_crit": "false",
         "image": "assets/moves/scyther/quick_attack.png",
         "damages": [
@@ -9723,16 +9835,24 @@
       },
       {
         "name": "Dual Wingbeat",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/scyther/dual_wingbeat.png",
         "damages": [
-          {"name": "Slash", "multiplier": 97, "levelCoef": 12, "constant": 280, "dealDamage": true},
+          {"name": "Slash", "multiplier": 97, "levelCoef": 12, "constant": 280, "dealDamage": true, "is_tick": true, "tick_count": 2},
+          {"name": "Slash +", "multiplier": 106.7, "levelCoef": 13, "constant": 315, "dealDamage": true, "upgraded": true, "is_tick": true, "tick_count": 2},
           {"name": "Dash", "multiplier": 97, "levelCoef": 12, "constant": 280, "dealDamage": true},
-          {"name": "Execute Bonus", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+15% missing HP (cap 1200 vs wild)"}
+          {"name": "Dash +", "multiplier": 106.7, "levelCoef": 13, "constant": 315, "dealDamage": true, "upgraded": true},
+          {"name": "Execute Bonus", "missing_hp_percent": 15, "wild_cap": 1200, "dealDamage": true, "notes": "+15% missing HP (cap 1200 vs wild)"}
         ]
       },
       {
         "name": "Double Hit",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/scyther/double_hit.png",
         "damages": [
@@ -9741,6 +9861,9 @@
       },
       {
         "name": "Swords Dance",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/scyther/swords_dance.png",
         "damages": [
@@ -9749,10 +9872,32 @@
       },
       {
         "name": "Green Illusion Dive (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/scyther/green_illusion_dive.png",
         "damages": [
-          {"name": "Initial, Dash & Copy Dash", "multiplier": 83, "levelCoef": 5, "constant": 230, "dealDamage": true}
+          {"name": "Initial, Dash & Copy Dash", "multiplier": 83, "levelCoef": 5, "constant": 230, "dealDamage": true, "is_tick": true, "tick_count": 7}
+        ],
+        "heals": [
+          {
+            "name": "Heal - per Copy (x5 max)",
+            "scaling": "atk",
+            "multiplier": 46.5,
+            "levelCoef": 3,
+            "constant": 130,
+            "is_tick": true, "tick_count": 5, "target": "self"
+          }
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0, "upgraded": true,
+            "constant": 0, "target": "self"
+          }
         ]
       }
     ]
@@ -10336,14 +10481,20 @@
       },
       {
         "name": "Swift",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 4,
         "can_crit": "false",
         "image": "assets/moves/sylveon/swift.png",
         "damages": [
-          {"name": "Per Star", "multiplier": 32, "levelCoef": 6, "constant": 190, "dealDamage": true}
+          {"name": "Per Star", "multiplier": 32, "levelCoef": 6, "constant": 190, "dealDamage": true, "is_tick": true, "tick_count": 4}
         ]
       },
       {
         "name": "Baby-Doll Eyes",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 6,
         "can_crit": "false",
         "image": "assets/moves/sylveon/baby_doll_eyes.png",
         "damages": [
@@ -10352,41 +10503,94 @@
       },
       {
         "name": "Mystical Fire",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/sylveon/mystical_fire.png",
         "damages": [
-          {"name": "First Hit", "multiplier": 74, "levelCoef": 12, "constant": 446, "dealDamage": true}
+          {"name": "First Hit", "multiplier": 74, "levelCoef": 12, "constant": 446, "dealDamage": true},
+          {"name": "Subsequent Hit (x3)", "multiplier": 21, "levelCoef": 3, "constant": 125, "dealDamage": true, "is_tick": true, "tick_count": 3, "notes": "28% of First Hit"},
+          {"name": "Subsequent Hit + (x4)", "multiplier": 21, "levelCoef": 3, "constant": 125, "dealDamage": true, "is_tick": true, "tick_count": 4, "notes": "28% of First Hit"}
         ]
       },
       {
         "name": "Hyper Voice",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/sylveon/hyper_voice.png",
         "damages": [
-          {"name": "Near (6x)", "multiplier": 25, "levelCoef": 6, "constant": 105, "dealDamage": true},
-          {"name": "Far (6x)", "multiplier": 42, "levelCoef": 10, "constant": 175, "dealDamage": true}
+          {"name": "Near (6x)", "multiplier": 25, "levelCoef": 6, "constant": 105, "dealDamage": true, "is_tick": true, "tick_count": 6},
+          {"name": "Far (6x)", "multiplier": 42, "levelCoef": 10, "constant": 175, "dealDamage": true, "is_tick": true, "tick_count": 6}
         ]
       },
       {
         "name": "Draining Kiss",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/sylveon/draining_kiss.png",
         "damages": [
-          {"name": "Damage (3x)", "multiplier": 26, "levelCoef": 4, "constant": 160, "dealDamage": true}
+          {"name": "Damage (3x)", "multiplier": 26, "levelCoef": 4, "constant": 160, "dealDamage": true, "is_tick": true, "tick_count": 3}
+        ],
+        "heals": [
+          {
+            "name": "Heal (x3)",
+            "scaling": "sp_atk",
+            "multiplier": 23,
+            "levelCoef": 0,
+            "constant": 190, "target": "self",
+            "is_tick": true, "tick_count": 3
+          },
+          {
+            "name": "Heal + (x3)",
+            "scaling": "sp_atk",
+            "multiplier": 34.5,
+            "levelCoef": 0,
+            "constant": 285, "target": "self",
+            "is_tick": true, "tick_count": 3, "upgraded": true
+          }
         ]
       },
       {
         "name": "Calm Mind",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/sylveon/calm_mind.png",
-        "damages": []
+        "damages": [],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "sp_atk",
+            "multiplier": 90,
+            "levelCoef": 0,
+            "constant": 100, "target": "self"
+          }
+        ]
       },
       {
         "name": "Fairy Frolic (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/sylveon/fairy_frolic.png",
         "damages": [
           {"name": "Damage", "multiplier": 130, "levelCoef": 13, "constant": 750, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0, "target": "self"
+          }
         ]
       }
     ]
@@ -10425,22 +10629,31 @@
       },
       {
         "name": "Peck",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/talonflame/peck.png",
         "damages": [
-          {"name": "Damage (3x)", "multiplier": 38, "levelCoef": 2, "constant": 70, "dealDamage": true}
+          {"name": "Damage (3x)", "multiplier": 38, "levelCoef": 2, "constant": 70, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Acrobatics",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/talonflame/acrobatics.png",
         "damages": [
-          {"name": "Damage (3x)", "multiplier": 75, "levelCoef": 6, "constant": 200, "dealDamage": true}
+          {"name": "Damage (3x)", "multiplier": 75, "levelCoef": 6, "constant": 200, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Flame Charge",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/talonflame/flame_charge.png",
         "damages": [
@@ -10449,14 +10662,30 @@
       },
       {
         "name": "Aerial Ace",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/talonflame/aerial_ace.png",
         "damages": [
-          {"name": "Damage", "multiplier": 110, "levelCoef": 14, "constant": 400, "dealDamage": true}
+          {"name": "Damage", "multiplier": 110, "levelCoef": 14, "constant": 400, "dealDamage": true},
+          {"name": "Damage +", "multiplier": 125, "levelCoef": 16, "constant": 420, "dealDamage": true, "upgraded": true}
+        ],
+        "heals": [
+          {
+            "name": "Heal",
+            "scaling": "atk",
+            "multiplier": 50,
+            "levelCoef": 0,
+            "constant": 45, "target": "self"
+          }
         ]
       },
       {
         "name": "Fly",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/talonflame/fly.png",
         "damages": [
@@ -10465,6 +10694,9 @@
       },
       {
         "name": "Brave Bird",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/talonflame/brave_bird.png",
         "damages": [
@@ -10473,10 +10705,13 @@
       },
       {
         "name": "Flame Sweep (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/talonflame/flame_sweep.png",
         "damages": [
-          {"name": "Damage (2x)", "multiplier": 124, "levelCoef": 11, "constant": 510, "dealDamage": true}
+          {"name": "Damage (2x)", "multiplier": 124, "levelCoef": 11, "constant": 510, "dealDamage": true, "is_tick": true, "tick_count": 2}
         ]
       }
     ]
@@ -10515,6 +10750,9 @@
       },
       {
         "name": "Rock Smash",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/tinkaton/rock_smash.png",
         "damages": [
@@ -10523,6 +10761,9 @@
       },
       {
         "name": "Fairy Wind",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/tinkaton/fairy_wind.png",
         "damages": [
@@ -10531,6 +10772,9 @@
       },
       {
         "name": "Gigaton Hammer",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/tinkaton/gigaton_hammer.png",
         "damages": [
@@ -10541,6 +10785,9 @@
       },
       {
         "name": "Smack Down",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/tinkaton/smack_down.png",
         "damages": [
@@ -10551,6 +10798,9 @@
       },
       {
         "name": "Ice Hammer",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/tinkaton/ice_hammer.png",
         "damages": [
@@ -10559,6 +10809,9 @@
       },
       {
         "name": "Thief",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/tinkaton/thief.png",
         "damages": [
@@ -10567,11 +10820,23 @@
       },
       {
         "name": "Kiss Bliss Kaboom (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/tinkaton/kiss_bliss_kaboom.png",
         "damages": [
           {"name": "Kiss Bliss", "multiplier": 54, "levelCoef": 3, "constant": 108, "dealDamage": true},
           {"name": "Kaboom", "multiplier": 270, "levelCoef": 24, "constant": 756, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0, "target": "self"
+          }
         ]
       }
     ]
@@ -10610,15 +10875,21 @@
       },
       {
         "name": "Will-o-Wisp",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/trevenant/will_o_wisp.png",
         "damages": [
           {"name": "Damage", "multiplier": 58, "levelCoef": 10, "constant": 190, "dealDamage": true},
-          {"name": "Burn (3 Ticks)", "multiplier": 14.5, "levelCoef": 3, "constant": 48, "dealDamage": true}
+          {"name": "Burn (3 Ticks)", "multiplier": 14.5, "levelCoef": 3, "constant": 48, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Branch Poke",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/trevenant/branch_poke.png",
         "damages": [
@@ -10630,33 +10901,44 @@
             "scaling": "hp",
             "multiplier": 9,
             "levelCoef": 0,
-            "constant": 0
+            "constant": 0,
+            "is_tick": true, "tick_count": 3
           }
         ]
       },
       {
         "name": "Wood Hammer",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/trevenant/wood_hammer.png",
         "damages": [
-          {"name": "Both Hits", "multiplier": 110, "levelCoef": 22, "constant": 242, "dealDamage": true}
+          {"name": "Both Hits", "multiplier": 110, "levelCoef": 22, "constant": 242, "dealDamage": true, "is_tick": true, "tick_count": 2}
         ]
       },
       {
         "name": "Curse",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/trevenant/curse.png",
         "damages": [
-          {"name": "Per Tick", "multiplier": 40, "levelCoef": 3, "constant": 30, "dealDamage": true},
+          {"name": "Per Tick (x12)", "multiplier": 40, "levelCoef": 3, "constant": 30, "dealDamage": true, "is_tick": true, "tick_count": 12},
           {"name": "Detonation", "multiplier": 160, "levelCoef": 12, "constant": 120, "dealDamage": true}
         ]
       },
       {
         "name": "Horn Leech",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/trevenant/horn_leech.png",
         "damages": [
-          {"name": "2 Hits", "multiplier": 43, "levelCoef": 4, "constant": 200, "dealDamage": true}
+          {"name": "Per Hit (x2)", "multiplier": 43, "levelCoef": 4, "constant": 200, "dealDamage": true, "is_tick": true, "tick_count": 2},
+          {"name": "Basic bonus damage", "multiplier": 21.5, "levelCoef": 2, "constant": 100, "dealDamage": true}
         ],
         "heals": [
           { "name": "Heal - Above 70% HP", "scaling": "hp", "multiplier": 15, "levelCoef": 0, "constant": 0 },
@@ -10666,14 +10948,20 @@
       },
       {
         "name": "Pain Split",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/trevenant/pain_split.png",
         "damages": [
-          {"name": "Per Tick", "multiplier": 29, "levelCoef": 2, "constant": 80, "dealDamage": true}
+          {"name": "Per Tick (x12)", "multiplier": 29, "levelCoef": 2, "constant": 80, "dealDamage": true, "is_tick": true, "tick_count": 12}
         ]
       },
       {
         "name": "Phantom Forest (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/trevenant/phantom_forest.png",
         "damages": [
@@ -10733,14 +11021,20 @@
       },
       {
         "name": "Razor Leaf",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "true",
         "image": "assets/moves/tsareena/razor_leaf.png",
         "damages": [
-          {"name": "Damage (3x)", "multiplier": 62, "levelCoef": 7, "constant": 120, "dealDamage": true}
+          {"name": "Damage (3x)", "multiplier": 62, "levelCoef": 7, "constant": 120, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Rapid Spin",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/tsareena/rapid_spin.png",
         "damages": [
@@ -10749,49 +11043,107 @@
       },
       {
         "name": "Triple Axel",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/tsareena/triple_axel.png",
         "damages": [
-          {"name": "Per Hit", "multiplier": 46, "levelCoef": 3, "constant": 57, "dealDamage": true},
-          {"name": "Per Hit (Queenly Majesty)", "multiplier": 74, "levelCoef": 5, "constant": 95, "dealDamage": true}
+          {"name": "Per Hit (x3)", "multiplier": 46, "levelCoef": 3, "constant": 57, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Per Hit + (x3)", "multiplier": 53, "levelCoef": 4, "constant": 68, "dealDamage": true, "is_tick": true, "tick_count": 3, "upgraded": true},
+          {"name": "Per Hit (x3, Queenly Majesty)", "multiplier": 74, "levelCoef": 5, "constant": 95, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Per Hit + (x3, Queenly Majesty)", "multiplier": 85, "levelCoef": 6, "constant": 110, "dealDamage": true, "is_tick": true, "tick_count": 3, "upgraded": true}
+        ],
+        "heals": [
+          { "name": "Heal - Per Hit & Target (x3, Queenly Majesty)", "scaling": "atk", "multiplier": 40, "levelCoef": 3, "constant": 20, "is_tick": true, "tick_count": 3 }
         ]
       },
       {
         "name": "Stomp",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/tsareena/stomp.png",
         "damages": [
           {"name": "Damage", "multiplier": 170, "levelCoef": 10, "constant": 208, "dealDamage": true},
-          {"name": "Damage (Queenly Majesty)", "multiplier": 274, "levelCoef": 14, "constant": 334, "dealDamage": true}
+          {"name": "Damage +", "multiplier": 198, "levelCoef": 10, "constant": 240, "dealDamage": true, "upgraded": true},
+          {"name": "Damage (Queenly Majesty)", "multiplier": 274, "levelCoef": 14, "constant": 334, "dealDamage": true},
+          {"name": "Damage + (Queenly Majesty)", "multiplier": 314, "levelCoef": 16, "constant": 385, "dealDamage": true, "upgraded": true}
+        ],
+        "heals": [
+          { "name": "Heal - Per Target (Queenly Majesty)", "scaling": "atk", "multiplier": 80, "levelCoef": 6, "constant": 40 }
         ]
       },
       {
         "name": "Trop Kick",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/tsareena/trop_kick.png",
         "damages": [
           {"name": "Damage", "multiplier": 75.65, "levelCoef": 3, "constant": 113, "dealDamage": true},
-          {"name": "DoT (7 Ticks)", "multiplier": 11.3, "levelCoef": 1, "constant": 17, "dealDamage": true},
+          {"name": "Damage +", "multiplier": 87, "levelCoef": 3, "constant": 130, "dealDamage": true, "upgraded": true},
+          {"name": "DoT (7 Ticks)", "multiplier": 11.3, "levelCoef": 1, "constant": 17, "dealDamage": true, "is_tick": true, "tick_count": 7},
+          {"name": "DoT + (7 Ticks)", "multiplier": 13, "levelCoef": 1, "constant": 20, "dealDamage": true, "is_tick": true, "tick_count": 7, "upgraded": true},
           {"name": "Damage (Queenly Majesty)", "multiplier": 121.1, "levelCoef": 4, "constant": 181, "dealDamage": true},
-          {"name": "DoT (7 Ticks - Queenly Majesty)", "multiplier": 18.09, "levelCoef": 1, "constant": 28, "dealDamage": true}
+          {"name": "Damage + (Queenly Majesty)", "multiplier": 139.2, "levelCoef": 5, "constant": 208, "dealDamage": true, "upgraded": true},
+          {"name": "DoT (7 Ticks - Queenly Majesty)", "multiplier": 18.09, "levelCoef": 1, "constant": 28, "dealDamage": true, "is_tick": true, "tick_count": 7},
+          {"name": "DoT + (7 Ticks - Queenly Majesty)", "multiplier": 20.8, "levelCoef": 1, "constant": 32, "dealDamage": true, "is_tick": true, "tick_count": 7, "upgraded": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield (Queenly Majesty)",
+            "scaling": "atk",
+            "multiplier": 264,
+            "levelCoef": 18,
+            "constant": 216, "target": "self"
+          }
         ]
       },
       {
         "name": "Grassy Glide",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/tsareena/grassy_glide.png",
         "damages": [
-          {"name": "Damage (2x)", "multiplier": 66.96, "levelCoef": 3, "constant": 87, "dealDamage": true},
-          {"name": "Damage (Queenly Majesty)", "multiplier": 107.13, "levelCoef": 5, "constant": 139, "dealDamage": true}
+          {"name": "Damage (2x)", "multiplier": 66.96, "levelCoef": 3, "constant": 87, "dealDamage": true, "is_tick": true, "tick_count": 2},
+          {"name": "Damage + (2x)", "multiplier": 77, "levelCoef": 4, "constant": 100, "dealDamage": true, "is_tick": true, "tick_count": 2, "upgraded": true},
+          {"name": "Damage (Queenly Majesty)", "multiplier": 107.13, "levelCoef": 5, "constant": 139, "dealDamage": true, "is_tick": true, "tick_count": 2},
+          {"name": "Damage + (2x, Queenly Majesty)", "multiplier": 123.2, "levelCoef": 6, "constant": 160, "dealDamage": true, "is_tick": true, "tick_count": 2, "upgraded": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield (Queenly Majesty)",
+            "scaling": "atk",
+            "multiplier": 264,
+            "levelCoef": 18,
+            "constant": 216, "target": "self"
+          }
         ]
       },
       {
         "name": "Queen Ascendant (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/tsareena/queen_ascendant.png",
         "damages": [
-          {"name": "Damage (9x)", "multiplier": 45, "levelCoef": 1, "constant": 64, "dealDamage": true},
+          {"name": "Damage (9x)", "multiplier": 45, "levelCoef": 1, "constant": 64, "dealDamage": true, "is_tick": true, "tick_count": 9},
           {"name": "Final Hit", "multiplier": 180, "levelCoef": 4, "constant": 256, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0, "target": "self"
+          }
         ]
       }
     ]
