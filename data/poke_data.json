@@ -2329,10 +2329,7 @@
             "missing_hp_percent": 30,
             "missing_hp_cap": null,
             "scaling": "hp",
-            "multiplier": 0,
-            "levelCoef": 0,
-            "constant": 0,
-            "notes": "25% Missing Hp"
+            "notes": "30% Missing Hp"
           }
         ],
         "shields": [
@@ -9895,7 +9892,7 @@
             "name": "Shield",
             "scaling": "hp",
             "multiplier": 20,
-            "levelCoef": 0, "upgraded": true,
+            "levelCoef": 0,
             "constant": 0, "target": "self"
           }
         ]
@@ -11182,14 +11179,20 @@
       },
       {
         "name": "Sand Stream (Passive)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/tyranitar/sand_stream.png",
         "damages": [
-          {"name": "Per Tick (7 Ticks)", "multiplier": 20, "levelCoef": 2, "constant": 30, "dealDamage": true}
+          {"name": "Per Tick (7 Ticks)", "multiplier": 20, "levelCoef": 2, "constant": 30, "dealDamage": true, "is_tick": true, "tick_count": 7}
         ]
       },
       {
         "name": "Bite",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/tyranitar/bite.png",
         "damages": [
@@ -11198,6 +11201,9 @@
       },
       {
         "name": "Rock Polish",
+        "learnLevel": 1,
+        "unlearn": 9,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/tyranitar/rock_polish.png",
         "damages": [
@@ -11206,6 +11212,9 @@
       },
       {
         "name": "Dark Pulse",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/tyranitar/dark_pulse.png",
         "damages": [
@@ -11215,37 +11224,93 @@
       },
       {
         "name": "Stone Edge",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/tyranitar/stone_edge.png",
         "damages": [
-          {"name": "Melee Range", "multiplier": 118, "levelCoef": 7, "constant": 270, "dealDamage": true},
-          {"name": "Max Range", "multiplier": 91, "levelCoef": 5, "constant": 208, "dealDamage": true}
+          {"name": "Melee Range", "multiplier": 118, "levelCoef": 7, "constant": 270, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Melee Range +", "multiplier": 126, "levelCoef": 9, "constant": 297, "dealDamage": true, "upgraded": true, "is_tick": true, "tick_count": 3},
+          {"name": "Max Range", "multiplier": 91, "levelCoef": 5, "constant": 208, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Max Range +", "multiplier": 98, "levelCoef": 6, "constant": 235, "dealDamage": true, "upgraded": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Ancient Power",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/tyranitar/ancient_power.png",
         "damages": [
           {"name": "Initial Hit", "multiplier": 74, "levelCoef": 3, "constant": 140, "dealDamage": true},
           {"name": "Second Hit", "multiplier": 74, "levelCoef": 0, "constant": 140, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield - per stack (max x3)",
+            "scaling": "atk",
+            "multiplier": 90,
+            "levelCoef": 0,
+            "constant": 360, "target": "self",
+            "is_tick": true, "tick_count": 3
+          },
+          {
+            "name": "Shield - per stack + (max x3)",
+            "scaling": "atk",
+            "multiplier": 108,
+            "levelCoef": 0,
+            "constant": 432, "target": "self", "upgraded": true,
+            "is_tick": true, "tick_count": 3
+          },
+          {
+            "name": "Shield - Additional",
+            "scaling": "atk",
+            "multiplier": 90,
+            "levelCoef": 0,
+            "constant": 360, "target": "self"
+          },
+          {
+            "name": "Shield - Additional +",
+            "scaling": "atk",
+            "multiplier": 108,
+            "levelCoef": 0,
+            "constant": 432, "target": "self", "upgraded": true
+          }
         ]
       },
       {
         "name": "Sand Tomb",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/tyranitar/sand_tomb.png",
         "damages": [
           {"name": "Leap", "multiplier": 39, "levelCoef": 3, "constant": 60, "dealDamage": true},
-          {"name": "AoE (per Tick)", "multiplier": 13, "levelCoef": 0, "constant": 20, "dealDamage": true}
+          {"name": "AoE (per Tick, x12)", "multiplier": 13, "levelCoef": 0, "constant": 20, "dealDamage": true, "is_tick": true, "tick_count": 12},
+          {"name": "AoE + (per Tick, x16)", "multiplier": 13, "levelCoef": 0, "constant": 20, "dealDamage": true, "is_tick": true, "tick_count": 16, "upgraded": true}
         ]
       },
       {
         "name": "Tyrannical Rampage (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/tyranitar/tyrannical_rampage.png",
         "damages": [
           {"name": "Basic", "multiplier": 130, "levelCoef": 6, "constant": 240, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0, "target": "self"
+          }
         ]
       }
     ]
@@ -11280,19 +11345,34 @@
         "damages": [
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
           {"name": "Boosted", "multiplier": 140, "levelCoef": 0, "constant": 0, "dealDamage": true}
+        ],
+        "heals": [
+          {
+            "name": "Heal - Boosted",
+            "missing_hp_percent": 10,
+            "missing_hp_cap": null,
+            "scaling": "hp",
+            "notes": "10% Missing Hp"
+          }
         ]
       },
       {
         "name": "Swift",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/umbreon/swift.png",
         "damages": [
           {"name": "First Star", "multiplier": 40, "levelCoef": 10, "constant": 100, "dealDamage": true},
-          {"name": "Subsequent Stars", "multiplier": 12, "levelCoef": 2, "constant": 30, "dealDamage": true}
+          {"name": "Subsequent Stars", "multiplier": 12, "levelCoef": 2, "constant": 30, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Fake Tears",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/umbreon/fake_tears.png",
         "damages": [
@@ -11310,6 +11390,9 @@
       },
       {
         "name": "Mean Look",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "true",
         "image": "assets/moves/umbreon/mean_look.png",
         "damages": [
@@ -11318,6 +11401,9 @@
       },
       {
         "name": "Foul Play",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/umbreon/foul_play.png",
         "damages": [
@@ -11326,20 +11412,26 @@
       },
       {
         "name": "Wish",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/umbreon/wish.png",
         "damages": [],
         "heals": [
           { "name": "Heal", "scaling": "atk", "multiplier": 300, "levelCoef": 18, "constant": 600 },
-          { "name": "Heal - Wish +", "scaling": "atk", "multiplier": 380, "levelCoef": 18, "constant": 700 }
+          { "name": "Heal - Wish +", "scaling": "atk", "multiplier": 380, "levelCoef": 18, "constant": 700, "upgraded": true }
         ]
       },
       {
         "name": "Snarl",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/umbreon/snarl.png",
         "damages": [
-          {"name": "8x", "multiplier": 15, "levelCoef": 1, "constant": 40, "dealDamage": true},
+          {"name": "Per Hit (8x)", "multiplier": 15, "levelCoef": 1, "constant": 40, "dealDamage": true, "is_tick": true, "tick_count": 8},
           {"name": "Final Shout", "multiplier": 30, "levelCoef": 2, "constant": 80, "dealDamage": true}
         ],
         "shields": [
@@ -11354,10 +11446,16 @@
       },
       {
         "name": "Moonlight Prance (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/umbreon/moonlight_prance.png",
         "damages": [
           {"name": "Damage", "multiplier": 224, "levelCoef": 13, "constant": 630, "dealDamage": true}
+        ],
+        "heals": [
+          { "name": "Heal", "scaling": "hp", "multiplier": 1, "levelCoef": 0, "constant": 0, "is_tick": true, "tick_count": 99, "notes": "When ult is learned and not in combat, 1% Max HP every second." }
         ],
         "shields": [
           {
@@ -11402,11 +11500,24 @@
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
           {"name": "Boosted (Kubfu)", "multiplier": 130, "levelCoef": 0, "constant": 0, "dealDamage": true},
           {"name": "Boosted (Single Strike)", "multiplier": 150, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Boosted (Rapid Strike, 2x)", "multiplier": 60, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Boosted (Rapid Strike, 2x)", "multiplier": 60, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 2}
+        ],
+        "shields": [
+          {
+            "name": "Shield (Single Strike)",
+            "scaling": "atk",
+            "multiplier": 70,
+            "levelCoef": 0,
+            "constant": 200,
+            "target": "self"
+          }
         ]
       },
       {
         "name": "Rock Smash",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/urshifu/rock_smash.png",
         "damages": [
@@ -11419,6 +11530,9 @@
       },
       {
         "name": "Headbutt",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/urshifu/headbutt.png",
         "damages": [
@@ -11427,24 +11541,38 @@
       },
       {
         "name": "Wicked Blow",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "true",
         "image": "assets/moves/urshifu/wicked_blow.png",
         "damages": [
           {"name": "Uncharged", "multiplier": 110, "levelCoef": 7, "constant": 175, "dealDamage": true},
           {"name": "Center (Charged)", "multiplier": 175, "levelCoef": 12, "constant": 280, "dealDamage": true},
-          {"name": "Conal (Charged)", "multiplier": 175, "levelCoef": 12, "constant": 280, "dealDamage": true}
+          {"name": "Center (Charged, Additionnal)", "missing_hp_percent": 10, "wild_cap": 1200, "dealDamage": true},
+          {"name": "Conal (Charged)", "multiplier": 175, "levelCoef": 12, "constant": 280, "dealDamage": true},
+          {"name": "Conal (Charged, Additionnal)", "missing_hp_percent": 5, "wild_cap": 600, "dealDamage": true}
         ]
       },
       {
         "name": "Surging Strikes",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "true",
         "image": "assets/moves/urshifu/surging_strikes.png",
         "damages": [
-          {"name": "Per Hit", "multiplier": 90.2, "levelCoef": 4, "constant": 125, "dealDamage": true}
+          {"name": "Per Hit", "multiplier": 90.2, "levelCoef": 4, "constant": 125, "dealDamage": true, "is_tick": true, "tick_count": 3}
+        ],
+        "heals": [
+          { "name": "Heal", "scaling": "hp", "multiplier": 2, "levelCoef": 0, "constant": 0, "target": "self" }
         ]
       },
       {
         "name": "Throat Chop",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/urshifu/throat_chop.png",
         "damages": [
@@ -11453,30 +11581,70 @@
       },
       {
         "name": "Liquidation",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/urshifu/liquidation.png",
         "damages": [
           {"name": "Damage", "multiplier": 97.5, "levelCoef": 6, "constant": 165, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield - Per Pokemon Hit (max 3)",
+            "scaling": "atk",
+            "multiplier": 90,
+            "levelCoef": 0,
+            "constant": 260,
+            "target": "self",
+            "is_tick": true, "tick_count": 3
+          }
         ]
       },
       {
         "name": "Ebon Fist (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/urshifu/ebon_fist.png",
         "damages": [
           {"name": "Damage", "multiplier": 330, "levelCoef": 12, "constant": 615, "dealDamage": true},
           {"name": "With Directive Input", "multiplier": 440, "levelCoef": 17, "constant": 820, "dealDamage": true},
           {"name": "Collision", "multiplier": 220, "levelCoef": 9, "constant": 410, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0,
+            "target": "self"
+          }
         ]
       },
       {
         "name": "Flowing Fists (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/urshifu/flowing_fists.png",
         "damages": [
           {"name": "Initial Hit", "multiplier": 37, "levelCoef": 2, "constant": 70, "dealDamage": true},
-          {"name": "Hits during follow-up", "multiplier": 74, "levelCoef": 4, "constant": 140, "dealDamage": true},
+          {"name": "Hits during follow-up", "multiplier": 74, "levelCoef": 4, "constant": 140, "dealDamage": true, "is_tick": true, "tick_count": 10},
           {"name": "Final Hit", "multiplier": 74, "levelCoef": 4, "constant": 140, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0,
+            "target": "self"
+          }
         ]
       }
     ]
@@ -11794,28 +11962,50 @@
       },
       {
         "name": "Pound",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/wigglytuff/pound.png",
         "damages": [
-          {"name": "Per Slap", "multiplier": 35, "levelCoef": 21, "constant": 390, "dealDamage": true}
+          {"name": "Per Slap", "multiplier": 35, "levelCoef": 21, "constant": 390, "dealDamage": true, "is_tick": true, "tick_count": 2}
         ]
       },
       {
         "name": "Defense Curl",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/wigglytuff/defense_curl.png",
-        "damages": []
+        "damages": [],
+        "shields": [
+          {
+            "name": "Shield - Unite Buffs",
+            "scaling": "hp",
+            "multiplier": 25,
+            "levelCoef": 0,
+            "constant": 0, "target": "self"
+          }
+        ]
       },
       {
         "name": "Double Slap",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/wigglytuff/double_slap.png",
         "damages": [
-          {"name": "Per Slap", "multiplier": 20, "levelCoef": 10, "constant": 230, "dealDamage": true}
+          {"name": "Per Slap", "multiplier": 20, "levelCoef": 10, "constant": 230, "dealDamage": true, "is_tick": true, "tick_count": 5},
+          {"name": "Per Slap +", "multiplier": 20, "levelCoef": 10, "constant": 230, "dealDamage": true, "upgraded": true, "is_tick": true, "tick_count": 6}
         ]
       },
       {
         "name": "Dazzling Gleam",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 10,
         "can_crit": "false",
         "image": "assets/moves/wigglytuff/dazzling_gleam.png",
         "damages": [
@@ -11825,23 +12015,57 @@
       },
       {
         "name": "Rollout",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/wigglytuff/rollout.png",
         "damages": [
           {"name": "Per Hit", "multiplier": 47, "levelCoef": 14, "constant": 590, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield - Unite Buffs",
+            "scaling": "hp",
+            "multiplier": 25,
+            "levelCoef": 0,
+            "constant": 0, "target": "self"
+          }
         ]
       },
       {
         "name": "Sing",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 12,
         "can_crit": "false",
         "image": "assets/moves/wigglytuff/sing.png",
         "damages": []
       },
       {
         "name": "Starlight Recital (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/wigglytuff/starlight_recital.png",
-        "damages": []
+        "damages": [],
+        "shields": [
+          {
+            "name": "Shield - Unite Buffs",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0, "target": "self"
+          },
+          {
+            "name": "Shield - Unite Move",
+            "scaling": "sp_atk",
+            "multiplier": 151.9,
+            "levelCoef": 0,
+            "constant": 810
+          }
+        ]
       }
     ]
   },
@@ -11881,62 +12105,110 @@
       },
       {
         "name": "Slash",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/zacian/slash.png",
         "damages": [
           {"name": "Damage", "multiplier": 160, "levelCoef": 14, "constant": 262, "dealDamage": true},
-          {"name": "Damage - Area of Effect", "multiplier": 80, "levelCoef": 7, "constant": 131, "dealDamage": true}
+          {"name": "Damage - Area of Effect", "multiplier": 80, "levelCoef": 7, "constant": 131, "dealDamage": true},
+          {"name": "Damage (Boosted)", "multiplier": 208, "levelCoef": 18, "constant": 342, "dealDamage": true},
+          {"name": "Damage - Area of Effect (Boosted)", "multiplier": 104, "levelCoef": 9, "constant": 171, "dealDamage": true}
         ]
       },
       {
         "name": "Quick Attack",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/zacian/quick_attack.png",
         "damages": [
-          {"name": "Damage", "multiplier": 79, "levelCoef": 7, "constant": 130, "dealDamage": true}
+          {"name": "Damage", "multiplier": 79, "levelCoef": 7, "constant": 130, "dealDamage": true},
+          {"name": "Damage", "multiplier": 90.85, "levelCoef": 8, "constant": 150, "dealDamage": true}
         ]
       },
       {
         "name": "Metal Claw",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/zacian/metal_claw.png",
         "damages": [
           {"name": "Damage - Shockwave", "multiplier": 101, "levelCoef": 5, "constant": 155, "dealDamage": true},
-          {"name": "Damage - Charge", "multiplier": 190, "levelCoef": 9, "constant": 292, "dealDamage": true}
+          {"name": "Damage - Charge", "multiplier": 190, "levelCoef": 9, "constant": 292, "dealDamage": true},
+          {"name": "Damage - Shockwave (Boosted)", "multiplier": 132, "levelCoef": 6, "constant": 202, "dealDamage": true},
+          {"name": "Damage - Charge (Boosted)", "multiplier": 246.5, "levelCoef": 12, "constant": 380, "dealDamage": true}
         ]
       },
       {
         "name": "Sacred Sword",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/zacian/sacred_sword.png",
         "damages": [
           {"name": "Damage - Circle Draw", "multiplier": 52.5, "levelCoef": 5, "constant": 85, "dealDamage": true},
-          {"name": "Damage - Flurry (x3 hits)", "multiplier": 34.5, "levelCoef": 3, "constant": 60, "dealDamage": true}
+          {"name": "Damage - Flurry (x3 hits)", "multiplier": 34.5, "levelCoef": 3, "constant": 60, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Damage - Circle Draw (Boosted)", "multiplier": 67.5, "levelCoef": 6, "constant": 118, "dealDamage": true},
+          {"name": "Damage - Flurry (x3 hits, Boosted)", "multiplier": 45, "levelCoef": 4, "constant": 75, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Agility",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/zacian/agility.png",
-        "damages": []
+        "damages": [],
+        "shields": [
+          {
+            "name": "Shield (Boosted)",
+            "scaling": "hp",
+            "multiplier": 12,
+            "levelCoef": 0,
+            "constant": 50, "target": "self"
+          }
+        ]
       },
       {
         "name": "Play Rough",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/zacian/play_rough.png",
         "damages": [
-          {"name": "Damage", "multiplier": 132, "levelCoef": 8, "constant": 216, "dealDamage": true}
+          {"name": "Damage", "multiplier": 132, "levelCoef": 8, "constant": 216, "dealDamage": true},
+          {"name": "Damage (Boosted)", "multiplier": 170, "levelCoef": 11, "constant": 280, "dealDamage": true}
         ]
       },
       {
         "name": "Sovereign Sword (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/zacian/sovereign_sword.png",
         "damages": [
           {"name": "Damage (<=9 Energy)", "multiplier": 396, "levelCoef": 23, "constant": 650, "dealDamage": true},
           {"name": "Damage (10-19 Energy)", "multiplier": 475.2, "levelCoef": 29, "constant": 780, "dealDamage": true},
           {"name": "Damage (20-29 Energy)", "multiplier": 554.4, "levelCoef": 32, "constant": 910, "dealDamage": true},
-          {"name": "Damage (30 Energy - Boosted)", "multiplier": 712.8, "levelCoef": 41, "constant": 1170, "dealDamage": true}
+          {"name": "Damage (30 Energy - Boosted)", "multiplier": 712.8, "levelCoef": 41, "constant": 1170, "dealDamage": true},
+          {"name": "Damage (Additional - Boosted) vs Unite Buffed Pokemon)", "multiplier": 198, "levelCoef": 12, "constant": 325, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield (Boosted)",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0, "target": "self"
+          }
         ]
       }
     ]
