@@ -1,51 +1,50 @@
 <nav id="sidebar" class="sidebar">
+
+  <!-- ══ HEADER ══ -->
   <div class="sidebar-header">
-    <h2>Unite Tools</h2>
+    <h2 class="sidebar-title-full">Unite Tools</h2>
+    <span class="sidebar-title-mini">UT</span>
   </div>
 
+  <!-- ══ CONTENU NORMAL (sidebar ouverte) ══ -->
   <div class="sidebar-content">
     <ul>
       <li class="nav-title" data-lang="nav_tools_title">Tools</li>
-        <li><a id="nav-damage-calc" href="damage-calc.html" data-lang="nav_damage_calc">Damage Calculator</a></li>
-        <li><a id="nav-draft-simulator" href="draft.html" data-lang="nav_draft_simulator">Draft Simulator</a></li>
-        <li><a id="nav-map-timing" href="map_timer.html" data-lang="nav_map_timing">Map Timer</a></li>
-        <li><a id="nav-map-timing" href="soon.html" data-lang="nav_map_interactive">Interactive Map</a></li>
-        <li><a id="nav-create-tierlist" href="tierlist.html" data-lang="nav_create_tierlist">Create Tierlist</a></li>
-        <li><a id="nav-create-tierlist" href="patch.html">Patch Tracker</a></li>
+      <li><a id="nav-damage-calc"     href="damage-calc.html" data-lang="nav_damage_calc">Damage Calculator</a></li>
+      <li><a id="nav-draft-simulator" href="draft.html" data-lang="nav_draft_simulator">Draft Simulator</a></li>
+      <li><a id="nav-map-timing"      href="map_timer.html" data-lang="nav_map_timing">Map Timer</a></li>
+      <li><a id="nav-map-interactive" href="soon.html" data-lang="nav_map_interactive">Interactive Map</a></li>
+      <li><a id="nav-create-tierlist" href="tierlist.html" data-lang="nav_create_tierlist">Create Tierlist</a></li>
+      <li><a id="nav-patch-tracker"   href="patch.html">Patch Tracker</a></li>
 
       <li class="nav-title">Other</li>
-        <li><a id="nav-about" href="about.html" data-lang="nav_about">About Me</a></li>
-        <li><a id="nav-about" href="feedback.html" data-lang="nav_feedback">Feedback</a></li>
+      <li><a id="nav-about"    href="about.html"    data-lang="nav_about">About Me</a></li>
+      <li><a id="nav-feedback" href="feedback.html" data-lang="nav_feedback">Feedback</a></li>
 
       <li class="nav-title">Games</li>
-        <li><a id="nav-about" href="unite-dle.html" data-lang="nav_udle">Unitedle</a></li>
+      <li><a id="nav-udle" href="unite-dle.html" data-lang="nav_udle">Unitedle</a></li>
 
       <li class="nav-title">Informations</li>
-        <li><a id="nav-update" href="update.html" data-lang="nav_update">Update</a></li>
+      <li><a id="nav-update" href="update.html" data-lang="nav_update">Update</a></li>
     </ul>
   </div>
 
-  <!-- Useful Links -->
+  <!-- ══ USEFUL LINKS ══ -->
   <div class="useful-links">
     <div class="useful-links-title" data-lang="nav_useful_links">Useful Links</div>
-
     <a href="https://uniteapi.dev/fr" class="useful-link" target="_blank">
       <span class="useful-link-name">Unite API</span>
       <span class="useful-link-desc">Player Database</span>
     </a>
-
     <a href="https://unite-db.com" class="useful-link" target="_blank">
       <span class="useful-link-name">Unite-DB</span>
       <span class="useful-link-desc">Game Database</span>
     </a>
-
   </div>
 
-  <!-- Lang Buttons -->
-  <div id="lang-switch" class="lang-switch">
-    <button id="hide-sidebar-btn" class="hide-sidebar-btn" aria-label="Masquer la barre de navigation">
-      ◀
-    </button>
+  <!-- ══ LANG SWITCH + HIDE BTN ══ -->
+  <div class="lang-switch">
+    <button id="hide-sidebar-btn" class="hide-sidebar-btn" aria-label="Masquer">◀</button>
     <button class="lang-btn active" data-lang="fr" aria-label="Français">
       <img src="/assets/flags/fr.svg" alt="Français">
     </button>
@@ -53,8 +52,75 @@
       <img src="/assets/flags/en.svg" alt="English">
     </button>
   </div>
+
+  <!-- ══ MINI SIDEBAR (visible quand .sidebar.hidden) ══ -->
+  <div class="sidebar-mini">
+
+    <!-- Icônes scrollables -->
+    <div class="sidebar-mini-scroll">
+
+      <!-- Tools -->
+     <a href="damage-calc.html" class="sidebar-mini-icon" title="Damage Calculator">
+      <i data-lucide="calculator"></i>
+    </a>
+
+    <a href="draft.html" class="sidebar-mini-icon" title="Draft Simulator">
+      <i data-lucide="play-circle"></i>
+    </a>
+
+    <a href="map_timer.html" class="sidebar-mini-icon" title="Map Timing">
+      <i data-lucide="clock-3"></i>
+    </a>
+
+    <a href="soon.html" class="sidebar-mini-icon" title="Interactive Map">
+      <i data-lucide="map"></i>
+    </a>
+
+    <a href="tierlist.html" class="sidebar-mini-icon" title="Create Tierlist">
+      <i data-lucide="list-ordered"></i>
+    </a>
+
+    <a href="patch.html" class="sidebar-mini-icon" title="Patch Tracker">
+      <i data-lucide="file-text"></i>
+    </a>
+
+    <div class="sidebar-mini-sep"></div>
+
+    <a href="about.html" class="sidebar-mini-icon" title="About Me">
+      <i data-lucide="user-round"></i>
+    </a>
+
+    <a href="feedback.html" class="sidebar-mini-icon" title="Feedback">
+      <i data-lucide="message-square"></i>
+    </a>
+
+    <div class="sidebar-mini-sep"></div>
+
+    <a href="unite-dle.html" class="sidebar-mini-icon" title="Unitedle">
+      <i data-lucide="lock"></i>
+    </a>
+
+    <div class="sidebar-mini-sep"></div>
+
+    <a href="update.html" class="sidebar-mini-icon" title="Update">
+      <i data-lucide="refresh-ccw"></i>
+    </a>
+
+    </div><!-- fin .sidebar-mini-scroll -->
+
+    <!-- Footer épinglé -->
+    <div class="sidebar-mini-footer">
+      <button class="lang-btn" data-lang="fr" aria-label="Français">
+        <img src="/assets/flags/fr.svg" alt="Français">
+      </button>
+      <button class="lang-btn" data-lang="en" aria-label="English">
+        <img src="/assets/flags/en.svg" alt="English">
+      </button>
+      <button id="show-sidebar-btn" class="hide-sidebar-btn" aria-label="Ouvrir">▶</button>
+    </div>
+
+  </div><!-- fin .sidebar-mini -->
+
 </nav>
 
-<button id="toggle-sidebar" class="toggle-sidebar-btn" aria-label="Ouvrir/fermer la barre de navigation">
-  ☰
-</button>
+<button id="toggle-sidebar" class="toggle-sidebar-btn" aria-label="Ouvrir/fermer la navigation">☰</button>

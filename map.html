@@ -1,42 +1,202 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unite Tools - Map Drawing</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unite Tools - Interactive Map</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./css/map.css">
   <link rel="stylesheet" href="./css/navbar.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-B7HW29S7HW');
-    </script>
+  <link rel="stylesheet" href="./css/map.css">
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="navbar-container"></div>
-    <div id="toolbar">
-        <button class="brush-size" data-size="5">🖌️</button>
-        <button class="brush-size" data-size="10">🖌️🖌️</button>
-        <button class="brush-size" data-size="20">🖌️🖌️🖌️</button>
-        
-        <button id="eraseBtn">🧽</button>
-        <button id="clearBtn">🗑️</button>
-        
-        <input type="color" id="colorPicker" value="#ff0000">
+  <div id="navbar-container"></div>
+
+  <!-- ── Top Bar ── -->
+  <div class="topbar">
+    <span class="topbar-title">🗺 Map</span>
+    <div class="topbar-sep"></div>
+
+    <!-- Map switch -->
+    <div class="map-pills">
+      <button class="map-pill active" data-map="groudon">Groudon</button>
+      <button class="map-pill" data-map="kyogre">Kyogre</button>
+      <button class="map-pill" data-map="rayquaza">Rayquaza</button>
     </div>
 
-    <div class="map-container">
-        <img src="assets/maps/map.webp" alt="Pokémon Unite Map" id="map-image">
-        <canvas id="map-canvas"></canvas>
+    <div class="topbar-sep"></div>
+
+    <!-- Team toggle -->
+    <div class="team-toggle">
+      <button class="team-btn purple active" data-team="purple">🟣 Purple</button>
+      <button class="team-btn orange"        data-team="orange">🟠 Orange</button>
     </div>
 
-    <script src="./scripts/map.js"></script>
-    <script src="./scripts/navbar.js"></script>
+    <div class="topbar-sep"></div>
+
+    <!-- Draw tools -->
+    <div class="tool-group">
+      <button class="tool-btn" data-tool="cursor" title="Select / Move (cursor)" style="font-size:14px;">↖</button>
+      <button class="tool-btn active" data-tool="draw"   title="Freehand (D)">✏</button>
+      <button class="tool-btn"        data-tool="arrow"  title="Arrow">➜</button>
+      <button class="tool-btn"        data-tool="eraser" title="Eraser (E)">⌫</button>
+    </div>
+
+    <!-- Colors -->
+    <div class="color-row">
+      <div class="color-swatch active" style="background:#4fc3f7;" data-color="#4fc3f7"></div>
+      <div class="color-swatch"        style="background:#ef5350;" data-color="#ef5350"></div>
+      <div class="color-swatch"        style="background:#ffd740;" data-color="#ffd740"></div>
+      <div class="color-swatch"        style="background:#4caf82;" data-color="#4caf82"></div>
+      <div class="color-swatch"        style="background:#9f53ec;" data-color="#9f53ec"></div>
+      <div class="color-swatch"        style="background:#ff9d00;" data-color="#ff9d00"></div>
+      <div class="color-swatch"        style="background:#ffffff;" data-color="#ffffff"></div>
+    </div>
+
+    <!-- Stroke size -->
+    <select class="stroke-select" id="stroke-size">
+      <option value="2">Thin</option>
+      <option value="4" selected>Medium</option>
+      <option value="7">Thick</option>
+      <option value="12">Bold</option>
+    </select>
+
+    <div class="topbar-sep"></div>
+
+    <!-- Actions -->
+    <button class="action-btn" id="undo-btn" title="Undo (Ctrl+Z)">↩ Undo</button>
+    <button class="action-btn danger" id="clear-draw-btn">🗑 Clear</button>
+
+    <div class="topbar-spacer"></div>
+
+    <!-- Pan hint -->
+    <span style="font-size:0.7rem;color:var(--text-dim);white-space:nowrap;">
+      🖱 Wheel = zoom &nbsp;|&nbsp; Space+drag = pan
+    </span>
+  </div>
+
+  <!-- ── Main ── -->
+  <div class="main-layout">
+
+    <!-- Icon Sidebar -->
+    <div class="icon-sidebar">
+      <button class="sidebar-cat-btn active" data-cat="pokemon">
+        <span class="cat-icon">🎮</span><span>Pokémon</span>
+      </button>
+      <button class="sidebar-cat-btn" data-cat="neutrals">
+        <span class="cat-icon">🌿</span><span>Wilds</span>
+      </button>
+      <button class="sidebar-cat-btn" data-cat="items">
+        <span class="cat-icon">🎒</span><span>Items</span>
+      </button>
+      <button class="sidebar-cat-btn" data-cat="other">
+        <span class="cat-icon">⚙</span><span>Other</span>
+      </button>
+      <div class="sidebar-div"></div>
+      <button class="sidebar-cat-btn" id="show-names-btn" title="Toggle names">
+        <span class="cat-icon" id="names-icon">🏷</span><span>Names</span>
+      </button>
+    </div>
+
+    <!-- Entity Panel -->
+    <div class="entity-panel" id="entity-panel">
+      <div class="panel-search-wrap">
+        <div class="search-wrap-inner">
+          <span class="search-icon-panel">🔍</span>
+          <input type="text" class="panel-search" id="panel-search"
+                 placeholder="Search..." autocomplete="off">
+        </div>
+      </div>
+      <div class="role-filters" id="role-filters">
+        <button class="role-filter active" data-role="all-roles">All</button>
+        <button class="role-filter" data-role="atk">Attacker</button>
+        <button class="role-filter" data-role="def">Defender</button>
+        <button class="role-filter" data-role="spe">Speedster</button>
+        <button class="role-filter" data-role="sup">Supporter</button>
+        <button class="role-filter" data-role="all">All-Rounder</button>
+      </div>
+      <div class="role-filters" id="item-filters" style="display:none;">
+        <button class="item-filter role-filter active" data-item-type="all">All</button>
+        <button class="item-filter role-filter" data-item-type="held">Held</button>
+        <button class="item-filter role-filter" data-item-type="battle">Battle</button>
+      </div>
+      <div class="panel-grid-wrap" id="panel-grid-wrap">
+        <div id="sprite-grid-container"></div>
+      </div>
+    </div>
+
+    <!-- Canvas Area -->
+    <div class="canvas-area" id="canvas-area">
+
+      <!-- Viewport: this element is panned & zoomed via CSS transform -->
+      <div id="viewport">
+        <div class="canvas-wrapper" id="canvas-wrapper">
+          <img id="map-img"
+               src="assets/maps/map_groudon.webp"
+               alt="Map"
+               onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMWEyYTJiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzZhODU4NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk1hcCBJbWFnZSBOb3QgRm91bmQ8L3RleHQ+PC9zdmc+'">
+          <canvas id="draw-canvas"></canvas>
+          <div id="sprites-layer"></div>
+        </div>
+      </div>
+
+      <!-- Zoom controls -->
+      <div class="zoom-controls">
+        <button class="zoom-btn" id="zoom-in">+</button>
+        <div class="zoom-level" id="zoom-label">100%</div>
+        <button class="zoom-btn" id="zoom-out">−</button>
+        <button class="zoom-btn" id="zoom-reset"
+                style="font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:700;">FIT</button>
+      </div>
+    </div>
+
+    <!-- Right Panel (selected sprite info) -->
+    <div class="right-panel" id="right-panel">
+      <div class="right-panel-inner">
+        <div class="rp-title">Selected</div>
+        <div class="rp-sprite-preview" id="rp-preview">
+          <img src="" id="rp-img" alt="">
+          <span class="rp-sprite-name" id="rp-name">—</span>
+        </div>
+        <div>
+          <div class="rp-label">Team</div>
+          <div class="rp-team-btns">
+            <button class="rp-team-btn purple active" data-rp-team="purple">🟣</button>
+            <button class="rp-team-btn orange"        data-rp-team="orange">🟠</button>
+            <button class="rp-team-btn neutral"       data-rp-team="neutral">⚪</button>
+          </div>
+        </div>
+        <div>
+          <div class="rp-label">Size</div>
+          <div class="rp-size-wrap">
+            <input type="range" class="rp-size-slider" id="rp-size" min="24" max="96" value="48">
+            <span class="rp-size-val" id="rp-size-val">48</span>
+          </div>
+        </div>
+        <button class="rp-delete-btn" id="rp-delete">🗑 Remove</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drag ghost -->
+  <div class="drag-ghost" id="drag-ghost">
+    <img id="drag-ghost-img" src="" alt="">
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Scripts: order matters — app.js first (defines App), then modules, then navbar -->
+  <script src="./scripts/map/data.js"></script>
+  <script src="./scripts/map/app.js"></script>
+  <script src="./scripts/map/viewport.js"></script>
+  <script src="./scripts/map/drawing.js"></script>
+  <script src="./scripts/map/sprites.js"></script>
+  <script src="./scripts/map/panel.js"></script>
+  <script src="./scripts/navbar.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+  lucide.createIcons();
+  </script>
 </body>
 </html>

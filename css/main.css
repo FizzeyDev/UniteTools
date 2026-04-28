@@ -26,10 +26,9 @@ body {
   color: var(--text);
   min-height: 100vh;
   padding: 1.5rem 1.5rem 3rem;
-  margin-left: 250px;
+  /* NE PAS mettre margin-left ici — géré par sidebar.css */
   transition: margin-left 0.3s ease;
 }
-body.sidebar-collapsed { margin-left: 0; }
 
 /* ── Hero ── */
 .hero {
@@ -116,11 +115,11 @@ body.sidebar-collapsed { margin-left: 0; }
   box-shadow: 0 16px 40px rgba(0,0,0,0.5);
 }
 
-.tool-card.draft      { border-color: rgba(159,83,236,0.4); }
+.tool-card.draft       { border-color: rgba(159,83,236,0.4); }
 .tool-card.draft:hover { border-color: var(--violet); box-shadow: 0 16px 40px rgba(159,83,236,0.15); }
 
-.tool-card.map        { border-color: rgba(79,195,247,0.35); }
-.tool-card.map:hover  { border-color: var(--blue);   box-shadow: 0 16px 40px rgba(79,195,247,0.15); }
+.tool-card.map         { border-color: rgba(79,195,247,0.35); }
+.tool-card.map:hover   { border-color: var(--blue);   box-shadow: 0 16px 40px rgba(79,195,247,0.15); }
 
 .tool-card.calc        { border-color: rgba(255,157,0,0.35); }
 .tool-card.calc:hover  { border-color: var(--orange); box-shadow: 0 16px 40px rgba(255,157,0,0.15); }
@@ -172,7 +171,7 @@ body.sidebar-collapsed { margin-left: 0; }
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 10px 28px;
-  background: var(--blue-dim, rgba(79,195,247,0.12));
+  background: rgba(79,195,247,0.12);
   color: var(--blue);
   border: 1px solid var(--blue);
   border-radius: var(--radius-sm);
@@ -182,18 +181,23 @@ body.sidebar-collapsed { margin-left: 0; }
   display: inline-block;
 }
 
-footer { text-align: center; margin-top: 2rem; font-size: 0.78rem; color: var(--text-dim); }
-footer #footer-legal { margin-top: 3px; font-size: 0.68rem; }
-
 .tool-btn:hover {
   background: rgba(79,195,247,0.22);
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(79,195,247,0.2);
 }
 
+footer {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+footer #footer-legal { margin-top: 3px; font-size: 0.68rem; }
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  body { margin-left: 0; padding: 1rem 0.75rem 2rem; }
+  body { padding: 1rem 0.75rem 2rem; }
   .hero { padding: 3rem 1rem 2.5rem; }
   .hero h1 { font-size: 2.2rem; }
   .hero-subtitle { font-size: 1rem; }

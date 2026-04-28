@@ -743,7 +743,7 @@
         "can_crit": "true",
         "image": "assets/moves/azumarill/whirlpool.png",
         "damages": [
-          {"name": "Damage per Hit", "multiplier": 68, "levelCoef": 4, "constant": 120, "dealDamage": true, "is_tick": true, "tick_count": 10}
+          {"name": "Damage per Hit", "multiplier": 34, "levelCoef": 2, "constant": 60, "dealDamage": true, "is_tick": true, "tick_count": 20}
         ],
         "heals": [
           { "name": "Heal - Per Hit (Wild)", "scaling": "atk", "multiplier": 7, "levelCoef": 0, "constant": 11, "is_tick": true, "tick_count": 10 },
@@ -8628,6 +8628,9 @@
       },
       {
         "name": "Fake Out",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/mr_mime/fake_out.png",
         "damages": [
@@ -8636,52 +8639,73 @@
       },
       {
         "name": "Light Screen",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/mr_mime/light_screen.png",
         "damages": []
       },
       {
         "name": "Confusion",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/mr_mime/confusion.png",
         "damages": [
           {"name": "Base", "multiplier": 148.75, "levelCoef": 14, "constant": 340, "dealDamage": true},
+          {"name": "Base +", "multiplier": 163, "levelCoef": 18, "constant": 390, "dealDamage": true, "upgraded": true},
           {"name": "Wall Hit Stun", "multiplier": 200, "levelCoef": 16, "constant": 450, "dealDamage": true},
-          {"name": "Power Swap Stun", "multiplier": 80, "levelCoef": 6, "constant": 180, "dealDamage": true}
+          {"name": "Wall Hit Stun +", "multiplier": 219, "levelCoef": 21, "constant": 500, "dealDamage": true, "upgraded": true},
+          {"name": "Power Swap Stun", "multiplier": 80, "levelCoef": 6, "constant": 180, "dealDamage": true},
+          {"name": "Power Swap Stun +", "multiplier": 88, "levelCoef": 7, "constant": 200, "dealDamage": true, "upgraded": true}
         ]
       },
       {
         "name": "Psychic",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/mr_mime/psychic.png",
         "damages": [
-          {"name": "Per Pulse (x3)", "multiplier": 21.6, "levelCoef": 2, "constant": 51, "dealDamage": true},
+          {"name": "Per Pulse (x3)", "multiplier": 21.6, "levelCoef": 2, "constant": 51, "dealDamage": true, "is_tick": true, "tick_count": 3},
           {"name": "Final Pulse", "multiplier": 72, "levelCoef": 8, "constant": 170, "dealDamage": true}
         ]
       },
       {
         "name": "Barrier",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/mr_mime/barrier.png",
         "damages": []
       },
       {
         "name": "Power Swap",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/mr_mime/power_swap.png",
         "damages": [
-          {"name": "Per Tick (to enemy)", "multiplier": 18, "levelCoef": 1, "constant": 30, "dealDamage": true}
+          {"name": "Per Tick (to enemy)", "multiplier": 18, "levelCoef": 1, "constant": 30, "dealDamage": true, "is_tick": true, "tick_count": 99, "notes": "99 Ticks because he can be unlimited"}
         ],
         "heals": [
-          { "name": "Heal - Per Tick (to ally)", "scaling": "sp_atk", "multiplier": 21, "levelCoef": 2, "constant": 15 }
+          {"name": "Heal - Per Tick (to ally)", "scaling": "sp_atk", "multiplier": 21, "levelCoef": 2, "constant": 15, "is_tick": true, "tick_count": 99, "notes": "99 Ticks because he can be unlimited"}
         ]
       },
       {
         "name": "Showtime (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/mr_mime/showtime.png",
         "damages": [
-          {"name": "First 3 Hits", "multiplier": 79, "levelCoef": 5, "constant": 220, "dealDamage": true},
+          {"name": "First 3 Hits", "multiplier": 79, "levelCoef": 5, "constant": 220, "dealDamage": true, "is_tick": true, "tick_count": 3},
           {"name": "Final Hit", "multiplier": 158, "levelCoef": 10, "constant": 440, "dealDamage": true}
         ],
         "shields": [
@@ -8881,6 +8905,9 @@
       },
       {
         "name": "Nuzzle",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/pawmot/nuzzle.png",
         "damages": [
@@ -8889,6 +8916,9 @@
       },
       {
         "name": "Scratch",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/pawmot/scratch.png",
         "damages": [
@@ -8897,26 +8927,48 @@
       },
       {
         "name": "Thunder Punch",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/pawmot/thunder_punch.png",
         "damages": [
           {"name": "Damage", "multiplier": 232, "levelCoef": 29, "constant": 404, "dealDamage": true},
-          {"name": "Damage (Fighter Mode)", "multiplier": 324, "levelCoef": 40, "constant": 566, "dealDamage": true}
+          {"name": "Damage +", "multiplier": 269, "levelCoef": 32, "constant": 465, "dealDamage": true, "upgraded": true},
+          {"name": "Damage (Fighter Mode)", "multiplier": 324, "levelCoef": 40, "constant": 566, "dealDamage": true},
+          {"name": "Damage + (Fighter Mode)", "multiplier": 374, "levelCoef": 47, "constant": 652, "dealDamage": true, "upgraded": true}
         ]
       },
       {
         "name": "Supercell Slam",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/pawmot/supercell_slam.png",
         "damages": [
           {"name": "First Use", "multiplier": 128, "levelCoef": 12, "constant": 171, "dealDamage": true},
           {"name": "Second Use", "multiplier": 168, "levelCoef": 16, "constant": 222, "dealDamage": true},
           {"name": "First Use (Fighter Mode)", "multiplier": 179, "levelCoef": 18, "constant": 240, "dealDamage": true},
-          {"name": "Second Use (Fighter Mode)", "multiplier": 234, "levelCoef": 22, "constant": 311, "dealDamage": true}
+          {"name": "First Use + (Fighter Mode)", "multiplier": 207, "levelCoef": 20, "constant": 274, "dealDamage": true, "upgraded": true},
+          {"name": "Second Use (Fighter Mode)", "multiplier": 234, "levelCoef": 22, "constant": 311, "dealDamage": true},
+          {"name": "Second Use + (Fighter Mode)", "multiplier": 270, "levelCoef": 26, "constant": 358, "dealDamage": true, "upgraded": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield - Unite",
+            "scaling": "atk",
+            "multiplier": 280,
+            "levelCoef": 0,
+            "constant": 240
+          }
         ]
       },
       {
         "name": "Volt Switch",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/pawmot/volt_switch.png",
         "damages": [
@@ -8926,19 +8978,35 @@
       },
       {
         "name": "Mach Punch",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/pawmot/mach_punch.png",
         "damages": [
           {"name": "Damage", "multiplier": 180, "levelCoef": 20, "constant": 270, "dealDamage": true},
-          {"name": "Damage (Fighter Mode)", "multiplier": 85, "levelCoef": 9, "constant": 126, "dealDamage": true}
+          {"name": "Damage (Fighter Mode)", "multiplier": 85, "levelCoef": 9, "constant": 126, "dealDamage": true},
+          {"name": "Damage (Fighter Mode)", "multiplier": 96, "levelCoef": 11, "constant": 145, "dealDamage": true, "upgraded": true}
         ]
       },
       {
         "name": "Zip Zap Full-Charge Spark (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/pawmot/zip_zap_full_charge_spark.png",
         "damages": [
           {"name": "Damage", "multiplier": 302, "levelCoef": 36, "constant": 504, "dealDamage": true}
+        ],
+        "shields": [
+          {
+            "name": "Shield - Unite",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0
+          }
         ]
       }
     ]
@@ -8977,6 +9045,9 @@
       },
       {
         "name": "Thunder Shock",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/pikachu/thunder_shock.png",
         "damages": [
@@ -8985,6 +9056,9 @@
       },
       {
         "name": "Electroweb",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/pikachu/electroweb.png",
         "damages": [
@@ -8993,35 +9067,51 @@
       },
       {
         "name": "Electro Ball",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/pikachu/electro_ball.png",
         "damages": [
           {"name": "Area", "multiplier": 80, "levelCoef": 24, "constant": 420, "dealDamage": true},
-          {"name": "Execute Bonus", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+6% missing HP (cap 1200 vs wild)"}
+          {"name": "Area +", "multiplier": 86, "levelCoef": 28, "constant": 480, "dealDamage": true, "upgraded": true},
+          {"name": "Execute Bonus", "missing_hp_percent": 6, "wild_cap": 1200, "dealDamage": true, "notes": "+6% missing HP (cap 1200 vs wild)"},
+          {"name": "Execute Bonus +", "missing_hp_percent": 8, "wild_cap": 1200, "dealDamage": true, "upgraded": true, "notes": "+6% missing HP (cap 1200 vs wild)"}
         ]
       },
       {
         "name": "Thunder",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/pikachu/thunder.png",
         "damages": [
-          {"name": "Per Bolt (x5)", "multiplier": 20.9, "levelCoef": 5, "constant": 218, "dealDamage": true}
+          {"name": "Per Bolt (x5)", "multiplier": 20.9, "levelCoef": 5, "constant": 218, "dealDamage": true, "is_tick": true, "tick_count": 5},
+          {"name": "Per Bolt + (x7)", "multiplier": 20.9, "levelCoef": 5, "constant": 218, "dealDamage": true, "upgraded": true, "is_tick": true, "tick_count": 7}
         ]
       },
       {
         "name": "Volt Tackle",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/pikachu/volt_tackle.png",
         "damages": [
-          {"name": "Damage (x5)", "multiplier": 15, "levelCoef": 3, "constant": 150, "dealDamage": true}
+          {"name": "Damage (x5)", "multiplier": 15, "levelCoef": 3, "constant": 150, "dealDamage": true, "is_tick": true, "tick_count": 5}
         ]
       },
       {
         "name": "Thunderbolt",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/pikachu/thunderbolt.png",
         "damages": [
-          {"name": "Damage", "multiplier": 50, "levelCoef": 12, "constant": 500, "dealDamage": true}
+          {"name": "Damage", "multiplier": 50, "levelCoef": 12, "constant": 500, "dealDamage": true},
+          {"name": "Damage", "multiplier": 59, "levelCoef": 14, "constant": 600, "dealDamage": true, "upgraded": true}
         ]
       },
       {
@@ -9029,7 +9119,16 @@
         "can_crit": "false",
         "image": "assets/moves/pikachu/thunderstorm.png",
         "damages": [
-          {"name": "Damage", "multiplier": 45.1, "levelCoef": 9, "constant": 450, "dealDamage": true}
+          {"name": "Damage", "multiplier": 45.1, "levelCoef": 9, "constant": 450, "dealDamage": true, "is_tick": true, "tick_count": 4}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 30,
+            "levelCoef": 0,
+            "constant": 0, "target": "self"
+          }
         ]
       }
     ]
@@ -9067,6 +9166,9 @@
       },
       {
         "name": "Confusion",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/psyduck/confusion.png",
         "damages": [
@@ -9076,6 +9178,9 @@
       },
       {
         "name": "Tail Whip",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/psyduck/tail_whip.png",
         "damages": [
@@ -9084,26 +9189,35 @@
       },
       {
         "name": "Surf",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/psyduck/surf.png",
         "damages": [
           {"name": "Damage", "multiplier": 65, "levelCoef": 4, "constant": 304, "dealDamage": true},
-          {"name": "Mysterious Power (x2)", "multiplier": 45, "levelCoef": 3, "constant": 212, "dealDamage": true}
+          {"name": "Mysterious Power (x2)", "multiplier": 45, "levelCoef": 3, "constant": 212, "dealDamage": true, "is_tick": true, "tick_count": 2}
         ]
       },
       {
         "name": "Bubble Beam",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/psyduck/bubble_beam.png",
         "damages": [
           {"name": "Beam", "multiplier": 80, "levelCoef": 4, "constant": 360, "dealDamage": true},
-          {"name": "Bubbles (x3)", "multiplier": 40, "levelCoef": 2, "constant": 180, "dealDamage": true},
+          {"name": "Bubbles (x3)", "multiplier": 40, "levelCoef": 2, "constant": 180, "dealDamage": true, "is_tick": true, "tick_count": 3},
           {"name": "Mysterious Power Beam", "multiplier": 96, "levelCoef": 5, "constant": 432, "dealDamage": true},
-          {"name": "Mysterious Power Bubbles (x3)", "multiplier": 48, "levelCoef": 2, "constant": 216, "dealDamage": true}
+          {"name": "Mysterious Power Bubbles (x3)", "multiplier": 48, "levelCoef": 2, "constant": 216, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Disable",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/psyduck/disable.png",
         "damages": [
@@ -9112,6 +9226,9 @@
       },
       {
         "name": "Psychic",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/psyduck/psychic.png",
         "damages": [
@@ -9120,10 +9237,13 @@
       },
       {
         "name": "Full-Power Psy-ay-ay! (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/psyduck/full_power_psy_ay_ay.png",
         "damages": [
-          {"name": "Damage (x3)", "multiplier": 60, "levelCoef": 6, "constant": 300, "dealDamage": true}
+          {"name": "Damage (x3)", "multiplier": 60, "levelCoef": 6, "constant": 300, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ],
         "shields": [
           {
@@ -9131,7 +9251,7 @@
             "scaling": "hp",
             "multiplier": 20,
             "levelCoef": 0,
-            "constant": 0
+            "constant": 0, "target": "self"
           }
         ]
       }
@@ -9171,6 +9291,9 @@
       },
       {
         "name": "Thunder Shock",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/raichu/thunder_shock.png",
         "damages": [
@@ -9179,6 +9302,9 @@
       },
       {
         "name": "Thunder Wave",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/raichu/thunder_wave.png",
         "damages": [
@@ -9187,23 +9313,33 @@
       },
       {
         "name": "Stored Power",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/raichu/stored_power.png",
         "damages": [
-          {"name": "Additional", "multiplier": 72, "levelCoef": 0, "constant": 80, "dealDamage": true}
+          {"name": "Additional", "multiplier": 72, "levelCoef": 0, "constant": 80, "dealDamage": true, "is_tick": true, "tick_count": 6}
         ]
       },
       {
         "name": "Electro Ball",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/raichu/electro_ball.png",
         "damages": [
           {"name": "Damage", "multiplier": 178, "levelCoef": 0, "constant": 340, "dealDamage": true},
-          {"name": "Activated by Thunderbolt", "multiplier": 187, "levelCoef": 0, "constant": 356, "dealDamage": true}
+          {"name": "Activated by Thunderbolt", "multiplier": 187, "levelCoef": 0, "constant": 356, "dealDamage": true},
+          {"name": "Damage - Dot + (x8)", "multiplier": 7.8, "levelCoef": 0, "constant": 10, "dealDamage": true, "is_tick": true, "tick_count": 8, "notes": "Need at least level 11"}
         ]
       },
       {
         "name": "Thunderbolt",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/raichu/thunderbolt.png",
         "damages": [
@@ -9212,20 +9348,36 @@
       },
       {
         "name": "Psychic",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/raichu/psychic.png",
         "damages": [
           {"name": "Damage", "multiplier": 102.4, "levelCoef": 0, "constant": 240, "dealDamage": true},
-          {"name": "Additional", "multiplier": 16, "levelCoef": 0, "constant": 40, "dealDamage": true}
+          {"name": "Additional", "multiplier": 16, "levelCoef": 0, "constant": 40, "dealDamage": true},
+          {"name": "Damage - Dot + (x5)", "multiplier": 10.24, "levelCoef": 0, "constant": 24, "dealDamage": true, "is_tick": true, "tick_count": 5, "notes": "Need at least level 11"}
         ]
       },
       {
         "name": "Thunderstorm Aerial (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/raichu/thunderstorm_aerial.png",
         "damages": [
           {"name": "Damage", "multiplier": 168, "levelCoef": 0, "constant": 400, "dealDamage": true},
-          {"name": "DoT (5 Ticks)", "multiplier": 33.6, "levelCoef": 0, "constant": 80, "dealDamage": true}
+          {"name": "DoT (5 Ticks)", "multiplier": 33.6, "levelCoef": 0, "constant": 80, "dealDamage": true, "is_tick": true, "tick_count": 5}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0, "target": "self"
+          }
         ]
       }
     ]
@@ -9701,8 +9853,8 @@
         "can_crit": "false",
         "image": "assets/moves/sirfetchd/brutal_swing.png",
         "damages": [
-          {"name": "Throw (per hit)", "multiplier": 100, "levelCoef": 0, "constant": 224, "dealDamage": true},
-          {"name": "Slam (optional)", "multiplier": 100, "levelCoef": 0, "constant": 224, "dealDamage": true}
+          {"name": "Throw", "multiplier": 100, "levelCoef": 0, "constant": 224, "dealDamage": true},
+          {"name": "Slam (optional)", "multiplier": 90, "levelCoef": 0, "constant": 200, "dealDamage": true}
         ],
         "shields": [
           {"name": "Shield", "scaling": "atk", "multiplier": 350, "levelCoef": 0, "constant": 180, "dealDamage": true},
@@ -9731,7 +9883,7 @@
         "can_crit": "false",
         "image": "assets/moves/sirfetchd/lunging_leek_nova_blast.png",
         "damages": [
-          {"name": "Charge (per hit, 5x)", "multiplier": 100, "levelCoef": 0, "constant": 200, "dealDamage": true},
+          {"name": "Charge (per hit, 5x)", "multiplier": 100, "levelCoef": 0, "constant": 200, "dealDamage": true, "is_tick": true, "tick_count": 5},
           {"name": "Explosion", "multiplier": 200, "levelCoef": 0, "constant": 400, "dealDamage": true, "notes": "Double damage, stuns 0.4s"}
         ]
       }
@@ -9771,6 +9923,9 @@
       },
       {
         "name": "Water Gun",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/slowbro/water_gun.png",
         "damages": [
@@ -9782,6 +9937,9 @@
       },
       {
         "name": "Slack Off",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/slowbro/slack_off.png",
         "damages": [],
@@ -9797,29 +9955,41 @@
       },
       {
         "name": "Scald",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/slowbro/scald.png",
         "damages": [
-          {"name": "Per Hit (3 Hits)", "multiplier": 97, "levelCoef": 7, "constant": 150, "dealDamage": true},
-          {"name": "Burn (5 Ticks)", "multiplier": 17, "levelCoef": 1, "constant": 28, "dealDamage": true}
+          {"name": "Per Hit (3 Hits)", "multiplier": 97, "levelCoef": 7, "constant": 150, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Burn (5 Ticks)", "multiplier": 17, "levelCoef": 1, "constant": 28, "dealDamage": true, "is_tick": true, "tick_count": 5}
         ]
       },
       {
         "name": "Surf",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/slowbro/surf.png",
         "damages": [
-          {"name": "Per Wave (3 Waves)", "multiplier": 103, "levelCoef": 6, "constant": 210, "dealDamage": true}
+          {"name": "Per Wave (3 Waves)", "multiplier": 103, "levelCoef": 6, "constant": 210, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
         "name": "Amnesia",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/slowbro/amnesia.png",
         "damages": []
       },
       {
         "name": "Telekinesis",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/slowbro/telekinesis.png",
         "damages": []
@@ -9829,7 +9999,7 @@
         "can_crit": "false",
         "image": "assets/moves/slowbro/slowbeam.png",
         "damages": [
-          {"name": "Damage (x6)", "multiplier": 80, "levelCoef": 3, "constant": 170, "dealDamage": true}
+          {"name": "Damage (x6)", "multiplier": 80, "levelCoef": 3, "constant": 170, "dealDamage": true, "is_tick": true, "tick_count": 6}
         ],
         "shields": [
           {
@@ -9877,6 +10047,9 @@
       },
       {
         "name": "Tackle",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/snorlax/tackle.png",
         "damages": [
@@ -9885,26 +10058,53 @@
       },
       {
         "name": "Rest",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/snorlax/rest.png",
-        "damages": []
+        "damages": [],
+        "heals": [
+          {
+            "name": "Heal - per tick",
+            "scaling": "hp",
+            "multiplier": 8,
+            "levelCoef": 0,
+            "constant": 0, "is_tick": true, "tick_count": 3, "target": "self"
+          }
+        ]
       },
       {
         "name": "Heavy Slam",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/snorlax/heavy_slam.png",
         "damages": [
-          {"name": "Damage", "multiplier": 160, "levelCoef": 12, "constant": 320, "dealDamage": true}
+          {"name": "Damage", "multiplier": 160, "levelCoef": 12, "constant": 320, "dealDamage": true},
+          {"name": "Damage +", "multiplier": 209, "levelCoef": 17, "constant": 416, "dealDamage": true, "upgraded": true}
         ]
       },
       {
         "name": "Flail",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
         "can_crit": "false",
         "image": "assets/moves/snorlax/flail.png",
-        "damages": []
+        "damages": [
+          {"name": "Basic Attack - Above 80% HP", "multiplier": 45, "levelCoef": 7, "constant": 90, "wild_cap": 2000, "dealDamage": true},
+          {"name": "Basic Attack - Above 80% HP +", "multiplier": 81, "levelCoef": 7, "constant": 100, "wild_cap": 2000, "dealDamage": true, "upgraded": true},
+          {"name": "Boosted Attack - Above 80% HP", "multiplier": 67.5, "levelCoef": 10, "constant": 135, "wild_cap": 2500, "dealDamage": true},
+          {"name": "Boosted Attack - Above 80% HP +", "multiplier": 121.5, "levelCoef": 10, "constant": 150, "wild_cap": 2500, "dealDamage": true, "upgraded": true}
+        ]
       },
       {
         "name": "Block",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/snorlax/block.png",
         "damages": [],
@@ -9914,23 +10114,29 @@
             "scaling": "hp",
             "multiplier": 17.4,
             "levelCoef": 0,
-            "constant": 1560
+            "constant": 1560, "target": "self"
           }
         ]
       },
       {
         "name": "Yawn",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/snorlax/yawn.png",
         "damages": []
       },
       {
         "name": "Power Nap (Unite)",
+        "learnLevel": 9 ,
+        "unlearn": null,
+        "upgradeLevel": null,
         "can_crit": "false",
         "image": "assets/moves/snorlax/power_nap.png",
         "damages": [
-          {"name": "Damage", "multiplier": 132, "levelCoef": 8, "constant": 360, "dealDamage": true},
-          {"name": "DoT (3 Ticks)", "multiplier": 66, "levelCoef": 4, "constant": 180, "dealDamage": true}
+          {"name": "Damage", "multiplier": 132, "levelCoef": 8, "constant": 360, "dealDamage": true, "is_tick": true, "tick_count": 2},
+          {"name": "DoT (3 Ticks)", "multiplier": 66, "levelCoef": 4, "constant": 180, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ],
         "heals": [
           {
@@ -9938,7 +10144,7 @@
             "scaling": "hp",
             "multiplier": 10,
             "levelCoef": 0,
-            "constant": 0
+            "constant": 0, "is_tick": true, "tick_count": 9, "target": "self"
           }
         ],
         "shields": [
@@ -9947,7 +10153,7 @@
             "scaling": "hp",
             "multiplier": 40,
             "levelCoef": 0,
-            "constant": 0
+            "constant": 0, "target": "self"
           }
         ]
       }
