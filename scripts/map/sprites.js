@@ -3,6 +3,7 @@
    ============================================================ */
 
 (function () {
+  function init() {
   const spritesLayer = document.getElementById('sprites-layer');
   const canvasArea   = document.getElementById('canvas-area');
   const rightPanel   = document.getElementById('right-panel');
@@ -53,6 +54,11 @@
   /* ──────────── Place sprite ──────────── */
   function placeSprite(item, canvasX, canvasY, team = App.currentTeam, size = 48) {
     const canvas = document.getElementById('draw-canvas');
+
+    // Safety: if canvas isn't sized yet, force a resize first
+    if (canvas.width <= 300) {
+      App.resizeCanvas && App.resizeCanvas();
+    }
 
     const spriteEl = document.createElement('div');
     spriteEl.className = `placed-sprite team-${team}`;
@@ -199,4 +205,10 @@
     App.placedSprites = [];
     App.selectSprite(null);
   };
+  } // end init
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();

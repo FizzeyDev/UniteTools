@@ -3,6 +3,7 @@
    ============================================================ */
 
 (function () {
+  function init() {
   const drawCanvas = document.getElementById('draw-canvas');
   const ctx        = drawCanvas.getContext('2d');
 
@@ -16,14 +17,15 @@
   /* ── Resize canvas to match map image exactly ── */
   function resizeCanvas() {
     const img = App.mapImg;
-    const w   = img.offsetWidth;
-    const h   = img.offsetHeight;
+    const w   = img.naturalWidth  || img.offsetWidth;
+    const h   = img.naturalHeight || img.offsetHeight;
     if (!w || !h) return;
-    if (drawCanvas.width === w && drawCanvas.height === h) return;
     drawCanvas.width        = w;
     drawCanvas.height       = h;
     drawCanvas.style.width  = w + 'px';
     drawCanvas.style.height = h + 'px';
+    img.style.width  = w + 'px';
+    img.style.height = h + 'px';
     redrawAll();
   }
 
@@ -210,4 +212,11 @@
 
   App.redrawAll    = redrawAll;
   App.resizeCanvas = resizeCanvas;
+  } // end init()
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();

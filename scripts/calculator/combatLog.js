@@ -735,6 +735,21 @@ function injectCombatLogStyles() {
       gap: 2px;
     }
 
+    .cl-picker-section-sep {
+      padding: 4px 10px 2px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #555;
+      border-top: 1px solid #252540;
+      margin-top: 2px;
+    }
+    .cl-picker-section-sep:first-child {
+      border-top: none;
+      margin-top: 0;
+    }
+
     /* cl-picker-row defined below with crit controls */
 
     .cl-picker-row input[type="checkbox"] {

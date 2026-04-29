@@ -898,5 +898,15 @@
     "file": "moltres_all.png",
     "role": "all",
     "dex": 146
+  },
+  {
+    "name": "Typhlosion",
+    "name_fr": "Typhlosion",
+    "name_es": "Typhlosion",
+    "name_de": "Tornupto",
+    "name_it": "Typhlosion",
+    "file": "typhlosion_atk.png",
+    "role": "atk",
+    "dex": 157
   }
 ]

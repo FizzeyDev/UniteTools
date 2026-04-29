@@ -416,14 +416,19 @@ body.sidebar-collapsed { margin-left: 0; }
 #viewport {
   position: absolute;
   top: 0; left: 0;
-  width: 100%; height: 100%;
+  /* Must shrink-wrap the image — NOT fill canvas-area —
+     so getBoundingClientRect on children is always accurate */
+  width: max-content;
+  height: max-content;
   transform-origin: 0 0;
   will-change: transform;
 }
 
-/* Canvas wrapper stays relative inside viewport */
+/* Canvas wrapper: exactly the size of the map image */
 .canvas-wrapper {
-  position: absolute;
+  position: relative;
+  display: inline-block; /* shrink-wrap the img */
+  line-height: 0;        /* kill phantom gap under img */
 }
 
 #map-img {

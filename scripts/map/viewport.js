@@ -3,6 +3,7 @@
    ============================================================ */
 
 (function () {
+  function init() {
   const canvasArea = document.getElementById('canvas-area');
   const viewport   = document.getElementById('viewport');
   const zoomLabel  = document.getElementById('zoom-label');
@@ -27,13 +28,16 @@
 
   /* ── Centre map ── */
   function centreMap() {
+    App.resizeCanvas && App.resizeCanvas();
+
     const areaRect = canvasArea.getBoundingClientRect();
-    const imgW = App.mapImg.naturalWidth  || App.mapImg.offsetWidth  || 800;
-    const imgH = App.mapImg.naturalHeight || App.mapImg.offsetHeight || 600;
+    const img  = App.mapImg;
+    const imgW = img.naturalWidth  || img.offsetWidth  || 800;
+    const imgH = img.naturalHeight || img.offsetHeight || 600;
 
     const fitZoom = Math.min(
-      (areaRect.width  * 0.9) / imgW,
-      (areaRect.height * 0.9) / imgH,
+      (areaRect.width  * 0.92) / imgW,
+      (areaRect.height * 0.92) / imgH,
       1
     );
     zoom = fitZoom;
@@ -139,4 +143,10 @@
   /* ── Init ── */
   App.zoom = zoom;
   applyTransform();
+  } // end init
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();

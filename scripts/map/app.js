@@ -49,7 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.classList.add('active');
       App.mapImg.src = MAPS[btn.dataset.map];
       App.mapImg.onload = () => {
-        setTimeout(() => { App.resizeCanvas(); App.centreMap(); }, 60);
+        App.resizeCanvas && App.resizeCanvas();
+        setTimeout(() => {
+          App.resizeCanvas && App.resizeCanvas();
+          App.centreMap    && App.centreMap();
+        }, 80);
       };
       App.drawPaths = [];
       App.redrawAll && App.redrawAll();
@@ -161,16 +165,16 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ── Init ── */
   setTimeout(() => { App.renderPanel && App.renderPanel(); }, 0);
 
-  App.mapImg.addEventListener('load', () => {
+  function initMap() {
+    App.resizeCanvas && App.resizeCanvas();
     setTimeout(() => {
       App.resizeCanvas && App.resizeCanvas();
       App.centreMap    && App.centreMap();
-    }, 80);
-  });
-  if (App.mapImg.complete) {
-    setTimeout(() => {
-      App.resizeCanvas && App.resizeCanvas();
-      App.centreMap    && App.centreMap();
-    }, 80);
+    }, 100);
+  }
+
+  App.mapImg.addEventListener('load', initMap);
+  if (App.mapImg.complete && App.mapImg.naturalWidth) {
+    initMap();
   }
 });

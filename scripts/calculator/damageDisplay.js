@@ -1352,7 +1352,28 @@ function openLinePicker(card, move, allItems) {
     critCount: 0,
   }));
 
-  allItems.forEach((item, idx) => {
+  // ── Séparateurs par section ──────────────────────────────────────────────
+  const typeOrder = ['damage', 'heal', 'shield'];
+  const typeLabels = { damage: '💥 Damage', heal: '❤️ Heal', shield: '🛡️ Shield' };
+  let lastType = null;
+
+  // On trie les items pour regrouper par type (damage → heal → shield)
+  const sortedItems = [...allItems].sort((a, b) => typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type));
+  // On garde les indices originaux pour critStates
+  const sortedIdxMap = sortedItems.map(si => allItems.indexOf(si));
+
+  sortedItems.forEach((item, sortedIdx) => {
+    const idx = sortedIdxMap[sortedIdx];
+
+    // Séparateur de section
+    if (item.type !== lastType) {
+      lastType = item.type;
+      const sep = document.createElement('div');
+      sep.className = 'cl-picker-section-sep';
+      sep.textContent = typeLabels[item.type];
+      list.appendChild(sep);
+    }
+
     const row = document.createElement('div');
     row.className = 'cl-picker-row';
 
@@ -1362,7 +1383,7 @@ function openLinePicker(card, move, allItems) {
     const cb = document.createElement('input');
     cb.type = 'checkbox';
     cb.checked = true;
-    checkboxes.push(cb);
+    checkboxes[idx] = cb;
     cb.addEventListener('click', (e) => e.stopPropagation());
 
     const valSpan = document.createElement('span');
@@ -1388,9 +1409,8 @@ function openLinePicker(card, move, allItems) {
     });
 
     const updateVal = () => {
-      if (item.type !== 'damage' || !item.canCrit) {
-        const v = item.type === 'damage' ? item.value : item.selfValue;
-        valSpan.textContent = v.toLocaleString();
+      if (item.type !== 'damage') {
+        valSpan.textContent = item.selfValue.toLocaleString();
         return;
       }
 
@@ -1399,12 +1419,21 @@ function openLinePicker(card, move, allItems) {
         const cc = Math.min(critStates[idx].critCount, hc);
         const nc = hc - cc;
 
+        if (!item.canCrit) {
+          // Pas de crit : juste le nombre de hits × valeur par tick
+          const perTick = item.normalPerTick ?? Math.round(item.value / item.tickCount);
+          const total = perTick * hc;
+          critStates[idx]._resolvedValue = total;
+          valSpan.textContent = total.toLocaleString();
+          return;
+        }
+
         // Utilise tick_scaling si présent
         if (item.tickScaling) {
           let total = 0;
           for (let i = 0; i < hc; i++) {
             const scale = item.tickScaling[i] ?? item.tickScaling[item.tickScaling.length - 1];
-            const isTickCrit = i < cc; // les cc premiers ticks sont des crits
+            const isTickCrit = i < cc;
             const base = isTickCrit ? item.critPerTick : item.normalPerTick;
             total += Math.floor(base * scale);
           }
@@ -1416,71 +1445,79 @@ function openLinePicker(card, move, allItems) {
           valSpan.textContent = total.toLocaleString();
         }
       } else {
+        if (!item.canCrit) {
+          valSpan.textContent = item.value.toLocaleString();
+          return;
+        }
         const v = critStates[idx].isCrit ? item.critValue : item.value;
         critStates[idx]._resolvedValue = v;
         valSpan.textContent = v.toLocaleString();
       }
     };
 
-    if (item.type === 'damage' && item.canCrit) {
+    // ── Contrôles : hits (toujours si isTick) + crits (si canCrit) ──────
+    if (item.isTick && item.tickCount > 1) {
       const critCtrl = document.createElement('div');
       critCtrl.className = 'cl-crit-controls';
 
-      if (item.isTick && item.tickCount > 1) {
-        const maxHits = item.tickCount;
-        critStates[idx].hitCount  = maxHits;
-        critStates[idx].critCount = 0;
+      const maxHits = item.tickCount;
+      critStates[idx].hitCount  = maxHits;
+      critStates[idx].critCount = 0;
 
-        critCtrl.innerHTML = `
-          <div class="cl-counter-row">
-            <span class="cl-crit-label">Hits :</span>
-            <button class="cl-crit-btn cl-hit-minus">−</button>
-            <span class="cl-hit-count">${maxHits}</span>/<span class="cl-crit-max">${maxHits}</span>
-            <button class="cl-crit-btn cl-hit-plus">+</button>
-          </div>
-          <div class="cl-counter-row">
-            <span class="cl-crit-label">💥Crits :</span>
-            <button class="cl-crit-btn cl-crit-minus">−</button>
-            <span class="cl-crit-count">0</span>/<span class="cl-hit-max-ref">${maxHits}</span>
-            <button class="cl-crit-btn cl-crit-plus">+</button>
-          </div>
-        `;
+      const showCritRow = item.type === 'damage' && item.canCrit;
 
-        const hitCountEl  = critCtrl.querySelector('.cl-hit-count');
-        const critCountEl = critCtrl.querySelector('.cl-crit-count');
-        const critMaxRef  = critCtrl.querySelector('.cl-hit-max-ref');
+      critCtrl.innerHTML = `
+        <div class="cl-counter-row">
+          <span class="cl-crit-label">Hits :</span>
+          <button class="cl-crit-btn cl-hit-minus">−</button>
+          <span class="cl-hit-count">${maxHits}</span>/<span class="cl-crit-max">${maxHits}</span>
+          <button class="cl-crit-btn cl-hit-plus">+</button>
+        </div>
+        ${showCritRow ? `
+        <div class="cl-counter-row">
+          <span class="cl-crit-label">💥Crits :</span>
+          <button class="cl-crit-btn cl-crit-minus">−</button>
+          <span class="cl-crit-count">0</span>/<span class="cl-hit-max-ref">${maxHits}</span>
+          <button class="cl-crit-btn cl-crit-plus">+</button>
+        </div>` : ''}
+      `;
 
-        const refreshColors = () => {
-          hitCountEl.style.color  = critStates[idx].hitCount  < maxHits ? '#ff9d00' : '#aaa';
-          critCountEl.style.color = critStates[idx].critCount > 0       ? '#ef5350' : '#aaa';
-        };
+      const hitCountEl  = critCtrl.querySelector('.cl-hit-count');
+      const critCountEl = showCritRow ? critCtrl.querySelector('.cl-crit-count') : null;
+      const critMaxRef  = showCritRow ? critCtrl.querySelector('.cl-hit-max-ref') : null;
 
-        critCtrl.querySelector('.cl-hit-minus').addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (critStates[idx].hitCount > 0) {
-            critStates[idx].hitCount--;
-            if (critStates[idx].critCount > critStates[idx].hitCount) {
-              critStates[idx].critCount = critStates[idx].hitCount;
-              critCountEl.textContent = critStates[idx].critCount;
-            }
-            hitCountEl.textContent  = critStates[idx].hitCount;
-            critMaxRef.textContent  = critStates[idx].hitCount;
-            refreshColors();
-            updateVal();
+      const refreshColors = () => {
+        hitCountEl.style.color  = critStates[idx].hitCount  < maxHits ? '#ff9d00' : '#aaa';
+        if (critCountEl) critCountEl.style.color = critStates[idx].critCount > 0 ? '#ef5350' : '#aaa';
+      };
+
+      critCtrl.querySelector('.cl-hit-minus').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (critStates[idx].hitCount > 0) {
+          critStates[idx].hitCount--;
+          if (showCritRow && critStates[idx].critCount > critStates[idx].hitCount) {
+            critStates[idx].critCount = critStates[idx].hitCount;
+            critCountEl.textContent = critStates[idx].critCount;
           }
-        });
+          hitCountEl.textContent = critStates[idx].hitCount;
+          if (critMaxRef) critMaxRef.textContent = critStates[idx].hitCount;
+          refreshColors();
+          updateVal();
+        }
+      });
 
-        critCtrl.querySelector('.cl-hit-plus').addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (critStates[idx].hitCount < maxHits) {
-            critStates[idx].hitCount++;
-            hitCountEl.textContent = critStates[idx].hitCount;
-            critMaxRef.textContent = critStates[idx].hitCount;
-            refreshColors();
-            updateVal();
-          }
-        });
+      critCtrl.querySelector('.cl-hit-plus').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (critStates[idx].hitCount < maxHits) {
+          critStates[idx].hitCount++;
+          hitCountEl.textContent = critStates[idx].hitCount;
+          if (critMaxRef) critMaxRef.textContent = critStates[idx].hitCount;
+          refreshColors();
+          updateVal();
+        }
+      });
 
+      if (showCritRow) {
         critCtrl.querySelector('.cl-crit-minus').addEventListener('click', (e) => {
           e.stopPropagation();
           if (critStates[idx].critCount > 0) {
@@ -1500,24 +1537,29 @@ function openLinePicker(card, move, allItems) {
             updateVal();
           }
         });
+      }
 
-      } else {
-        critCtrl.innerHTML = `
-          <button class="cl-crit-toggle" data-mode="normal">Normal</button>
-          <button class="cl-crit-toggle cl-crit-toggle-crit" data-mode="crit">Crit</button>
-        `;
-        const btns = critCtrl.querySelectorAll('.cl-crit-toggle');
-        btns[0].classList.add('active');
-        btns.forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const mode = btn.dataset.mode;
-            critStates[idx].isCrit = mode === 'crit';
-            btns.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+      row.appendChild(critCtrl);
+
+    } else if (item.type === 'damage' && item.canCrit) {
+      const critCtrl = document.createElement('div');
+      critCtrl.className = 'cl-crit-controls';
+
+      critCtrl.innerHTML = `
+        <button class="cl-crit-toggle" data-mode="normal">Normal</button>
+        <button class="cl-crit-toggle cl-crit-toggle-crit" data-mode="crit">Crit</button>
+      `;
+      const btns = critCtrl.querySelectorAll('.cl-crit-toggle');
+      btns[0].classList.add('active');
+      btns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const mode = btn.dataset.mode;
+          critStates[idx].isCrit = mode === 'crit';
+          btns.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
             updateVal();
           });
         });
-      }
 
       row.appendChild(critCtrl);
     }
@@ -1534,30 +1576,37 @@ function openLinePicker(card, move, allItems) {
   const selectAllBtn = document.createElement('button');
   selectAllBtn.className = 'cl-picker-btn cl-picker-all';
   selectAllBtn.textContent = 'Tout';
-  selectAllBtn.addEventListener('click', (e) => { e.stopPropagation(); checkboxes.forEach(cb => cb.checked = true); });
+  selectAllBtn.addEventListener('click', (e) => { e.stopPropagation(); Object.values(checkboxes).forEach(cb => cb.checked = true); });
 
   const selectNoneBtn = document.createElement('button');
   selectNoneBtn.className = 'cl-picker-btn cl-picker-none';
   selectNoneBtn.textContent = 'Aucun';
-  selectNoneBtn.addEventListener('click', (e) => { e.stopPropagation(); checkboxes.forEach(cb => cb.checked = false); });
+  selectNoneBtn.addEventListener('click', (e) => { e.stopPropagation(); Object.values(checkboxes).forEach(cb => cb.checked = false); });
 
   const confirmBtn = document.createElement('button');
   confirmBtn.className = 'cl-picker-btn cl-picker-confirm';
   confirmBtn.textContent = '＋ Ajouter';
   confirmBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    const selected = allItems
-      .map((item, idx) => {
-        if (!checkboxes[idx].checked) return null;
-        if (item.type === 'damage' && item.canCrit) {
-          let selectedValue, critLabel;
-          if (item.isTick && item.tickCount > 1) {
-            const hc = critStates[idx].hitCount;
-            const cc = Math.min(critStates[idx].critCount, hc);
-            const nc = hc - cc;
+    const selected = sortedItems
+      .map((item, sortedIdx) => {
+        const idx = sortedIdxMap[sortedIdx];
+        if (!checkboxes[idx] || !checkboxes[idx].checked) return null;
 
-            // Utilise tick_scaling si présent
-            if (item.tickScaling) {
+        if (item.isTick && item.tickCount > 1) {
+          const hc = critStates[idx].hitCount;
+          const cc = Math.min(critStates[idx].critCount, hc);
+          const nc = hc - cc;
+          let selectedValue, critLabel;
+
+          if (item.type === 'damage') {
+            if (!item.canCrit) {
+              // Pas de crit : hits × valeur par tick
+              const perTick = item.normalPerTick ?? Math.round(item.value / item.tickCount);
+              selectedValue = perTick * hc;
+              const hitLabel = hc < item.tickCount ? `${hc}/${item.tickCount}hits` : `${item.tickCount}hits`;
+              critLabel = hc < item.tickCount ? `(${hitLabel})` : '';
+            } else if (item.tickScaling) {
               let total = 0;
               for (let i = 0; i < hc; i++) {
                 const scale = item.tickScaling[i] ?? item.tickScaling[item.tickScaling.length - 1];
@@ -1566,19 +1615,30 @@ function openLinePicker(card, move, allItems) {
                 total += Math.floor(base * scale);
               }
               selectedValue = total;
+              const hitLabel = hc < item.tickCount ? `${hc}/${item.tickCount}hits` : `${item.tickCount}hits`;
+              const critPart = cc > 0 ? ` ${cc}💥` : '';
+              critLabel = `(${hitLabel}${critPart})`;
             } else {
               selectedValue = nc * item.normalPerTick + cc * item.critPerTick;
+              const hitLabel = hc < item.tickCount ? `${hc}/${item.tickCount}hits` : `${item.tickCount}hits`;
+              const critPart = cc > 0 ? ` ${cc}💥` : '';
+              critLabel = `(${hitLabel}${critPart})`;
             }
-
-            const hitLabel  = hc < item.tickCount ? `${hc}/${item.tickCount}hits` : `${item.tickCount}hits`;
-            const critPart  = cc > 0 ? ` ${cc}💥` : '';
-            critLabel = `(${hitLabel}${critPart})`;
+            return { ...item, selectedValue, critLabel };
           } else {
-            selectedValue = critStates[idx].isCrit ? item.critValue : item.value;
-            critLabel = critStates[idx].isCrit ? '⚡Crit' : '';
+            // heal/shield avec isTick : on prend selfValue × hitCount
+            const perTick = Math.round(item.selfValue / item.tickCount);
+            const allyPerTick = Math.round((item.allyValue ?? item.selfValue) / item.tickCount);
+            return { ...item, selfValue: perTick * hc, allyValue: allyPerTick * hc };
           }
+        }
+
+        if (item.type === 'damage' && item.canCrit) {
+          const selectedValue = critStates[idx].isCrit ? item.critValue : item.value;
+          const critLabel = critStates[idx].isCrit ? '⚡Crit' : '';
           return { ...item, selectedValue, critLabel };
         }
+
         return item;
       })
       .filter(Boolean);
@@ -1610,6 +1670,8 @@ function openLinePicker(card, move, allItems) {
   picker.style.top  = `${top}px`;
   picker.style.left = `${left}px`;
 
+  // Fix click-through : le clic qui a ouvert le picker ne doit pas le refermer.
+  // On attache l'outsideHandler dans un rAF pour sauter la propagation du clic courant.
   requestAnimationFrame(() => {
     const outsideHandler = (e) => {
       if (!picker.contains(e.target)) {

@@ -1,85 +1,193 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang="page_title">Unite Tools - Home</title>
-    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/navbar.css">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
-    <script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-lang="page_title">Unite Tools - Home</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/home.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
+  <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-B7HW29S7HW');
-    </script>
+  </script>
 </head>
 <body>
-    <div id="navbar-container"></div>
 
-    <main>
-        <section class="hero">
-            <h1 data-lang="hero_title">Unite Tools</h1>
-            <p class="hero-subtitle" data-lang="hero_subtitle">La suite d'outils ultime pour dominer Pokémon Unite</p>
-            <p class="hero-desc" data-lang="hero_desc">Drafts compétitifs, timers de map, calculs de dégâts précis et création de tier lists - tout ce qu'il vous faut pour progresser.</p>
-        </section>
+  <div id="navbar-container"></div>
 
-        <section class="tools-grid">
-            <!-- Draft Simulator Card -->
-            <div class="tool-card draft">
-                <div class="card-image-wrapper">
-                    <img src="https://i.redd.it/zt7zbh76kiuc1.png" alt="Draft Simulator">
-                </div>
-                <h2 data-lang="draft_title">Draft Simulator</h2>
-                <p data-lang="draft_desc">Simulez des drafts réalistes avec timer, bans, picks et filtres par rôle. Idéal pour vous entraîner aux phases de sélection compétitives.</p>
-                <a href="/draft.html" class="tool-btn" data-lang="draft_btn">Accéder au Draft</a>
-            </div>
+  <main>
 
-            <!-- Map Timer Card -->
-            <div class="tool-card map">
-                <div class="card-image-wrapper">
-                    <img src="https://static0.thegamerimages.com/wordpress/wp-content/uploads/2022/09/Pokemon-Unite-Theia-Sky-Ruins-Map.jpg" alt="Map Timer">
-                </div>
-                <h2 data-lang="map_title">Map Timer</h2>
-                <p data-lang="map_desc">Suivez précisément les timers d'apparitions des objectifs (Regieleki, Rayquaza, etc.) pour optimiser votre stratégie de map control.</p>
-                <a href="/map_timer.html" class="tool-btn" data-lang="map_btn">Accéder au Timer</a>
-            </div>
+    <!-- ── HERO ── -->
+    <section class="hero">
+      <h1 data-lang="hero_title">Unite Tools</h1>
+      <p class="hero-subtitle" data-lang="hero_subtitle">The ultimate tool suite for Pokémon Unite</p>
+      <p class="hero-desc" data-lang="hero_desc">Competitive drafts, map timers, precise damage calculations, and tier list creation. Everything you need to improve.</p>
+      <div class="hero-actions">
+        <a href="/draft.html" class="tool-btn" data-lang="draft_btn">Access Draft</a>
+        <a href="#tools" class="tool-btn tool-btn--ghost" data-lang="hero_discover">Discover tools</a>
+      </div>
+    </section>
 
-            <!-- Damage Calculator Card -->
-            <div class="tool-card calc">
-                <div class="card-image-wrapper">
-                    <img src="https://preview.redd.it/13opxrkb1ue91.png?width=976&format=png&auto=webp&s=02f8fc5065e91e6eb21977c83c7599842e1b6ae1" alt="Damage Calculator">
-                </div>
-                <h2 data-lang="calc_title">Calculateur de Dégâts</h2>
-                <p data-lang="calc_desc">Calculez précisément chaque move avec items, niveaux, buffs/debuffs et stacks. L'outil indispensable pour optimiser vos builds.</p>
-                <a href="/damage-calc.html" class="tool-btn" data-lang="calc_btn">Accéder au Calculateur</a>
-            </div>
+    <!-- ── STATS BAR ── -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-number">6</span>
+        <span class="stat-label" data-lang="about_stat_tools">Tools</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">100%</span>
+        <span class="stat-label" data-lang="home_stat_free">Free</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">∞</span>
+        <span class="stat-label" data-lang="home_stat_simulations">Simulations</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">0</span>
+        <span class="stat-label" data-lang="home_stat_account">Account required</span>
+      </div>
+    </div>
 
-            <!-- Create Tierlist Card -->
-            <div class="tool-card tierlist">
-                <div class="card-image-wrapper">
-                    <img src="https://preview.redd.it/what-my-unite-fun-ranking-tierlist-says-about-me-v0-pv0lax9mpefe1.png?auto=webp&s=b0dc12ad1a0370dedfd0e55ff1bb9daee03403e0" alt="Create Tierlist">
-                </div>
-                <h2 data-lang="tierlist_title">Create Tierlist</h2>
-                <p data-lang="tierlist_desc">Créez et partagez vos propres tier lists personnalisées. Classez les Pokémon selon vos critères et comparez avec la communauté.</p>
-                <a href="/tierlist.html" class="tool-btn" data-lang="tierlist_btn">Créer une Tierlist</a>
-            </div>
-        </section>
-        <!-- ── Footer ───────────────────────────────────── -->
-        <footer>
-            <div id="footer-signature" data-lang="footer_signature"></div>
-            <div id="footer-legal"     data-lang="footer_legal"></div>
-        </footer>
-    </main>
+    <!-- ── TOOLS GRID ── -->
+    <section class="tools-grid" id="tools">
 
-<script src="scripts/navbar.js"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<script>
-lucide.createIcons();
-</script>
+      <!-- DRAFT -->
+      <div class="tool-card draft">
+        <div class="card-image-wrapper">
+          <img src="assets/homepage/draft.png" alt="Draft Simulator">
+          <span class="card-tag" data-lang="home_tag_draft">Selection phase</span>
+        </div>
+        <div class="card-body">
+          <h2 data-lang="draft_title">Draft Simulator</h2>
+          <p data-lang="draft_desc">Simulate realistic drafts with timers, bans, picks, and role filters. Perfect for training in competitive selection phases.</p>
+          <a href="/draft.html" class="tool-btn" data-lang="draft_btn">Access Draft</a>
+        </div>
+      </div>
+
+      <!-- MAP TIMER -->
+      <div class="tool-card map">
+        <div class="card-image-wrapper">
+          <img src="assets/homepage/timing.png" alt="Map Timer">
+          <span class="card-tag" data-lang="home_tag_map">Map control</span>
+        </div>
+        <div class="card-body">
+          <h2 data-lang="map_title">Map Timer</h2>
+          <p data-lang="map_desc">Precisely track objective spawn timers (Regieleki, Rayquaza, etc.) to optimize your map control strategy.</p>
+          <a href="/map_timer.html" class="tool-btn" data-lang="map_btn">Access Timer</a>
+        </div>
+      </div>
+
+      <!-- DAMAGE CALC -->
+      <div class="tool-card calc">
+        <div class="card-image-wrapper">
+          <img src="assets/homepage/calculator.png" alt="Damage Calculator">
+          <span class="card-tag" data-lang="home_tag_calc">Build optimizer</span>
+        </div>
+        <div class="card-body">
+          <h2 data-lang="calc_title">Damage Calculator</h2>
+          <p data-lang="calc_desc">Accurately calculate every move with items, levels, buffs/debuffs, and stacks. The essential tool for optimizing your builds.</p>
+          <a href="/damage-calc.html" class="tool-btn" data-lang="calc_btn">Access Calculator</a>
+        </div>
+      </div>
+
+      <!-- TIERLIST -->
+      <div class="tool-card tierlist">
+        <div class="card-image-wrapper">
+          <img src="assets/homepage/tierlist.png" alt="Create Tierlist">
+          <span class="card-tag" data-lang="home_tag_tierlist">Meta & Rankings</span>
+        </div>
+        <div class="card-body">
+          <h2 data-lang="tierlist_title">Create Tierlist</h2>
+          <p data-lang="tierlist_desc">Create and share your own custom tier lists. Rank Pokémon based on your criteria and compare with the community.</p>
+          <a href="/tierlist.html" class="tool-btn" data-lang="tierlist_btn">Create Tierlist</a>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE MAP -->
+      <div class="tool-card imap">
+        <div class="card-image-wrapper">
+          <img src="assets/homepage/map.png" alt="Interactive Map">
+          <span class="card-tag" data-lang="home_tag_imap">Strategy</span>
+        </div>
+        <div class="card-body">
+          <h2 data-lang="imap_title">Interactive Map</h2>
+          <p data-lang="imap_desc">Explore all Unite maps interactively. Visualize spawn zones, goal positions, objectives, and plan strategies with your team.</p>
+          <a href="/interactive-map.html" class="tool-btn" data-lang="imap_btn">Explore Map</a>
+        </div>
+      </div>
+
+      <!-- PATCH TRACKER -->
+      <div class="tool-card patch">
+        <div class="card-image-wrapper">
+          <img src="assets/homepage/patch.png" alt="Patch Tracker">
+          <span class="card-tag" data-lang="home_tag_patch">Balance history</span>
+        </div>
+        <div class="card-body">
+          <h2 data-lang="patch_title_short">Patch Tracker</h2>
+          <p data-lang="patch_desc_home">Track every buff, nerf, and balance change across all patches. Filter by Pokémon or version and analyze meta trends over time.</p>
+          <a href="/patch-tracker.html" class="tool-btn" data-lang="patch_btn">View Patches</a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── WHY SECTION ── -->
+    <section class="why-section">
+      <p class="why-eyebrow" data-lang="home_why_eyebrow">Why Unite Tools</p>
+      <h2 class="why-title" data-lang="home_why_title">Built to win</h2>
+      <div class="why-grid">
+        <div class="why-item">
+          <span class="why-icon">🎯</span>
+          <h3 data-lang="home_feat_precision_title">Competitive precision</h3>
+          <p data-lang="home_feat_precision_desc">Exact calculations, up-to-date data. Every number matters when you play to win.</p>
+        </div>
+        <div class="why-item">
+          <span class="why-icon">⚡</span>
+          <h3 data-lang="home_feat_speed_title">Ultra fast</h3>
+          <p data-lang="home_feat_speed_desc">Lightweight and responsive. No unnecessary loading — you're ready before the game even starts.</p>
+        </div>
+        <div class="why-item">
+          <span class="why-icon">🔓</span>
+          <h3 data-lang="home_feat_free_title">100% free</h3>
+          <p data-lang="home_feat_free_desc">No account, no subscription, no ads. All tools are immediately accessible.</p>
+        </div>
+        <div class="why-item">
+          <span class="why-icon">🛠️</span>
+          <h3 data-lang="home_feat_allinone_title">All in one</h3>
+          <p data-lang="home_feat_allinone_desc">Draft, timer, calculator, tier list — no need to juggle 4 different sites.</p>
+        </div>
+        <div class="why-item">
+          <span class="why-icon">📱</span>
+          <h3 data-lang="home_feat_mobile_title">Mobile friendly</h3>
+          <p data-lang="home_feat_mobile_desc">Access your tools from any device, in game or between matches.</p>
+        </div>
+        <div class="why-item">
+          <span class="why-icon">🏆</span>
+          <h3 data-lang="home_feat_players_title">Built by players</h3>
+          <p data-lang="home_feat_players_desc">Every tool addresses a real competitive need, not a marketing spec.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer>
+      <div id="footer-signature" data-lang="footer_signature"></div>
+      <div id="footer-legal" data-lang="footer_legal"></div>
+    </footer>
+
+  </main>
+
+  <script src="scripts/navbar.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+
 </body>
 </html>

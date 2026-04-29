@@ -2,6 +2,10 @@
    about.css - Unite Tools / About Page
    ============================================= */
 
+strong {
+  display: inline;
+}
+
 /* ── HERO ── */
 .about-hero {
   position: relative;
@@ -225,6 +229,12 @@
   line-height: 1.7;
   font-weight: 500;
 }
+.card-body br {
+  display: block;
+  content: "";
+  margin-top: 12px;
+}
+
 .card-body strong { color: var(--text); font-weight: 700; }
 
 /* ── SECTION TITLE ── */

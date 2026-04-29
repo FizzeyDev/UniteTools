@@ -107,14 +107,14 @@
       },
       {
         "name": "Midnight Slash (Unite)",
-         "learnLevel": 9,
+        "learnLevel": 9,
         "unlearn": null,
         "upgradeLevel": null,
 		    "can_crit": "true",
         "image": "assets/moves/absol/midnight_slash.png",
         "damages": [
           {"name": "Full (6 hits)", "multiplier": 83, "levelCoef": 4, "constant": 184, "dealDamage": true, "is_tick": true, "tick_count": 6 },
-          {"name": "Reduced (≤3 hits)", "multiplier": 24.9, "levelCoef": 1.2, "constant": 55.2, "dealDamage": true, "notes": "30% du full" }
+          {"name": "Reduced (≤3 hits)", "multiplier": 24.9, "levelCoef": 1.2, "constant": 55.2, "dealDamage": true, "is_tick": true, "tick_count": 6, "notes": "30% from Full" }
         ],
         "shields": [
           {
@@ -11146,6 +11146,108 @@
     ]
   },
   {
+    "pokemonId": "typhlosion",
+    "dex": 762,
+    "role": "attacker",
+    "style": "special",
+    "stats": [
+      {"level": 1, "hp": 3300, "atk": 134, "def": 40, "sp_atk": 50, "sp_def": 40, "crit": 0},
+      {"level": 2, "hp": 3357, "atk": 136, "def": 44, "sp_atk": 63, "sp_def": 44, "crit": 0},
+      {"level": 3, "hp": 3426, "atk": 139, "def": 49, "sp_atk": 79, "sp_def": 49, "crit": 0},
+      {"level": 4, "hp": 3508, "atk": 142, "def": 55, "sp_atk": 98, "sp_def": 55, "crit": 0},
+      {"level": 5, "hp": 3907, "atk": 157, "def": 83, "sp_atk": 191, "sp_def": 84, "crit": 0},
+      {"level": 6, "hp": 4026, "atk": 162, "def": 91, "sp_atk": 219, "sp_def": 93, "crit": 0},
+      {"level": 7, "hp": 4469, "atk": 179, "def": 122, "sp_atk": 322, "sp_def": 125, "crit": 0},
+      {"level": 8, "hp": 4641, "atk": 186, "def": 134, "sp_atk": 362, "sp_def": 137, "crit": 0},
+      {"level": 9, "hp": 4847, "atk": 194, "def": 148, "sp_atk": 410, "sp_def": 152, "crit": 0},
+      {"level": 10, "hp": 5094, "atk": 204, "def": 165, "sp_atk": 467, "sp_def": 170, "crit": 0},
+      {"level": 11, "hp": 5391, "atk": 215, "def": 186, "sp_atk": 536, "sp_def": 191, "crit": 0},
+      {"level": 12, "hp": 5747, "atk": 229, "def": 211, "sp_atk": 619, "sp_def": 217, "crit": 0},
+      {"level": 13, "hp": 6174, "atk": 246, "def": 241, "sp_atk": 718, "sp_def": 248, "crit": 0},
+      {"level": 14, "hp": 6686, "atk": 266, "def": 277, "sp_atk": 837, "sp_def": 285, "crit": 0},
+      {"level": 15, "hp": 7300, "atk": 290, "def": 320, "sp_atk": 980, "sp_def": 330, "crit": 0}
+    ],
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "true",
+        "image": "assets/moves/basic_attack.png",
+        "damages": [
+          {"name": "Basic", "multiplier": 30, "levelCoef": 0, "constant": 160, "dealDamage": true, "scaling": "special"},
+          {"name": "Boosted", "multiplier": 45, "levelCoef": 0, "constant": 240, "dealDamage": true, "scaling": "special"}
+        ]
+      },
+      {
+        "name": "Ember",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/typhlosion/ember.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 30, "levelCoef": 2, "constant": 450, "dealDamage": true, "scaling": "special"},
+          {"name": "Damage - Burn (per tick x3)", "multiplier": 10, "levelCoef": 0, "constant": 60, "dealDamage": true, "scaling": "special", "is_tick": true, "tick_count": 3}
+        ]
+      },
+      {
+        "name": "Tackle",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/typhlosion/tackle.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 30, "levelCoef": 5, "constant": 500, "dealDamage": true, "scaling": "special"}
+        ],
+        "shields": [
+          {"name": "Shield", "scaling": "special", "multiplier": 60, "levelCoef": 0, "constant": 400, "target": "self"}
+        ]
+      },
+      {
+        "name": "Eruption",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/typhlosion/eruption.png",
+        "damages": [
+          {"name": "Damage - per Hit", "multiplier": 90, "levelCoef": 8, "constant": 400, "dealDamage": true, "is_tick": true, "tick_count": 4},
+          {"name": "Damage - per Hit +", "multiplier": 104, "levelCoef": 8, "constant": 469, "dealDamage": true, "tick_count": 4, "upgraded": true}
+        ]
+      },
+      {
+        "name": "Flame Wheel",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/typhlosion/flame_wheel.png",
+        "damages": [
+          {"name": "Damage - per Hit", "multiplier": 60, "levelCoef": 10, "constant": 380, "dealDamage": true, "is_tick": true, "tick_count": 2}
+        ],
+        "shields": [
+          {"name": "Shield", "scaling": "special", "multiplier": 100, "levelCoef": 0, "constant": 350, "target": "self"},
+          {"name": "Shield +", "scaling": "special", "multiplier": 130, "levelCoef": 0, "constant": 455, "target": "self", "upgraded": true}
+        ]
+      },
+      {
+        "name": "Explosive Heat Haze (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/typhlosion/explosive_heat_haze.png",
+        "damages": [
+          {"name": "Shockwave (x4)", "multiplier": 20, "levelCoef": 1, "constant": 200, "dealDamage": true, "scaling": "special", "is_tick": true, "tick_count": 4},
+          {"name": "Flame DoT (x10)", "multiplier": 20, "levelCoef": 1, "constant": 200, "dealDamage": true, "scaling": "special", "is_tick": true, "tick_count": 10}
+        ],
+        "shields": [
+          {"name": "Shield", "scaling": "hp", "multiplier": 20, "levelCoef": 0, "constant": 0, "target": "self"}
+        ]
+      }
+    ]
+  },
+  {
     "pokemonId": "tyranitar",
     "dex": 248,
     "role": "allrounder",
@@ -11677,8 +11779,8 @@
         "can_crit": "true",
         "image": "assets/moves/basic_attack.png",
         "damages": [
-          {"name": "Basic", "multiplier": 30, "levelCoef": 8, "constant": 120, "dealDamage": true},
-          {"name": "Boosted", "multiplier": 45, "levelCoef": 12, "constant": 180, "dealDamage": true}
+          {"name": "Basic", "multiplier": 30, "levelCoef": 8, "constant": 120, "dealDamage": true, "scaling": "special"},
+          {"name": "Boosted", "multiplier": 45, "levelCoef": 12, "constant": 180, "dealDamage": true, "scaling": "special"}
         ]
       },
       {
