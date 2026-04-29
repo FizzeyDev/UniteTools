@@ -11212,7 +11212,7 @@
         "image": "assets/moves/typhlosion/eruption.png",
         "damages": [
           {"name": "Damage - per Hit", "multiplier": 90, "levelCoef": 8, "constant": 400, "dealDamage": true, "is_tick": true, "tick_count": 4},
-          {"name": "Damage - per Hit +", "multiplier": 104, "levelCoef": 8, "constant": 469, "dealDamage": true, "tick_count": 4, "upgraded": true}
+          {"name": "Damage - per Hit +", "multiplier": 104, "levelCoef": 8, "constant": 469, "dealDamage": true, "is_tick": true, "tick_count": 4, "upgraded": true}
         ]
       },
       {
