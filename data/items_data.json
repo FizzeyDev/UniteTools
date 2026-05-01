@@ -448,7 +448,7 @@
     "bonus2": "Critical-Hit Damage +14%",
     "stats": [
       { "label": "Critical-Hit Rate", "percent": true, "float": 1, "value": 7 },
-      { "label": "Critical-Hit Damage", "percent": true, "float": 1, "value": 1.07 }
+      { "label": "Critical-Hit Damage", "percent": true, "float": 1, "value": 1.14 }
     ],
     "description1": "Critical hits deal additional damage.",
     "level20": "75%",

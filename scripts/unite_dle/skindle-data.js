@@ -31,6 +31,7 @@ window.UNITE_SKINS = [
 
   // ── Cinderace ──
   { pokemon: "Cinderace",          skinName: "Bedtime",            file: "cinderace_bedtime.jpg" },
+  { pokemon: "Cinderace",          skinName: "Neo Guardian",       file: "cinderace_neo_guardian.jpg" },
 
   // ── Darkrai ──
   { pokemon: "Darkrai",            skinName: "Neo Street",         file: "darkrai_neo_street.jpg" },
@@ -41,8 +42,14 @@ window.UNITE_SKINS = [
   // ── Dragapult ──
   { pokemon: "Dragapult",          skinName: "Performer",          file: "dragapult_performer.jpg" },
 
+  // ── Espeon ──
+  { pokemon: "Espeon",             skinName: "Komorebi",           file: "espeon_komorebi.jpg" },
+
   // ── Galarian Rapidash ──
-  { pokemon: "Rapidash",  skinName: "Fairy-Tale",         file: "galarian-rapidash_fairy-tale.jpg" },
+  { pokemon: "Rapidash",           skinName: "Fairy-Tale",         file: "galarian-rapidash_fairy-tale.jpg" },
+
+  // ── Garchomp ──
+  { pokemon: "Garchomp",           skinName: "Neo Guardian",       file: "garchomp_neo_guardian.jpg" },
 
   // ── Gengar ──
   { pokemon: "Gengar",             skinName: "Neo Street",         file: "gengar_neo_street.jpg" },
@@ -52,6 +59,12 @@ window.UNITE_SKINS = [
 
   // ── Gyarados ──
   { pokemon: "Gyarados",           skinName: "Darkness",           file: "gyarados_darkness.jpg" },
+
+  // ── Latias ──
+  { pokemon: "Latias",             skinName: "Knight",             file: "latias_knight.jpg" },
+
+  // ── Latios ──
+  { pokemon: "Latios",             skinName: "Knight",             file: "latios_knight.jpg" },
 
   // ── Lucario ──
   { pokemon: "Lucario",            skinName: "Neo Street",         file: "lucario_neo_street.jpg" },
@@ -77,6 +90,7 @@ window.UNITE_SKINS = [
 
   // ── Suicune ──
   { pokemon: "Suicune",            skinName: "Pokekubi",           file: "suicune_pokekubi.jpg" },
+  { pokemon: "Suicune",            skinName: "Aurora",             file: "suicune_aurora.jpg" },
 
   // ── Sylveon ──
   { pokemon: "Sylveon",            skinName: "Elegant",            file: "sylveon_elegant.jpg" },

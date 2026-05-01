@@ -6268,8 +6268,8 @@
         "can_crit": "true",
         "image": "assets/moves/basic_attack.png",
         "damages": [
-          {"name": "Basic", "multiplier": 48.2, "levelCoef": 4, "constant": 90, "dealDamage": true},
-          {"name": "Boosted", "multiplier": 54.8, "levelCoef": 6, "constant": 100, "dealDamage": true}
+          {"name": "Basic", "multiplier": 48.2, "levelCoef": 4, "constant": 90, "dealDamage": true, "scaling": "special"},
+          {"name": "Boosted", "multiplier": 54.8, "levelCoef": 6, "constant": 100, "dealDamage": true, "scaling": "special"}
         ]
       },
       {

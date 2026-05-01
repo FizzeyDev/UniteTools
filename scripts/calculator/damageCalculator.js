@@ -279,7 +279,6 @@ export function calculateDamage(
   defenderCurrentHP = null
 ) {
 
-  // ── Helper crit mutualisé ───────────────────────────────────────────────────
   const applyCrit = (value) => {
     if (!crit) return value;
     let baseCritMult = 2.0;
@@ -287,7 +286,9 @@ export function calculateDamage(
     else if (pokemonId === "sirfetchd") baseCritMult = 1.6;
     else if (pokemonId === "inteleon") baseCritMult = 2.5;
     if (state.currentDefender?.pokemonId === "falinks") baseCritMult *= 0.5;
-    return Math.floor(value * baseCritMult * extraCritMult);
+    // extraCritMult est un bonus additif (ex: 1.14 = +14%), on l'ajoute à la base
+    const bonusAdd = extraCritMult - 1.0;
+    return Math.floor(value * (baseCritMult + bonusAdd));     // ✅ additif
   };
 
   const isWild = state.currentDefender?.category === 'mob';
@@ -378,12 +379,20 @@ export function getAutoAttackResults(atkStats, defStats, currentDefHP, globalDam
     currentDefHP
   );
 
+  state.attackerItems.forEach(item => {
+    if (item && item.name === "Scope Lens") {
+      console.log("Scope Lens item:", JSON.stringify(item, null, 2));
+    }
+  });
+
   let scopeCritBonus = 1.0;
   state.attackerItems.forEach(item => {
     if (item && item.name === "Scope Lens" && item.stats) {
       const critStat = item.stats.find(s => s.label === "Critical-Hit Damage");
       if (critStat && critStat.value) {
-        scopeCritBonus = critStat.value;
+        scopeCritBonus = critStat.value > 10
+          ? 1 + critStat.value / 100
+          : critStat.value;
         results.hasScope = true;
       }
     }
