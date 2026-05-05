@@ -1648,3 +1648,77 @@ body.sidebar-collapsed { margin-left: 0; }
   .kill-queue-panel { width: 100%; }
   .pko-fields-grid { grid-template-columns: 1fr; }
 }
+/* ══════════════════════════════════════
+   CREDITS FOOTER
+══════════════════════════════════════ */
+.credits-footer {
+  margin-top: 32px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  padding: 24px 32px 32px;
+}
+
+.credits-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.credits-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.credits-intro {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.credits-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.credits-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--blue);
+  font-size: 0.78rem;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.credits-link:hover {
+  background: var(--blue-dim);
+  border-color: var(--blue);
+  color: #fff;
+}
+
+.credits-link-icon {
+  font-size: 0.9rem;
+}
+
+/* ── Wild card info button ── */
+.wild-card-info {
+  font-size: 0.8rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+  user-select: none;
+  margin-top: -2px;
+}
+
+.wild-card-info:hover {
+  opacity: 1;
+}

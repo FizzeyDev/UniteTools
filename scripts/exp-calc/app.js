@@ -125,6 +125,32 @@
     }
   }
 
+  function showInfoPopup(name, info) {
+    const existing = document.getElementById('info-popup-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'info-popup-overlay';
+    overlay.className = 'modal-overlay';
+    overlay.style.display = 'flex';
+
+    const box = document.createElement('div');
+    box.className = 'modal-box wide';
+    box.innerHTML = `
+      <div class="modal-header">
+        <span class="modal-title">ℹ️ ${name}</span>
+        <button class="modal-close" id="info-popup-close">✕</button>
+      </div>
+      <div class="modal-body" style="white-space:pre-wrap;line-height:1.7;color:var(--text);">${info}</div>
+    `;
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    const close = () => overlay.remove();
+    box.querySelector('#info-popup-close').addEventListener('click', close);
+    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+  }
+
   // ─── Wild Grid ────────────────────────────────────────────────────────────
 
   function renderWildGrid(mapId) {
@@ -164,6 +190,19 @@
       card.appendChild(imgEl);
       card.appendChild(nameEl);
       card.appendChild(xpEl);
+
+      if (poke.info) {
+        const infoBtn = document.createElement('div');
+        infoBtn.className = 'wild-card-info';
+        infoBtn.title = poke.info;
+        infoBtn.textContent = 'ℹ️';
+        infoBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          showInfoPopup(poke.name, poke.info);
+        });
+        card.appendChild(infoBtn);
+      }
+
       card.appendChild(addBtn);
 
       card.addEventListener('click', () => openKillModal(poke, mapId));
@@ -703,7 +742,15 @@
       } else {
         label = `⚔️ ${ev.name}`;
       }
-      addSimLog(simState.currentSec, label, ev.xp);
+      // Show catch-up bonus if applicable (base XP without catch-up vs with)
+      let xpDisplay = ev.xp;
+      let catchupNote = null;
+      if (catchupMult > 1.0 && (ev.type === 'wild' || ev.type === 'score')) {
+        const baseXP = Math.round(ev.xp / catchupMult);
+        const bonus = ev.xp - baseXP;
+        if (bonus > 0) catchupNote = `+${baseXP} (+${bonus})`;
+      }
+      addSimLog(simState.currentSec, label, xpDisplay, false, catchupNote);
       const idx = simState.events.indexOf(ev);
       if (idx > -1) simState.events.splice(idx, 1);
     });
@@ -726,7 +773,7 @@
     updateSimDisplay();
   }
 
-  function addSimLog(timerSec, msg, xp, isLevelup = false) {
+  function addSimLog(timerSec, msg, xp, isLevelup = false, catchupNote = null) {
     const log = $('sim-log');
     const entry = document.createElement('div');
     entry.className = 'sim-log-entry' + (isLevelup ? ' levelup' : '');
@@ -745,7 +792,13 @@
     if (xp !== null && xp !== undefined) {
       const xpEl = document.createElement('span');
       xpEl.className = 'sim-log-xp';
-      xpEl.textContent = `+${xp}`;
+      if (catchupNote) {
+        xpEl.textContent = catchupNote;
+        xpEl.title = `Catch-Up modifier active (×${D.getCatchUpModifier(D.getLevelFromXP(simState.totalXP), state.enemyHighestLevel).toFixed(2)})`;
+        xpEl.style.color = 'var(--yellow)';
+      } else {
+        xpEl.textContent = `+${xp}`;
+      }
       entry.appendChild(xpEl);
     }
 

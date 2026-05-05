@@ -349,6 +349,7 @@ const WILD_DATA = {
       name: "Regieleki",
       img: "assets/farms/regieleki.png",
       aeosBalls: 20,
+      info: "Spawns at 7:00 in top lane. Respawns 2 min after KO. On KO: spawns a Soldier Regieleki allied to your team. Auto Attack does 200% Atk with 2s cooldown (ranged). Move 1: 300% Atk 8s CD · Move 2: 250% Atk 8s CD.",
       data: [
         { timer: "7:00", xp: 240 }, { timer: "6:40", xp: 330 }, { timer: "6:10", xp: 340 },
         { timer: "5:40", xp: 350 }, { timer: "5:10", xp: 370 }, { timer: "4:40", xp: 380 },
@@ -377,6 +378,7 @@ const WILD_DATA = {
       name: "Groudon",
       img: "assets/farms/groudon.png",
       aeosBalls: 30,
+      info: "Spawns at 2:00 in center. Does NOT respawn. On Last Hit: grants a powerful buff to your team. Shares XP to whole team (last hitter gets normal amount, others get 60%). Auto Attack does 200% Atk with 2s cooldown.",
       data: [
         { timer: "2:00", xp: 1092 }, { timer: "1:40", xp: 1170 }, { timer: "1:10", xp: 1254 },
         { timer: "0:40", xp: 1284 }, { timer: "0:10", xp: 1320 },
@@ -387,6 +389,7 @@ const WILD_DATA = {
       name: "Regice / Regirock / Registeel",
       img: "assets/farms/regice.png",
       aeosBalls: 20,
+      info: "Spawns at 7:00 in bot lane. Respawns 2 min after KO. On Last Hit — Regirock: +30% DEF & +25% SPDEF. Registeel: +15% ATK & +15% SPATK. Regice: 5% max HP heal every 3s + 8% HP shield 30s. Shares XP to whole team (last hitter gets normal amount, others get 60%). Auto Attack does 100% Atk with 2s cooldown.",
       data: [
         { timer: "7:00", xp: 240 }, { timer: "6:40", xp: 330 }, { timer: "6:10", xp: 340 },
         { timer: "5:40", xp: 350 }, { timer: "5:10", xp: 370 }, { timer: "4:40", xp: 380 },
@@ -452,6 +455,7 @@ const WILD_DATA = {
       name: "Kyogre",
       img: "assets/farms/kyogre.png",
       aeosBalls: 30,
+      info: "Spawns at 2:00 in center. Does NOT respawn. On Last Hit: grants a powerful buff to your team. Same XP as Groudon. Shares XP to whole team (last hitter gets normal amount, others get 60%).",
       data: [
         { timer: "2:00", xp: 1092 }, { timer: "1:40", xp: 1170 }, { timer: "1:10", xp: 1254 },
         { timer: "0:40", xp: 1284 }, { timer: "0:10", xp: 1320 },
@@ -507,10 +511,41 @@ const WILD_DATA = {
       ]
     },
     {
+      id: "regieleki_rq",
+      name: "Regieleki",
+      img: "assets/farms/regieleki.png",
+      aeosBalls: 20,
+      info: "Spawns at 7:00 in top lane. Respawns 2 min after KO. On KO: spawns a Soldier Regieleki allied to your team. Auto Attack does 200% Atk with 2s cooldown (ranged). Move 1: 300% Atk 8s CD · Move 2: 250% Atk 8s CD.",
+      data: [
+        { timer: "7:00", xp: 240 }, { timer: "6:40", xp: 260 }, { timer: "6:10", xp: 270 },
+        { timer: "5:40", xp: 280 }, { timer: "5:10", xp: 290 }, { timer: "4:40", xp: 300 },
+        { timer: "4:10", xp: 310 }, { timer: "3:40", xp: 320 }, { timer: "3:10", xp: 340 },
+        { timer: "2:40", xp: 370 }, { timer: "2:10", xp: 390 }, { timer: "2:00", xp: 390 },
+        { timer: "1:40", xp: 420 }, { timer: "1:10", xp: 450 }, { timer: "0:40", xp: 460 },
+        { timer: "0:10", xp: 470 },
+      ]
+    },
+    {
+      id: "regice_rq",
+      name: "Regice/Regirock/Registeel",
+      img: "assets/farms/regice.png",
+      aeosBalls: 20,
+      info: "Spawns at 7:00 in bot lane. Respawns 2 min after KO. On Last Hit — Regirock: +30% DEF & +25% SPDEF. Registeel: +15% ATK & +15% SPATK. Regice: 5% max HP heal every 3s + 8% HP shield 30s. Shares XP to whole team (last hitter gets normal amount, others get 60%). Auto Attack does 100% Atk with 2s cooldown.",
+      data: [
+        { timer: "7:00", xp: 240 }, { timer: "6:40", xp: 260 }, { timer: "6:10", xp: 270 },
+        { timer: "5:40", xp: 280 }, { timer: "5:10", xp: 290 }, { timer: "4:40", xp: 300 },
+        { timer: "4:10", xp: 310 }, { timer: "3:40", xp: 320 }, { timer: "3:10", xp: 340 },
+        { timer: "2:40", xp: 370 }, { timer: "2:10", xp: 390 }, { timer: "2:00", xp: 390 },
+        { timer: "1:40", xp: 420 }, { timer: "1:10", xp: 450 }, { timer: "0:40", xp: 460 },
+        { timer: "0:10", xp: 470 },
+      ]
+    },
+    {
       id: "rayquaza_boss",
       name: "Rayquaza",
       img: "assets/farms/rayquaza.png",
       aeosBalls: 30,
+      info: "Spawns at 2:00 in center. Does NOT respawn. On Last Hit: shields living teammates, triples goal-scoring speed and scoring uninterruptible while shield active (Strength: 30% HP +3000). Boosts all damage from auto attacks and move 1 vs enemy players by 40% while shield active. Grants 15 Aeos Energy to every ally (last hitter gains 30). Shares XP to whole team (60% to non-last-hitters). Auto Attack does 200% Atk with 1.5s cooldown.",
       data: [
         { timer: "2:00", xp: 1092 }, { timer: "1:40", xp: 1170 }, { timer: "1:10", xp: 1254 },
         { timer: "0:40", xp: 1284 }, { timer: "0:10", xp: 1320 },
