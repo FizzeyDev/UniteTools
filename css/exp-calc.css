@@ -842,6 +842,23 @@ body.sidebar-collapsed { margin-left: 0; }
 }
 .ker-remove:hover { background: rgba(239,83,80,0.2); color: var(--red); }
 
+.ker-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.ker-edit {
+  font-size: 12px;
+}
+.ker-edit:hover { background: rgba(79,195,247,0.15) !important; color: var(--blue) !important; }
+
+.ker-dupe {
+  font-size: 13px;
+}
+.ker-dupe:hover { background: rgba(76,175,130,0.15) !important; color: var(--green) !important; }
+
 /* Score event row variant */
 .kill-event-row.score-row { border-color: rgba(255,215,64,0.2); }
 .kill-event-row.score-row .ker-name { color: var(--yellow); }

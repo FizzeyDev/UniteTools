@@ -281,14 +281,100 @@
 
   // ─── Kill Queue ───────────────────────────────────────────────────────────
 
+  // null = adding new entry; number = index of entry being edited
+  let editingIdx = null;
+
   function addKillToQueue(entry) {
-    state.killQueue.push(entry);
+    if (editingIdx !== null) {
+      state.killQueue[editingIdx] = entry;
+      editingIdx = null;
+    } else {
+      state.killQueue.push(entry);
+    }
     renderKillQueue();
   }
 
   function removeFromQueue(idx) {
     state.killQueue.splice(idx, 1);
     renderKillQueue();
+  }
+
+  function duplicateQueueEntry(idx) {
+    const clone = { ...state.killQueue[idx] };
+    state.killQueue.splice(idx + 1, 0, clone);
+    renderKillQueue();
+  }
+
+  function editQueueEntry(idx) {
+    const entry = state.killQueue[idx];
+    editingIdx = idx;
+
+    if (entry.type === 'wild') {
+      // Reconstruct the poke object from stored entry data
+      const mapData = D.WILD_DATA[state.currentMap] || [];
+      let poke = mapData.find(p => p.id === entry.id);
+      // Fallback: build a minimal poke object from entry
+      if (!poke) poke = { id: entry.id, name: entry.name, img: entry.img };
+      killModalTarget = poke;
+      killModalMap = state.currentMap;
+
+      $('kill-modal-title').textContent = `Edit Kill — ${poke.name}`;
+      $('kill-modal-img').src = poke.img;
+      $('kill-modal-name').textContent = poke.name;
+
+      const timerSec = D.timerToSeconds(entry.timer);
+      $('kill-min').value = Math.floor(timerSec / 60);
+      $('kill-sec').value = timerSec % 60;
+      $('allies-count').textContent = String(entry.allies || 0);
+
+      // Swap confirm button label
+      $('kill-modal-confirm').textContent = '✎ Save Changes';
+      updateKillModalXP();
+      $('kill-modal').style.display = 'flex';
+
+    } else if (entry.type === 'playerko') {
+      const timerSec = D.timerToSeconds(entry.timer);
+      $('pko-min').value = Math.floor(timerSec / 60);
+      $('pko-sec').value = timerSec % 60;
+      $('pko-victim-level').value = entry.victimLevel;
+      $('pko-streak').value = entry.streakNumber;
+      $('pko-is-assist').checked = !!entry.isAssist;
+      $('pko-apply-catchup').checked = !!entry.applyCatchUp;
+
+      $('pko-modal-confirm').textContent = '✎ Save Changes';
+      updatePlayerKOPreview();
+      $('player-ko-modal').style.display = 'flex';
+
+    } else if (entry.type === 'score') {
+      const timerSec = D.timerToSeconds(entry.timer);
+      $('score-min').value = Math.floor(timerSec / 60);
+      $('score-sec').value = timerSec % 60;
+      $('score-pts').value = entry.points;
+      // Score has no modal — edit inline by just triggering the add button
+      // We remove the old entry and the next "add" will re-insert at same position
+      // For score, we use a minimal approach: open a tiny dedicated flow
+      // Actually: directly trigger confirm flow here since score has no modal
+      editingIdx = null; // reset — score edits apply immediately via the panel
+      state.killQueue[idx] = {
+        ...entry,
+        timer: D.secondsToTimer(timerSec),
+        xp: D.getScoringXP(entry.points),
+      };
+      // Focus the score panel so user can adjust and re-add
+      // Remove original, pre-fill panel, user clicks +Add
+      state.killQueue.splice(idx, 1);
+      editingIdx = idx; // insert at this position on next add
+      renderKillQueue();
+    }
+  }
+
+  function makeKerBtn(text, title, cls, onClick) {
+    const btn = document.createElement('button');
+    btn.className = `ker-remove ${cls}`;
+    btn.textContent = text;
+    btn.title = title;
+    btn.addEventListener('click', onClick);
+    return btn;
   }
 
   function renderKillQueue() {
@@ -302,85 +388,66 @@
 
     state.killQueue.forEach((entry, idx) => {
       const row = document.createElement('div');
+      const isEditing = editingIdx === idx;
+      if (isEditing) row.style.outline = '1px solid var(--blue)';
+
+      // Build action buttons (edit + duplicate + remove)
+      const actions = document.createElement('div');
+      actions.className = 'ker-actions';
+      actions.appendChild(makeKerBtn('✎', 'Edit', 'ker-edit', () => editQueueEntry(idx)));
+      actions.appendChild(makeKerBtn('⧉', 'Duplicate', 'ker-dupe', () => duplicateQueueEntry(idx)));
+      actions.appendChild(makeKerBtn('✕', 'Remove', '', () => removeFromQueue(idx)));
 
       if (entry.type === 'playerko') {
         row.className = 'kill-event-row playerko-row';
-
         const info = document.createElement('div');
         info.className = 'ker-info';
         info.innerHTML = `
           <div class="ker-name">⚔️ Player KO${entry.isAssist ? ' <span class="ker-assist-tag">ASSIST</span>' : ''}</div>
           <div class="ker-meta">⏱ ${entry.timer} · Victim Lv.${entry.victimLevel} · Streak ${entry.streakNumber >= 0 ? '+' : ''}${entry.streakNumber}</div>
         `;
-
         const xpEl = document.createElement('div');
         xpEl.className = 'ker-xp';
         xpEl.textContent = `+${entry.xp}`;
-
-        const rem = document.createElement('button');
-        rem.className = 'ker-remove';
-        rem.textContent = '✕';
-        rem.title = 'Remove';
-        rem.addEventListener('click', () => removeFromQueue(idx));
-
         row.appendChild(info);
         row.appendChild(xpEl);
-        row.appendChild(rem);
+        row.appendChild(actions);
 
       } else if (entry.type === 'wild') {
         row.className = 'kill-event-row';
-
         const img = document.createElement('img');
         img.className = 'ker-img';
         img.src = entry.img;
         img.onerror = () => { img.src = 'assets/items/none.png'; };
         img.draggable = false;
-
         const info = document.createElement('div');
         info.className = 'ker-info';
         info.innerHTML = `
           <div class="ker-name">${entry.name}</div>
           <div class="ker-meta">⏱ ${entry.timer}${entry.allies > 0 ? ` · ${entry.allies + 1} players` : ''}</div>
         `;
-
         const xpEl = document.createElement('div');
         xpEl.className = 'ker-xp';
         xpEl.textContent = `+${entry.xp}`;
-
-        const rem = document.createElement('button');
-        rem.className = 'ker-remove';
-        rem.textContent = '✕';
-        rem.title = 'Remove';
-        rem.addEventListener('click', () => removeFromQueue(idx));
-
         row.appendChild(img);
         row.appendChild(info);
         row.appendChild(xpEl);
-        row.appendChild(rem);
+        row.appendChild(actions);
 
       } else if (entry.type === 'score') {
         row.className = 'kill-event-row score-row';
-
         const info = document.createElement('div');
         info.className = 'ker-info';
         info.innerHTML = `
           <div class="ker-name">🏆 Scoring</div>
           <div class="ker-meta">⏱ ${entry.timer} · ${entry.points} pts</div>
         `;
-
         const xpEl = document.createElement('div');
         xpEl.className = 'ker-xp';
         xpEl.textContent = `+${entry.xp}`;
-
-        const rem = document.createElement('button');
-        rem.className = 'ker-remove';
-        rem.textContent = '✕';
-        rem.title = 'Remove';
-        rem.addEventListener('click', () => removeFromQueue(idx));
-
         row.appendChild(info);
         row.appendChild(xpEl);
-        row.appendChild(rem);
+        row.appendChild(actions);
       }
 
       list.appendChild(row);
@@ -839,23 +906,22 @@
         allies,
         xp,
       });
+      $('kill-modal-confirm').textContent = '+ Add to Queue';
       $('kill-modal').style.display = 'none';
       killModalTarget = null;
     });
 
-    $('kill-modal-cancel').addEventListener('click', () => {
-      $('kill-modal').style.display = 'none';
+    function closeKillModal() {
+      editingIdx = null;
       killModalTarget = null;
-    });
-    $('kill-modal-close').addEventListener('click', () => {
+      $('kill-modal-confirm').textContent = '+ Add to Queue';
       $('kill-modal').style.display = 'none';
-      killModalTarget = null;
-    });
+    }
+
+    $('kill-modal-cancel').addEventListener('click', closeKillModal);
+    $('kill-modal-close').addEventListener('click', closeKillModal);
     $('kill-modal').addEventListener('click', e => {
-      if (e.target === $('kill-modal')) {
-        $('kill-modal').style.display = 'none';
-        killModalTarget = null;
-      }
+      if (e.target === $('kill-modal')) closeKillModal();
     });
 
     // Player KO button
@@ -887,17 +953,20 @@
         applyCatchUp,
         xp,
       });
+      $('pko-modal-confirm').textContent = '+ Add to Queue';
       $('player-ko-modal').style.display = 'none';
     });
 
-    $('pko-modal-cancel').addEventListener('click', () => {
+    function closePKOModal() {
+      editingIdx = null;
+      $('pko-modal-confirm').textContent = '+ Add to Queue';
       $('player-ko-modal').style.display = 'none';
-    });
-    $('pko-modal-close').addEventListener('click', () => {
-      $('player-ko-modal').style.display = 'none';
-    });
+    }
+
+    $('pko-modal-cancel').addEventListener('click', closePKOModal);
+    $('pko-modal-close').addEventListener('click', closePKOModal);
     $('player-ko-modal').addEventListener('click', e => {
-      if (e.target === $('player-ko-modal')) $('player-ko-modal').style.display = 'none';
+      if (e.target === $('player-ko-modal')) closePKOModal();
     });
 
     // Scoring
