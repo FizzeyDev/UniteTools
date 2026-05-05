@@ -10,6 +10,8 @@
     tableMap: 'groudon',
     killQueue: [],
     simulation: null,
+    // Enemy main config (for catch-up modifier)
+    enemyHighestLevel: 1,
   };
 
   const $ = id => document.getElementById(id);
@@ -20,7 +22,10 @@
     renderWildGrid(state.currentMap);
     renderXPTable(state.tableMap);
     updateXPProgress();
+    updateCatchUpDisplay();
   }
+
+  // ─── Pokemon Picker ────────────────────────────────────────────────────────
 
   function buildPokemonPicker(filter = '') {
     const grid = $('pokemon-picker-grid');
@@ -66,11 +71,13 @@
 
     $('pokemon-name-display').textContent = poke.name;
     updateXPProgress();
+    updateCatchUpDisplay();
   }
 
   function updateLevelDisplay() {
     $('lvl-display').textContent = state.startLevel;
     updateXPProgress();
+    updateCatchUpDisplay();
   }
 
   function updateXPProgress() {
@@ -89,6 +96,36 @@
       ? 'MAX'
       : `0 / ${D.LEVEL_UP_XP[lvl - 1] || '—'} XP`;
   }
+
+  // ─── Catch-Up / Enemy Config ───────────────────────────────────────────────
+
+  function updateCatchUpDisplay() {
+    const myLevel = state.startLevel;
+    const enemyLevel = state.enemyHighestLevel;
+    const mult = D.getCatchUpModifier(myLevel, enemyLevel);
+    const levelsAhead = enemyLevel - myLevel;
+
+    const badge = $('catchup-badge');
+    const detail = $('catchup-detail');
+
+    if (!badge || !detail) return;
+
+    if (levelsAhead >= 2) {
+      badge.textContent = `+${Math.round((mult - 1) * 100)}% Catch-Up`;
+      badge.className = 'catchup-badge active';
+      detail.textContent = `Enemy Lv.${enemyLevel} · ${levelsAhead} levels ahead → ×${mult.toFixed(2)} on Base XP`;
+    } else if (levelsAhead === 1) {
+      badge.textContent = 'Catch-Up: 1 lvl (no bonus)';
+      badge.className = 'catchup-badge inactive';
+      detail.textContent = `At least 2 level gap required to activate the modifier.`;
+    } else {
+      badge.textContent = 'Catch-Up: Inactive';
+      badge.className = 'catchup-badge inactive';
+      detail.textContent = `Your level (${myLevel}) ≥ enemy level (${enemyLevel}) — no modifier.`;
+    }
+  }
+
+  // ─── Wild Grid ────────────────────────────────────────────────────────────
 
   function renderWildGrid(mapId) {
     const grid = $('wild-grid');
@@ -135,10 +172,12 @@
   }
 
   function getStartTimerStr() {
-    const m = parseInt($('start-min').value) || 10;
-    const s = parseInt($('start-sec').value) || 0;
+    const m = safeInt('start-min', 10);
+    const s = safeInt('start-sec', 0);
     return D.secondsToTimer(m * 60 + s);
   }
+
+  // ─── Wild Kill Modal ──────────────────────────────────────────────────────
 
   let killModalTarget = null;
   let killModalMap = null;
@@ -151,8 +190,8 @@
     $('kill-modal-img').src = poke.img;
     $('kill-modal-name').textContent = poke.name;
 
-    const startM = parseInt($('start-min').value) || 10;
-    const startS = parseInt($('start-sec').value) || 0;
+    const startM = safeInt('start-min', 10);
+    const startS = safeInt('start-sec', 0);
     $('kill-min').value = startM;
     $('kill-sec').value = startS;
     $('allies-count').textContent = '0';
@@ -175,6 +214,73 @@
     $('kill-xp-preview').dataset.xp = xp;
   }
 
+  // ─── Player KO Modal ─────────────────────────────────────────────────────
+
+  function getPlayerKOStreakNumber() {
+    return parseInt($('pko-streak').value) || 0;
+  }
+
+  function updatePlayerKOPreview() {
+    const victimLevel = parseInt($('pko-victim-level').value) || 1;
+    const streakNumber = getPlayerKOStreakNumber();
+    const isAssist = $('pko-is-assist').checked;
+    const applyCatchUp = $('pko-apply-catchup').checked;
+
+    const myLevel = state.startLevel;
+    const opponentHighestLevel = state.enemyHighestLevel;
+
+    // killerLevel: for level diff modifier, we use our own level
+    const xp = D.calculatePlayerKOXP({
+      victimLevel,
+      streakNumber,
+      killerLevel: myLevel,
+      myLevel,
+      opponentHighestLevel,
+      isAssist,
+      applyCatchUp,
+    });
+
+    // Show modifier breakdown
+    const baseXP = D.KO_BASE_XP[Math.min(victimLevel - 1, 14)];
+    const streakMult = D.getStreakModifier(streakNumber);
+    const levelDiffMult = D.getKOLevelDiffModifier(myLevel, victimLevel);
+    const catchUpMult = applyCatchUp ? D.getCatchUpModifier(myLevel, opponentHighestLevel) : 1.0;
+
+    let breakdownParts = [
+      `Base: ${baseXP}`,
+      streakMult !== 1 ? `Streak ×${streakMult.toFixed(2)}` : null,
+      levelDiffMult !== 1 ? `Lvl. diff ×${levelDiffMult.toFixed(2)}` : null,
+      isAssist ? `Assist ×0.50` : null,
+      applyCatchUp && catchUpMult !== 1 ? `Catch-Up ×${catchUpMult.toFixed(2)}` : null,
+    ].filter(Boolean);
+
+    $('pko-xp-preview').textContent = `${xp} XP`;
+    $('pko-xp-preview').dataset.xp = xp;
+    $('pko-breakdown').textContent = breakdownParts.join(' · ');
+
+    // Show catch-up warning if unconfirmed
+    const catchUpWarn = $('pko-catchup-warn');
+    if (catchUpWarn) {
+      catchUpWarn.style.display = applyCatchUp ? 'flex' : 'none';
+    }
+  }
+
+  function openPlayerKOModal() {
+    const startM = safeInt('start-min', 10);
+    const startS = safeInt('start-sec', 0);
+    $('pko-min').value = startM;
+    $('pko-sec').value = startS;
+    $('pko-victim-level').value = Math.min(state.startLevel + 1, 15);
+    $('pko-streak').value = 0;
+    $('pko-is-assist').checked = false;
+    $('pko-apply-catchup').checked = false;
+
+    updatePlayerKOPreview();
+    $('player-ko-modal').style.display = 'flex';
+  }
+
+  // ─── Kill Queue ───────────────────────────────────────────────────────────
+
   function addKillToQueue(entry) {
     state.killQueue.push(entry);
     renderKillQueue();
@@ -190,15 +296,40 @@
     list.innerHTML = '';
 
     if (state.killQueue.length === 0) {
-      list.innerHTML = '<div class="empty-queue-hint">Add wild Pokémon kills, scoring events below.</div>';
+      list.innerHTML = '<div class="empty-queue-hint">Add wild Pokémon kills, player KOs or scoring events below.</div>';
       return;
     }
 
     state.killQueue.forEach((entry, idx) => {
       const row = document.createElement('div');
-      row.className = 'kill-event-row' + (entry.type === 'score' ? ' score-row' : '');
 
-      if (entry.type === 'wild') {
+      if (entry.type === 'playerko') {
+        row.className = 'kill-event-row playerko-row';
+
+        const info = document.createElement('div');
+        info.className = 'ker-info';
+        info.innerHTML = `
+          <div class="ker-name">⚔️ Player KO${entry.isAssist ? ' <span class="ker-assist-tag">ASSIST</span>' : ''}</div>
+          <div class="ker-meta">⏱ ${entry.timer} · Victim Lv.${entry.victimLevel} · Streak ${entry.streakNumber >= 0 ? '+' : ''}${entry.streakNumber}</div>
+        `;
+
+        const xpEl = document.createElement('div');
+        xpEl.className = 'ker-xp';
+        xpEl.textContent = `+${entry.xp}`;
+
+        const rem = document.createElement('button');
+        rem.className = 'ker-remove';
+        rem.textContent = '✕';
+        rem.title = 'Remove';
+        rem.addEventListener('click', () => removeFromQueue(idx));
+
+        row.appendChild(info);
+        row.appendChild(xpEl);
+        row.appendChild(rem);
+
+      } else if (entry.type === 'wild') {
+        row.className = 'kill-event-row';
+
         const img = document.createElement('img');
         img.className = 'ker-img';
         img.src = entry.img;
@@ -228,6 +359,8 @@
         row.appendChild(rem);
 
       } else if (entry.type === 'score') {
+        row.className = 'kill-event-row score-row';
+
         const info = document.createElement('div');
         info.className = 'ker-info';
         info.innerHTML = `
@@ -254,14 +387,22 @@
     });
   }
 
+  // ─── Calculation ──────────────────────────────────────────────────────────
+
+  function safeInt(id, fallback) {
+    const v = parseInt($(id).value);
+    return isNaN(v) ? fallback : v;
+  }
+
   function buildEvents() {
-    const startM = parseInt($('start-min').value) || 10;
-    const startS = parseInt($('start-sec').value) || 0;
-    const durM = parseInt($('dur-min').value) || 10;
-    const durS = parseInt($('dur-sec').value) || 0;
+    const startM = safeInt('start-min', 10);
+    const startS = safeInt('start-sec', 0);
+    const durM   = safeInt('dur-min', 10);
+    const durS   = safeInt('dur-sec', 0);
 
     const startSec = startM * 60 + startS;
-    const endSec = Math.max(0, startSec - (durM * 60 + durS));
+    const durationSec = durM * 60 + durS;
+    const endSec = Math.max(0, startSec - durationSec);
 
     const events = state.killQueue.map(e => ({
       ...e,
@@ -273,20 +414,17 @@
     return { events, startSec, endSec };
   }
 
-  function calculatePassiveXP(startSec, endSec) {
+  function calculatePassiveXP(startSec, endSec, getLevel) {
+    // getLevel(sec) returns the player level at a given timer second.
+    // For classic mode a constant function is fine; sim uses real-time level.
     const boundary = 8 * 60;
     let total = 0;
 
-    if (startSec > boundary) {
-      const highEnd = startSec;
-      const highStart = Math.max(endSec, boundary);
-      total += (highEnd - highStart) * 4;
-    }
-
-    if (endSec < boundary) {
-      const lowEnd = Math.min(startSec, boundary);
-      const lowStart = endSec;
-      total += (lowEnd - lowStart) * 6;
+    for (let t = startSec - 1; t >= endSec; t--) {
+      const rate = t >= boundary ? 4 : 6;
+      const level = getLevel(t);
+      const catchupMult = D.getCatchUpModifier(level, state.enemyHighestLevel);
+      total += Math.floor(rate * catchupMult);
     }
 
     return total;
@@ -295,9 +433,26 @@
   function calculateClassic() {
     const { events, startSec, endSec } = buildEvents();
 
-    let totalXP = D.getStartXPForLevel(state.startLevel);
-    const passiveTotal = calculatePassiveXP(startSec, endSec);
+    // Pre-simulate level progression for the passive XP catch-up calculation.
+    // We replay events in time order to track the approximate level at each second.
+    const startXPVal = D.getStartXPForLevel(state.startLevel);
+    const sortedEvents = [...events].sort((a, b) => b.timerSec - a.timerSec);
+    let runningXP = startXPVal;
+    let evtIdx = 0;
 
+    // levelAtSec(sec): estimate player level at timer=sec.
+    // Events that fired BEFORE this moment have timerSec > sec (since timer counts down).
+    const levelAtSec = (sec) => {
+      let xp = startXPVal;
+      for (const ev of sortedEvents) {
+        if (ev.timerSec > sec) xp = Math.min(xp + ev.xp, D.LEVEL_XP_TABLE[14]);
+      }
+      return D.getLevelFromXP(xp);
+    };
+
+    const passiveTotal = calculatePassiveXP(startSec, endSec, levelAtSec);
+
+    let totalXP = startXPVal;
     let eventXP = 0;
     events.forEach(e => { eventXP += e.xp; });
 
@@ -323,19 +478,31 @@
 
     const durationSec = startSec - endSec;
     const boundary = 8 * 60;
+    const catchupMult = D.getCatchUpModifier(state.startLevel, state.enemyHighestLevel);
+    const catchupNote = catchupMult > 1.0 ? ` · Catch-Up ×${catchupMult.toFixed(2)}` : '';
     let passiveDesc = '';
     if (startSec > boundary && endSec < boundary) {
-      passiveDesc = `(4/sec → 6/sec, mixed)`;
+      passiveDesc = `(4/sec → 6/sec, mixed${catchupNote})`;
     } else if (endSec >= boundary) {
-      passiveDesc = `(4 XP/sec × ${durationSec}s)`;
+      passiveDesc = `(4 XP/sec × ${durationSec}s${catchupNote})`;
     } else {
-      passiveDesc = `(6 XP/sec × ${durationSec}s)`;
+      passiveDesc = `(6 XP/sec × ${durationSec}s${catchupNote})`;
     }
     addBreakdownRow(breakdown, '⏱', null, 'Passive XP', passiveDesc, passiveTotal);
 
     events.forEach(ev => {
-      const label = ev.type === 'score' ? `🏆 Score (${ev.points} pts)` : ev.name;
-      addBreakdownRow(breakdown, null, ev.img || null, label, `@ ${ev.timer}`, ev.xp);
+      let label, meta;
+      if (ev.type === 'score') {
+        label = `🏆 Score (${ev.points} pts)`;
+        meta = `@ ${ev.timer}`;
+      } else if (ev.type === 'playerko') {
+        label = `⚔️ Player KO${ev.isAssist ? ' (Assist)' : ''}`;
+        meta = `@ ${ev.timer} · Victim Lv.${ev.victimLevel}`;
+      } else {
+        label = ev.name;
+        meta = `@ ${ev.timer}`;
+      }
+      addBreakdownRow(breakdown, null, ev.img || null, label, meta, ev.xp);
     });
 
     $('result-mode-label').textContent = 'Classic Result';
@@ -379,6 +546,8 @@
     container.appendChild(row);
   }
 
+  // ─── Advanced Simulation ──────────────────────────────────────────────────
+
   let simState = null;
   let simInterval = null;
   let simSpeed = 1;
@@ -392,6 +561,7 @@
       totalXP: D.getStartXPForLevel(state.startLevel),
       events: [...events],
       paused: true,
+      _lastCatchupLogSec: startSec,
     };
 
     simSpeed = 1;
@@ -401,6 +571,12 @@
     $('sim-log').innerHTML = '';
 
     updateSimDisplay();
+
+    // Log initial catch-up status
+    const initMult = D.getCatchUpModifier(state.startLevel, state.enemyHighestLevel);
+    if (initMult > 1.0) {
+      addSimLog(startSec, `⚡ Catch-Up ×${initMult.toFixed(2)} active at start (enemy Lv.${state.enemyHighestLevel})`, null, false);
+    }
 
     $('result-mode-label').textContent = 'Advanced Simulation';
     $('result-classic').style.display = 'none';
@@ -435,16 +611,31 @@
     }
 
     const prevLevel = D.getLevelFromXP(simState.totalXP);
-    const passiveXP = D.getPassiveXPPerSec(simState.currentSec);
+    const currentLevel = prevLevel; // use level before this tick's XP
+    const passiveRate = D.getPassiveXPPerSec(simState.currentSec);
+    const catchupMult = D.getCatchUpModifier(currentLevel, state.enemyHighestLevel);
+    const passiveXP = Math.floor(passiveRate * catchupMult);
     simState.totalXP = Math.min(
       simState.totalXP + passiveXP,
       D.LEVEL_XP_TABLE[14]
     );
 
+    // Log catch-up passive if modifier is active (once per level-up boundary or first tick)
+    if (catchupMult > 1.0 && simState.currentSec === simState._lastCatchupLogSec - 1) {
+      simState._lastCatchupLogSec = simState.currentSec;
+    }
+
     const events = simState.events.filter(e => e.timerSec === simState.currentSec);
     events.forEach(ev => {
       simState.totalXP = Math.min(simState.totalXP + ev.xp, D.LEVEL_XP_TABLE[14]);
-      const label = ev.type === 'score' ? `🏆 Score (${ev.points} pts)` : `⚔️ ${ev.name}`;
+      let label;
+      if (ev.type === 'score') {
+        label = `🏆 Score (${ev.points} pts)`;
+      } else if (ev.type === 'playerko') {
+        label = `⚔️ Player KO${ev.isAssist ? ' (Assist)' : ''} Lv.${ev.victimLevel}`;
+      } else {
+        label = `⚔️ ${ev.name}`;
+      }
       addSimLog(simState.currentSec, label, ev.xp);
       const idx = simState.events.indexOf(ev);
       if (idx > -1) simState.events.splice(idx, 1);
@@ -453,6 +644,16 @@
     const newLevel = D.getLevelFromXP(simState.totalXP);
     if (newLevel > prevLevel) {
       addSimLog(simState.currentSec, `⬆️ Level Up! Now Lv. ${newLevel}`, null, true);
+      // Check if catch-up modifier changed after leveling up
+      const oldMult = D.getCatchUpModifier(prevLevel, state.enemyHighestLevel);
+      const newMult = D.getCatchUpModifier(newLevel, state.enemyHighestLevel);
+      if (newMult !== oldMult) {
+        if (newMult > 1.0) {
+          addSimLog(simState.currentSec, `⚡ Catch-Up ×${newMult.toFixed(2)} active (passive XP boosted)`, null, false);
+        } else if (oldMult > 1.0) {
+          addSimLog(simState.currentSec, `Catch-Up modifier deactivated`, null, false);
+        }
+      }
     }
 
     updateSimDisplay();
@@ -484,6 +685,8 @@
     log.appendChild(entry);
     log.scrollTop = log.scrollHeight;
   }
+
+  // ─── XP Reference Table ───────────────────────────────────────────────────
 
   function renderXPTable(mapId) {
     const pokemons = D.WILD_DATA[mapId] || [];
@@ -552,6 +755,8 @@
     });
   }
 
+  // ─── Event Bindings ───────────────────────────────────────────────────────
+
   function bindEvents() {
     $('pokemon-search').addEventListener('input', e => {
       buildPokemonPicker(e.target.value);
@@ -562,6 +767,22 @@
     });
     $('lvl-plus').addEventListener('click', () => {
       if (state.startLevel < 15) { state.startLevel++; updateLevelDisplay(); }
+    });
+
+    // Enemy level stepper
+    $('enemy-lvl-minus').addEventListener('click', () => {
+      if (state.enemyHighestLevel > 1) {
+        state.enemyHighestLevel--;
+        $('enemy-lvl-display').textContent = state.enemyHighestLevel;
+        updateCatchUpDisplay();
+      }
+    });
+    $('enemy-lvl-plus').addEventListener('click', () => {
+      if (state.enemyHighestLevel < 15) {
+        state.enemyHighestLevel++;
+        $('enemy-lvl-display').textContent = state.enemyHighestLevel;
+        updateCatchUpDisplay();
+      }
     });
 
     document.querySelectorAll('[data-map]').forEach(btn => {
@@ -587,6 +808,7 @@
       });
     });
 
+    // Wild kill modal controls
     ['kill-min', 'kill-sec'].forEach(id => {
       $(id).addEventListener('input', updateKillModalXP);
     });
@@ -636,6 +858,49 @@
       }
     });
 
+    // Player KO button
+    $('add-player-ko-btn').addEventListener('click', openPlayerKOModal);
+
+    // Player KO modal controls
+    ['pko-victim-level', 'pko-streak', 'pko-min', 'pko-sec'].forEach(id => {
+      $(id).addEventListener('input', updatePlayerKOPreview);
+    });
+    $('pko-is-assist').addEventListener('change', updatePlayerKOPreview);
+    $('pko-apply-catchup').addEventListener('change', updatePlayerKOPreview);
+
+    $('pko-modal-confirm').addEventListener('click', () => {
+      const m = parseInt($('pko-min').value) || 0;
+      const s = parseInt($('pko-sec').value) || 0;
+      const timer = D.secondsToTimer(m * 60 + s);
+      const victimLevel = parseInt($('pko-victim-level').value) || 1;
+      const streakNumber = getPlayerKOStreakNumber();
+      const isAssist = $('pko-is-assist').checked;
+      const applyCatchUp = $('pko-apply-catchup').checked;
+      const xp = parseInt($('pko-xp-preview').dataset.xp) || 0;
+
+      addKillToQueue({
+        type: 'playerko',
+        timer,
+        victimLevel,
+        streakNumber,
+        isAssist,
+        applyCatchUp,
+        xp,
+      });
+      $('player-ko-modal').style.display = 'none';
+    });
+
+    $('pko-modal-cancel').addEventListener('click', () => {
+      $('player-ko-modal').style.display = 'none';
+    });
+    $('pko-modal-close').addEventListener('click', () => {
+      $('player-ko-modal').style.display = 'none';
+    });
+    $('player-ko-modal').addEventListener('click', e => {
+      if (e.target === $('player-ko-modal')) $('player-ko-modal').style.display = 'none';
+    });
+
+    // Scoring
     $('add-score-btn').addEventListener('click', () => {
       const m = parseInt($('score-min').value) || 0;
       const s = parseInt($('score-sec').value) || 0;
@@ -703,9 +968,23 @@
     $('howto-modal').addEventListener('click', e => {
       if (e.target === $('howto-modal')) $('howto-modal').style.display = 'none';
     });
+
+    // Disclaimer modal
+    $('disclaimerBtn').addEventListener('click', () => {
+      $('disclaimer-modal').style.display = 'flex';
+    });
+    $('disclaimer-close').addEventListener('click', () => {
+      $('disclaimer-modal').style.display = 'none';
+    });
+    $('disclaimer-modal').addEventListener('click', e => {
+      if (e.target === $('disclaimer-modal')) $('disclaimer-modal').style.display = 'none';
+    });
   }
 
-  document.addEventListener('DOMContentLoaded', init);
-  if (document.readyState !== 'loading') init();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
 })();

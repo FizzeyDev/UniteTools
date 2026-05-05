@@ -34,7 +34,121 @@ const LEVEL_UP_XP = [
   Infinity,
 ];
 
+// Base XP granted per level when KO-ing an enemy player (level 1–15)
 const KO_BASE_XP = [20, 60, 100, 140, 180, 220, 260, 300, 360, 420, 480, 540, 600, 700, 800];
+
+// ─── Catch-Up Modifier ───────────────────────────────────────────────────────
+// Applied when the opposing team's highest-level Pokémon is higher than yours.
+// levelsAhead = opponentMaxLevel - yourLevel
+// Does NOT affect Stored Exp conversion — only Base Exp received.
+const CATCH_UP_TABLE = [
+  // { levelsAhead, multiplier }
+  { levelsAhead: 2, multiplier: 1.20 },
+  { levelsAhead: 3, multiplier: 1.30 },
+  { levelsAhead: 4, multiplier: 1.50 },
+  { levelsAhead: 5, multiplier: 1.60 },
+  { levelsAhead: 6, multiplier: 1.60 },
+  { levelsAhead: 7, multiplier: 1.80 },
+];
+
+/**
+ * Returns the Catch-Up multiplier (e.g. 1.2) for a given level difference.
+ * Returns 1.0 if no modifier applies (levelsAhead <= 1).
+ * @param {number} myLevel
+ * @param {number} opponentHighestLevel
+ */
+function getCatchUpModifier(myLevel, opponentHighestLevel) {
+  const levelsAhead = opponentHighestLevel - myLevel;
+  if (levelsAhead <= 1) return 1.0;
+  const capped = Math.min(levelsAhead, 7);
+  const entry = CATCH_UP_TABLE.find(e => e.levelsAhead === capped);
+  return entry ? entry.multiplier : 1.80; // cap at 7+
+}
+
+// ─── Streak Modifier ─────────────────────────────────────────────────────────
+// Applied to base kill XP granted when a player is KO'd.
+// streakNumber: negative = death streak, positive = kill streak
+// Reset to 0 when streak breaks, then incremented/decremented.
+const STREAK_TABLE = [
+  { streak: -3, multiplier: 0.60 },
+  { streak: -2, multiplier: 0.80 },
+  { streak: -1, multiplier: 0.90 },
+  { streak:  0, multiplier: 1.00 },
+  { streak:  1, multiplier: 1.10 },
+  { streak:  2, multiplier: 1.30 },
+  { streak:  3, multiplier: 1.50 },
+];
+
+/**
+ * Returns the streak multiplier for a given streak number.
+ * Clamped between -3 and +3.
+ * @param {number} streakNumber
+ */
+function getStreakModifier(streakNumber) {
+  const clamped = Math.max(-3, Math.min(3, streakNumber));
+  const entry = STREAK_TABLE.find(e => e.streak === clamped);
+  return entry ? entry.multiplier : 1.0;
+}
+
+// ─── KO Level Difference Modifier ────────────────────────────────────────────
+// Applied when the KO'd player is higher level than you.
+// levelsAbove = victimLevel - killerLevel
+/**
+ * Returns the level-difference multiplier for a player KO.
+ * @param {number} killerLevel
+ * @param {number} victimLevel
+ */
+function getKOLevelDiffModifier(killerLevel, victimLevel) {
+  const diff = victimLevel - killerLevel;
+  if (diff >= 2) return 1.50;
+  if (diff === 1) return 1.20;
+  return 1.00;
+}
+
+/**
+ * Calculates the full XP gained from KO-ing an enemy player.
+ *
+ * Formula: Math.floor(KO_BASE_XP[victimLevel-1] * streakMult * levelDiffMult)
+ * Then apply catchUpMult to the result if applicable.
+ *
+ * Note: Whether Catch-Up modifier applies to Player KO XP is unconfirmed.
+ * This function accepts a `applyCatchUp` boolean flag (default false).
+ *
+ * @param {number} victimLevel        - Level of the KO'd player (1–15)
+ * @param {number} streakNumber       - Streak number of the KO'd player
+ * @param {number} killerLevel        - Level of the killer (for level diff)
+ * @param {number} myLevel            - Your level (for catch-up)
+ * @param {number} opponentHighestLevel - Opponent team's highest level
+ * @param {boolean} isAssist          - If true, XP is split (assist = 50%)
+ * @param {boolean} applyCatchUp      - Whether to apply catch-up modifier (unconfirmed)
+ */
+function calculatePlayerKOXP({
+  victimLevel,
+  streakNumber,
+  killerLevel,
+  myLevel,
+  opponentHighestLevel,
+  isAssist = false,
+  applyCatchUp = false,
+}) {
+  const baseXP = KO_BASE_XP[Math.min(victimLevel - 1, 14)];
+  const streakMult = getStreakModifier(streakNumber);
+  const levelDiffMult = getKOLevelDiffModifier(killerLevel, victimLevel);
+
+  let xp = Math.floor(baseXP * streakMult * levelDiffMult);
+
+  if (isAssist) {
+    // Assists receive a portion; typically treated as ~50% share (unconfirmed exact split)
+    xp = Math.floor(xp * 0.5);
+  }
+
+  if (applyCatchUp) {
+    const catchUpMult = getCatchUpModifier(myLevel, opponentHighestLevel);
+    xp = Math.floor(xp * catchUpMult);
+  }
+
+  return xp;
+}
 
 const WILD_DATA = {
   groudon: [
@@ -581,11 +695,17 @@ window.XPCalcData = {
   LEVEL_XP_TABLE,
   LEVEL_UP_XP,
   KO_BASE_XP,
+  CATCH_UP_TABLE,
+  STREAK_TABLE,
   WILD_DATA,
   PLAYER_POKEMON,
   getScoringXP,
   getPassiveXPPerSec,
   getWildXP,
+  getCatchUpModifier,
+  getStreakModifier,
+  getKOLevelDiffModifier,
+  calculatePlayerKOXP,
   timerToSeconds,
   secondsToTimer,
   getLevelFromXP,

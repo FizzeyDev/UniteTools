@@ -1,6 +1,6 @@
 /* ─────────────────────────────────────────────
    exp-calc.css  — XP Calculator page styles
-   Matches Unite Tools design system
+   Unite Tools design system
 ───────────────────────────────────────────── */
 
 :root {
@@ -42,7 +42,9 @@ body {
 }
 body.sidebar-collapsed { margin-left: 0; }
 
-/* ── Top Bar ── */
+/* ══════════════════════════════════════
+   TOP BAR
+══════════════════════════════════════ */
 .topbar {
   height: 52px;
   background: var(--surface);
@@ -66,7 +68,24 @@ body.sidebar-collapsed { margin-left: 0; }
   color: #fff;
   text-shadow: 0 0 20px rgba(79,195,247,0.4);
 }
+
 .topbar-spacer { flex: 1; }
+
+.disclaimer-btn {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 7px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255,157,0,0.3);
+  background: var(--orange-dim);
+  color: var(--orange);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transition: all 0.2s;
+}
+.disclaimer-btn:hover { background: rgba(255,157,0,0.22); }
 
 .how-to-use-btn {
   font-family: 'Rajdhani', sans-serif;
@@ -84,7 +103,9 @@ body.sidebar-collapsed { margin-left: 0; }
 }
 .how-to-use-btn:hover { background: rgba(79,195,247,0.2); }
 
-/* ── Main Container ── */
+/* ══════════════════════════════════════
+   MAIN CONTAINER
+══════════════════════════════════════ */
 .xp-main {
   flex: 1;
   padding: 20px 24px 40px;
@@ -96,7 +117,7 @@ body.sidebar-collapsed { margin-left: 0; }
 }
 
 /* ══════════════════════════════════════
-   TOP SECTION
+   TOP SECTION — Pokemon Config + Session
 ══════════════════════════════════════ */
 .top-section {
   display: flex;
@@ -114,7 +135,7 @@ body.sidebar-collapsed { margin-left: 0; }
   flex-shrink: 0;
 }
 
-/* ── Pokemon Config Block ── */
+/* Pokemon Config Block */
 .pokemon-config-block {
   flex: 1;
   padding: 16px;
@@ -130,9 +151,7 @@ body.sidebar-collapsed { margin-left: 0; }
   gap: 14px;
 }
 
-.pokemon-avatar-wrap {
-  flex-shrink: 0;
-}
+.pokemon-avatar-wrap { flex-shrink: 0; }
 
 .pokemon-circle {
   width: 80px;
@@ -147,8 +166,10 @@ body.sidebar-collapsed { margin-left: 0; }
   position: relative;
   transition: border-color 0.2s;
 }
-.pokemon-circle.selected { border-color: var(--blue); box-shadow: 0 0 16px rgba(79,195,247,0.3); }
-
+.pokemon-circle.selected {
+  border-color: var(--blue);
+  box-shadow: 0 0 16px rgba(79,195,247,0.3);
+}
 .pokemon-circle img {
   width: 68px;
   height: 68px;
@@ -279,6 +300,7 @@ body.sidebar-collapsed { margin-left: 0; }
 }
 .toggle-switch.disabled { cursor: not-allowed; opacity: 0.4; }
 .toggle-switch input { opacity: 0; width: 0; height: 0; }
+
 .toggle-slider {
   position: absolute;
   inset: 0;
@@ -305,9 +327,7 @@ body.sidebar-collapsed { margin-left: 0; }
 }
 
 /* Pokemon Search & Grid */
-.pokemon-search-wrap {
-  position: relative;
-}
+.pokemon-search-wrap { position: relative; }
 
 .cfg-input {
   font-family: 'Rajdhani', sans-serif;
@@ -545,8 +565,148 @@ body.sidebar-collapsed { margin-left: 0; }
   color: var(--text-dim);
 }
 
+/* Passive XP badges */
+.passive-xp-info {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.passive-xp-badge {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 900;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.passive-xp-badge.before8 {
+  background: var(--blue-dim);
+  border: 1px solid rgba(79,195,247,0.3);
+  color: var(--blue);
+}
+.passive-xp-badge.after8 {
+  background: var(--orange-dim);
+  border: 1px solid rgba(255,157,0,0.3);
+  color: var(--orange);
+}
+.passive-xp-small {
+  font-size: 0.6rem;
+  font-weight: 600;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 /* ══════════════════════════════════════
-   EVENTS SECTION (Kill Queue + Wild Grid)
+   ENEMY CONFIG SECTION
+══════════════════════════════════════ */
+.enemy-config-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.enemy-config-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  flex-wrap: wrap;
+}
+
+.enemy-config-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text);
+}
+
+.enemy-config-hint {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.enemy-config-body {
+  padding: 14px 16px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.enemy-level-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.enemy-level-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.enemy-level-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.catchup-badge {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface-3);
+  color: var(--text-dim);
+  transition: all 0.2s;
+}
+.catchup-badge.active {
+  background: var(--green-dim);
+  border-color: rgba(76,175,130,0.4);
+  color: var(--green);
+}
+
+.catchup-detail {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  max-width: 340px;
+  line-height: 1.4;
+}
+
+.enemy-config-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  max-width: 500px;
+  flex: 1;
+}
+
+.enemy-note-icon { flex-shrink: 0; }
+
+/* ══════════════════════════════════════
+   EVENTS SECTION — Kill Queue + Wild Grid
 ══════════════════════════════════════ */
 .events-section {
   display: flex;
@@ -636,10 +796,7 @@ body.sidebar-collapsed { margin-left: 0; }
   flex-shrink: 0;
 }
 
-.ker-info {
-  flex: 1;
-  min-width: 0;
-}
+.ker-info { flex: 1; min-width: 0; }
 
 .ker-name {
   font-family: 'Exo 2', sans-serif;
@@ -711,6 +868,12 @@ body.sidebar-collapsed { margin-left: 0; }
   color: var(--text-dim);
 }
 
+.quick-add-desc {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
 .quick-add-fields {
   display: flex;
   gap: 8px;
@@ -745,7 +908,15 @@ body.sidebar-collapsed { margin-left: 0; }
 }
 .quick-add-btn:hover { background: rgba(255,215,64,0.22); border-color: var(--yellow); }
 
-/* ── Wild Panel ── */
+.playerko-quick { background: rgba(239,83,80,0.05); border-radius: var(--radius-sm); padding: 8px; }
+.playerko-btn {
+  border-color: rgba(239,83,80,0.35);
+  background: rgba(239,83,80,0.08);
+  color: var(--red);
+}
+.playerko-btn:hover { background: rgba(239,83,80,0.18); border-color: var(--red); }
+
+/* Wild Panel */
 .wild-panel {
   flex: 1;
   background: var(--surface);
@@ -814,13 +985,11 @@ body.sidebar-collapsed { margin-left: 0; }
   transform: translateY(-2px);
   box-shadow: 0 4px 16px rgba(0,0,0,0.4);
 }
-
 .wild-card-img {
   width: 52px;
   height: 52px;
   object-fit: contain;
 }
-
 .wild-card-name {
   font-family: 'Exo 2', sans-serif;
   font-size: 0.62rem;
@@ -833,14 +1002,12 @@ body.sidebar-collapsed { margin-left: 0; }
   text-overflow: ellipsis;
   max-width: 90px;
 }
-
 .wild-card-xp {
   font-family: 'Exo 2', sans-serif;
   font-size: 0.7rem;
   font-weight: 700;
   color: var(--yellow);
 }
-
 .wild-card-add-btn {
   font-family: 'Rajdhani', sans-serif;
   font-weight: 700;
@@ -926,8 +1093,8 @@ body.sidebar-collapsed { margin-left: 0; }
   color: var(--blue);
   line-height: 1;
 }
-.rsb-val.gold   { color: var(--yellow); }
-.rsb-val.teal   { color: var(--teal); }
+.rsb-val.gold { color: var(--yellow); }
+.rsb-val.teal { color: var(--teal); }
 
 .rsb-label {
   font-size: 0.68rem;
@@ -937,7 +1104,7 @@ body.sidebar-collapsed { margin-left: 0; }
   margin-top: 4px;
 }
 
-/* Breakdown */
+/* Result Breakdown */
 .result-breakdown {
   display: flex;
   flex-direction: column;
@@ -960,23 +1127,16 @@ body.sidebar-collapsed { margin-left: 0; }
   align-items: center;
   gap: 8px;
 }
-
-.bd-icon {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-}
-
+.bd-icon { width: 22px; height: 22px; object-fit: contain; }
 .bd-name { color: var(--text); }
 .bd-meta { color: var(--text-dim); font-size: 0.68rem; }
-
 .bd-xp {
   font-family: 'Exo 2', sans-serif;
   font-weight: 700;
   color: var(--yellow);
 }
 
-/* ── Advanced Sim ── */
+/* Advanced Sim */
 .sim-header-row {
   display: flex;
   gap: 12px;
@@ -994,7 +1154,6 @@ body.sidebar-collapsed { margin-left: 0; }
   border-radius: var(--radius-sm);
   padding: 8px 16px;
 }
-
 .sim-timer-label {
   font-size: 0.6rem;
   font-weight: 700;
@@ -1002,7 +1161,6 @@ body.sidebar-collapsed { margin-left: 0; }
   letter-spacing: 0.1em;
   color: var(--text-dim);
 }
-
 .sim-timer-val {
   font-family: 'Exo 2', sans-serif;
   font-size: 1.6rem;
@@ -1076,7 +1234,6 @@ body.sidebar-collapsed { margin-left: 0; }
   from { opacity: 0; transform: translateX(-10px); }
   to   { opacity: 1; transform: translateX(0); }
 }
-
 .sim-log-time {
   font-family: 'Exo 2', sans-serif;
   font-weight: 700;
@@ -1167,16 +1324,11 @@ body.sidebar-collapsed { margin-left: 0; }
   font-weight: 700;
   color: var(--text-dim);
 }
-
 .xp-table tr:hover td { background: rgba(79,195,247,0.05); }
 
-/* Highlight 2:00 (the 2-min mark) */
-.xp-table tr.row-highlight td {
-  background: rgba(239,83,80,0.07);
-}
+.xp-table tr.row-highlight td { background: rgba(239,83,80,0.07); }
 .xp-table tr.row-highlight td.col-timer { color: var(--red); }
 
-/* Pokemon header cell with icon */
 .xp-table th.poke-header {
   display: flex;
   flex-direction: column;
@@ -1191,7 +1343,7 @@ body.sidebar-collapsed { margin-left: 0; }
 }
 
 /* ══════════════════════════════════════
-   MODAL
+   MODALS
 ══════════════════════════════════════ */
 .modal-overlay {
   position: fixed;
@@ -1223,6 +1375,8 @@ body.sidebar-collapsed { margin-left: 0; }
   border-bottom: 1px solid var(--border);
   background: var(--surface-2);
 }
+
+.disclaimer-header { border-bottom-color: rgba(255,157,0,0.25); }
 
 .modal-title {
   font-family: 'Exo 2', sans-serif;
@@ -1265,13 +1419,11 @@ body.sidebar-collapsed { margin-left: 0; }
   border-radius: var(--radius-sm);
   padding: 10px 14px;
 }
-
 .modal-pokemon-preview img {
   width: 48px;
   height: 48px;
   object-fit: contain;
 }
-
 .modal-pokemon-preview span {
   font-family: 'Exo 2', sans-serif;
   font-size: 1rem;
@@ -1325,7 +1477,7 @@ body.sidebar-collapsed { margin-left: 0; }
 }
 .modal-btn.cancel:hover { color: var(--text); }
 
-/* Howto */
+/* How To Use modal */
 .howto-body { max-height: 70vh; overflow-y: auto; }
 .howto-body::-webkit-scrollbar { width: 3px; }
 .howto-body::-webkit-scrollbar-thumb { background: var(--surface-3); }
@@ -1357,53 +1509,125 @@ body.sidebar-collapsed { margin-left: 0; }
   flex-shrink: 0;
 }
 
-/* Passive XP auto badges */
-.passive-xp-info {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-
-.passive-xp-badge {
-  font-family: 'Exo 2', sans-serif;
+/* Disclaimer modal */
+.disclaimer-intro {
   font-size: 0.85rem;
-  font-weight: 900;
-  padding: 4px 10px;
+  line-height: 1.6;
+  color: var(--text-dim);
+  padding: 4px 0;
+}
+
+.disclaimer-block {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
+  padding: 12px 14px;
   display: flex;
-  align-items: center;
-  gap: 5px;
-  white-space: nowrap;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.passive-xp-badge.before8 {
-  background: var(--blue-dim);
-  border: 1px solid rgba(79,195,247,0.3);
-  color: var(--blue);
-}
-
-.passive-xp-badge.after8 {
-  background: var(--orange-dim);
-  border: 1px solid rgba(255,157,0,0.3);
+.disclaimer-block-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--orange);
 }
 
-.passive-xp-small {
-  font-size: 0.6rem;
-  font-weight: 600;
-  opacity: 0.8;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.disclaimer-block p {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--text-dim);
 }
 
-/* ── Responsive ── */
+.disclaimer-footer-note {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 4px 0;
+  opacity: 0.7;
+}
+
+/* Player KO modal specifics */
+.pko-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.pko-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pko-toggle-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.pko-toggle-row:hover { border-color: rgba(79,195,247,0.25); }
+.pko-toggle-row input { margin-top: 2px; accent-color: var(--blue); }
+
+.pko-toggle-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pko-toggle-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.pko-toggle-sub {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+.pko-unconfirmed { color: var(--orange); }
+
+.pko-catchup-warn {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(255,157,0,0.07);
+  border: 1px solid rgba(255,157,0,0.25);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 0.78rem;
+  color: var(--orange);
+  line-height: 1.5;
+}
+
+.pko-breakdown {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  padding: 4px 2px;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
 @media (max-width: 1100px) {
   .session-config-block { width: 320px; }
 }
+
 @media (max-width: 860px) {
   body { margin-left: 0; }
   .top-section { flex-direction: column; }
   .session-config-block { width: 100%; }
   .events-section { flex-direction: column; }
   .kill-queue-panel { width: 100%; }
+  .pko-fields-grid { grid-template-columns: 1fr; }
 }
