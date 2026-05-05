@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unite Tools - XP Calculator</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./css/navbar.css">
+  <link rel="stylesheet" href="./css/exp-calc.css">
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <!-- ── Top Bar ── -->
+  <div class="topbar">
+    <span class="topbar-title">⚡ XP Calculator</span>
+    <div class="topbar-spacer"></div>
+    <button class="how-to-use-btn" id="howToUseBtn">📖 How to Use</button>
+  </div>
+
+  <!-- ── Main Layout ── -->
+  <div class="xp-main">
+
+    <!-- ═══════════════════════════════════════
+         TOP SECTION: Pokemon Config + Session
+    ═══════════════════════════════════════ -->
+    <div class="top-section">
+
+      <!-- Pokemon Selector Block -->
+      <div class="pokemon-config-block">
+        <div class="pokemon-preview-area">
+          <div class="pokemon-avatar-wrap">
+            <div class="pokemon-circle" id="pokemon-circle">
+              <img id="pokemon-avatar" src="" alt="" draggable="false">
+              <span id="pokemon-placeholder">?</span>
+            </div>
+          </div>
+          <div class="pokemon-info-col">
+            <div class="pokemon-name-display" id="pokemon-name-display">Select a Pokémon</div>
+            <div class="pokemon-level-row">
+              <span class="cfg-label">Level</span>
+              <div class="level-stepper">
+                <button class="step-btn" id="lvl-minus">−</button>
+                <span class="level-value" id="lvl-display">1</span>
+                <button class="step-btn" id="lvl-plus">+</button>
+              </div>
+              <span class="level-fraction" id="lvl-xp-fraction">0 / 100 XP</span>
+            </div>
+            <div class="exp-share-row">
+              <img src="assets/items/exp_share.png" alt="Exp Share" class="exp-share-icon" draggable="false">
+              <span class="exp-share-label">Exp. Share</span>
+              <div class="coming-soon-badge">Coming Soon</div>
+              <label class="toggle-switch disabled">
+                <input type="checkbox" id="exp-share-toggle" disabled>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pokemon Search -->
+        <div class="pokemon-search-wrap">
+          <input type="text" id="pokemon-search" class="cfg-input" placeholder="🔍  Search Pokémon…" autocomplete="off">
+        </div>
+        <div class="pokemon-picker-grid" id="pokemon-picker-grid">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- Vertical separator -->
+      <div class="top-sep"></div>
+
+      <!-- Session Config Block -->
+      <div class="session-config-block">
+        <div class="session-title">Session Settings</div>
+
+        <div class="session-fields">
+          <div class="field-group">
+            <label class="cfg-label">Start Timer</label>
+            <div class="timer-input-wrap">
+              <input type="number" id="start-min" class="timer-part" min="0" max="10" value="10" placeholder="MM">
+              <span class="timer-colon">:</span>
+              <input type="number" id="start-sec" class="timer-part" min="0" max="59" value="0" placeholder="SS">
+            </div>
+            <span class="field-hint">Game timer at start (e.g. 10:00)</span>
+          </div>
+
+          <div class="field-group">
+            <label class="cfg-label">Duration</label>
+            <div class="timer-input-wrap">
+              <input type="number" id="dur-min" class="timer-part" min="0" max="10" value="10" placeholder="MM">
+              <span class="timer-colon">:</span>
+              <input type="number" id="dur-sec" class="timer-part" min="0" max="59" value="0" placeholder="SS">
+            </div>
+            <span class="field-hint">How long to simulate</span>
+          </div>
+
+          <div class="field-group">
+            <label class="cfg-label">Passive XP/sec</label>
+            <div class="passive-xp-info">
+              <span class="passive-xp-badge before8">4 <span class="passive-xp-small">xp/s avant 8:00</span></span>
+              <span class="passive-xp-badge after8">6 <span class="passive-xp-small">xp/s après 8:00</span></span>
+            </div>
+            <span class="field-hint">Calculé automatiquement</span>
+          </div>
+        </div>
+
+        <!-- XP Progress Display -->
+        <div class="xp-progress-box">
+          <div class="xp-prog-row">
+            <span class="xp-prog-label">Current XP</span>
+            <span class="xp-prog-val" id="current-xp-display">0</span>
+          </div>
+          <div class="xp-prog-bar-wrap">
+            <div class="xp-prog-bar" id="xp-prog-bar" style="width:0%"></div>
+          </div>
+          <div class="xp-prog-row small">
+            <span id="xp-to-next-label">— XP to next level</span>
+            <span id="xp-level-display">Lv. 1</span>
+          </div>
+        </div>
+
+        <!-- Calculate Buttons -->
+        <div class="calc-btn-row">
+          <button class="calc-btn classic" id="calc-classic-btn">
+            <span class="calc-btn-icon">⚡</span>
+            <div>
+              <div class="calc-btn-title">Classic</div>
+              <div class="calc-btn-sub">Instant result</div>
+            </div>
+          </button>
+          <button class="calc-btn advanced" id="calc-advanced-btn">
+            <span class="calc-btn-icon">🎬</span>
+            <div>
+              <div class="calc-btn-title">Advanced</div>
+              <div class="calc-btn-sub">Live simulation</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         KILL LIST & EVENTS
+    ═══════════════════════════════════════ -->
+    <div class="events-section">
+
+      <!-- Kill Queue (left) -->
+      <div class="kill-queue-panel">
+        <div class="panel-header">
+          <span class="panel-header-title">📋 Kill Queue</span>
+          <button class="clear-queue-btn" id="clear-queue-btn">🗑 Clear</button>
+        </div>
+        <div class="kill-queue-list" id="kill-queue-list">
+          <div class="empty-queue-hint">Add wild Pokémon kills, scoring events below.</div>
+        </div>
+
+        <!-- Scoring event add -->
+        <div class="quick-add-row">
+          <div class="quick-add-block">
+            <span class="quick-add-label">🏆 Scoring</span>
+            <div class="quick-add-fields">
+              <div class="qaf">
+                <span class="qaf-label">Timer</span>
+                <div class="timer-input-wrap mini">
+                  <input type="number" id="score-min" class="timer-part mini" min="0" max="10" value="5">
+                  <span class="timer-colon">:</span>
+                  <input type="number" id="score-sec" class="timer-part mini" min="0" max="59" value="0">
+                </div>
+              </div>
+              <div class="qaf">
+                <span class="qaf-label">Points</span>
+                <input type="number" id="score-pts" class="cfg-input mini" min="1" max="100" value="10">
+              </div>
+            </div>
+            <button class="quick-add-btn" id="add-score-btn">+ Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wild Pokemon Grid (right, scrollable) -->
+      <div class="wild-panel">
+        <div class="panel-header">
+          <span class="panel-header-title">🌿 Wild Pokémon</span>
+          <!-- Map filter -->
+          <div class="map-pills small">
+            <button class="map-pill active" data-map="groudon">Groudon</button>
+            <button class="map-pill" data-map="kyogre">Kyogre</button>
+            <button class="map-pill" data-map="rayquaza">Rayquaza</button>
+          </div>
+        </div>
+        <div class="wild-grid-scroll">
+          <div class="wild-grid" id="wild-grid">
+            <!-- filled by JS -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         RESULT PANEL
+    ═══════════════════════════════════════ -->
+    <div class="result-panel" id="result-panel" style="display:none;">
+      <div class="result-header">
+        <span class="result-title" id="result-mode-label">Classic Result</span>
+        <button class="result-close-btn" id="result-close-btn">✕ Close</button>
+      </div>
+
+      <!-- Classic result -->
+      <div id="result-classic" class="result-body">
+        <div class="result-summary">
+          <div class="result-stat-big">
+            <div class="rsb-val" id="res-total-xp">0</div>
+            <div class="rsb-label">Total XP Gained</div>
+          </div>
+          <div class="result-stat-big">
+            <div class="rsb-val gold" id="res-final-level">1</div>
+            <div class="rsb-label">Final Level</div>
+          </div>
+          <div class="result-stat-big">
+            <div class="rsb-val teal" id="res-remaining-xp">0</div>
+            <div class="rsb-label">XP Remaining to Lv Up</div>
+          </div>
+        </div>
+        <div class="result-breakdown" id="result-breakdown">
+          <!-- breakdown rows -->
+        </div>
+      </div>
+
+      <!-- Advanced simulation -->
+      <div id="result-advanced" class="result-body" style="display:none;">
+        <div class="sim-header-row">
+          <div class="sim-timer-display">
+            <span class="sim-timer-label">TIMER</span>
+            <span class="sim-timer-val" id="sim-timer-val">10:00</span>
+          </div>
+          <div class="xp-prog-box-sim">
+            <div class="xp-prog-row">
+              <span class="xp-prog-label">XP</span>
+              <span class="xp-prog-val" id="sim-xp-val">0</span>
+            </div>
+            <div class="xp-prog-bar-wrap">
+              <div class="xp-prog-bar" id="sim-xp-bar" style="width:0%"></div>
+            </div>
+            <span class="sim-level-badge" id="sim-level-badge">Lv. 1</span>
+          </div>
+          <div class="sim-controls">
+            <button class="sim-ctrl-btn" id="sim-play-pause">▶ Play</button>
+            <button class="sim-ctrl-btn" id="sim-speed-btn" data-speed="1">1x</button>
+            <button class="sim-ctrl-btn" id="sim-restart-btn">↩ Restart</button>
+          </div>
+        </div>
+        <div class="sim-log" id="sim-log">
+          <!-- live events log -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         XP TABLE (reference)
+    ═══════════════════════════════════════ -->
+    <div class="xp-table-section">
+      <div class="section-header-row">
+        <span class="section-title">📊 Wild Pokémon XP Table</span>
+        <div class="map-pills small">
+          <button class="map-pill active" data-map-table="groudon">Groudon</button>
+          <button class="map-pill" data-map-table="kyogre">Kyogre</button>
+          <button class="map-pill" data-map-table="rayquaza">Rayquaza</button>
+        </div>
+      </div>
+      <div class="xp-table-scroll">
+        <table class="xp-table" id="xp-ref-table">
+          <thead id="xp-table-head"></thead>
+          <tbody id="xp-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- end xp-main -->
+
+  <!-- ═══ KILL ADD MODAL ═══ -->
+  <div class="modal-overlay" id="kill-modal" style="display:none;">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span class="modal-title" id="kill-modal-title">Add Kill</span>
+        <button class="modal-close" id="kill-modal-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-pokemon-preview">
+          <img id="kill-modal-img" src="" alt="" draggable="false">
+          <span id="kill-modal-name"></span>
+        </div>
+        <div class="field-group">
+          <label class="cfg-label">Timer of Kill</label>
+          <div class="timer-input-wrap">
+            <input type="number" id="kill-min" class="timer-part" min="0" max="10" value="9">
+            <span class="timer-colon">:</span>
+            <input type="number" id="kill-sec" class="timer-part" min="0" max="59" value="0">
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="cfg-label">Allies sharing XP</label>
+          <div class="level-stepper">
+            <button class="step-btn" id="allies-minus">−</button>
+            <span class="level-value" id="allies-count">0</span>
+            <button class="step-btn" id="allies-plus">+</button>
+          </div>
+          <span class="field-hint">0 = solo kill</span>
+        </div>
+        <div class="field-group">
+          <label class="cfg-label">XP at this timer</label>
+          <div class="modal-xp-preview" id="kill-xp-preview">— XP</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn confirm" id="kill-modal-confirm">+ Add to Queue</button>
+        <button class="modal-btn cancel" id="kill-modal-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ HOW TO USE MODAL ═══ -->
+  <div class="modal-overlay" id="howto-modal" style="display:none;">
+    <div class="modal-box wide">
+      <div class="modal-header">
+        <span class="modal-title">📖 How to Use — XP Calculator</span>
+        <button class="modal-close" id="howto-close">✕</button>
+      </div>
+      <div class="modal-body howto-body">
+        <div class="howto-step">
+          <div class="howto-num">1</div>
+          <div>
+            <strong>Choose your Pokémon</strong> and set your starting level.
+          </div>
+        </div>
+        <div class="howto-step">
+          <div class="howto-num">2</div>
+          <div>
+            Set the <strong>Start Timer</strong> (when you start farming) and the <strong>Duration</strong> of your session.
+          </div>
+        </div>
+        <div class="howto-step">
+          <div class="howto-num">3</div>
+          <div>
+            Add kills from the <strong>Wild Pokémon</strong> grid. Click a Pokémon, set the timer and number of allies sharing XP, then confirm.
+          </div>
+        </div>
+        <div class="howto-step">
+          <div class="howto-num">4</div>
+          <div>
+            Add <strong>Scoring</strong> events using the scoring quick-add row (timer + points scored).
+          </div>
+        </div>
+        <div class="howto-step">
+          <div class="howto-num">5</div>
+          <div>
+            Press <strong>Classic</strong> for an instant summary, or <strong>Advanced</strong> to watch a real-time simulation that you can speed up to x4.
+          </div>
+        </div>
+        <div class="howto-step">
+          <div class="howto-num">💡</div>
+          <div>
+            The <strong>XP Table</strong> at the bottom shows how much XP each wild Pokémon gives at every timer tick — use it to plan kills efficiently.
+          </div>
+        </div>
+        <hr style="border-color:rgba(255,255,255,0.07);margin:12px 0">
+        <p style="color:var(--text-dim);font-size:0.82rem;">
+          <strong style="color:var(--yellow)">Passive XP:</strong> Automatique — 4 XP/sec entre 10:00 et 8:00, puis 6 XP/sec entre 8:00 et 0:00.<br>
+          <strong style="color:var(--yellow)">XP Share:</strong> Coming Soon — will be implemented in a future update.<br>
+          <strong style="color:var(--yellow)">Enemy Kill:</strong> Coming Soon — will give XP based on level difference.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="./scripts/navbar.js"></script>
+  <script src="./scripts/exp-calc/data.js"></script>
+  <script src="./scripts/exp-calc/app.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
