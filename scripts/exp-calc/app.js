@@ -94,7 +94,7 @@
       : `${toNext} XP to next level`;
     $('lvl-xp-fraction').textContent = lvl >= 15
       ? 'MAX'
-      : `0 / ${D.LEVEL_UP_XP[lvl - 1] || '—'} XP`;
+      : `0 / ${D.LEVEL_UP_XP[lvl - 1] || '-'} XP`;
   }
 
   // ─── Catch-Up / Enemy Config ───────────────────────────────────────────────
@@ -121,7 +121,7 @@
     } else {
       badge.textContent = 'Catch-Up: Inactive';
       badge.className = 'catchup-badge inactive';
-      detail.textContent = `Your level (${myLevel}) ≥ enemy level (${enemyLevel}) — no modifier.`;
+      detail.textContent = `Your level (${myLevel}) ≥ enemy level (${enemyLevel}) - no modifier.`;
     }
   }
 
@@ -225,7 +225,7 @@
     killModalTarget = poke;
     killModalMap = mapId;
 
-    $('kill-modal-title').textContent = `Add Kill — ${poke.name}`;
+    $('kill-modal-title').textContent = `Add Kill - ${poke.name}`;
     $('kill-modal-img').src = poke.img;
     $('kill-modal-name').textContent = poke.name;
 
@@ -357,7 +357,7 @@
       killModalTarget = poke;
       killModalMap = state.currentMap;
 
-      $('kill-modal-title').textContent = `Edit Kill — ${poke.name}`;
+      $('kill-modal-title').textContent = `Edit Kill - ${poke.name}`;
       $('kill-modal-img').src = poke.img;
       $('kill-modal-name').textContent = poke.name;
 
@@ -389,11 +389,11 @@
       $('score-min').value = Math.floor(timerSec / 60);
       $('score-sec').value = timerSec % 60;
       $('score-pts').value = entry.points;
-      // Score has no modal — edit inline by just triggering the add button
+      // Score has no modal - edit inline by just triggering the add button
       // We remove the old entry and the next "add" will re-insert at same position
       // For score, we use a minimal approach: open a tiny dedicated flow
       // Actually: directly trigger confirm flow here since score has no modal
-      editingIdx = null; // reset — score edits apply immediately via the panel
+      editingIdx = null; // reset - score edits apply immediately via the panel
       state.killQueue[idx] = {
         ...entry,
         timer: D.secondsToTimer(timerSec),
@@ -733,7 +733,6 @@
 
     const events = simState.events.filter(e => e.timerSec === simState.currentSec);
     events.forEach(ev => {
-      simState.totalXP = Math.min(simState.totalXP + ev.xp, D.LEVEL_XP_TABLE[14]);
       let label;
       if (ev.type === 'score') {
         label = `🏆 Score (${ev.points} pts)`;
@@ -742,15 +741,16 @@
       } else {
         label = `⚔️ ${ev.name}`;
       }
-      // Show catch-up bonus if applicable (base XP without catch-up vs with)
-      let xpDisplay = ev.xp;
+      // Apply catch-up multiplier to wild/score XP at simulation time
+      let finalXP = ev.xp;
       let catchupNote = null;
       if (catchupMult > 1.0 && (ev.type === 'wild' || ev.type === 'score')) {
-        const baseXP = Math.round(ev.xp / catchupMult);
-        const bonus = ev.xp - baseXP;
-        if (bonus > 0) catchupNote = `+${baseXP} (+${bonus})`;
+        finalXP = Math.floor(ev.xp * catchupMult);
+        const bonus = finalXP - ev.xp;
+        if (bonus > 0) catchupNote = `+${ev.xp} (+${bonus})`;
       }
-      addSimLog(simState.currentSec, label, xpDisplay, false, catchupNote);
+      simState.totalXP = Math.min(simState.totalXP + finalXP, D.LEVEL_XP_TABLE[14]);
+      addSimLog(simState.currentSec, label, finalXP, false, catchupNote);
       const idx = simState.events.indexOf(ev);
       if (idx > -1) simState.events.splice(idx, 1);
     });
@@ -858,7 +858,7 @@
       pokemons.forEach(p => {
         const td = document.createElement('td');
         const entry = p.data.find(d => d.timer === timer);
-        td.textContent = entry ? entry.xp : '—';
+        td.textContent = entry ? entry.xp : '-';
         if (entry) {
           const xp = entry.xp;
           if (xp >= 500) td.style.color = 'var(--red)';

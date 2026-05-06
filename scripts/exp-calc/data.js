@@ -40,7 +40,7 @@ const KO_BASE_XP = [20, 60, 100, 140, 180, 220, 260, 300, 360, 420, 480, 540, 60
 // ─── Catch-Up Modifier ───────────────────────────────────────────────────────
 // Applied when the opposing team's highest-level Pokémon is higher than yours.
 // levelsAhead = opponentMaxLevel - yourLevel
-// Does NOT affect Stored Exp conversion — only Base Exp received.
+// Does NOT affect Stored Exp conversion - only Base Exp received.
 const CATCH_UP_TABLE = [
   // { levelsAhead, multiplier }
   { levelsAhead: 2, multiplier: 1.20 },
@@ -188,7 +188,7 @@ const WILD_DATA = {
       id: "natu",
       name: "Natu",
       img: "assets/farms/natu.png",
-      aeosBalls: 0,
+      aeosBalls: 1,
       data: [
         { timer: "10:00", xp: 60 }, { timer: "9:40", xp: 60 }, { timer: "9:10", xp: 60 },
         { timer: "8:40", xp: 67 }, { timer: "8:10", xp: 67 }, { timer: "7:40", xp: 74 },
@@ -204,7 +204,7 @@ const WILD_DATA = {
       id: "bunnelby",
       name: "Bunnelby",
       img: "assets/farms/bunnelby.png",
-      aeosBalls: 7,
+      aeosBalls: 5,
       data: [
         { timer: "10:00", xp: 120 }, { timer: "9:40", xp: 120 }, { timer: "9:10", xp: 130 },
         { timer: "8:40", xp: 140 }, { timer: "8:10", xp: 150 }, { timer: "7:40", xp: 160 },
@@ -214,6 +214,256 @@ const WILD_DATA = {
         { timer: "2:40", xp: 260 }, { timer: "2:10", xp: 280 }, { timer: "2:00", xp: 280 },
         { timer: "1:40", xp: 310 }, { timer: "1:10", xp: 330 }, { timer: "0:40", xp: 340 },
         { timer: "0:10", xp: 350 },
+      ]
+    },
+    {
+      id: "baltoy_jungle",
+      name: "Baltoy (Jungle)",
+      img: "assets/farms/baltoy.png",
+      aeosBalls: 2,
+      data: [
+        { timer: "10:00", xp: 160 }, { timer: "9:40", xp: 160 }, { timer: "9:10", xp: 170 },
+        { timer: "8:40", xp: 170 }, { timer: "8:10", xp: 180 }, { timer: "7:40", xp: 190 },
+        { timer: "7:10", xp: 190 }, { timer: "6:40", xp: 200 }, { timer: "6:10", xp: 200 },
+        { timer: "5:40", xp: 210 }, { timer: "5:10", xp: 220 }, { timer: "4:40", xp: 220 },
+        { timer: "4:10", xp: 230 }, { timer: "3:40", xp: 230 }, { timer: "3:10", xp: 250 },
+        { timer: "2:40", xp: 270 }, { timer: "2:10", xp: 280 }, { timer: "2:00", xp: 280 },
+        { timer: "1:40", xp: 300 }, { timer: "1:10", xp: 320 }, { timer: "0:40", xp: 330 },
+        { timer: "0:10", xp: 330 },
+      ]
+    },
+    {
+      id: "baltoy_center",
+      name: "Baltoy (Center)",
+      img: "assets/farms/baltoy.png",
+      aeosBalls: 2,
+      data: [
+        { timer: "10:00", xp: 60 }, { timer: "9:40", xp: 60 }, { timer: "9:10", xp: 70 },
+        { timer: "8:40", xp: 70 }, { timer: "8:10", xp: 80 }, { timer: "7:40", xp: 90 },
+        { timer: "7:10", xp: 90 }, { timer: "6:40", xp: 100 }, { timer: "6:10", xp: 100 },
+        { timer: "5:40", xp: 110 }, { timer: "5:10", xp: 120 }, { timer: "4:40", xp: 120 },
+        { timer: "4:10", xp: 130 }, { timer: "3:40", xp: 130 }, { timer: "3:10", xp: 150 },
+        { timer: "2:40", xp: 170 }, { timer: "2:10", xp: 180 }, { timer: "2:00", xp: 180 },
+        { timer: "1:40", xp: 200 }, { timer: "1:10", xp: 220 }, { timer: "0:40", xp: 230 },
+        { timer: "0:10", xp: 230 },
+      ]
+    },
+    {
+      id: "baltoy_lane",
+      name: "Baltoy (Lane)",
+      img: "assets/farms/baltoy.png",
+      aeosBalls: 2,
+      data: [
+        { timer: "10:00", xp: 60 }, { timer: "9:40", xp: 60 }, { timer: "9:10", xp: 70 },
+        { timer: "8:40", xp: 70 }, { timer: "8:10", xp: 80 }, { timer: "7:40", xp: 90 },
+        { timer: "7:10", xp: 90 }, { timer: "6:40", xp: 100 }, { timer: "6:10", xp: 100 },
+        { timer: "5:40", xp: 110 }, { timer: "5:10", xp: 120 }, { timer: "4:40", xp: 120 },
+        { timer: "4:10", xp: 130 }, { timer: "3:40", xp: 130 }, { timer: "3:10", xp: 150 },
+        { timer: "2:40", xp: 170 }, { timer: "2:10", xp: 180 }, { timer: "2:00", xp: 180 },
+        { timer: "1:40", xp: 200 }, { timer: "1:10", xp: 220 }, { timer: "0:40", xp: 230 },
+        { timer: "0:10", xp: 230 },
+      ]
+    },
+    {
+      id: "indeedee",
+      name: "Indeedee",
+      img: "assets/farms/indeedee.png",
+      aeosBalls: 5,
+      data: [
+        { timer: "10:00", xp: 160 }, { timer: "9:40", xp: 160 }, { timer: "9:10", xp: 170 },
+        { timer: "8:40", xp: 180 }, { timer: "8:10", xp: 190 }, { timer: "7:40", xp: 200 },
+        { timer: "7:10", xp: 200 }, { timer: "6:40", xp: 210 }, { timer: "6:10", xp: 220 },
+        { timer: "5:40", xp: 230 }, { timer: "5:10", xp: 230 }, { timer: "4:40", xp: 240 },
+        { timer: "4:10", xp: 250 }, { timer: "3:40", xp: 260 }, { timer: "3:10", xp: 280 },
+        { timer: "2:40", xp: 300 }, { timer: "2:10", xp: 320 }, { timer: "2:00", xp: 320 },
+        { timer: "1:40", xp: 350 }, { timer: "1:10", xp: 370 }, { timer: "0:40", xp: 380 },
+        { timer: "0:10", xp: 390 },
+      ]
+    },
+    {
+      id: "swablu",
+      name: "Swablu",
+      img: "assets/farms/swablu.png",
+      aeosBalls: 3,
+      data: [
+        { timer: "10:00", xp: 80 }, { timer: "9:40", xp: 80 }, { timer: "9:10", xp: 80 },
+        { timer: "8:40", xp: 87 }, { timer: "8:10", xp: 87 }, { timer: "7:40", xp: 94 },
+        { timer: "7:10", xp: 94 }, { timer: "6:40", xp: 94 }, { timer: "6:10", xp: 101 },
+        { timer: "5:40", xp: 101 }, { timer: "5:10", xp: 101 }, { timer: "4:40", xp: 108 },
+        { timer: "4:10", xp: 108 }, { timer: "3:40", xp: 115 }, { timer: "3:10", xp: 122 },
+        { timer: "2:40", xp: 129 }, { timer: "2:10", xp: 136 }, { timer: "2:00", xp: 136 },
+        { timer: "1:40", xp: 143 }, { timer: "1:10", xp: 150 }, { timer: "0:40", xp: 157 },
+        { timer: "0:10", xp: 157 },
+      ]
+    },
+    {
+      id: "altaria",
+      name: "Altaria",
+      img: "assets/farms/altaria.png",
+      aeosBalls: 6,
+      data: [
+        { timer: "10:00", xp: 190 }, { timer: "9:40", xp: 200 }, { timer: "9:10", xp: 210 },
+        { timer: "8:40", xp: 220 }, { timer: "8:10", xp: 230 }, { timer: "7:40", xp: 230 },
+        { timer: "7:10", xp: 240 }, { timer: "6:40", xp: 250 }, { timer: "6:10", xp: 260 },
+        { timer: "5:40", xp: 270 }, { timer: "5:10", xp: 280 }, { timer: "4:40", xp: 290 },
+        { timer: "4:10", xp: 300 }, { timer: "3:40", xp: 310 }, { timer: "3:10", xp: 340 },
+        { timer: "2:40", xp: 360 }, { timer: "2:10", xp: 390 }, { timer: "2:00", xp: 390 },
+        { timer: "1:40", xp: 420 }, { timer: "1:10", xp: 450 }, { timer: "0:40", xp: 460 },
+        { timer: "0:10", xp: 470 },
+      ]
+    },
+    {
+      id: "escavalier",
+      name: "Escavalier",
+      img: "assets/farms/escavalier.png",
+      aeosBalls: 7,
+      data: [
+        { timer: "10:00", xp: 190 }, { timer: "9:40", xp: 200 }, { timer: "9:10", xp: 210 },
+        { timer: "8:40", xp: 220 }, { timer: "8:10", xp: 230 }, { timer: "7:40", xp: 240 },
+        { timer: "7:10", xp: 250 }, { timer: "6:40", xp: 260 }, { timer: "6:10", xp: 270 },
+        { timer: "5:40", xp: 280 }, { timer: "5:10", xp: 300 }, { timer: "4:40", xp: 300 },
+        { timer: "4:10", xp: 310 }, { timer: "3:40", xp: 320 }, { timer: "3:10", xp: 330 },
+        { timer: "2:40", xp: 340 }, { timer: "2:10", xp: 350 }, { timer: "2:00", xp: 350 },
+        { timer: "1:40", xp: 360 }, { timer: "1:10", xp: 370 }, { timer: "0:40", xp: 380 },
+        { timer: "0:10", xp: 390 },
+      ]
+    },
+    {
+      id: "accelgor",
+      name: "Accelgor",
+      img: "assets/farms/accelgor.png",
+      aeosBalls: 7,
+      data: [
+        { timer: "10:00", xp: 190 }, { timer: "9:40", xp: 200 }, { timer: "9:10", xp: 210 },
+        { timer: "8:40", xp: 220 }, { timer: "8:10", xp: 230 }, { timer: "7:40", xp: 240 },
+        { timer: "7:10", xp: 250 }, { timer: "6:40", xp: 260 }, { timer: "6:10", xp: 270 },
+        { timer: "5:40", xp: 280 }, { timer: "5:10", xp: 290 }, { timer: "4:40", xp: 300 },
+        { timer: "4:10", xp: 310 }, { timer: "3:40", xp: 320 }, { timer: "3:10", xp: 330 },
+        { timer: "2:40", xp: 340 }, { timer: "2:10", xp: 350 }, { timer: "2:00", xp: 350 },
+        { timer: "1:40", xp: 360 }, { timer: "1:10", xp: 370 }, { timer: "0:40", xp: 380 },
+        { timer: "0:10", xp: 390 },
+      ]
+    },
+    {
+      id: "regieleki",
+      name: "Regieleki",
+      img: "assets/farms/regieleki.png",
+      aeosBalls: 20,
+      info: "Spawns at 7:00 in top lane. Respawns 2 min after KO. On KO: spawns a Soldier Regieleki allied to your team. Auto Attack does 200% Atk with 2s cooldown (ranged). Move 1: 300% Atk 8s CD · Move 2: 250% Atk 8s CD.",
+      data: [
+        { timer: "7:00", xp: 240 }, { timer: "6:40", xp: 330 }, { timer: "6:10", xp: 340 },
+        { timer: "5:40", xp: 350 }, { timer: "5:10", xp: 370 }, { timer: "4:40", xp: 380 },
+        { timer: "4:10", xp: 390 }, { timer: "3:40", xp: 400 }, { timer: "3:10", xp: 440 },
+        { timer: "2:40", xp: 470 }, { timer: "2:10", xp: 510 }, { timer: "2:00", xp: 510 },
+        { timer: "1:40", xp: 540 }, { timer: "1:10", xp: 580 }, { timer: "0:40", xp: 600 },
+        { timer: "0:10", xp: 610 },
+      ]
+    },
+    {
+      id: "regidrago",
+      name: "Regidrago",
+      img: "assets/farms/regidrago.png",
+      aeosBalls: 20,
+      data: [
+        { timer: "8:00", xp: 96 }, { timer: "7:40", xp: 108 }, { timer: "7:10", xp: 114 },
+        { timer: "6:40", xp: 120 }, { timer: "6:10", xp: 126 }, { timer: "5:40", xp: 132 },
+        { timer: "5:10", xp: 138 }, { timer: "4:40", xp: 144 }, { timer: "4:10", xp: 150 },
+        { timer: "3:40", xp: 162 }, { timer: "3:10", xp: 174 }, { timer: "2:40", xp: 186 },
+        { timer: "2:10", xp: 198 }, { timer: "2:00", xp: 198 }, { timer: "1:40", xp: 210 },
+        { timer: "1:10", xp: 222 }, { timer: "0:40", xp: 234 }, { timer: "0:10", xp: 246 },
+      ]
+    },
+    {
+      id: "groudon_boss",
+      name: "Groudon",
+      img: "assets/farms/groudon.png",
+      aeosBalls: 30,
+      info: "Spawns at 2:00 in center. Does NOT respawn. On Last Hit: grants a powerful buff to your team. Shares XP to whole team (last hitter gets normal amount, others get 60%). Auto Attack does 200% Atk with 2s cooldown.",
+      data: [
+        { timer: "2:00", xp: 1092 }, { timer: "1:40", xp: 1170 }, { timer: "1:10", xp: 1254 },
+        { timer: "0:40", xp: 1284 }, { timer: "0:10", xp: 1320 },
+      ]
+    },
+    {
+      id: "regice",
+      name: "Regice / Regirock / Registeel",
+      img: "assets/farms/regice.png",
+      aeosBalls: 20,
+      info: "Spawns at 7:00 in bot lane. Respawns 2 min after KO. On Last Hit - Regirock: +30% DEF & +25% SPDEF. Registeel: +15% ATK & +15% SPATK. Regice: 5% max HP heal every 3s + 8% HP shield 30s. Shares XP to whole team (last hitter gets normal amount, others get 60%). Auto Attack does 100% Atk with 2s cooldown.",
+      data: [
+        { timer: "7:00", xp: 240 }, { timer: "6:40", xp: 330 }, { timer: "6:10", xp: 340 },
+        { timer: "5:40", xp: 350 }, { timer: "5:10", xp: 370 }, { timer: "4:40", xp: 380 },
+        { timer: "4:10", xp: 390 }, { timer: "3:40", xp: 400 }, { timer: "3:10", xp: 440 },
+        { timer: "2:40", xp: 470 }, { timer: "2:10", xp: 510 }, { timer: "2:00", xp: 510 },
+        { timer: "1:40", xp: 540 }, { timer: "1:10", xp: 580 }, { timer: "0:40", xp: 600 },
+        { timer: "0:10", xp: 610 },
+      ]
+    },
+  ],
+
+  kyogre: [
+    {
+      id: "bunnelby_start",
+      name: "Bunnelby (Start)",
+      img: "assets/farms/bunnelby.png",
+      aeosBalls: 2,
+      data: [
+        { timer: "10:00", xp: 70 }, { timer: "9:40", xp: 70 }, { timer: "9:10", xp: 70 },
+        { timer: "8:40", xp: 70 }, { timer: "8:10", xp: 70 }, { timer: "7:40", xp: 70 },
+        { timer: "7:10", xp: 70 }, { timer: "6:40", xp: 70 }, { timer: "6:10", xp: 70 },
+        { timer: "5:40", xp: 70 }, { timer: "5:10", xp: 70 }, { timer: "4:40", xp: 70 },
+        { timer: "4:10", xp: 70 }, { timer: "3:40", xp: 70 }, { timer: "3:10", xp: 70 },
+        { timer: "2:40", xp: 70 }, { timer: "2:10", xp: 70 }, { timer: "2:00", xp: 70 },
+        { timer: "1:40", xp: 70 }, { timer: "1:10", xp: 70 }, { timer: "0:40", xp: 70 },
+        { timer: "0:10", xp: 70 },
+      ]
+    },
+    {
+      id: "bunnelby",
+      name: "Bunnelby",
+      img: "assets/farms/bunnelby.png",
+      aeosBalls: 5,
+      data: [
+        { timer: "10:00", xp: 120 }, { timer: "9:40", xp: 120 }, { timer: "9:10", xp: 130 },
+        { timer: "8:40", xp: 140 }, { timer: "8:10", xp: 150 }, { timer: "7:40", xp: 160 },
+        { timer: "7:10", xp: 160 }, { timer: "6:40", xp: 170 }, { timer: "6:10", xp: 180 },
+        { timer: "5:40", xp: 190 }, { timer: "5:10", xp: 200 }, { timer: "4:40", xp: 200 },
+        { timer: "4:10", xp: 210 }, { timer: "3:40", xp: 220 }, { timer: "3:10", xp: 240 },
+        { timer: "2:40", xp: 260 }, { timer: "2:10", xp: 280 }, { timer: "2:00", xp: 280 },
+        { timer: "1:40", xp: 310 }, { timer: "1:10", xp: 330 }, { timer: "0:40", xp: 340 },
+        { timer: "0:10", xp: 350 },
+      ]
+    },
+    {
+      id: "natu",
+      name: "Natu",
+      img: "assets/farms/natu.png",
+      aeosBalls: 1,
+      data: [
+        { timer: "10:00", xp: 60 }, { timer: "9:40", xp: 60 }, { timer: "9:10", xp: 60 },
+        { timer: "8:40", xp: 67 }, { timer: "8:10", xp: 67 }, { timer: "7:40", xp: 74 },
+        { timer: "7:10", xp: 74 }, { timer: "6:40", xp: 74 }, { timer: "6:10", xp: 81 },
+        { timer: "5:40", xp: 81 }, { timer: "5:10", xp: 81 }, { timer: "4:40", xp: 88 },
+        { timer: "4:10", xp: 88 }, { timer: "3:40", xp: 95 }, { timer: "3:10", xp: 102 },
+        { timer: "2:40", xp: 109 }, { timer: "2:10", xp: 116 }, { timer: "2:00", xp: 116 },
+        { timer: "1:40", xp: 123 }, { timer: "1:10", xp: 130 }, { timer: "0:40", xp: 137 },
+        { timer: "0:10", xp: 137 },
+      ]
+    },
+    {
+      id: "xatu",
+      name: "Xatu",
+      img: "assets/farms/xatu.png",
+      aeosBalls: 2,
+      data: [
+        { timer: "10:00", xp: 250 }, { timer: "9:40", xp: 250 }, { timer: "9:10", xp: 250 },
+        { timer: "8:40", xp: 250 }, { timer: "8:10", xp: 250 }, { timer: "7:40", xp: 250 },
+        { timer: "7:10", xp: 250 }, { timer: "6:40", xp: 250 }, { timer: "6:10", xp: 250 },
+        { timer: "5:40", xp: 250 }, { timer: "5:10", xp: 250 }, { timer: "4:40", xp: 250 },
+        { timer: "4:10", xp: 250 }, { timer: "3:40", xp: 250 }, { timer: "3:10", xp: 250 },
+        { timer: "2:40", xp: 250 }, { timer: "2:10", xp: 250 }, { timer: "2:00", xp: 250 },
+        { timer: "1:40", xp: 250 }, { timer: "1:10", xp: 250 }, { timer: "0:40", xp: 250 },
+        { timer: "0:10", xp: 250 },
       ]
     },
     {
@@ -345,21 +595,6 @@ const WILD_DATA = {
       ]
     },
     {
-      id: "regieleki",
-      name: "Regieleki",
-      img: "assets/farms/regieleki.png",
-      aeosBalls: 20,
-      info: "Spawns at 7:00 in top lane. Respawns 2 min after KO. On KO: spawns a Soldier Regieleki allied to your team. Auto Attack does 200% Atk with 2s cooldown (ranged). Move 1: 300% Atk 8s CD · Move 2: 250% Atk 8s CD.",
-      data: [
-        { timer: "7:00", xp: 240 }, { timer: "6:40", xp: 330 }, { timer: "6:10", xp: 340 },
-        { timer: "5:40", xp: 350 }, { timer: "5:10", xp: 370 }, { timer: "4:40", xp: 380 },
-        { timer: "4:10", xp: 390 }, { timer: "3:40", xp: 400 }, { timer: "3:10", xp: 440 },
-        { timer: "2:40", xp: 470 }, { timer: "2:10", xp: 510 }, { timer: "2:00", xp: 510 },
-        { timer: "1:40", xp: 540 }, { timer: "1:10", xp: 580 }, { timer: "0:40", xp: 600 },
-        { timer: "0:10", xp: 610 },
-      ]
-    },
-    {
       id: "regidrago",
       name: "Regidrago",
       img: "assets/farms/regidrago.png",
@@ -374,22 +609,11 @@ const WILD_DATA = {
       ]
     },
     {
-      id: "groudon_boss",
-      name: "Groudon",
-      img: "assets/farms/groudon.png",
-      aeosBalls: 30,
-      info: "Spawns at 2:00 in center. Does NOT respawn. On Last Hit: grants a powerful buff to your team. Shares XP to whole team (last hitter gets normal amount, others get 60%). Auto Attack does 200% Atk with 2s cooldown.",
-      data: [
-        { timer: "2:00", xp: 1092 }, { timer: "1:40", xp: 1170 }, { timer: "1:10", xp: 1254 },
-        { timer: "0:40", xp: 1284 }, { timer: "0:10", xp: 1320 },
-      ]
-    },
-    {
       id: "regice",
       name: "Regice / Regirock / Registeel",
       img: "assets/farms/regice.png",
       aeosBalls: 20,
-      info: "Spawns at 7:00 in bot lane. Respawns 2 min after KO. On Last Hit — Regirock: +30% DEF & +25% SPDEF. Registeel: +15% ATK & +15% SPATK. Regice: 5% max HP heal every 3s + 8% HP shield 30s. Shares XP to whole team (last hitter gets normal amount, others get 60%). Auto Attack does 100% Atk with 2s cooldown.",
+      info: "Spawns at 7:00 in bot lane. Respawns 2 min after KO. On Last Hit - Regirock: +30% DEF & +25% SPDEF. Registeel: +15% ATK & +15% SPATK. Regice: 5% max HP heal every 3s + 8% HP shield 30s. Shares XP to whole team (last hitter gets normal amount, others get 60%). Auto Attack does 100% Atk with 2s cooldown.",
       data: [
         { timer: "7:00", xp: 240 }, { timer: "6:40", xp: 330 }, { timer: "6:10", xp: 340 },
         { timer: "5:40", xp: 350 }, { timer: "5:10", xp: 370 }, { timer: "4:40", xp: 380 },
@@ -397,57 +621,6 @@ const WILD_DATA = {
         { timer: "2:40", xp: 470 }, { timer: "2:10", xp: 510 }, { timer: "2:00", xp: 510 },
         { timer: "1:40", xp: 540 }, { timer: "1:10", xp: 580 }, { timer: "0:40", xp: 600 },
         { timer: "0:10", xp: 610 },
-      ]
-    },
-  ],
-
-  kyogre: [
-    {
-      id: "bunnelby",
-      name: "Bunnelby",
-      img: "assets/farms/bunnelby.png",
-      aeosBalls: 7,
-      data: [
-        { timer: "10:00", xp: 120 }, { timer: "9:40", xp: 120 }, { timer: "9:10", xp: 130 },
-        { timer: "8:40", xp: 140 }, { timer: "8:10", xp: 150 }, { timer: "7:40", xp: 160 },
-        { timer: "7:10", xp: 160 }, { timer: "6:40", xp: 170 }, { timer: "6:10", xp: 180 },
-        { timer: "5:40", xp: 190 }, { timer: "5:10", xp: 200 }, { timer: "4:40", xp: 200 },
-        { timer: "4:10", xp: 210 }, { timer: "3:40", xp: 220 }, { timer: "3:10", xp: 240 },
-        { timer: "2:40", xp: 260 }, { timer: "2:10", xp: 280 }, { timer: "2:00", xp: 280 },
-        { timer: "1:40", xp: 310 }, { timer: "1:10", xp: 330 }, { timer: "0:40", xp: 340 },
-        { timer: "0:10", xp: 350 },
-      ]
-    },
-    {
-      id: "natu",
-      name: "Natu",
-      img: "assets/farms/natu.png",
-      aeosBalls: 0,
-      data: [
-        { timer: "10:00", xp: 60 }, { timer: "9:40", xp: 60 }, { timer: "9:10", xp: 60 },
-        { timer: "8:40", xp: 67 }, { timer: "8:10", xp: 67 }, { timer: "7:40", xp: 74 },
-        { timer: "7:10", xp: 74 }, { timer: "6:40", xp: 74 }, { timer: "6:10", xp: 81 },
-        { timer: "5:40", xp: 81 }, { timer: "5:10", xp: 81 }, { timer: "4:40", xp: 88 },
-        { timer: "4:10", xp: 88 }, { timer: "3:40", xp: 95 }, { timer: "3:10", xp: 102 },
-        { timer: "2:40", xp: 109 }, { timer: "2:10", xp: 116 }, { timer: "2:00", xp: 116 },
-        { timer: "1:40", xp: 123 }, { timer: "1:10", xp: 130 }, { timer: "0:40", xp: 137 },
-        { timer: "0:10", xp: 137 },
-      ]
-    },
-    {
-      id: "xatu",
-      name: "Xatu",
-      img: "assets/farms/xatu.png",
-      aeosBalls: 2,
-      data: [
-        { timer: "10:00", xp: 250 }, { timer: "9:40", xp: 250 }, { timer: "9:10", xp: 250 },
-        { timer: "8:40", xp: 250 }, { timer: "8:10", xp: 250 }, { timer: "7:40", xp: 250 },
-        { timer: "7:10", xp: 250 }, { timer: "6:40", xp: 250 }, { timer: "6:10", xp: 250 },
-        { timer: "5:40", xp: 250 }, { timer: "5:10", xp: 250 }, { timer: "4:40", xp: 250 },
-        { timer: "4:10", xp: 250 }, { timer: "3:40", xp: 250 }, { timer: "3:10", xp: 250 },
-        { timer: "2:40", xp: 250 }, { timer: "2:10", xp: 250 }, { timer: "2:00", xp: 250 },
-        { timer: "1:40", xp: 250 }, { timer: "1:10", xp: 250 }, { timer: "0:40", xp: 250 },
-        { timer: "0:10", xp: 250 },
       ]
     },
     {
@@ -479,10 +652,42 @@ const WILD_DATA = {
 
   rayquaza: [
     {
+      id: "bunnelby_start",
+      name: "Bunnelby (Start)",
+      img: "assets/farms/bunnelby.png",
+      aeosBalls: 2,
+      data: [
+        { timer: "10:00", xp: 70 }, { timer: "9:40", xp: 70 }, { timer: "9:10", xp: 70 },
+        { timer: "8:40", xp: 70 }, { timer: "8:10", xp: 70 }, { timer: "7:40", xp: 70 },
+        { timer: "7:10", xp: 70 }, { timer: "6:40", xp: 70 }, { timer: "6:10", xp: 70 },
+        { timer: "5:40", xp: 70 }, { timer: "5:10", xp: 70 }, { timer: "4:40", xp: 70 },
+        { timer: "4:10", xp: 70 }, { timer: "3:40", xp: 70 }, { timer: "3:10", xp: 70 },
+        { timer: "2:40", xp: 70 }, { timer: "2:10", xp: 70 }, { timer: "2:00", xp: 70 },
+        { timer: "1:40", xp: 70 }, { timer: "1:10", xp: 70 }, { timer: "0:40", xp: 70 },
+        { timer: "0:10", xp: 70 },
+      ]
+    },
+    {
+      id: "xatu",
+      name: "Xatu",
+      img: "assets/farms/xatu.png",
+      aeosBalls: 2,
+      data: [
+        { timer: "10:00", xp: 250 }, { timer: "9:40", xp: 250 }, { timer: "9:10", xp: 250 },
+        { timer: "8:40", xp: 250 }, { timer: "8:10", xp: 250 }, { timer: "7:40", xp: 250 },
+        { timer: "7:10", xp: 250 }, { timer: "6:40", xp: 250 }, { timer: "6:10", xp: 250 },
+        { timer: "5:40", xp: 250 }, { timer: "5:10", xp: 250 }, { timer: "4:40", xp: 250 },
+        { timer: "4:10", xp: 250 }, { timer: "3:40", xp: 250 }, { timer: "3:10", xp: 250 },
+        { timer: "2:40", xp: 250 }, { timer: "2:10", xp: 250 }, { timer: "2:00", xp: 250 },
+        { timer: "1:40", xp: 250 }, { timer: "1:10", xp: 250 }, { timer: "0:40", xp: 250 },
+        { timer: "0:10", xp: 250 },
+      ]
+    },
+    {
       id: "bunnelby",
       name: "Bunnelby",
       img: "assets/farms/bunnelby.png",
-      aeosBalls: 7,
+      aeosBalls: 5,
       data: [
         { timer: "10:00", xp: 120 }, { timer: "9:40", xp: 120 }, { timer: "9:10", xp: 130 },
         { timer: "8:40", xp: 140 }, { timer: "8:10", xp: 150 }, { timer: "7:40", xp: 160 },
@@ -498,7 +703,7 @@ const WILD_DATA = {
       id: "natu",
       name: "Natu",
       img: "assets/farms/natu.png",
-      aeosBalls: 0,
+      aeosBalls: 1,
       data: [
         { timer: "10:00", xp: 60 }, { timer: "9:40", xp: 60 }, { timer: "9:10", xp: 60 },
         { timer: "8:40", xp: 67 }, { timer: "8:10", xp: 67 }, { timer: "7:40", xp: 74 },
@@ -508,6 +713,134 @@ const WILD_DATA = {
         { timer: "2:40", xp: 109 }, { timer: "2:10", xp: 116 }, { timer: "2:00", xp: 116 },
         { timer: "1:40", xp: 123 }, { timer: "1:10", xp: 130 }, { timer: "0:40", xp: 137 },
         { timer: "0:10", xp: 137 },
+      ]
+    },
+    {
+      id: "baltoy_jungle",
+      name: "Baltoy (Jungle)",
+      img: "assets/farms/baltoy.png",
+      aeosBalls: 2,
+      data: [
+        { timer: "10:00", xp: 160 }, { timer: "9:40", xp: 160 }, { timer: "9:10", xp: 170 },
+        { timer: "8:40", xp: 170 }, { timer: "8:10", xp: 180 }, { timer: "7:40", xp: 190 },
+        { timer: "7:10", xp: 190 }, { timer: "6:40", xp: 200 }, { timer: "6:10", xp: 200 },
+        { timer: "5:40", xp: 210 }, { timer: "5:10", xp: 220 }, { timer: "4:40", xp: 220 },
+        { timer: "4:10", xp: 230 }, { timer: "3:40", xp: 230 }, { timer: "3:10", xp: 250 },
+        { timer: "2:40", xp: 270 }, { timer: "2:10", xp: 280 }, { timer: "2:00", xp: 280 },
+        { timer: "1:40", xp: 300 }, { timer: "1:10", xp: 320 }, { timer: "0:40", xp: 330 },
+        { timer: "0:10", xp: 330 },
+      ]
+    },
+    {
+      id: "baltoy_center",
+      name: "Baltoy (Center)",
+      img: "assets/farms/baltoy.png",
+      aeosBalls: 2,
+      data: [
+        { timer: "10:00", xp: 60 }, { timer: "9:40", xp: 60 }, { timer: "9:10", xp: 70 },
+        { timer: "8:40", xp: 70 }, { timer: "8:10", xp: 80 }, { timer: "7:40", xp: 90 },
+        { timer: "7:10", xp: 90 }, { timer: "6:40", xp: 100 }, { timer: "6:10", xp: 100 },
+        { timer: "5:40", xp: 110 }, { timer: "5:10", xp: 120 }, { timer: "4:40", xp: 120 },
+        { timer: "4:10", xp: 130 }, { timer: "3:40", xp: 130 }, { timer: "3:10", xp: 150 },
+        { timer: "2:40", xp: 170 }, { timer: "2:10", xp: 180 }, { timer: "2:00", xp: 180 },
+        { timer: "1:40", xp: 200 }, { timer: "1:10", xp: 220 }, { timer: "0:40", xp: 230 },
+        { timer: "0:10", xp: 230 },
+      ]
+    },
+    {
+      id: "baltoy_lane",
+      name: "Baltoy (Lane)",
+      img: "assets/farms/baltoy.png",
+      aeosBalls: 2,
+      data: [
+        { timer: "10:00", xp: 60 }, { timer: "9:40", xp: 60 }, { timer: "9:10", xp: 70 },
+        { timer: "8:40", xp: 70 }, { timer: "8:10", xp: 80 }, { timer: "7:40", xp: 90 },
+        { timer: "7:10", xp: 90 }, { timer: "6:40", xp: 100 }, { timer: "6:10", xp: 100 },
+        { timer: "5:40", xp: 110 }, { timer: "5:10", xp: 120 }, { timer: "4:40", xp: 120 },
+        { timer: "4:10", xp: 130 }, { timer: "3:40", xp: 130 }, { timer: "3:10", xp: 150 },
+        { timer: "2:40", xp: 170 }, { timer: "2:10", xp: 180 }, { timer: "2:00", xp: 180 },
+        { timer: "1:40", xp: 200 }, { timer: "1:10", xp: 220 }, { timer: "0:40", xp: 230 },
+        { timer: "0:10", xp: 230 },
+      ]
+    },
+    {
+      id: "indeedee",
+      name: "Indeedee",
+      img: "assets/farms/indeedee.png",
+      aeosBalls: 0,
+      data: [
+        { timer: "10:00", xp: 160 }, { timer: "9:40", xp: 160 }, { timer: "9:10", xp: 170 },
+        { timer: "8:40", xp: 180 }, { timer: "8:10", xp: 190 }, { timer: "7:40", xp: 200 },
+        { timer: "7:10", xp: 200 }, { timer: "6:40", xp: 210 }, { timer: "6:10", xp: 220 },
+        { timer: "5:40", xp: 230 }, { timer: "5:10", xp: 230 }, { timer: "4:40", xp: 240 },
+        { timer: "4:10", xp: 250 }, { timer: "3:40", xp: 260 }, { timer: "3:10", xp: 280 },
+        { timer: "2:40", xp: 300 }, { timer: "2:10", xp: 320 }, { timer: "2:00", xp: 320 },
+        { timer: "1:40", xp: 350 }, { timer: "1:10", xp: 370 }, { timer: "0:40", xp: 380 },
+        { timer: "0:10", xp: 390 },
+      ]
+    },
+    {
+      id: "swablu",
+      name: "Swablu",
+      img: "assets/farms/swablu.png",
+      aeosBalls: 3,
+      data: [
+        { timer: "10:00", xp: 80 }, { timer: "9:40", xp: 80 }, { timer: "9:10", xp: 80 },
+        { timer: "8:40", xp: 87 }, { timer: "8:10", xp: 87 }, { timer: "7:40", xp: 94 },
+        { timer: "7:10", xp: 94 }, { timer: "6:40", xp: 94 }, { timer: "6:10", xp: 101 },
+        { timer: "5:40", xp: 101 }, { timer: "5:10", xp: 101 }, { timer: "4:40", xp: 108 },
+        { timer: "4:10", xp: 108 }, { timer: "3:40", xp: 115 }, { timer: "3:10", xp: 122 },
+        { timer: "2:40", xp: 129 }, { timer: "2:10", xp: 136 }, { timer: "2:00", xp: 136 },
+        { timer: "1:40", xp: 143 }, { timer: "1:10", xp: 150 }, { timer: "0:40", xp: 157 },
+        { timer: "0:10", xp: 157 },
+      ]
+    },
+    {
+      id: "altaria",
+      name: "Altaria",
+      img: "assets/farms/altaria.png",
+      aeosBalls: 6,
+      data: [
+        { timer: "10:00", xp: 190 }, { timer: "9:40", xp: 200 }, { timer: "9:10", xp: 210 },
+        { timer: "8:40", xp: 220 }, { timer: "8:10", xp: 230 }, { timer: "7:40", xp: 230 },
+        { timer: "7:10", xp: 240 }, { timer: "6:40", xp: 250 }, { timer: "6:10", xp: 260 },
+        { timer: "5:40", xp: 270 }, { timer: "5:10", xp: 280 }, { timer: "4:40", xp: 290 },
+        { timer: "4:10", xp: 300 }, { timer: "3:40", xp: 310 }, { timer: "3:10", xp: 340 },
+        { timer: "2:40", xp: 360 }, { timer: "2:10", xp: 390 }, { timer: "2:00", xp: 390 },
+        { timer: "1:40", xp: 420 }, { timer: "1:10", xp: 450 }, { timer: "0:40", xp: 460 },
+        { timer: "0:10", xp: 470 },
+      ]
+    },
+    {
+      id: "escavalier",
+      name: "Escavalier",
+      img: "assets/farms/escavalier.png",
+      aeosBalls: 7,
+      data: [
+        { timer: "10:00", xp: 190 }, { timer: "9:40", xp: 200 }, { timer: "9:10", xp: 210 },
+        { timer: "8:40", xp: 220 }, { timer: "8:10", xp: 230 }, { timer: "7:40", xp: 240 },
+        { timer: "7:10", xp: 250 }, { timer: "6:40", xp: 260 }, { timer: "6:10", xp: 270 },
+        { timer: "5:40", xp: 280 }, { timer: "5:10", xp: 300 }, { timer: "4:40", xp: 300 },
+        { timer: "4:10", xp: 310 }, { timer: "3:40", xp: 320 }, { timer: "3:10", xp: 330 },
+        { timer: "2:40", xp: 340 }, { timer: "2:10", xp: 350 }, { timer: "2:00", xp: 350 },
+        { timer: "1:40", xp: 360 }, { timer: "1:10", xp: 370 }, { timer: "0:40", xp: 380 },
+        { timer: "0:10", xp: 390 },
+      ]
+    },
+    {
+      id: "accelgor",
+      name: "Accelgor",
+      img: "assets/farms/accelgor.png",
+      aeosBalls: 7,
+      data: [
+        { timer: "10:00", xp: 190 }, { timer: "9:40", xp: 200 }, { timer: "9:10", xp: 210 },
+        { timer: "8:40", xp: 220 }, { timer: "8:10", xp: 230 }, { timer: "7:40", xp: 240 },
+        { timer: "7:10", xp: 250 }, { timer: "6:40", xp: 260 }, { timer: "6:10", xp: 270 },
+        { timer: "5:40", xp: 280 }, { timer: "5:10", xp: 290 }, { timer: "4:40", xp: 300 },
+        { timer: "4:10", xp: 310 }, { timer: "3:40", xp: 320 }, { timer: "3:10", xp: 330 },
+        { timer: "2:40", xp: 340 }, { timer: "2:10", xp: 350 }, { timer: "2:00", xp: 350 },
+        { timer: "1:40", xp: 360 }, { timer: "1:10", xp: 370 }, { timer: "0:40", xp: 380 },
+        { timer: "0:10", xp: 390 },
       ]
     },
     {
@@ -530,7 +863,7 @@ const WILD_DATA = {
       name: "Regice/Regirock/Registeel",
       img: "assets/farms/regice.png",
       aeosBalls: 20,
-      info: "Spawns at 7:00 in bot lane. Respawns 2 min after KO. On Last Hit — Regirock: +30% DEF & +25% SPDEF. Registeel: +15% ATK & +15% SPATK. Regice: 5% max HP heal every 3s + 8% HP shield 30s. Shares XP to whole team (last hitter gets normal amount, others get 60%). Auto Attack does 100% Atk with 2s cooldown.",
+      info: "Spawns at 7:00 in bot lane. Respawns 2 min after KO. On Last Hit - Regirock: +30% DEF & +25% SPDEF. Registeel: +15% ATK & +15% SPATK. Regice: 5% max HP heal every 3s + 8% HP shield 30s. Shares XP to whole team (last hitter gets normal amount, others get 60%). Auto Attack does 100% Atk with 2s cooldown.",
       data: [
         { timer: "7:00", xp: 240 }, { timer: "6:40", xp: 260 }, { timer: "6:10", xp: 270 },
         { timer: "5:40", xp: 280 }, { timer: "5:10", xp: 290 }, { timer: "4:40", xp: 300 },
