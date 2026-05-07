@@ -444,15 +444,36 @@
           </div>
         </div>
 
+        <!-- Role + Allies nearby -->
+        <div class="field-group">
+          <label class="cfg-label">Your role in this KO</label>
+          <div class="pko-role-row">
+            <label class="pko-role-option" id="pko-role-koer-label">
+              <input type="radio" name="pko-role" id="pko-role-koer" value="koer" checked>
+              <span class="pko-role-btn">⚔️ KO-er <span class="pko-role-sub">100% XP</span></span>
+            </label>
+            <label class="pko-role-option" id="pko-role-ally-label">
+              <input type="radio" name="pko-role" id="pko-role-ally" value="ally">
+              <span class="pko-role-btn">🤝 Ally nearby <span class="pko-role-sub" id="pko-ally-pct">—</span></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Allies nearby stepper (always shown, affects both roles) -->
+        <div class="field-group" id="pko-allies-field">
+          <label class="cfg-label">Allied players nearby</label>
+          <div class="pko-allies-row">
+            <div class="level-stepper">
+              <button class="step-btn" id="pko-allies-minus">−</button>
+              <span class="level-value" id="pko-allies-count">0</span>
+              <button class="step-btn" id="pko-allies-plus">+</button>
+            </div>
+            <span class="field-hint" id="pko-allies-hint">0 = solo KO</span>
+          </div>
+        </div>
+
         <!-- Toggles -->
         <div class="pko-toggles">
-          <label class="pko-toggle-row">
-            <input type="checkbox" id="pko-is-assist">
-            <span class="pko-toggle-label">
-              <span class="pko-toggle-title">Assist (not the killing blow)</span>
-              <span class="pko-toggle-sub">Reduces XP received (~50%)</span>
-            </span>
-          </label>
           <label class="pko-toggle-row">
             <input type="checkbox" id="pko-apply-catchup">
             <span class="pko-toggle-label">

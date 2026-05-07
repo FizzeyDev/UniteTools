@@ -105,6 +105,31 @@ function getKOLevelDiffModifier(killerLevel, victimLevel) {
   return 1.00;
 }
 
+// ─── Proximity XP Modifier for Player KOs ───────────────────────────────────
+// When allies are nearby at the moment of a KO:
+//   - The KO-er always receives 100% of the computed XP
+//   - Each allied player in proximity receives a share based on how many allies are present
+// alliesNearby: number of allied players near the KO (NOT counting the KO-er), 0-4
+// isKoer: true = you landed the killing blow, false = you are an ally in proximity
+const PROXIMITY_XP_SHARE = [
+  1.00,   // 0 allies nearby  -> KO-er gets 100% (solo)
+  0.50,   // 1 ally nearby    -> each ally gets 50%
+  0.25,   // 2 allies nearby  -> each ally gets 25%
+  0.1667, // 3 allies nearby  -> each ally gets ~16.67%
+  0.125,  // 4 allies nearby  -> each ally gets 12.50%
+];
+
+/**
+ * Returns the XP multiplier for a player in a KO event.
+ * @param {boolean} isKoer       - true if this player landed the killing blow
+ * @param {number}  alliesNearby - number of allied players in proximity (0-4, not counting self)
+ */
+function getProximityXPMultiplier(isKoer, alliesNearby) {
+  if (isKoer) return 1.0;
+  const idx = Math.max(0, Math.min(4, alliesNearby));
+  return PROXIMITY_XP_SHARE[idx];
+}
+
 /**
  * Calculates the full XP gained from KO-ing an enemy player.
  *
@@ -128,7 +153,8 @@ function calculatePlayerKOXP({
   killerLevel,
   myLevel,
   opponentHighestLevel,
-  isAssist = false,
+  isKoer = true,
+  alliesNearby = 0,
   applyCatchUp = false,
 }) {
   const baseXP = KO_BASE_XP[Math.min(victimLevel - 1, 14)];
@@ -137,9 +163,10 @@ function calculatePlayerKOXP({
 
   let xp = Math.floor(baseXP * streakMult * levelDiffMult);
 
-  if (isAssist) {
-    // Assists receive a portion; typically treated as ~50% share (unconfirmed exact split)
-    xp = Math.floor(xp * 0.5);
+  // Apply proximity share: KO-er always gets 100%, allies get their fraction
+  const proximityMult = getProximityXPMultiplier(isKoer, alliesNearby);
+  if (proximityMult !== 1.0) {
+    xp = Math.floor(xp * proximityMult);
   }
 
   if (applyCatchUp) {
@@ -1008,17 +1035,32 @@ function getWildXP(wildId, mapId, timerStr) {
   const exact = pokemon.data.find(d => d.timer === timerStr);
   if (exact) return exact.xp;
 
+  // Find the most recent spawn that occurred at or before the kill timer.
+  // Timer counts DOWN (10:00 -> 0:00), so "at or before" means
+  // the data entry with the highest timer value that is still <= timerStr in seconds.
   const timerSec = timerToSeconds(timerStr);
-  let closest = null;
-  let closestDiff = Infinity;
+  let best = null;
   for (const entry of pokemon.data) {
-    const diff = Math.abs(timerToSeconds(entry.timer) - timerSec);
-    if (diff < closestDiff) {
-      closestDiff = diff;
-      closest = entry;
+    const entrySec = timerToSeconds(entry.timer);
+    // entrySec >= timerSec means the spawn happened at or before this moment
+    if (entrySec >= timerSec) {
+      if (best === null || entrySec < timerToSeconds(best.timer)) {
+        best = entry;
+      }
     }
   }
-  return closest ? closest.xp : 0;
+  // Fallback: if no entry found (kill before all spawns), use closest
+  if (!best) {
+    let closestDiff = Infinity;
+    for (const entry of pokemon.data) {
+      const diff = Math.abs(timerToSeconds(entry.timer) - timerSec);
+      if (diff < closestDiff) {
+        closestDiff = diff;
+        best = entry;
+      }
+    }
+  }
+  return best ? best.xp : 0;
 }
 
 function timerToSeconds(str) {
@@ -1083,6 +1125,8 @@ window.XPCalcData = {
   getStreakModifier,
   getKOLevelDiffModifier,
   calculatePlayerKOXP,
+  getProximityXPMultiplier,
+  PROXIMITY_XP_SHARE,
   timerToSeconds,
   secondsToTimer,
   getLevelFromXP,

@@ -89,7 +89,7 @@ window.UNITE_SKINS = [
   { pokemon: "Snorlax",            skinName: "Space",              file: "snorlax_space.jpg" },
 
   // ── Suicune ──
-  { pokemon: "Suicune",            skinName: "Pokekubi",           file: "suicune_pokekubi.jpg" },
+  { pokemon: "Suicune",            skinName: "Pokebuki",           file: "suicune_pokebuki.jpg" },
   { pokemon: "Suicune",            skinName: "Aurora",             file: "suicune_aurora.jpg" },
 
   // ── Sylveon ──

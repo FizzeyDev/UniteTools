@@ -1920,3 +1920,105 @@ body.sidebar-collapsed { margin-left: 0; }
 .wild-card-info:hover {
   opacity: 1;
 }
+/* ── Fixed-XP info button (Regi/bosses) ── */
+.wild-card-info.fixed-xp-info {
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: 'Exo 2', sans-serif;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(159, 83, 236, 0.2);
+  border: 1px solid rgba(159, 83, 236, 0.5);
+  color: var(--violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: background 0.15s, opacity 0.15s;
+  user-select: none;
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+.wild-card-info.fixed-xp-info:hover {
+  opacity: 1;
+  background: rgba(159, 83, 236, 0.35);
+}
+
+/* ── Fixed-XP notice in kill modal ── */
+.fixed-xp-notice {
+  background: rgba(159, 83, 236, 0.1);
+  border: 1px solid rgba(159, 83, 236, 0.3);
+  border-radius: var(--radius-sm);
+  color: var(--violet);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.5;
+  padding: 10px 14px;
+  margin: 0 0 14px 0;
+}
+
+/* ── Player KO role picker ── */
+.pko-role-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.pko-role-option {
+  flex: 1;
+  cursor: pointer;
+}
+
+.pko-role-option input[type="radio"] {
+  display: none;
+}
+
+.pko-role-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 10px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-dim);
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: all 0.15s;
+  text-align: center;
+  user-select: none;
+}
+
+.pko-role-sub {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-dim);
+}
+
+.pko-role-option input[type="radio"]:checked + .pko-role-btn {
+  border-color: var(--violet);
+  background: var(--violet-dim);
+  color: var(--violet);
+}
+
+.pko-role-option input[type="radio"]:checked + .pko-role-btn .pko-role-sub {
+  color: var(--violet);
+}
+
+.pko-role-option:hover .pko-role-btn {
+  border-color: rgba(159,83,236,0.4);
+  color: var(--text);
+}
+
+/* ── Player KO allies nearby row ── */
+.pko-allies-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}

@@ -190,19 +190,6 @@
       card.appendChild(imgEl);
       card.appendChild(nameEl);
       card.appendChild(xpEl);
-
-      if (poke.info) {
-        const infoBtn = document.createElement('div');
-        infoBtn.className = 'wild-card-info';
-        infoBtn.title = poke.info;
-        infoBtn.textContent = 'ℹ️';
-        infoBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          showInfoPopup(poke.name, poke.info);
-        });
-        card.appendChild(infoBtn);
-      }
-
       card.appendChild(addBtn);
 
       card.addEventListener('click', () => openKillModal(poke, mapId));
@@ -244,6 +231,22 @@
 
     $('allies-count').textContent = '0';
 
+    // Hide allies field for fixedXP mobs (Regi/bosses)
+    const alliesFieldGroup = document.getElementById('allies-count').closest('.field-group');
+    if (alliesFieldGroup) alliesFieldGroup.style.display = killModalTarget.fixedXP ? 'none' : '';
+
+    // Fixed-XP notice
+    let fxn = document.getElementById('kill-modal-fixed-xp-notice');
+    if (!fxn) {
+      fxn = document.createElement('div');
+      fxn.id = 'kill-modal-fixed-xp-notice';
+      fxn.className = 'fixed-xp-notice';
+      fxn.textContent = '✔ XP is shared equally — everyone on the team always receives 60% of the base value regardless of last hit.';
+      const footer = document.getElementById('kill-modal').querySelector('.modal-footer');
+      footer.parentNode.insertBefore(fxn, footer);
+    }
+    fxn.style.display = killModalTarget.fixedXP ? '' : 'none';
+
     updateKillModalXP();
     $('kill-modal').style.display = 'flex';
   }
@@ -255,7 +258,8 @@
     const timer = D.secondsToTimer(m * 60 + s);
     const allies = parseInt($('allies-count').textContent) || 0;
     let xp = D.getWildXP(killModalTarget.id, killModalMap, timer);
-    if (allies > 0) {
+    // fixedXP mobs (Regi/bosses) always give 60% - allies sharing doesn't apply
+    if (!killModalTarget.fixedXP && allies > 0) {
       xp = Math.floor(xp / (allies + 1) * 1.2);
     }
     $('kill-xp-preview').textContent = `${xp} XP`;
@@ -268,10 +272,20 @@
     return parseInt($('pko-streak').value) || 0;
   }
 
+  function getPlayerKOAlliesNearby() {
+    return parseInt($('pko-allies-count').textContent) || 0;
+  }
+
+  function isPlayerKOer() {
+    const r = document.querySelector('input[name="pko-role"]:checked');
+    return !r || r.value === 'koer';
+  }
+
   function updatePlayerKOPreview() {
     const victimLevel = parseInt($('pko-victim-level').value) || 1;
     const streakNumber = getPlayerKOStreakNumber();
-    const isAssist = $('pko-is-assist').checked;
+    const isKoer = isPlayerKOer();
+    const alliesNearby = getPlayerKOAlliesNearby();
     const applyCatchUp = $('pko-apply-catchup').checked;
 
     const myLevel = state.startLevel;
@@ -283,7 +297,8 @@
       killerLevel: myLevel,
       myLevel,
       opponentHighestLevel,
-      isAssist,
+      isKoer,
+      alliesNearby,
       applyCatchUp,
     });
 
@@ -291,18 +306,37 @@
     const streakMult = D.getStreakModifier(streakNumber);
     const levelDiffMult = D.getKOLevelDiffModifier(myLevel, victimLevel);
     const catchUpMult = applyCatchUp ? D.getCatchUpModifier(myLevel, opponentHighestLevel) : 1.0;
+    const proximityMult = D.getProximityXPMultiplier(isKoer, alliesNearby);
 
     let breakdownParts = [
       `Base: ${baseXP}`,
       streakMult !== 1 ? `Streak ×${streakMult.toFixed(2)}` : null,
       levelDiffMult !== 1 ? `Lvl. diff ×${levelDiffMult.toFixed(2)}` : null,
-      isAssist ? `Assist ×0.50` : null,
+      !isKoer ? `Proximity ×${proximityMult.toFixed(4).replace(/\.?0+$/, '')}` : null,
       applyCatchUp && catchUpMult !== 1 ? `Catch-Up ×${catchUpMult.toFixed(2)}` : null,
     ].filter(Boolean);
 
     $('pko-xp-preview').textContent = `${xp} XP`;
     $('pko-xp-preview').dataset.xp = xp;
     $('pko-breakdown').textContent = breakdownParts.join(' · ');
+
+    // Update ally pct label
+    const allyPct = $('pko-ally-pct');
+    if (allyPct) {
+      if (alliesNearby === 0) {
+        allyPct.textContent = '—';
+      } else {
+        const pct = D.PROXIMITY_XP_SHARE[Math.min(alliesNearby, 4)];
+        allyPct.textContent = `${Math.round(pct * 10000) / 100}% XP`;
+      }
+    }
+
+    // Update allies hint
+    const hint = $('pko-allies-hint');
+    if (hint) {
+      if (alliesNearby === 0) hint.textContent = '0 = solo KO';
+      else hint.textContent = `${alliesNearby} ally${alliesNearby > 1 ? 'ies' : ''} nearby`;
+    }
 
     const catchUpWarn = $('pko-catchup-warn');
     if (catchUpWarn) {
@@ -326,7 +360,9 @@
 
     $('pko-victim-level').value = Math.min(state.startLevel + 1, 15);
     $('pko-streak').value = 0;
-    $('pko-is-assist').checked = false;
+    $('pko-allies-count').textContent = '0';
+    const koerRadio = document.getElementById('pko-role-koer');
+    if (koerRadio) koerRadio.checked = true;
     $('pko-apply-catchup').checked = false;
 
     updatePlayerKOPreview();
@@ -414,7 +450,9 @@
       $('pko-sec').value = timerSec % 60;
       $('pko-victim-level').value = entry.victimLevel;
       $('pko-streak').value = entry.streakNumber;
-      $('pko-is-assist').checked = !!entry.isAssist;
+      $('pko-allies-count').textContent = String(entry.alliesNearby || 0);
+      const roleRadio = document.getElementById(entry.isKoer === false ? 'pko-role-ally' : 'pko-role-koer');
+      if (roleRadio) roleRadio.checked = true;
       $('pko-apply-catchup').checked = !!entry.applyCatchUp;
 
       $('pko-modal-confirm').textContent = '✎ Save Changes';
@@ -472,8 +510,8 @@
         const info = document.createElement('div');
         info.className = 'ker-info';
         info.innerHTML = `
-          <div class="ker-name">⚔️ Player KO${entry.isAssist ? ' <span class="ker-assist-tag">ASSIST</span>' : ''}</div>
-          <div class="ker-meta">⏱ ${entry.timer} · Victim Lv.${entry.victimLevel} · Streak ${entry.streakNumber >= 0 ? '+' : ''}${entry.streakNumber}</div>
+          <div class="ker-name">⚔️ Player KO${entry.isKoer === false ? ' <span class="ker-assist-tag">ALLY</span>' : ''}</div>
+          <div class="ker-meta">⏱ ${entry.timer} · Victim Lv.${entry.victimLevel} · Streak ${entry.streakNumber >= 0 ? '+' : ''}${entry.streakNumber}${entry.alliesNearby > 0 ? ` · ${entry.alliesNearby} ally${entry.alliesNearby > 1 ? 'ies' : ''} nearby` : ''}</div>
         `;
         const xpEl = document.createElement('div');
         xpEl.className = 'ker-xp';
@@ -1121,7 +1159,17 @@
     ['pko-victim-level', 'pko-streak', 'pko-min', 'pko-sec'].forEach(id => {
       $(id).addEventListener('input', updatePlayerKOPreview);
     });
-    $('pko-is-assist').addEventListener('change', updatePlayerKOPreview);
+    document.querySelectorAll('input[name="pko-role"]').forEach(r => {
+      r.addEventListener('change', updatePlayerKOPreview);
+    });
+    $('pko-allies-minus').addEventListener('click', () => {
+      const val = parseInt($('pko-allies-count').textContent) || 0;
+      if (val > 0) { $('pko-allies-count').textContent = val - 1; updatePlayerKOPreview(); }
+    });
+    $('pko-allies-plus').addEventListener('click', () => {
+      const val = parseInt($('pko-allies-count').textContent) || 0;
+      if (val < 4) { $('pko-allies-count').textContent = val + 1; updatePlayerKOPreview(); }
+    });
     $('pko-apply-catchup').addEventListener('change', updatePlayerKOPreview);
 
     $('pko-modal-confirm').addEventListener('click', () => {
@@ -1130,7 +1178,8 @@
       const timer = D.secondsToTimer(m * 60 + s);
       const victimLevel = parseInt($('pko-victim-level').value) || 1;
       const streakNumber = getPlayerKOStreakNumber();
-      const isAssist = $('pko-is-assist').checked;
+      const isKoer = isPlayerKOer();
+      const alliesNearby = getPlayerKOAlliesNearby();
       const applyCatchUp = $('pko-apply-catchup').checked;
       const xp = parseInt($('pko-xp-preview').dataset.xp) || 0;
 
@@ -1139,7 +1188,8 @@
         timer,
         victimLevel,
         streakNumber,
-        isAssist,
+        isKoer,
+        alliesNearby,
         applyCatchUp,
         xp,
       });
