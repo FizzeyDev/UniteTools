@@ -229,10 +229,19 @@
     $('kill-modal-img').src = poke.img;
     $('kill-modal-name').textContent = poke.name;
 
-    const startM = safeInt('start-min', 10);
-    const startS = safeInt('start-sec', 0);
-    $('kill-min').value = startM;
-    $('kill-sec').value = startS;
+    // Si une simulation est active, pré-remplir avec le timer courant de la sim
+    if (simState && $('result-advanced').style.display !== 'none') {
+      const curM = Math.floor(simState.currentSec / 60);
+      const curS = simState.currentSec % 60;
+      $('kill-min').value = curM;
+      $('kill-sec').value = curS;
+    } else {
+      const startM = safeInt('start-min', 10);
+      const startS = safeInt('start-sec', 0);
+      $('kill-min').value = startM;
+      $('kill-sec').value = startS;
+    }
+
     $('allies-count').textContent = '0';
 
     updateKillModalXP();
@@ -268,7 +277,6 @@
     const myLevel = state.startLevel;
     const opponentHighestLevel = state.enemyHighestLevel;
 
-    // killerLevel: for level diff modifier, we use our own level
     const xp = D.calculatePlayerKOXP({
       victimLevel,
       streakNumber,
@@ -279,7 +287,6 @@
       applyCatchUp,
     });
 
-    // Show modifier breakdown
     const baseXP = D.KO_BASE_XP[Math.min(victimLevel - 1, 14)];
     const streakMult = D.getStreakModifier(streakNumber);
     const levelDiffMult = D.getKOLevelDiffModifier(myLevel, victimLevel);
@@ -297,7 +304,6 @@
     $('pko-xp-preview').dataset.xp = xp;
     $('pko-breakdown').textContent = breakdownParts.join(' · ');
 
-    // Show catch-up warning if unconfirmed
     const catchUpWarn = $('pko-catchup-warn');
     if (catchUpWarn) {
       catchUpWarn.style.display = applyCatchUp ? 'flex' : 'none';
@@ -305,10 +311,19 @@
   }
 
   function openPlayerKOModal() {
-    const startM = safeInt('start-min', 10);
-    const startS = safeInt('start-sec', 0);
-    $('pko-min').value = startM;
-    $('pko-sec').value = startS;
+    // Si une simulation est active, pré-remplir avec le timer courant de la sim
+    if (simState && $('result-advanced').style.display !== 'none') {
+      const curM = Math.floor(simState.currentSec / 60);
+      const curS = simState.currentSec % 60;
+      $('pko-min').value = curM;
+      $('pko-sec').value = curS;
+    } else {
+      const startM = safeInt('start-min', 10);
+      const startS = safeInt('start-sec', 0);
+      $('pko-min').value = startM;
+      $('pko-sec').value = startS;
+    }
+
     $('pko-victim-level').value = Math.min(state.startLevel + 1, 15);
     $('pko-streak').value = 0;
     $('pko-is-assist').checked = false;
@@ -320,7 +335,6 @@
 
   // ─── Kill Queue ───────────────────────────────────────────────────────────
 
-  // null = adding new entry; number = index of entry being edited
   let editingIdx = null;
 
   function addKillToQueue(entry) {
@@ -331,6 +345,32 @@
       state.killQueue.push(entry);
     }
     renderKillQueue();
+
+    // ── Injection live dans la simulation avancée ──
+    if (simState && $('result-advanced').style.display !== 'none') {
+      const enriched = { ...entry, timerSec: D.timerToSeconds(entry.timer) };
+
+      if (enriched.timerSec <= simState.currentSec) {
+        // Le timer n'est pas encore passé dans la sim → on l'injecte
+        simState.events.push(enriched);
+        const label = entry.name || (entry.type === 'playerko' ? 'Player KO' : 'Score');
+        addSimLog(
+          simState.currentSec,
+          `➕ Added : ${label} @ ${entry.timer}`,
+          null,
+          false
+        );
+      } else {
+        // Le timer est déjà passé → on prévient
+        const label = entry.name || (entry.type === 'playerko' ? 'Player KO' : 'Score');
+        addSimLog(
+          simState.currentSec,
+          `⚠️ ${label} @ ${entry.timer} — timer déjà passé, non pris en compte`,
+          null,
+          false
+        );
+      }
+    }
   }
 
   function removeFromQueue(idx) {
@@ -349,10 +389,8 @@
     editingIdx = idx;
 
     if (entry.type === 'wild') {
-      // Reconstruct the poke object from stored entry data
       const mapData = D.WILD_DATA[state.currentMap] || [];
       let poke = mapData.find(p => p.id === entry.id);
-      // Fallback: build a minimal poke object from entry
       if (!poke) poke = { id: entry.id, name: entry.name, img: entry.img };
       killModalTarget = poke;
       killModalMap = state.currentMap;
@@ -366,7 +404,6 @@
       $('kill-sec').value = timerSec % 60;
       $('allies-count').textContent = String(entry.allies || 0);
 
-      // Swap confirm button label
       $('kill-modal-confirm').textContent = '✎ Save Changes';
       updateKillModalXP();
       $('kill-modal').style.display = 'flex';
@@ -389,20 +426,14 @@
       $('score-min').value = Math.floor(timerSec / 60);
       $('score-sec').value = timerSec % 60;
       $('score-pts').value = entry.points;
-      // Score has no modal - edit inline by just triggering the add button
-      // We remove the old entry and the next "add" will re-insert at same position
-      // For score, we use a minimal approach: open a tiny dedicated flow
-      // Actually: directly trigger confirm flow here since score has no modal
-      editingIdx = null; // reset - score edits apply immediately via the panel
+      editingIdx = null;
       state.killQueue[idx] = {
         ...entry,
         timer: D.secondsToTimer(timerSec),
         xp: D.getScoringXP(entry.points),
       };
-      // Focus the score panel so user can adjust and re-add
-      // Remove original, pre-fill panel, user clicks +Add
       state.killQueue.splice(idx, 1);
-      editingIdx = idx; // insert at this position on next add
+      editingIdx = idx;
       renderKillQueue();
     }
   }
@@ -430,7 +461,6 @@
       const isEditing = editingIdx === idx;
       if (isEditing) row.style.outline = '1px solid var(--blue)';
 
-      // Build action buttons (edit + duplicate + remove)
       const actions = document.createElement('div');
       actions.className = 'ker-actions';
       actions.appendChild(makeKerBtn('✎', 'Edit', 'ker-edit', () => editQueueEntry(idx)));
@@ -521,8 +551,6 @@
   }
 
   function calculatePassiveXP(startSec, endSec, getLevel) {
-    // getLevel(sec) returns the player level at a given timer second.
-    // For classic mode a constant function is fine; sim uses real-time level.
     const boundary = 8 * 60;
     let total = 0;
 
@@ -539,15 +567,9 @@
   function calculateClassic() {
     const { events, startSec, endSec } = buildEvents();
 
-    // Pre-simulate level progression for the passive XP catch-up calculation.
-    // We replay events in time order to track the approximate level at each second.
     const startXPVal = D.getStartXPForLevel(state.startLevel);
     const sortedEvents = [...events].sort((a, b) => b.timerSec - a.timerSec);
-    let runningXP = startXPVal;
-    let evtIdx = 0;
 
-    // levelAtSec(sec): estimate player level at timer=sec.
-    // Events that fired BEFORE this moment have timerSec > sec (since timer counts down).
     const levelAtSec = (sec) => {
       let xp = startXPVal;
       for (const ev of sortedEvents) {
@@ -677,8 +699,8 @@
     $('sim-log').innerHTML = '';
 
     updateSimDisplay();
+    updateSimLiveIndicator();
 
-    // Log initial catch-up status
     const initMult = D.getCatchUpModifier(state.startLevel, state.enemyHighestLevel);
     if (initMult > 1.0) {
       addSimLog(startSec, `⚡ Catch-Up ×${initMult.toFixed(2)} active at start (enemy Lv.${state.enemyHighestLevel})`, null, false);
@@ -702,6 +724,18 @@
     $('sim-xp-bar').style.width = D.getLevelProgressPct(xp) + '%';
   }
 
+  // ─── Indicateur live dans la sim ─────────────────────────────────────────
+
+  function updateSimLiveIndicator() {
+    const indicator = $('sim-live-indicator');
+    if (!indicator || !simState) return;
+
+    const pending = simState.events.filter(e => e.timerSec <= simState.currentSec).length;
+    indicator.textContent = pending > 0
+      ? `${pending} événement(s) en attente`
+      : 'Aucun événement en attente';
+  }
+
   function simStep() {
     if (!simState || simState.paused) return;
 
@@ -713,11 +747,12 @@
       simState.paused = true;
       $('sim-play-pause').textContent = '▶ Play';
       addSimLog(simState.currentSec + 1, '✅ Simulation complete!', null, true);
+      updateSimLiveIndicator();
       return;
     }
 
     const prevLevel = D.getLevelFromXP(simState.totalXP);
-    const currentLevel = prevLevel; // use level before this tick's XP
+    const currentLevel = prevLevel;
     const passiveRate = D.getPassiveXPPerSec(simState.currentSec);
     const catchupMult = D.getCatchUpModifier(currentLevel, state.enemyHighestLevel);
     const passiveXP = Math.floor(passiveRate * catchupMult);
@@ -726,7 +761,6 @@
       D.LEVEL_XP_TABLE[14]
     );
 
-    // Log catch-up passive if modifier is active (once per level-up boundary or first tick)
     if (catchupMult > 1.0 && simState.currentSec === simState._lastCatchupLogSec - 1) {
       simState._lastCatchupLogSec = simState.currentSec;
     }
@@ -741,7 +775,6 @@
       } else {
         label = `⚔️ ${ev.name}`;
       }
-      // Apply catch-up multiplier to wild/score XP at simulation time
       let finalXP = ev.xp;
       let catchupNote = null;
       if (catchupMult > 1.0 && (ev.type === 'wild' || ev.type === 'score')) {
@@ -758,7 +791,6 @@
     const newLevel = D.getLevelFromXP(simState.totalXP);
     if (newLevel > prevLevel) {
       addSimLog(simState.currentSec, `⬆️ Level Up! Now Lv. ${newLevel}`, null, true);
-      // Check if catch-up modifier changed after leveling up
       const oldMult = D.getCatchUpModifier(prevLevel, state.enemyHighestLevel);
       const newMult = D.getCatchUpModifier(newLevel, state.enemyHighestLevel);
       if (newMult !== oldMult) {
@@ -771,6 +803,7 @@
     }
 
     updateSimDisplay();
+    updateSimLiveIndicator();
   }
 
   function addSimLog(timerSec, msg, xp, isLevelup = false, catchupNote = null) {
@@ -889,7 +922,6 @@
       if (state.startLevel < 15) { state.startLevel++; updateLevelDisplay(); }
     });
 
-    // Enemy level stepper
     $('enemy-lvl-minus').addEventListener('click', () => {
       if (state.enemyHighestLevel > 1) {
         state.enemyHighestLevel--;
@@ -1081,6 +1113,44 @@
       showAdvancedResult();
     });
 
+    // ── Bouton "Ajouter un événement" dans la sim ──
+    // Ce bouton scrolle vers la section d'ajout d'événements
+    const simAddBtn = $('sim-add-event-btn');
+    if (simAddBtn) {
+      simAddBtn.addEventListener('click', () => {
+        // Pause la sim si elle tourne pour que le timer soit lisible
+        const wasPaused = simState ? simState.paused : true;
+        if (simState && !simState.paused) {
+          simState.paused = true;
+          clearInterval(simInterval);
+          simInterval = null;
+          $('sim-play-pause').textContent = '▶ Play';
+          addSimLog(simState.currentSec, '⏸ Simulation pausée pour ajout d\'événement', null, false);
+        }
+
+        // Scroll vers la section d'ajout
+        const evSection = document.querySelector('.events-section') || document.querySelector('.wild-panel');
+        if (evSection) {
+          evSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
+
+    // ── Bouton "Player KO live" dans la sim ──
+    const simPKOBtn = $('sim-add-pko-btn');
+    if (simPKOBtn) {
+      simPKOBtn.addEventListener('click', () => {
+        // Pause si nécessaire
+        if (simState && !simState.paused) {
+          simState.paused = true;
+          clearInterval(simInterval);
+          simInterval = null;
+          $('sim-play-pause').textContent = '▶ Play';
+        }
+        openPlayerKOModal();
+      });
+    }
+
     $('howToUseBtn').addEventListener('click', () => {
       $('howto-modal').style.display = 'flex';
     });
@@ -1091,7 +1161,6 @@
       if (e.target === $('howto-modal')) $('howto-modal').style.display = 'none';
     });
 
-    // Disclaimer modal
     $('disclaimerBtn').addEventListener('click', () => {
       $('disclaimer-modal').style.display = 'flex';
     });

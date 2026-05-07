@@ -18,6 +18,7 @@
     <div class="topbar-spacer"></div>
     <button class="disclaimer-btn" id="disclaimerBtn">⚠️ Disclaimer</button>
     <button class="how-to-use-btn" id="howToUseBtn">📖 How to Use</button>
+    <button class="roadmap-btn" id="roadmapBtn">🗺️ Roadmap</button>
   </div>
 
   <!-- ── Main Layout ── -->
@@ -87,7 +88,7 @@
             <span class="field-hint">Game timer at start (e.g. 10:00)</span>
           </div>
 
-          <div class="field-group">
+          <!-- <div class="field-group">
             <label class="cfg-label">Duration</label>
             <div class="timer-input-wrap">
               <input type="number" id="dur-min" class="timer-part" min="0" max="10" value="10" placeholder="MM">
@@ -95,7 +96,7 @@
               <input type="number" id="dur-sec" class="timer-part" min="0" max="59" value="0" placeholder="SS">
             </div>
             <span class="field-hint">How long to simulate</span>
-          </div>
+          </div> -->
 
           <div class="field-group">
             <label class="cfg-label">Passive XP/sec</label>
@@ -479,7 +480,7 @@
         <div class="howto-step">
           <div class="howto-num">2</div>
           <div>
-            Set the <strong>Start Timer</strong> (when you start farming) and the <strong>Duration</strong> of your session.
+            Set the <strong>Start Timer</strong> (when you start farming) of your session.
           </div>
         </div>
         <div class="howto-step">
@@ -569,10 +570,92 @@
     </div>
   </div>
 
+  <!-- ═══ ROADMAP MODAL ═══ -->
+  <div class="modal-overlay" id="roadmap-modal" style="display:none;">
+    <div class="modal-box wide">
+      <div class="modal-header roadmap-header">
+        <span class="modal-title roadmap-title">🗺️ Roadmap — Upcoming Updates</span>
+        <button class="modal-close" id="roadmap-close">✕</button>
+      </div>
+      <div class="modal-body howto-body">
+
+        <p class="roadmap-intro">
+          Here are the features currently in development or planned for upcoming versions of the XP Calculator.
+        </p>
+
+        <div class="roadmap-item">
+          <div class="roadmap-item-icon violet">📋</div>
+          <div class="roadmap-item-content">
+            <div class="roadmap-item-top">
+              <span class="roadmap-item-title">Farm Presets</span>
+              <span class="roadmap-badge soon">Priority</span>
+            </div>
+            <p class="roadmap-item-desc">Save and reload your favorite Kill Queues as named presets. Create an "Early jungle", "Full clear", or any custom rotation to instantly replay your usual scenarios without reconfiguring everything.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-item-icon blue">🎬</div>
+          <div class="roadmap-item-content">
+            <div class="roadmap-item-top">
+              <span class="roadmap-item-title">Enemy in Advanced Simulation</span>
+              <span class="roadmap-badge next">Up Next</span>
+            </div>
+            <p class="roadmap-item-desc">In Advanced simulation mode, enable an enemy preset that levels up in parallel. Watch the level gap update in real time and see the Catch-Up Modifier activate or deactivate dynamically.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-item-icon yellow">🔗</div>
+          <div class="roadmap-item-content">
+            <div class="roadmap-item-top">
+              <span class="roadmap-item-title">Exp. Share</span>
+              <span class="roadmap-badge wip">In Progress</span>
+            </div>
+            <p class="roadmap-item-desc">Full support for the Exp. Share item.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-item-icon green">🎯</div>
+          <div class="roadmap-item-content">
+            <div class="roadmap-item-top">
+              <span class="roadmap-item-title">Increased Accuracy</span>
+              <span class="roadmap-badge later">Ongoing</span>
+            </div>
+            <p class="roadmap-item-desc">Continuous refinement of all data: wild Pokémon respawn timing, held item buffs, player KO formulas, Catch-Up Modifier verification on KOs. Community contributions from Mathcord are always welcome.</p>
+          </div>
+        </div>
+
+        <hr style="border-color:rgba(255,255,255,0.07);margin:4px 0">
+        <p style="color:var(--text-dim);font-size:0.78rem;line-height:1.55;">
+          Have an idea, data to share or found a bug? Open a ticket in the 
+          <a href="http://127.0.0.1:5501/feedback.html" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none;">Feedback part</a>
+          and contribute to the project!
+        </p>
+
+      </div>
+    </div>
+  </div>
+
   <script src="./scripts/navbar.js"></script>
   <script src="./scripts/exp-calc/data.js"></script>
   <script src="./scripts/exp-calc/app.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
+  <script>
+    // Roadmap modal
+    document.getElementById('roadmapBtn').addEventListener('click', () => {
+      document.getElementById('roadmap-modal').style.display = 'flex';
+    });
+    document.getElementById('roadmap-close').addEventListener('click', () => {
+      document.getElementById('roadmap-modal').style.display = 'none';
+    });
+    document.getElementById('roadmap-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('roadmap-modal')) {
+        document.getElementById('roadmap-modal').style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
