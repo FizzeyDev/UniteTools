@@ -88,7 +88,7 @@
             <span class="field-hint">Game timer at start (e.g. 10:00)</span>
           </div>
 
-          <!-- <div class="field-group">
+          <div class="field-group">
             <label class="cfg-label">Duration</label>
             <div class="timer-input-wrap">
               <input type="number" id="dur-min" class="timer-part" min="0" max="10" value="10" placeholder="MM">
@@ -96,7 +96,7 @@
               <input type="number" id="dur-sec" class="timer-part" min="0" max="59" value="0" placeholder="SS">
             </div>
             <span class="field-hint">How long to simulate</span>
-          </div> -->
+          </div>
 
           <div class="field-group">
             <label class="cfg-label">Passive XP/sec</label>
@@ -279,14 +279,34 @@
             <span class="sim-timer-val" id="sim-timer-val">10:00</span>
           </div>
           <div class="xp-prog-box-sim">
-            <div class="xp-prog-row">
-              <span class="xp-prog-label">XP</span>
-              <span class="xp-prog-val" id="sim-xp-val">0</span>
+            <!-- Stats row: Total XP / XP to next / Stored XP -->
+            <div class="sim-stats-row">
+              <div class="sim-stat">
+                <span class="sim-stat-label">Total XP</span>
+                <span class="sim-stat-val" id="sim-xp-val">0</span>
+              </div>
+              <div class="sim-stat">
+                <span class="sim-stat-label">To next Lv.</span>
+                <span class="sim-stat-val" id="sim-xp-to-next">—</span>
+              </div>
+              <div class="sim-stat stored-stat" id="sim-stored-stat" style="display:none;">
+                <span class="sim-stat-label">📦 Stored XP</span>
+                <span class="sim-stat-val stored" id="sim-stored-val">0</span>
+              </div>
             </div>
+            <!-- XP progress bar (blue = normal XP) -->
             <div class="xp-prog-bar-wrap">
               <div class="xp-prog-bar" id="sim-xp-bar" style="width:0%"></div>
             </div>
-            <span class="sim-level-badge" id="sim-level-badge">Lv. 1</span>
+            <!-- Stored XP bar (green, only visible when stored > 0) -->
+            <div class="xp-prog-bar-wrap stored-bar-wrap" id="sim-stored-bar-wrap" style="display:none;">
+              <div class="xp-prog-bar stored-bar" id="sim-stored-bar" style="width:0%"></div>
+            </div>
+            <!-- Level badge + stored indicator -->
+            <div class="sim-level-row">
+              <span class="sim-level-badge" id="sim-level-badge">Lv. 1</span>
+              <span class="sim-stored-badge" id="sim-stored-badge" style="display:none;">📦 Stored active</span>
+            </div>
           </div>
           <div class="sim-controls">
             <button class="sim-ctrl-btn" id="sim-play-pause">▶ Play</button>
@@ -370,7 +390,7 @@
             <input type="number" id="kill-sec" class="timer-part" min="0" max="59" value="0">
           </div>
         </div>
-        <div class="field-group" id="kill-modal-allies-row">
+        <div class="field-group">
           <label class="cfg-label">Allies sharing XP</label>
           <div class="level-stepper">
             <button class="step-btn" id="allies-minus">−</button>

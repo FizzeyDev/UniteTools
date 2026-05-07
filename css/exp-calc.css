@@ -366,7 +366,7 @@ body.sidebar-collapsed { margin-left: 0; }
 .pokemon-picker-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 6px;
   max-height: 170px;
   overflow-y: auto;
   padding-right: 4px;
@@ -375,9 +375,9 @@ body.sidebar-collapsed { margin-left: 0; }
 .pokemon-picker-grid::-webkit-scrollbar-thumb { background: var(--surface-3); }
 
 .poke-pick-card {
-  width: 48px;
-  height: 48px;
-  border-radius: 9px;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
   border: 2px solid var(--border);
   background: var(--surface-2);
   cursor: pointer;
@@ -395,8 +395,8 @@ body.sidebar-collapsed { margin-left: 0; }
   box-shadow: 0 0 10px rgba(79,195,247,0.3);
 }
 .poke-pick-card img {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
   pointer-events: none;
 }
@@ -1210,7 +1210,84 @@ body.sidebar-collapsed { margin-left: 0; }
   padding: 8px 12px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
+}
+
+/* Stats row */
+.sim-stats-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.sim-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.sim-stat-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+
+.sim-stat-val {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--yellow);
+}
+
+.sim-stat-val.stored {
+  color: #8bc34a;
+}
+
+.stored-stat {
+  margin-left: auto;
+  background: rgba(139,195,74,0.08);
+  border: 1px solid rgba(139,195,74,0.25);
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+
+/* Stored XP bar */
+.stored-bar-wrap {
+  margin-top: -2px;
+}
+
+.xp-prog-bar-wrap {
+  height: 5px;
+  background: var(--surface-3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.xp-prog-bar {
+  height: 100%;
+  background: var(--blue);
+  border-radius: 3px;
+  transition: width 0.1s linear;
+}
+
+.stored-bar-wrap .xp-prog-bar-wrap {
+  height: 4px;
+}
+
+.stored-bar {
+  background: #8bc34a;
+  transition: width 0.2s ease;
+}
+
+/* Level + stored badge row */
+.sim-level-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .sim-level-badge {
@@ -1218,7 +1295,23 @@ body.sidebar-collapsed { margin-left: 0; }
   font-size: 0.8rem;
   font-weight: 700;
   color: var(--yellow);
-  align-self: flex-end;
+}
+
+.sim-stored-badge {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #8bc34a;
+  background: rgba(139,195,74,0.1);
+  border: 1px solid rgba(139,195,74,0.3);
+  border-radius: 20px;
+  padding: 1px 8px;
+  animation: storedPulse 2s ease-in-out infinite;
+}
+
+@keyframes storedPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
 .sim-controls {
@@ -1283,6 +1376,9 @@ body.sidebar-collapsed { margin-left: 0; }
 }
 .sim-log-entry.levelup { border-color: rgba(255,215,64,0.4); background: var(--yellow-dim); }
 .sim-log-entry.levelup .sim-log-msg { color: var(--yellow); font-weight: 700; }
+.sim-log-entry.stored-convert { border-color: rgba(139,195,74,0.35); background: rgba(139,195,74,0.06); }
+.sim-log-entry.stored-convert .sim-log-msg { color: #8bc34a; }
+.sim-log-xp.stored-xp { color: #8bc34a; }
 
 /* ══════════════════════════════════════
    XP REFERENCE TABLE

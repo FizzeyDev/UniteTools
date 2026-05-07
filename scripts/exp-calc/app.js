@@ -526,18 +526,19 @@
   // ─── Calculation ──────────────────────────────────────────────────────────
 
   function safeInt(id, fallback) {
-    const el = $(id);
-    if (!el) return fallback;
-    const v = parseInt(el.value);
+    const v = parseInt($(id).value);
     return isNaN(v) ? fallback : v;
   }
 
   function buildEvents() {
     const startM = safeInt('start-min', 10);
     const startS = safeInt('start-sec', 0);
+    const durM   = safeInt('dur-min', 10);
+    const durS   = safeInt('dur-sec', 0);
 
     const startSec = startM * 60 + startS;
-    const endSec = 0; // always simulate to end of match
+    const durationSec = durM * 60 + durS;
+    const endSec = Math.max(0, startSec - durationSec);
 
     const events = state.killQueue.map(e => ({
       ...e,
@@ -675,6 +676,25 @@
 
   // ─── Advanced Simulation ──────────────────────────────────────────────────
 
+  /**
+   * Returns the evolutionLevels array for the currently selected Pokémon, or null.
+   */
+  function getSelectedEvolutionLevels() {
+    if (!state.selectedPokemon) return null;
+    const poke = D.PLAYER_POKEMON.find(p => p.name === state.selectedPokemon);
+    return poke ? poke.evolutionLevels : null;
+  }
+
+  /**
+   * Returns true if the given level is a "Stored XP level" —
+   * i.e. one level BEFORE an evolution (evoLevel - 1).
+   */
+  function isStoredXPLevel(level) {
+    const evos = getSelectedEvolutionLevels();
+    if (!evos) return false;
+    return evos.some(evo => evo - 1 === level);
+  }
+
   let simState = null;
   let simInterval = null;
   let simSpeed = 1;
@@ -686,6 +706,7 @@
       currentSec: startSec,
       endSec: endSec,
       totalXP: D.getStartXPForLevel(state.startLevel),
+      storedXP: 0,
       events: [...events],
       paused: true,
       _lastCatchupLogSec: startSec,
@@ -702,7 +723,13 @@
 
     const initMult = D.getCatchUpModifier(state.startLevel, state.enemyHighestLevel);
     if (initMult > 1.0) {
-      addSimLog(startSec, `⚡ Catch-Up ×${initMult.toFixed(2)} active at start (enemy Lv.${state.enemyHighestLevel})`, null, false);
+      addSimLog(startSec, `⚡ Catch-Up ×${initMult.toFixed(2)} active at start (enemy Lv.${state.enemyHighestLevel})`, null, null);
+    }
+
+    if (isStoredXPLevel(state.startLevel)) {
+      const evos = D.PLAYER_POKEMON.find(p => p.name === state.selectedPokemon)?.evolutionLevels || [];
+      const nextEvo = evos.find(e => e === state.startLevel + 1);
+      addSimLog(startSec, `📦 Stored XP active from start (Lv.${state.startLevel}, evolves at Lv.${nextEvo})`, null, 'stored-info');
     }
 
     $('result-mode-label').textContent = 'Advanced Simulation';
@@ -718,9 +745,43 @@
     $('sim-timer-val').textContent = timerStr;
 
     const xp = simState.totalXP;
+    const level = D.getLevelFromXP(xp);
+    const stored = simState.storedXP || 0;
+    const hasStored = stored > 0;
+    const isStoredLevel = isStoredXPLevel(level);
+
+    // Stats
     $('sim-xp-val').textContent = xp.toLocaleString();
-    $('sim-level-badge').textContent = `Lv. ${D.getLevelFromXP(xp)}`;
+    $('sim-xp-to-next').textContent = level >= 15 ? 'MAX' : D.getXPToNextLevel(xp).toLocaleString();
+
+    // Level badge — show "(Stored)" indicator if on a stored-XP level
+    const storedLevelText = isStoredLevel
+      ? `Lv. ${level} · 📦 Stored`
+      : `Lv. ${level}`;
+    $('sim-level-badge').textContent = storedLevelText;
+
+    // XP progress bar (blue)
     $('sim-xp-bar').style.width = D.getLevelProgressPct(xp) + '%';
+
+    // Stored XP — show/hide elements
+    const storedStat = $('sim-stored-stat');
+    const storedBarWrap = $('sim-stored-bar-wrap');
+    const storedBadge = $('sim-stored-badge');
+
+    if (hasStored || isStoredLevel) {
+      storedStat.style.display = '';
+      $('sim-stored-val').textContent = stored.toLocaleString();
+      storedBarWrap.style.display = '';
+      // Stored bar shows stored XP as % of XP needed for next level (just for visual scale)
+      const toNext = level >= 15 ? 1 : D.getXPToNextLevel(D.getStartXPForLevel(level));
+      const storedPct = toNext > 0 ? Math.min(100, Math.round((stored / toNext) * 100)) : 0;
+      $('sim-stored-bar').style.width = storedPct + '%';
+      storedBadge.style.display = isStoredLevel ? '' : 'none';
+    } else {
+      storedStat.style.display = 'none';
+      storedBarWrap.style.display = 'none';
+      storedBadge.style.display = 'none';
+    }
   }
 
   // ─── Indicateur live dans la sim ─────────────────────────────────────────
@@ -745,25 +806,25 @@
       simInterval = null;
       simState.paused = true;
       $('sim-play-pause').textContent = '▶ Play';
-      addSimLog(simState.currentSec + 1, '✅ Simulation complete!', null, true);
+      addSimLog(simState.currentSec + 1, '✅ Simulation complete!', null, 'levelup');
       updateSimLiveIndicator();
       return;
     }
 
     const prevLevel = D.getLevelFromXP(simState.totalXP);
-    const currentLevel = prevLevel;
+    const catchupMult = D.getCatchUpModifier(prevLevel, state.enemyHighestLevel);
     const passiveRate = D.getPassiveXPPerSec(simState.currentSec);
-    const catchupMult = D.getCatchUpModifier(currentLevel, state.enemyHighestLevel);
-    const passiveXP = Math.floor(passiveRate * catchupMult);
-    simState.totalXP = Math.min(
-      simState.totalXP + passiveXP,
-      D.LEVEL_XP_TABLE[14]
-    );
+    const rawPassive = passiveRate; // base before catch-up
+    const passiveXPWithCatchup = Math.floor(rawPassive * catchupMult);
 
-    if (catchupMult > 1.0 && simState.currentSec === simState._lastCatchupLogSec - 1) {
-      simState._lastCatchupLogSec = simState.currentSec;
+    // ── Passive XP: goes to Stored if on a stored-XP level, otherwise normal ──
+    if (isStoredXPLevel(prevLevel)) {
+      simState.storedXP = (simState.storedXP || 0) + passiveXPWithCatchup;
+    } else {
+      simState.totalXP = Math.min(simState.totalXP + passiveXPWithCatchup, D.LEVEL_XP_TABLE[14]);
     }
 
+    // ── Active XP events ──
     const events = simState.events.filter(e => e.timerSec === simState.currentSec);
     events.forEach(ev => {
       let label;
@@ -774,29 +835,71 @@
       } else {
         label = `⚔️ ${ev.name}`;
       }
-      let finalXP = ev.xp;
-      let catchupNote = null;
-      if (catchupMult > 1.0 && (ev.type === 'wild' || ev.type === 'score')) {
-        finalXP = Math.floor(ev.xp * catchupMult);
-        const bonus = finalXP - ev.xp;
-        if (bonus > 0) catchupNote = `+${ev.xp} (+${bonus})`;
+
+      // Base active XP (before catch-up)
+      const baseXP = ev.xp;
+
+      // Catch-up applies only to the base active XP, not to stored conversion
+      let activeXPWithCatchup = baseXP;
+      let catchupBonus = 0;
+      if (catchupMult > 1.0) {
+        activeXPWithCatchup = Math.floor(baseXP * catchupMult);
+        catchupBonus = activeXPWithCatchup - baseXP;
       }
-      simState.totalXP = Math.min(simState.totalXP + finalXP, D.LEVEL_XP_TABLE[14]);
-      addSimLog(simState.currentSec, label, finalXP, false, catchupNote);
+
+      // Stored XP conversion: convert up to baseXP from stored (catch-up does NOT apply to conversion)
+      const stored = simState.storedXP || 0;
+      const converted = Math.min(stored, baseXP);
+      simState.storedXP = stored - converted;
+
+      const totalGain = activeXPWithCatchup + converted;
+      simState.totalXP = Math.min(simState.totalXP + totalGain, D.LEVEL_XP_TABLE[14]);
+
+      // Build log note
+      let catchupNote = null;
+      if (catchupBonus > 0 && converted > 0) {
+        catchupNote = `+${baseXP} +${converted} stored (+${catchupBonus} catch-up) = +${totalGain}`;
+      } else if (catchupBonus > 0) {
+        catchupNote = `+${baseXP} (+${catchupBonus} catch-up) = +${totalGain}`;
+      } else if (converted > 0) {
+        catchupNote = `+${baseXP} +${converted} stored = +${totalGain}`;
+      }
+
+      addSimLog(simState.currentSec, label, totalGain, converted > 0 ? 'stored' : null, catchupNote);
+
+      // Log stored conversion separately if significant
+      if (converted > 0) {
+        addSimLog(simState.currentSec, `📦 Stored converted: ${converted} XP (${simState.storedXP} remaining)`, null, 'stored-info');
+      }
+
       const idx = simState.events.indexOf(ev);
       if (idx > -1) simState.events.splice(idx, 1);
     });
 
+    // ── Level up checks ──
     const newLevel = D.getLevelFromXP(simState.totalXP);
     if (newLevel > prevLevel) {
-      addSimLog(simState.currentSec, `⬆️ Level Up! Now Lv. ${newLevel}`, null, true);
+      addSimLog(simState.currentSec, `⬆️ Level Up! Now Lv. ${newLevel}`, null, 'levelup');
+
+      // Log if stored XP becomes active or deactivates at new level
+      const wasStored = isStoredXPLevel(prevLevel);
+      const nowStored = isStoredXPLevel(newLevel);
+      if (!wasStored && nowStored) {
+        const evos = D.PLAYER_POKEMON.find(p => p.name === state.selectedPokemon)?.evolutionLevels || [];
+        const nextEvo = evos.find(e => e === newLevel + 1);
+        addSimLog(simState.currentSec, `📦 Stored XP activated (evolves at Lv.${nextEvo}) — Passive XP now saved`, null, 'stored-info');
+      } else if (wasStored && !nowStored) {
+        addSimLog(simState.currentSec, `📦 Stored XP deactivated — back to normal passive gain`, null, 'stored-info');
+      }
+
+      // Catch-up modifier change
       const oldMult = D.getCatchUpModifier(prevLevel, state.enemyHighestLevel);
       const newMult = D.getCatchUpModifier(newLevel, state.enemyHighestLevel);
       if (newMult !== oldMult) {
         if (newMult > 1.0) {
-          addSimLog(simState.currentSec, `⚡ Catch-Up ×${newMult.toFixed(2)} active (passive XP boosted)`, null, false);
+          addSimLog(simState.currentSec, `⚡ Catch-Up ×${newMult.toFixed(2)} active (passive XP boosted)`, null, null);
         } else if (oldMult > 1.0) {
-          addSimLog(simState.currentSec, `Catch-Up modifier deactivated`, null, false);
+          addSimLog(simState.currentSec, `Catch-Up modifier deactivated`, null, null);
         }
       }
     }
@@ -805,10 +908,14 @@
     updateSimLiveIndicator();
   }
 
-  function addSimLog(timerSec, msg, xp, isLevelup = false, catchupNote = null) {
+  function addSimLog(timerSec, msg, xp, style = null, note = null) {
     const log = $('sim-log');
     const entry = document.createElement('div');
-    entry.className = 'sim-log-entry' + (isLevelup ? ' levelup' : '');
+
+    let cls = 'sim-log-entry';
+    if (style === 'levelup') cls += ' levelup';
+    else if (style === 'stored' || style === 'stored-info') cls += ' stored-convert';
+    entry.className = cls;
 
     const timeEl = document.createElement('span');
     timeEl.className = 'sim-log-time';
@@ -823,11 +930,10 @@
 
     if (xp !== null && xp !== undefined) {
       const xpEl = document.createElement('span');
-      xpEl.className = 'sim-log-xp';
-      if (catchupNote) {
-        xpEl.textContent = catchupNote;
-        xpEl.title = `Catch-Up modifier active (×${D.getCatchUpModifier(D.getLevelFromXP(simState.totalXP), state.enemyHighestLevel).toFixed(2)})`;
-        xpEl.style.color = 'var(--yellow)';
+      xpEl.className = 'sim-log-xp' + (style === 'stored' ? ' stored-xp' : '');
+      if (note) {
+        xpEl.textContent = note;
+        if (style !== 'stored') xpEl.style.color = 'var(--yellow)';
       } else {
         xpEl.textContent = `+${xp}`;
       }
