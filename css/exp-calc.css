@@ -366,8 +366,8 @@ body.sidebar-collapsed { margin-left: 0; }
 .pokemon-picker-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  max-height: 120px;
+  gap: 5px;
+  max-height: 170px;
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -375,9 +375,9 @@ body.sidebar-collapsed { margin-left: 0; }
 .pokemon-picker-grid::-webkit-scrollbar-thumb { background: var(--surface-3); }
 
 .poke-pick-card {
-  width: 52px;
-  height: 52px;
-  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 9px;
   border: 2px solid var(--border);
   background: var(--surface-2);
   cursor: pointer;
@@ -395,8 +395,8 @@ body.sidebar-collapsed { margin-left: 0; }
   box-shadow: 0 0 10px rgba(79,195,247,0.3);
 }
 .poke-pick-card img {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
   pointer-events: none;
 }

@@ -526,19 +526,18 @@
   // ─── Calculation ──────────────────────────────────────────────────────────
 
   function safeInt(id, fallback) {
-    const v = parseInt($(id).value);
+    const el = $(id);
+    if (!el) return fallback;
+    const v = parseInt(el.value);
     return isNaN(v) ? fallback : v;
   }
 
   function buildEvents() {
     const startM = safeInt('start-min', 10);
     const startS = safeInt('start-sec', 0);
-    const durM   = safeInt('dur-min', 10);
-    const durS   = safeInt('dur-sec', 0);
 
     const startSec = startM * 60 + startS;
-    const durationSec = durM * 60 + durS;
-    const endSec = Math.max(0, startSec - durationSec);
+    const endSec = 0; // always simulate to end of match
 
     const events = state.killQueue.map(e => ({
       ...e,
