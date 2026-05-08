@@ -28,25 +28,18 @@ export function loadTabs() {
 
     const addBtn = document.createElement('button');
     addBtn.id = 'add-tab';
-    addBtn.textContent = '+ Add Tierlist';
+    addBtn.textContent = '+ Add';
+    addBtn.title = 'Add a new tierlist (Ctrl+N)';
     addBtn.addEventListener('click', () => import('./actions.js').then(m => m.addTab()));
     tabList.appendChild(addBtn);
 }
 
 export function switchTab(tabId) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tierlist-container').forEach(c => c.classList.remove('active'));
-
-    const newTab = document.querySelector(`.tab[data-tab-id="${tabId}"]`);
-    const newContainer = document.getElementById(`tierlist-${tabId}`);
-    if (newTab && newContainer) {
-        newTab.classList.add('active');
-        newContainer.classList.add('active');
-        state.currentDraft = tabId;
-        recalcUsage(tabId);
-        loadTierList(tabId);
-        loadGallery(state.currentCategory);
-    }
+    state.currentDraft = tabId;
+    recalcUsage(tabId);
+    loadTabs();
+    loadTierList(tabId);
+    loadGallery(state.currentCategory);
 }
 
 export function loadTierList(draftId) {
@@ -58,55 +51,84 @@ export function loadTierList(draftId) {
     container.className = `tierlist-container ${draftId === state.currentDraft ? 'active' : ''}`;
     container.id = `tierlist-${draftId}`;
 
+    // Mode bar
     const modeBar = document.createElement('div');
     modeBar.className = 'mode-bar';
     const modeLabel = document.createElement('span');
     modeLabel.className = 'mode-label';
-    modeLabel.textContent = 'Mode :';
+    modeLabel.textContent = 'Mode';
     modeBar.appendChild(modeLabel);
 
     const modeBtns = document.createElement('div');
     modeBtns.className = 'mode-btns';
-    MODES.forEach(({ key, label }) => {
+    MODES.forEach(({ key, label }, idx) => {
         const btn = document.createElement('button');
         btn.className = `mode-btn ${state.tierlistMode === key ? 'active' : ''}`;
         btn.dataset.mode = key;
+        btn.title = `Shortcut: ${idx + 1}`;
         btn.textContent = label;
         modeBtns.appendChild(btn);
     });
     modeBar.appendChild(modeBtns);
-    container.appendChild(modeBar);
+
+    // Spacer so controls sit at the right of the mode bar
+    const spacer = document.createElement('div');
+    spacer.style.flex = '1';
+    modeBar.appendChild(spacer);
 
     const controls = document.createElement('div');
-    controls.className = 'tier-controls';
+    controls.className = 'mode-controls';
+    controls.style.cssText = 'display:flex; gap:6px; align-items:center;';
     controls.innerHTML = `
-        <button id="add-tier-btn">+ Add Tier</button>
-        <button id="clear-draft-btn" class="clear-draft">Clear Draft</button>
+        <button class="mode-btn" id="add-tier-btn" title="Add a new row">+ Tier</button>
+        <button class="mode-btn clear-draft-btn" id="clear-draft-btn" title="Clear all items (Ctrl+Delete)" style="border-color:rgba(239,83,80,0.3); color:#ef5350;">Clear</button>
     `;
-    container.appendChild(controls);
+    modeBar.appendChild(controls);
+    container.appendChild(modeBar);
 
+    // Tier rows
     draft.tiers.forEach((tier, index) => {
         const tierRow = document.createElement('div');
         tierRow.className = 'tier-row';
         tierRow.dataset.tierIndex = index;
-        tierRow.innerHTML = `
-            <div class="tier-header" style="background:${tier.color}">${tier.name}</div>
-            <div class="tier-items" data-tier-index="${index}"></div>
-            <div class="tier-actions">
-                <button class="settings-tier" aria-label="Edit tier" data-tier-index="${index}">
-                    <img src="${basePath}assets/icons/settings.png" alt="⚙" onerror="this.outerHTML='⚙'">
-                </button>
-            </div>
-        `;
-        const itemsZone = tierRow.querySelector('.tier-items');
+
+        const header = document.createElement('div');
+        header.className = 'tier-header';
+        header.style.background = tier.color || '#4a90e2';
+        header.textContent = tier.name;
+        header.title = 'Click to edit tier';
+        header.dataset.tierIndex = index;
+        tierRow.appendChild(header);
+
+        const itemsZone = document.createElement('div');
+        itemsZone.className = 'tier-items';
+        itemsZone.dataset.tierIndex = index;
         tier.items.forEach(item => itemsZone.appendChild(createTierItemElement(item, basePath)));
+        tierRow.appendChild(itemsZone);
+
+        const actions = document.createElement('div');
+        actions.className = 'tier-actions';
+        const settingsBtn = document.createElement('button');
+        settingsBtn.className = 'settings-tier';
+        settingsBtn.setAttribute('aria-label', 'Edit tier');
+        settingsBtn.dataset.tierIndex = index;
+        settingsBtn.title = 'Edit tier name and color';
+        const settingsImg = document.createElement('img');
+        settingsImg.src = `${basePath}assets/icons/settings.png`;
+        settingsImg.alt = '⚙';
+        settingsImg.onerror = () => { settingsImg.outerHTML = '⚙'; };
+        settingsBtn.appendChild(settingsImg);
+        actions.appendChild(settingsBtn);
+        tierRow.appendChild(actions);
+
         container.appendChild(tierRow);
     });
 
+    // Remove zone
     const removeZone = document.createElement('div');
     removeZone.className = 'remove-zone';
     removeZone.id = 'remove-zone';
-    removeZone.textContent = '🗑 Drop here to remove from tier';
+    removeZone.innerHTML = '🗑 Drop here to remove';
     container.appendChild(removeZone);
 
     const wrapper = document.getElementById('tierlist-wrapper');
@@ -126,12 +148,14 @@ export function createTierItemElement(item, basePath) {
     el.dataset.name = item.name;
     el.dataset.category = item.category;
     el.draggable = true;
+    el.title = item.name;
 
     const sprite = document.createElement('img');
     sprite.src = `${basePath}assets/${item.category}/${item.file}`;
     sprite.alt = item.name;
     sprite.className = 'tier-item__sprite';
     sprite.draggable = false;
+    sprite.onerror = () => { sprite.style.opacity = '0.3'; };
     el.appendChild(sprite);
 
     const nameEl = document.createElement('div');
@@ -144,23 +168,86 @@ export function createTierItemElement(item, basePath) {
     const mode = state.tierlistMode;
     const detail = getPokeDetail(item.name);
 
-    if (mode === 'simple') {
-        return el;
-    }
+    if (mode === 'simple') return el;
 
-    let passiveImg = resolvePassiveImg(item, detail);
-    let uniteImg = resolveUniteImg(item, detail);
-    let move1Img = item.move1Img || resolveStandardMoveImg(item.move1, detail);
-    let move2Img = item.move2Img || resolveStandardMoveImg(item.move2, detail);
+    const passiveImg  = resolvePassiveImg(item, detail);
+    const uniteImg    = resolveUniteImg(item, detail);
+    const move1Img    = item.move1Img  || resolveStandardMoveImg(item.move1,  detail);
+    const move2Img    = item.move2Img  || resolveStandardMoveImg(item.move2,  detail);
 
     if (mode === 'moves') {
-        if (item.move1) el.appendChild(makeBadge(item.move1, move1Img, basePath, 'badge--left',  'badge--move'));
-        if (item.move2) el.appendChild(makeBadge(item.move2, move2Img, basePath, 'badge--right', 'badge--move'));
+        if (item.move1) el.appendChild(makeBadge(item.move1, move1Img, basePath, 'badge--left',   'badge--move'));
+        if (item.move2) el.appendChild(makeBadge(item.move2, move2Img, basePath, 'badge--right',  'badge--move'));
+
     } else if (mode === 'passive') {
-        if (item.passive) el.appendChild(makeBadge(item.passive, passiveImg, basePath, 'badge--center', 'badge--passive'));
+        // Large card: show move image only (no pokémon sprite)
+        return makeMoveCard(el, item, item.passive, passiveImg, basePath, 'move-card--passive');
+
     } else if (mode === 'unite') {
-        if (item.unite) el.appendChild(makeBadge(item.unite, uniteImg, basePath, 'badge--center', 'badge--unite'));
+        // Large card: show move image only (no pokémon sprite)
+        return makeMoveCard(el, item, item.unite, uniteImg, basePath, 'move-card--unite');
     }
+
+    return el;
+}
+
+/**
+ * Transforms the tier-item element into a large move card.
+ * The pokémon sprite is hidden; the move image fills the card instead.
+ * A small pokémon avatar is shown as a corner indicator.
+ */
+function makeMoveCard(el, item, moveName, moveImg, basePath, typeClass) {
+    el.classList.add('tier-item--move-card', typeClass);
+
+    // Remove the default sprite & name that were already appended
+    el.innerHTML = '';
+
+    // Small pokémon avatar (corner)
+    const avatarWrap = document.createElement('div');
+    avatarWrap.className = 'move-card__avatar';
+    const avatarImg = document.createElement('img');
+    avatarImg.src = `${basePath}assets/${item.category}/${item.file}`;
+    avatarImg.alt = item.name;
+    avatarImg.draggable = false;
+    avatarImg.onerror = () => { avatarImg.style.opacity = '0.2'; };
+    avatarWrap.appendChild(avatarImg);
+    el.appendChild(avatarWrap);
+
+    // Large move image
+    const moveWrap = document.createElement('div');
+    moveWrap.className = 'move-card__img-wrap';
+
+    if (moveImg) {
+        const img = document.createElement('img');
+        img.src = moveImg.startsWith('assets/') ? `${basePath}${moveImg}` : moveImg;
+        img.alt = moveName || item.name;
+        img.className = 'move-card__img';
+        img.draggable = false;
+        img.onerror = () => {
+            img.style.display = 'none';
+            fallback.style.display = 'flex';
+        };
+        const fallback = document.createElement('div');
+        fallback.className = 'move-card__fallback';
+        fallback.textContent = (moveName || '?').slice(0, 3).toUpperCase();
+        fallback.style.display = 'none';
+        moveWrap.appendChild(img);
+        moveWrap.appendChild(fallback);
+    } else {
+        // No image available — show text initials
+        const fallback = document.createElement('div');
+        fallback.className = 'move-card__fallback';
+        fallback.textContent = moveName ? moveName.slice(0, 3).toUpperCase() : '?';
+        moveWrap.appendChild(fallback);
+    }
+
+    el.appendChild(moveWrap);
+
+    // Move name label
+    const label = document.createElement('div');
+    label.className = 'move-card__label';
+    label.textContent = moveName || '—';
+    el.appendChild(label);
 
     return el;
 }
@@ -219,20 +306,37 @@ function setupTierListeners(draftId) {
     const container = document.getElementById(`tierlist-${draftId}`);
     if (!container) return;
 
-    container.querySelectorAll('.mode-btn').forEach(btn => {
+    // Mode buttons
+    container.querySelectorAll('.mode-btn[data-mode]').forEach(btn => {
         btn.addEventListener('click', () => {
             state.tierlistMode = btn.dataset.mode;
             loadTierList(draftId);
         });
     });
 
+    // Add / clear tier
     container.querySelector('#add-tier-btn')   ?.addEventListener('click', () => addTier(draftId));
-    container.querySelector('#clear-draft-btn')?.addEventListener('click', () => clearDraft(draftId));
-
-    container.querySelectorAll('.settings-tier').forEach(btn => {
-        btn.addEventListener('click', () => openTierModal(draftId, parseInt(btn.dataset.tierIndex)));
+    container.querySelector('#clear-draft-btn')?.addEventListener('click', () => {
+        if (confirm('Clear all items from this tierlist?')) {
+            clearDraft(draftId);
+            window.showToast?.('Tierlist cleared', 'info');
+        }
     });
 
+    // Click tier header → open edit modal
+    container.querySelectorAll('.tier-header').forEach(header => {
+        header.addEventListener('click', () => openTierModal(draftId, parseInt(header.dataset.tierIndex)));
+    });
+
+    // Settings button (gear icon) — also opens edit modal
+    container.querySelectorAll('.settings-tier').forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.stopPropagation();
+            openTierModal(draftId, parseInt(btn.dataset.tierIndex));
+        });
+    });
+
+    // Double-click tier item to edit moves
     container.addEventListener('dblclick', e => {
         const item = e.target.closest('.tier-item');
         if (!item || item.dataset.category !== 'pokemon') return;

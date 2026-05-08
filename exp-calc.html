@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -8,6 +8,14 @@
   <link rel="stylesheet" href="./css/navbar.css">
   <link rel="stylesheet" href="./css/exp-calc.css">
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-B7HW29S7HW');
+  </script>
 </head>
 <body>
   <div id="navbar-container"></div>
@@ -16,7 +24,9 @@
   <div class="topbar">
     <span class="topbar-title">⚡ XP Calculator</span>
     <div class="topbar-spacer"></div>
+    <button class="disclaimer-btn" id="disclaimerBtn">⚠️ Disclaimer</button>
     <button class="how-to-use-btn" id="howToUseBtn">📖 How to Use</button>
+    <button class="roadmap-btn" id="roadmapBtn">🗺️ Roadmap</button>
   </div>
 
   <!-- ── Main Layout ── -->
@@ -99,10 +109,10 @@
           <div class="field-group">
             <label class="cfg-label">Passive XP/sec</label>
             <div class="passive-xp-info">
-              <span class="passive-xp-badge before8">4 <span class="passive-xp-small">xp/s avant 8:00</span></span>
-              <span class="passive-xp-badge after8">6 <span class="passive-xp-small">xp/s après 8:00</span></span>
+              <span class="passive-xp-badge before8">4 <span class="passive-xp-small">xp/s before 8:00</span></span>
+              <span class="passive-xp-badge after8">6 <span class="passive-xp-small">xp/s after 8:00</span></span>
             </div>
-            <span class="field-hint">Calculé automatiquement</span>
+            <span class="field-hint">Calculated automatically</span>
           </div>
         </div>
 
@@ -116,7 +126,7 @@
             <div class="xp-prog-bar" id="xp-prog-bar" style="width:0%"></div>
           </div>
           <div class="xp-prog-row small">
-            <span id="xp-to-next-label">— XP to next level</span>
+            <span id="xp-to-next-label">- XP to next level</span>
             <span id="xp-level-display">Lv. 1</span>
           </div>
         </div>
@@ -143,6 +153,36 @@
     </div>
 
     <!-- ═══════════════════════════════════════
+         ENEMY CONFIG (Catch-Up Modifier)
+    ═══════════════════════════════════════ -->
+    <div class="enemy-config-section">
+      <div class="enemy-config-header">
+        <span class="enemy-config-title">🎯 Enemy Team Configuration</span>
+        <span class="enemy-config-hint">Set the main enemy reference for the <strong>Catch-Up Modifier</strong></span>
+      </div>
+      <div class="enemy-config-body">
+        <div class="enemy-level-block">
+          <span class="cfg-label">Highest level on the opposing team</span>
+          <div class="enemy-level-row">
+            <div class="level-stepper">
+              <button class="step-btn" id="enemy-lvl-minus">−</button>
+              <span class="level-value" id="enemy-lvl-display">1</span>
+              <button class="step-btn" id="enemy-lvl-plus">+</button>
+            </div>
+            <div class="enemy-level-info">
+              <span class="catchup-badge inactive" id="catchup-badge">Catch-Up: Inactive</span>
+              <span class="catchup-detail" id="catchup-detail">Your level (1) ≥ enemy level (1) - no modifier applied.</span>
+            </div>
+          </div>
+        </div>
+        <div class="enemy-config-note">
+          <span class="enemy-note-icon">ℹ️</span>
+          <span>This enemy is used only as a reference for the Catch-Up modifier. It is not counted among kills or other events. Catch-Up applies to base XP received when the opponent is ahead by at least <strong>2 levels</strong>.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
          KILL LIST & EVENTS
     ═══════════════════════════════════════ -->
     <div class="events-section">
@@ -154,10 +194,19 @@
           <button class="clear-queue-btn" id="clear-queue-btn">🗑 Clear</button>
         </div>
         <div class="kill-queue-list" id="kill-queue-list">
-          <div class="empty-queue-hint">Add wild Pokémon kills, scoring events below.</div>
+          <div class="empty-queue-hint">Add wild Pokémon kills, player KOs or scoring events below.</div>
         </div>
 
-        <!-- Scoring event add -->
+        <!-- Quick Add: Player KO -->
+        <div class="quick-add-row">
+          <div class="quick-add-block playerko-quick">
+            <span class="quick-add-label">⚔️ Player KO</span>
+            <p class="quick-add-desc">KO an enemy player - calculates XP based on their level, streak and level diff.</p>
+            <button class="quick-add-btn playerko-btn" id="add-player-ko-btn">+ Add Player KO</button>
+          </div>
+        </div>
+
+        <!-- Quick Add: Scoring -->
         <div class="quick-add-row">
           <div class="quick-add-block">
             <span class="quick-add-label">🏆 Scoring</span>
@@ -238,14 +287,34 @@
             <span class="sim-timer-val" id="sim-timer-val">10:00</span>
           </div>
           <div class="xp-prog-box-sim">
-            <div class="xp-prog-row">
-              <span class="xp-prog-label">XP</span>
-              <span class="xp-prog-val" id="sim-xp-val">0</span>
+            <!-- Stats row: Total XP / XP to next / Stored XP -->
+            <div class="sim-stats-row">
+              <div class="sim-stat">
+                <span class="sim-stat-label">Total XP</span>
+                <span class="sim-stat-val" id="sim-xp-val">0</span>
+              </div>
+              <div class="sim-stat">
+                <span class="sim-stat-label">To next Lv.</span>
+                <span class="sim-stat-val" id="sim-xp-to-next">—</span>
+              </div>
+              <div class="sim-stat stored-stat" id="sim-stored-stat" style="display:none;">
+                <span class="sim-stat-label">📦 Stored XP</span>
+                <span class="sim-stat-val stored" id="sim-stored-val">0</span>
+              </div>
             </div>
+            <!-- XP progress bar (blue = normal XP) -->
             <div class="xp-prog-bar-wrap">
               <div class="xp-prog-bar" id="sim-xp-bar" style="width:0%"></div>
             </div>
-            <span class="sim-level-badge" id="sim-level-badge">Lv. 1</span>
+            <!-- Stored XP bar (green, only visible when stored > 0) -->
+            <div class="xp-prog-bar-wrap stored-bar-wrap" id="sim-stored-bar-wrap" style="display:none;">
+              <div class="xp-prog-bar stored-bar" id="sim-stored-bar" style="width:0%"></div>
+            </div>
+            <!-- Level badge + stored indicator -->
+            <div class="sim-level-row">
+              <span class="sim-level-badge" id="sim-level-badge">Lv. 1</span>
+              <span class="sim-stored-badge" id="sim-stored-badge" style="display:none;">📦 Stored active</span>
+            </div>
           </div>
           <div class="sim-controls">
             <button class="sim-ctrl-btn" id="sim-play-pause">▶ Play</button>
@@ -281,6 +350,34 @@
 
   </div><!-- end xp-main -->
 
+  <!-- ═══════════════════════════════════════
+       CREDITS FOOTER
+  ═══════════════════════════════════════ -->
+  <footer class="credits-footer">
+    <div class="credits-inner">
+      <div class="credits-title">📊 Data Sources & Credits</div>
+      <p class="credits-intro">The data used in this calculator comes from the <strong>Mathcord</strong> community. Many thanks to all contributors!</p>
+      <div class="credits-links">
+        <a class="credits-link" href="https://discord.gg/DMBB3nzTqm" target="_blank" rel="noopener">
+          <span class="credits-link-icon">💬</span>
+          <span>Mathcord Discord</span>
+        </a>
+        <a class="credits-link" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQSC178tOXF_sRzZSiR6Hel91Mkldw9qbptZ7M9TbqSQMCM9phuFvJGDvicjUnNqTimd9yEVT8EBEQN/pubhtml" target="_blank" rel="noopener">
+          <span class="credits-link-icon">📄</span>
+          <span>Wild Pokémon - Groudon / Kyogre</span>
+        </a>
+        <a class="credits-link" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTyFxS5sJsG7sTe_luVIK5nuvbrt9cbftsa1KuvVgeFiEbWICLp9EdrKCyk3OzqAR1o7iWw9Hd5P7B0/pubhtml#gid=1290754032" target="_blank" rel="noopener">
+          <span class="credits-link-icon">📄</span>
+          <span>Wild Pokémon - Rayquaza (Theia Sky Ruins)</span>
+        </a>
+        <a class="credits-link" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQSiaT9MXnLGTy1PZCYiABi3Vhp2-v9tbs2IwkuBePPiX3bpP50I1sAVt8Zflj9jtYvm7BswzGPUL_G/pubhtml" target="_blank" rel="noopener">
+          <span class="credits-link-icon">📄</span>
+          <span>XP Tables (levels & progression)</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
   <!-- ═══ KILL ADD MODAL ═══ -->
   <div class="modal-overlay" id="kill-modal" style="display:none;">
     <div class="modal-box">
@@ -312,7 +409,7 @@
         </div>
         <div class="field-group">
           <label class="cfg-label">XP at this timer</label>
-          <div class="modal-xp-preview" id="kill-xp-preview">— XP</div>
+          <div class="modal-xp-preview" id="kill-xp-preview">- XP</div>
         </div>
       </div>
       <div class="modal-footer">
@@ -322,11 +419,104 @@
     </div>
   </div>
 
+  <!-- ═══ PLAYER KO MODAL ═══ -->
+  <div class="modal-overlay" id="player-ko-modal" style="display:none;">
+    <div class="modal-box wide">
+      <div class="modal-header">
+        <span class="modal-title">⚔️ Add Player KO</span>
+        <button class="modal-close" id="pko-modal-close">✕</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Timer -->
+        <div class="field-group">
+          <label class="cfg-label">Timer of KO</label>
+          <div class="timer-input-wrap">
+            <input type="number" id="pko-min" class="timer-part" min="0" max="10" value="9">
+            <span class="timer-colon">:</span>
+            <input type="number" id="pko-sec" class="timer-part" min="0" max="59" value="0">
+          </div>
+        </div>
+
+        <!-- Two-column fields -->
+        <div class="pko-fields-grid">
+          <div class="field-group">
+            <label class="cfg-label">Victim level</label>
+            <input type="number" id="pko-victim-level" class="cfg-input" min="1" max="15" value="2">
+            <span class="field-hint">Level of the KO'd player (1–15)</span>
+          </div>
+          <div class="field-group">
+            <label class="cfg-label">Victim streak</label>
+            <input type="number" id="pko-streak" class="cfg-input" min="-3" max="3" value="0">
+            <span class="field-hint">−3 (death streak) → +3 (kill streak)</span>
+          </div>
+        </div>
+
+        <!-- Role + Allies nearby -->
+        <div class="field-group">
+          <label class="cfg-label">Your role in this KO</label>
+          <div class="pko-role-row">
+            <label class="pko-role-option" id="pko-role-koer-label">
+              <input type="radio" name="pko-role" id="pko-role-koer" value="koer" checked>
+              <span class="pko-role-btn">⚔️ KO-er <span class="pko-role-sub">100% XP</span></span>
+            </label>
+            <label class="pko-role-option" id="pko-role-ally-label">
+              <input type="radio" name="pko-role" id="pko-role-ally" value="ally">
+              <span class="pko-role-btn">🤝 Ally nearby <span class="pko-role-sub" id="pko-ally-pct">—</span></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Allies nearby stepper (always shown, affects both roles) -->
+        <div class="field-group" id="pko-allies-field">
+          <label class="cfg-label">Allied players nearby</label>
+          <div class="pko-allies-row">
+            <div class="level-stepper">
+              <button class="step-btn" id="pko-allies-minus">−</button>
+              <span class="level-value" id="pko-allies-count">0</span>
+              <button class="step-btn" id="pko-allies-plus">+</button>
+            </div>
+            <span class="field-hint" id="pko-allies-hint">0 = solo KO</span>
+          </div>
+        </div>
+
+        <!-- Toggles -->
+        <div class="pko-toggles">
+          <label class="pko-toggle-row">
+            <input type="checkbox" id="pko-apply-catchup">
+            <span class="pko-toggle-label">
+              <span class="pko-toggle-title">Apply Catch-Up Modifier</span>
+              <span class="pko-toggle-sub pko-unconfirmed">⚠️ Unconfirmed in-game - needs testing</span>
+            </span>
+          </label>
+        </div>
+
+        <!-- Catch-up unconfirmed warning -->
+        <div class="pko-catchup-warn" id="pko-catchup-warn" style="display:none;">
+          <span>⚠️</span>
+          <span>Applying the Catch-Up Modifier to Player KOs is <strong>not yet confirmed</strong> in-game. This value is a theoretical estimate based on the general mechanic.</span>
+        </div>
+
+        <!-- XP Preview -->
+        <div class="field-group">
+          <label class="cfg-label">Estimated XP</label>
+          <div class="modal-xp-preview" id="pko-xp-preview">- XP</div>
+          <div class="pko-breakdown" id="pko-breakdown"></div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn confirm" id="pko-modal-confirm">+ Add to Queue</button>
+        <button class="modal-btn cancel" id="pko-modal-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══ HOW TO USE MODAL ═══ -->
   <div class="modal-overlay" id="howto-modal" style="display:none;">
     <div class="modal-box wide">
       <div class="modal-header">
-        <span class="modal-title">📖 How to Use — XP Calculator</span>
+        <span class="modal-title">📖 How to Use - XP Calculator</span>
         <button class="modal-close" id="howto-close">✕</button>
       </div>
       <div class="modal-body howto-body">
@@ -339,23 +529,35 @@
         <div class="howto-step">
           <div class="howto-num">2</div>
           <div>
-            Set the <strong>Start Timer</strong> (when you start farming) and the <strong>Duration</strong> of your session.
+            Set the <strong>Start Timer</strong> (when you start farming) of your session.
           </div>
         </div>
         <div class="howto-step">
           <div class="howto-num">3</div>
           <div>
-            Add kills from the <strong>Wild Pokémon</strong> grid. Click a Pokémon, set the timer and number of allies sharing XP, then confirm.
+            Configure the <strong>Enemy Team</strong> section - set the highest enemy Pokémon level to activate the <strong>Catch-Up Modifier</strong> if applicable.
           </div>
         </div>
         <div class="howto-step">
           <div class="howto-num">4</div>
           <div>
-            Add <strong>Scoring</strong> events using the scoring quick-add row (timer + points scored).
+            Add kills from the <strong>Wild Pokémon</strong> grid. Click a Pokémon, set the timer and number of allies sharing XP, then confirm.
           </div>
         </div>
         <div class="howto-step">
           <div class="howto-num">5</div>
+          <div>
+            Add <strong>Player KO</strong> events via the Kill Queue panel - enter the victim's level, their streak, and whether you landed the killing blow.
+          </div>
+        </div>
+        <div class="howto-step">
+          <div class="howto-num">6</div>
+          <div>
+            Add <strong>Scoring</strong> events using the scoring quick-add row (timer + points scored).
+          </div>
+        </div>
+        <div class="howto-step">
+          <div class="howto-num">7</div>
           <div>
             Press <strong>Classic</strong> for an instant summary, or <strong>Advanced</strong> to watch a real-time simulation that you can speed up to x4.
           </div>
@@ -363,15 +565,124 @@
         <div class="howto-step">
           <div class="howto-num">💡</div>
           <div>
-            The <strong>XP Table</strong> at the bottom shows how much XP each wild Pokémon gives at every timer tick — use it to plan kills efficiently.
+            The <strong>XP Table</strong> at the bottom shows how much XP each wild Pokémon gives at every timer tick - use it to plan kills efficiently.
           </div>
         </div>
         <hr style="border-color:rgba(255,255,255,0.07);margin:12px 0">
         <p style="color:var(--text-dim);font-size:0.82rem;">
-          <strong style="color:var(--yellow)">Passive XP:</strong> Automatique — 4 XP/sec entre 10:00 et 8:00, puis 6 XP/sec entre 8:00 et 0:00.<br>
-          <strong style="color:var(--yellow)">XP Share:</strong> Coming Soon — will be implemented in a future update.<br>
-          <strong style="color:var(--yellow)">Enemy Kill:</strong> Coming Soon — will give XP based on level difference.
+          <strong style="color:var(--yellow)">Passive XP:</strong> Automatic - 4 XP/sec between 10:00 and 8:00, then 6 XP/sec between 8:00 and 0:00.<br>
+          <strong style="color:var(--yellow)">XP Share:</strong> Coming Soon - will be implemented in a future update.<br>
+          <strong style="color:var(--yellow)">Catch-Up on Player KO:</strong> Unconfirmed - enable the option at your own risk to test the theoretical value.
         </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DISCLAIMER MODAL ═══ -->
+  <div class="modal-overlay" id="disclaimer-modal" style="display:none;">
+    <div class="modal-box wide">
+      <div class="modal-header disclaimer-header">
+        <span class="modal-title">⚠️ Disclaimer - Please read before using</span>
+        <button class="modal-close" id="disclaimer-close">✕</button>
+      </div>
+      <div class="modal-body howto-body">
+
+        <div class="disclaimer-intro">
+          <p>This calculator is an <strong>estimation tool</strong> designed to approximate Pokémon UNITE's in-game mechanics as closely as possible. It does not claim to perfectly reproduce every match condition.</p>
+        </div>
+
+        <div class="disclaimer-block">
+          <div class="disclaimer-block-title">📊 Data Accuracy</div>
+          <p>XP values for wild Pokémon, passive XP, scoring, and KOs are based on in-game observations and measurements. They may differ slightly depending on the game version, balance updates, or undocumented conditions.</p>
+        </div>
+
+        <div class="disclaimer-block">
+          <div class="disclaimer-block-title">🎯 Partially Confirmed Mechanics</div>
+          <p>Some mechanics - in particular <strong>the application of the Catch-Up Modifier to Player KOs</strong> - are not officially documented by the developers and have not yet been exhaustively verified in-game. The corresponding values are theoretical extrapolations.</p>
+        </div>
+
+        <div class="disclaimer-block">
+          <div class="disclaimer-block-title">⚙️ Model Simplifications</div>
+          <p>This simulator does not reproduce every condition of a real match: Pokémon interactions, exact wild respawn timing, Exp. Share between nearby allies, held item buffs, and other situational factors are not yet integrated.</p>
+        </div>
+
+        <div class="disclaimer-block">
+          <div class="disclaimer-block-title">🔄 Ongoing Development</div>
+          <p>This tool is actively developed. Data is updated as patches are released. If you spot an inconsistency or have data to share, feel free to contribute.</p>
+        </div>
+
+        <div class="disclaimer-footer-note">
+          This calculator is an independent community project, unaffiliated with TiMi Studio Group, Nintendo, or The Pokémon Company.
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ROADMAP MODAL ═══ -->
+  <div class="modal-overlay" id="roadmap-modal" style="display:none;">
+    <div class="modal-box wide">
+      <div class="modal-header roadmap-header">
+        <span class="modal-title roadmap-title">🗺️ Roadmap — Upcoming Updates</span>
+        <button class="modal-close" id="roadmap-close">✕</button>
+      </div>
+      <div class="modal-body howto-body">
+
+        <p class="roadmap-intro">
+          Here are the features currently in development or planned for upcoming versions of the XP Calculator.
+        </p>
+
+        <div class="roadmap-item">
+          <div class="roadmap-item-icon violet">📋</div>
+          <div class="roadmap-item-content">
+            <div class="roadmap-item-top">
+              <span class="roadmap-item-title">Farm Presets</span>
+              <span class="roadmap-badge soon">Priority</span>
+            </div>
+            <p class="roadmap-item-desc">Save and reload your favorite Kill Queues as named presets. Create an "Early jungle", "Full clear", or any custom rotation to instantly replay your usual scenarios without reconfiguring everything.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-item-icon blue">🎬</div>
+          <div class="roadmap-item-content">
+            <div class="roadmap-item-top">
+              <span class="roadmap-item-title">Enemy in Advanced Simulation</span>
+              <span class="roadmap-badge next">Up Next</span>
+            </div>
+            <p class="roadmap-item-desc">In Advanced simulation mode, enable an enemy preset that levels up in parallel. Watch the level gap update in real time and see the Catch-Up Modifier activate or deactivate dynamically.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-item-icon yellow">🔗</div>
+          <div class="roadmap-item-content">
+            <div class="roadmap-item-top">
+              <span class="roadmap-item-title">Exp. Share</span>
+              <span class="roadmap-badge wip">In Progress</span>
+            </div>
+            <p class="roadmap-item-desc">Full support for the Exp. Share item.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-item-icon green">🎯</div>
+          <div class="roadmap-item-content">
+            <div class="roadmap-item-top">
+              <span class="roadmap-item-title">Increased Accuracy</span>
+              <span class="roadmap-badge later">Ongoing</span>
+            </div>
+            <p class="roadmap-item-desc">Continuous refinement of all data: wild Pokémon respawn timing, held item buffs, player KO formulas, Catch-Up Modifier verification on KOs. Community contributions from Mathcord are always welcome.</p>
+          </div>
+        </div>
+
+        <hr style="border-color:rgba(255,255,255,0.07);margin:4px 0">
+        <p style="color:var(--text-dim);font-size:0.78rem;line-height:1.55;">
+          Have an idea, data to share or found a bug? Open a ticket in the 
+          <a href="http://127.0.0.1:5501/feedback.html" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none;">Feedback part</a>
+          and contribute to the project!
+        </p>
+
       </div>
     </div>
   </div>
@@ -381,5 +692,19 @@
   <script src="./scripts/exp-calc/app.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
+  <script>
+    // Roadmap modal
+    document.getElementById('roadmapBtn').addEventListener('click', () => {
+      document.getElementById('roadmap-modal').style.display = 'flex';
+    });
+    document.getElementById('roadmap-close').addEventListener('click', () => {
+      document.getElementById('roadmap-modal').style.display = 'none';
+    });
+    document.getElementById('roadmap-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('roadmap-modal')) {
+        document.getElementById('roadmap-modal').style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
