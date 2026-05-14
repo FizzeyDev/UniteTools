@@ -36,7 +36,6 @@
     width: 100vw;
   }
 
-  /* ===== LEFT: DISPLAY PANEL ===== */
   #display-panel {
     flex: 0 0 480px;
     height: 100vh;
@@ -187,7 +186,6 @@
   }
   .clear-btn:hover { background: rgba(220,50,50,0.3); }
 
-  /* ===== RIGHT ===== */
   #list-panel {
     flex: 1;
     display: flex;
@@ -225,7 +223,6 @@
     transform: translateY(-50%); color: var(--text-dim); font-size: 13px;
   }
 
-  /* TEAM SELECTOR */
   .team-selector {
     padding: 10px 16px;
     display: flex;
@@ -265,7 +262,6 @@
   .team-btn.none-btn.active { background: rgba(255,255,255,0.07); opacity: 1; }
   .team-btn:hover { opacity: 0.9; }
 
-  /* Role tabs */
   .role-tabs {
     padding: 8px 16px 0;
     display: flex; gap: 6px;
@@ -312,7 +308,6 @@
     filter: brightness(1) saturate(1) !important;
     z-index: 5;
   }
-  /* Quand le pokémon est dans le display, on le grise dans la liste aussi */
   .pokemon-card.in-display {
     filter: brightness(0.28) saturate(0.15);
   }
@@ -425,11 +420,24 @@
 const POKEMON_DATA = [{"name":"Absol","name_fr":"Absol","file":"absol_spe.png","role":"spe"},{"name":"Aegislash","name_fr":"Exagide","file":"aegislash_all.png","role":"all"},{"name":"Alcremie","name_fr":"Charmilly","file":"alcreamie_sup.png","role":"sup"},{"name":"Armarouge","name_fr":"Carmadura","file":"armarouge_atk.png","role":"atk"},{"name":"Articuno","name_fr":"Artikodin","file":"articuno_def.png","role":"def"},{"name":"Azumarill","name_fr":"Azumarill","file":"azumarill_all.png","role":"all"},{"name":"Blaziken","name_fr":"Braségali","file":"blaziken_all.png","role":"all"},{"name":"Blastoise","name_fr":"Tortank","file":"blastoise_def.png","role":"def"},{"name":"Blissey","name_fr":"Leuphorie","file":"blissey_sup.png","role":"sup"},{"name":"Buzzwole","name_fr":"Mouscoto","file":"buzzwole_all.png","role":"all"},{"name":"Ceruledge","name_fr":"Malvalame","file":"ceruledge_all.png","role":"all"},{"name":"Chandelure","name_fr":"Lugulabre","file":"chandelure_atk.png","role":"atk"},{"name":"Charizard","name_fr":"Dracaufeu","file":"charizard_all.png","role":"all"},{"name":"Mega-Charizard X","name_fr":"Méga-Dracaufeu X","file":"mXcharizard_all.png","role":"all"},{"name":"Mega-Charizard Y","name_fr":"Méga-Dracaufeu Y","file":"mYcharizard_all.png","role":"all"},{"name":"Cinderace","name_fr":"Pyrobut","file":"cinderace_atk.png","role":"atk"},{"name":"Clefable","name_fr":"Mélodelfe","file":"clefable_sup.png","role":"sup"},{"name":"Comfey","name_fr":"Guérilande","file":"comfey_sup.png","role":"sup"},{"name":"Cramorant","name_fr":"Nigosier","file":"cramorant_atk.png","role":"atk"},{"name":"Crustle","name_fr":"Crabaraque","file":"crustle_def.png","role":"def"},{"name":"Darkrai","name_fr":"Darkrai","file":"darkrai_spe.png","role":"spe"},{"name":"Decidueye","name_fr":"Archéduc","file":"decidueye_atk.png","role":"atk"},{"name":"Delphox","name_fr":"Goupelin","file":"delphox_atk.png","role":"atk"},{"name":"Dhelmise","name_fr":"Sinistrail","file":"dhelmise_all.png","role":"all"},{"name":"Dodrio","name_fr":"Dodrio","file":"dodrio_spe.png","role":"spe"},{"name":"Dragapult","name_fr":"Lanssorien","file":"dragapult_atk.png","role":"atk"},{"name":"Dragonite","name_fr":"Dracolosse","file":"dragonite_all.png","role":"all"},{"name":"Duraludon","name_fr":"Duralugon","file":"duraludon_atk.png","role":"atk"},{"name":"Eldegoss","name_fr":"Blancoton","file":"eldegoss_sup.png","role":"sup"},{"name":"Empoleon","name_fr":"Pingoléon","file":"empoleon_all.png","role":"all"},{"name":"Espeon","name_fr":"Mentali","file":"espeon_atk.png","role":"atk"},{"name":"Falinks","name_fr":"Hexadron","file":"falinks_all.png","role":"all"},{"name":"Feraligatr","name_fr":"Aligatueur","file":"feraligatr_all.png","role":"all"},{"name":"Garchomp","name_fr":"Carchacrok","file":"garchomp_all.png","role":"all"},{"name":"Gardevoir","name_fr":"Gardevoir","file":"gardevoir_atk.png","role":"atk"},{"name":"Gengar","name_fr":"Ectoplasma","file":"gengar_spe.png","role":"spe"},{"name":"Glaceon","name_fr":"Givrali","file":"glaceon_atk.png","role":"atk"},{"name":"Goodra","name_fr":"Muplodocus","file":"goodra_def.png","role":"def"},{"name":"Greedent","name_fr":"Rongrigou","file":"greedent_def.png","role":"def"},{"name":"Greninja","name_fr":"Amphinobi","file":"greninja_atk.png","role":"atk"},{"name":"Gyarados","name_fr":"Léviator","file":"gyarados_all.png","role":"all"},{"name":"Mega-Gyarados","name_fr":"Méga-Léviator","file":"mgyarados_all.png","role":"all"},{"name":"Ho-Oh","name_fr":"Ho-Oh","file":"ho-oh_def.png","role":"def"},{"name":"Hoopa","name_fr":"Hoopa","file":"hoopa_sup.png","role":"sup"},{"name":"Inteleon","name_fr":"Lézargus","file":"inteleon_atk.png","role":"atk"},{"name":"Lapras","name_fr":"Lokhlass","file":"lapras_def.png","role":"def"},{"name":"Latias","name_fr":"Latias","file":"latias_sup.png","role":"sup"},{"name":"Latios","name_fr":"Latios","file":"latios_atk.png","role":"atk"},{"name":"Leafeon","name_fr":"Phyllali","file":"leafeon_spe.png","role":"spe"},{"name":"Lucario","name_fr":"Lucario","file":"lucario_all.png","role":"all"},{"name":"Mega-Lucario","name_fr":"Méga-Lucario","file":"mlucario_all.png","role":"all"},{"name":"Machamp","name_fr":"Mackogneur","file":"machamp_all.png","role":"all"},{"name":"Mamoswine","name_fr":"Mammochon","file":"mamoswine_def.png","role":"def"},{"name":"Meowscarada","name_fr":"Miascarade","file":"meowscarada_spe.png","role":"spe"},{"name":"Meowth","name_fr":"Miaouss","file":"meowth_spe.png","role":"spe"},{"name":"Metagross","name_fr":"Métalosse","file":"metagross_all.png","role":"all"},{"name":"Mewtwo X","name_fr":"Méga-Mewtwo X","file":"mewtwoX_all.png","role":"all"},{"name":"Mewtwo Y","name_fr":"Méga-Mewtwo Y","file":"mewtwoY_atk.png","role":"atk"},{"name":"Mew","name_fr":"Mew","file":"mew_atk.png","role":"atk"},{"name":"Mimikyu","name_fr":"Mimiqui","file":"mimikyu_all.png","role":"all"},{"name":"Miraidon","name_fr":"Miraidon","file":"miraidon_atk.png","role":"atk"},{"name":"Moltres","name_fr":"Sulfura","file":"moltres_all.png","role":"all"},{"name":"Mr. Mime","name_fr":"M. Mime","file":"mr.mime_sup.png","role":"sup"},{"name":"Ninetales","name_fr":"Feunard","file":"ninetales_atk.png","role":"atk"},{"name":"Pawmot","name_fr":"Pawmot","file":"pawmot_all.png","role":"all"},{"name":"Pikachu","name_fr":"Pikachu","file":"pikachu_atk.png","role":"atk"},{"name":"Psyduck","name_fr":"Psykokwak","file":"psyduck_sup.png","role":"sup"},{"name":"Raichu","name_fr":"Raichu","file":"raichu_atk.png","role":"atk"},{"name":"Rapidash","name_fr":"Galopa","file":"rapidash_spe.png","role":"spe"},{"name":"Sableye","name_fr":"Ténéfix","file":"sableye_sup.png","role":"sup"},{"name":"Scizor","name_fr":"Cizayox","file":"scizor_all.png","role":"all"},{"name":"Scyther","name_fr":"Insécateur","file":"scyther_spe.png","role":"all"},{"name":"Sirfetchd","name_fr":"Palarticho","file":"sirfetchd_all.png","role":"all"},{"name":"Slowbro","name_fr":"Flagadoss","file":"slowbro_def.png","role":"def"},{"name":"Snorlax","name_fr":"Ronflex","file":"snorlax_def.png","role":"def"},{"name":"Suicune","name_fr":"Suicune","file":"suicune_all.png","role":"all"},{"name":"Sylveon","name_fr":"Nymphali","file":"sylveon_atk.png","role":"atk"},{"name":"Talonflame","name_fr":"Flambusard","file":"talonflame_spe.png","role":"spe"},{"name":"Tinkaton","name_fr":"Forgelina","file":"tinkaton_all.png","role":"all"},{"name":"Trevenant","name_fr":"Desséliande","file":"trevenant_def.png","role":"def"},{"name":"Tsareena","name_fr":"Sucreine","file":"tsaarena_all.png","role":"all"},{"name":"Typhlosion","name_fr":"Typhlosion","file":"typhlosion_atk.png","role":"atk"},{"name":"Tyranitar","name_fr":"Tyranocif","file":"tyranitar_all.png","role":"all"},{"name":"Umbreon","name_fr":"Noctali","file":"umbreon_def.png","role":"def"},{"name":"Urshifu","name_fr":"Shifours","file":"urshifu_all.png","role":"all"},{"name":"Vaporeon","name_fr":"Aquali","file":"vaporeon_def.png","role":"def"},{"name":"Venusaur","name_fr":"Florizarre","file":"venusaur_atk.png","role":"atk"},{"name":"Wigglytuff","name_fr":"Grodoudou","file":"wigglytuff_sup.png","role":"sup"},{"name":"Zacian","name_fr":"Zacian","file":"zacian_all.png","role":"all"},{"name":"Zapdos","name_fr":"Électhor","file":"zapdos_atk.png","role":"atk"},{"name":"Zeraora","name_fr":"Zeraora","file":"zeraora_spe.png","role":"spe"},{"name":"Zoroark","name_fr":"Zoroark","file":"zoroark_spe.png","role":"spe"}];
 
 const IMG_BASE = 'assets/pokemon/';
+const LS_KEY = 'unite_tracker_picks';
 let picks = []; // [{ file, team }]
 let activeMode = null;
 let roleFilter = 'all';
-const bc = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('unite_tracker') : null;
 
+// ===== LOCALSTORAGE SYNC =====
+function saveState() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(picks)); } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) picks = JSON.parse(raw);
+  } catch(e) { picks = []; }
+}
+
+// ===== MODE TEAM =====
 function setMode(mode) {
   activeMode = mode;
   document.getElementById('btnOrange').classList.toggle('active', mode === 'orange');
@@ -437,32 +445,31 @@ function setMode(mode) {
   document.getElementById('btnNone').classList.toggle('active', mode === null);
 }
 
+// ===== CLIC POKÉMON =====
 function onCardClick(file) {
   const idx = picks.findIndex(p => p.file === file);
-  if (idx !== -1) {
-    picks.splice(idx, 1);
-  } else {
-    picks.push({ file, team: activeMode });
-  }
+  if (idx !== -1) picks.splice(idx, 1);
+  else picks.push({ file, team: activeMode });
+  saveState();
   renderDisplay();
   renderList();
-  if (bc) bc.postMessage({ picks });
 }
 
 function removePick(file) {
   picks = picks.filter(p => p.file !== file);
+  saveState();
   renderDisplay();
   renderList();
-  if (bc) bc.postMessage({ picks });
 }
 
 function clearAll() {
   picks = [];
+  saveState();
   renderDisplay();
   renderList();
-  if (bc) bc.postMessage({ picks });
 }
 
+// ===== RENDER DISPLAY =====
 function renderDisplay() {
   const grid = document.getElementById('displayGrid');
   grid.innerHTML = '';
@@ -494,6 +501,7 @@ function renderDisplay() {
   });
 }
 
+// ===== RENDER LIST =====
 function renderList() {
   const grid = document.getElementById('pokemonGrid');
   const search = document.getElementById('searchInput').value.toLowerCase();
@@ -527,6 +535,7 @@ function setRole(el, role) {
   renderList();
 }
 
+// ===== OBS =====
 function openOverlay() {
   const url = window.location.href.split('?')[0] + '?overlay=true';
   window.open(url, '_blank', 'width=700,height=200,resizable=yes,scrollbars=no');
@@ -545,8 +554,12 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3500);
 }
 
+// ===== OVERLAY MODE =====
+// Le navigateur interne d'OBS a son propre localStorage isolé du vrai navigateur.
+// Solution : l'overlay relit localStorage toutes les 500ms (polling).
 function checkOverlayMode() {
   if (new URLSearchParams(window.location.search).get('overlay') !== 'true') return;
+
   document.body.classList.add('overlay-mode');
   document.body.style.background = 'transparent';
 
@@ -554,9 +567,9 @@ function checkOverlayMode() {
   div.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:transparent;align-content:flex-start;';
   document.body.appendChild(div);
 
-  function render(picks) {
+  function render(data) {
     div.innerHTML = '';
-    (picks || []).forEach(({ file, team }) => {
+    (data || []).forEach(({ file, team }) => {
       const wrap = document.createElement('div');
       wrap.style.cssText = 'position:relative;width:80px;height:80px;flex-shrink:0;';
       const img = document.createElement('img');
@@ -573,9 +586,21 @@ function checkOverlayMode() {
     });
   }
 
-  if (bc) bc.onmessage = e => render(e.data.picks);
+  // Polling localStorage toutes les 500ms
+  let lastRaw = null;
+  setInterval(() => {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (raw !== lastRaw) {
+        lastRaw = raw;
+        render(raw ? JSON.parse(raw) : []);
+      }
+    } catch(e) {}
+  }, 500);
 }
 
+// ===== INIT =====
+loadState();
 checkOverlayMode();
 renderDisplay();
 renderList();
