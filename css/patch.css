@@ -28,24 +28,49 @@
   /* Alias patch-spécifiques → variables projet */
   --accent:       var(--violet);
   --accent-glow:  var(--violet-dim);
-  --buff:         #4caf82;
-  --buff-bg:      rgba(76,175,130,0.13);
-  --nerf:         #ef5350;
-  --nerf-bg:      rgba(239,83,80,0.13);
-  --tweak:        #ffd740;
-  --tweak-bg:     rgba(255,215,64,0.13);
+  --buff:         var(--green);
+  --buff-bg:      var(--green-dim);
+  --nerf:         var(--red);
+  --nerf-bg:      var(--red-dim);
+  --tweak:        var(--yellow);
+  --tweak-bg:     var(--yellow-dim);
 }
 
-html, body {
+/* ─── BODY — aligné sur navbar.css ──────────────────────────────────────────
+   navbar.css gère margin-left (250px / 54px / 0).
+   patch.css ne redéfinit PAS margin-left sur html/body pour éviter les conflits.
+   On garde uniquement le fond, la font et le padding.
+────────────────────────────────────────────────────────────────────────────── */
+html {
   font-family: 'Rajdhani', sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
+}
+
+body {
+  /* NE PAS redéfinir margin-left ici : c'est navbar.css qui le contrôle */
   padding: 2rem 2rem 4rem;
-  margin-left: 250px;
   transition: margin-left 0.3s ease;
 }
-body.sidebar-collapsed { margin-left: 0; }
+
+/* Fallback si navbar.css absent — identique aux classes de navbar.css */
+body:not(.sidebar-hidden) {
+  /* la navbar.css applique margin-left:250px sur body sans classe */
+}
+
+/* Subtle grid bg */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(79,195,247,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,195,247,0.018) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
 
 /* ─── SCROLLBAR ─────────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar              { width: 5px; }
@@ -661,14 +686,23 @@ body.sidebar-collapsed { margin-left: 0; }
 }
 
 /* ─── RESPONSIVE ─────────────────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  body { padding: 1rem 0.75rem 2rem; }
+}
+
 @media (max-width: 768px) {
-  body { margin-left: 0; padding: 1rem 0.75rem 2rem; }
+  body { padding: 3.5rem 0.75rem 2rem; }
 }
 
 @media (max-width: 540px) {
-  .wrap        { padding: 0.5rem 0 3rem; }
-  .m-stats     { grid-template-columns: repeat(2, 1fr); }
-  .poke-grid   { grid-template-columns: 1fr; }
-  .stats       { gap: 8px; }
-  .stat-card   { min-width: calc(50% - 5px); }
+  .wrap      { padding: 0.5rem 0 3rem; }
+  .m-stats   { grid-template-columns: repeat(2, 1fr); }
+  .poke-grid { grid-template-columns: 1fr; }
+  .stats     { gap: 8px; }
+  .stat-card { min-width: calc(50% - 5px); }
+
+  .patch-pills .pill { display: none; }
+  .patch-pills .pill:first-child { display: inline-block; }
+
+  .timeline-title { flex-direction: column; align-items: flex-start; gap: 6px; }
 }
