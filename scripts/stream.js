@@ -524,6 +524,7 @@ function initPicksOverlay() {
 function initBansOverlay() {
   document.body.classList.add('overlay-mode');
   document.body.style.background = 'transparent';
+  document.body.style.backgroundColor = 'transparent';
 
   const root = document.createElement('div');
   root.id = 'bans-overlay-root';
@@ -556,7 +557,7 @@ function initBansOverlay() {
         const banEntry = teamBans[i];
         const slot = document.createElement('div');
         const isNext = (nextTeam === team && i === teamBans.length);
-        slot.className = `bans-overlay-slot ${team}${isNext ? ' next' : ''}`;
+        slot.className = `bans-overlay-slot ${team}${isNext ? ' next' : ''}${banEntry ? ' filled' : ''}`;
 
         if (banEntry) {
           const pokeImg = document.createElement('img');
@@ -570,6 +571,17 @@ function initBansOverlay() {
 
           slot.appendChild(pokeImg);
           slot.appendChild(missingImg);
+
+          // Couleur selon l'équipe
+          if (team === 'purple') {
+            slot.style.borderColor = 'var(--violet)';
+            slot.style.background = 'rgba(159,83,236,0.18)';
+            slot.style.boxShadow = '0 0 12px rgba(159,83,236,0.5)';
+          } else {
+            slot.style.borderColor = 'var(--orange)';
+            slot.style.background = 'rgba(255,157,0,0.14)';
+            slot.style.boxShadow = '0 0 12px rgba(255,157,0,0.5)';
+          }
         }
 
         slotsWrap.appendChild(slot);

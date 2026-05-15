@@ -1136,7 +1136,7 @@ body.overlay-mode #app { display: none; }
   width: 100%; height: 100%;
   object-fit: cover;
   display: block;
-  filter: grayscale(0.5) brightness(0.45);
+  filter: grayscale(0.2) brightness(0.65);
 }
 .bans-overlay-slot .slot-missing-img {
   position: absolute;
@@ -1146,6 +1146,26 @@ body.overlay-mode #app { display: none; }
   display: block;
   z-index: 2;
   opacity: 0.7;
+}
+
+body.overlay-mode {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+#bans-overlay-root {
+  background: transparent !important;
+}
+
+.bans-overlay-slot.purple {
+  border-color: var(--violet);
+  background: rgba(159,83,236,0.25);
+  box-shadow: 0 0 14px rgba(159,83,236,0.5);
+}
+.bans-overlay-slot.orange {
+  border-color: var(--orange);
+  background: rgba(255,157,0,0.2);
+  box-shadow: 0 0 14px rgba(255,157,0,0.5);
 }
 
 /* Active (next-to-ban) glow on overlay */
