@@ -487,11 +487,7 @@ function initPicksOverlay() {
   picksRow.id = 'overlay-picks-row';
   root.appendChild(picksRow);
 
-  const mapBar = document.createElement('div');
-  mapBar.id = 'overlay-map-bar';
-  root.appendChild(mapBar);
-
-  function renderOverlay(picksData, mapData) {
+  function renderOverlay(picksData) {
     picksRow.innerHTML = '';
     (picksData || []).forEach(({ file, team }) => {
       const wrap = document.createElement('div');
@@ -508,62 +504,20 @@ function initPicksOverlay() {
       wrap.appendChild(ring);
       picksRow.appendChild(wrap);
     });
-
-    mapBar.innerHTML = '';
-    MAPS.forEach((m) => {
-      const isActive = mapData === m.id;
-      const item = document.createElement('div');
-      item.className = 'overlay-map-item ' + m.id + (isActive ? ' active' : '');
-
-      const imgSrc = isActive ? MAP_BASE_GIF + m.id + '.gif' : MAP_BASE_SPAWN + m.id + '.png';
-      const img = document.createElement('img');
-      img.className = 'overlay-map-img';
-      img.src = imgSrc;
-      img.alt = m.label;
-      img.onerror = function() {
-        if (isActive && this.src.includes('.gif')) {
-          this.src = MAP_BASE_SPAWN + m.id + '.png';
-        } else {
-          this.style.display = 'none';
-          const ph = document.createElement('div');
-          ph.className = 'overlay-map-placeholder';
-          ph.textContent = m.emoji;
-          item.insertBefore(ph, item.firstChild);
-        }
-      };
-
-      const badge = document.createElement('div');
-      badge.className = 'overlay-map-badge';
-      badge.textContent = 'SELECTED';
-
-      const name = document.createElement('div');
-      name.className = 'overlay-map-name';
-      name.textContent = m.label.toUpperCase();
-
-      item.appendChild(img);
-      item.appendChild(badge);
-      item.appendChild(name);
-      mapBar.appendChild(item);
-    });
-
-    mapBar.style.display = (mapData || (picksData && picksData.length > 0)) ? 'flex' : 'none';
   }
 
   let lastRaw = null;
-  let lastMap = null;
   setInterval(() => {
     try {
-      const raw    = localStorage.getItem(LS_KEY);
-      const rawMap = localStorage.getItem(LS_MAP_KEY) || '';
-      if (raw !== lastRaw || rawMap !== lastMap) {
+      const raw = localStorage.getItem(LS_KEY);
+      if (raw !== lastRaw) {
         lastRaw = raw;
-        lastMap = rawMap;
-        renderOverlay(raw ? JSON.parse(raw) : [], rawMap || null);
+        renderOverlay(raw ? JSON.parse(raw) : []);
       }
     } catch(e) {}
   }, 500);
 
-  renderOverlay([], null);
+  renderOverlay([]);
 }
 
 // ===== OVERLAY MODE (bans) =====

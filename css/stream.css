@@ -1103,13 +1103,13 @@ body.overlay-mode #app { display: none; }
   display: flex;
   align-items: stretch;
   gap: 0;
-  background: rgba(5, 10, 12, 0.92);
+  background: transparent;
   border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.10);
-  backdrop-filter: blur(8px);
+  border: none;
+  backdrop-filter: none;
   width: fit-content;
   overflow: hidden;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.06) inset;
+  box-shadow: none;
   margin: 4px;
 }
 
