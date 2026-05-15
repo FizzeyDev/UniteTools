@@ -27,6 +27,27 @@
       "notes": "Shop update, Event update, Bug fixes, Text fixes"
     },
     {
+      "version": "1.22.1.8",
+      "name": "Long-Range Tactics Part 2",
+      "date": "2026-03-19",
+      "buffs": [
+        "Chandelure",
+        "Dragapult",
+        "Dragonite",
+        "Suicune",
+        "Venusaur"
+      ],
+      "nerfs": [
+        "Sirfetchd",
+        "Mega-Lucario",
+        "Meowth",
+        "Vaporeon",
+        "Zapdos"
+      ],
+      "tweaks": [],
+      "notes": "Shop update, Event update, Bug fixes, Text fixes"
+    },
+    {
       "version": "1.22.1.9",
       "name": "Revival Stars",
       "date": "2026-04-16",
