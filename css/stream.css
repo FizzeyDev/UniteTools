@@ -76,6 +76,43 @@ body.overlay-mode #app { display: none; }
   flex-direction: column;
   background: linear-gradient(160deg, var(--surface-2) 0%, var(--surface) 100%);
   border-right: 1px solid var(--border-md);
+  /* No min-width cap — resizable */
+  min-width: 160px;
+}
+
+/* ===== RESIZABLE DIVIDER ===== */
+/* CHANGE 3: cursor + visual indicator for the draggable divider */
+#panel-divider {
+  width: 6px;
+  height: 100vh;
+  background: var(--border);
+  cursor: col-resize;
+  flex-shrink: 0;
+  position: relative;
+  transition: background 0.15s;
+  z-index: 10;
+}
+#panel-divider:hover,
+#panel-divider:active {
+  background: rgba(79,195,247,0.35);
+}
+/* Grippy dots */
+#panel-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px;
+  height: 40px;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(79,195,247,0.5) 0px,
+    rgba(79,195,247,0.5) 3px,
+    transparent 3px,
+    transparent 7px
+  );
+  border-radius: 1px;
 }
 
 .panel-header {
@@ -486,6 +523,7 @@ body.overlay-mode #app { display: none; }
   flex-direction: column;
   background: var(--surface);
   overflow: hidden;
+  min-width: 200px;
 }
 
 .list-header {
@@ -678,7 +716,32 @@ body.overlay-mode #app { display: none; }
   opacity: 0.85;
 }
 
-/* Ban mode card states */
+/* ===== CHANGE 1: Bans tab — colored banned cards instead of greyed ===== */
+.pokemon-card.banned-purple-colored {
+  filter: none !important;
+  border-color: var(--violet) !important;
+  box-shadow: 0 0 12px rgba(159,83,236,0.45), inset 0 0 18px rgba(159,83,236,0.12) !important;
+  background: rgba(159,83,236,0.1) !important;
+}
+.pokemon-card.banned-orange-colored {
+  filter: none !important;
+  border-color: var(--orange) !important;
+  box-shadow: 0 0 12px rgba(255,157,0,0.45), inset 0 0 18px rgba(255,157,0,0.12) !important;
+  background: rgba(255,157,0,0.08) !important;
+}
+/* Hover override — keep colored, just brighten slightly */
+.pokemon-card.banned-purple-colored:hover {
+  filter: brightness(1.1) !important;
+  transform: none !important;
+  cursor: default;
+}
+.pokemon-card.banned-orange-colored:hover {
+  filter: brightness(1.1) !important;
+  transform: none !important;
+  cursor: default;
+}
+
+/* Keep old grey classes for backwards-compat (no longer assigned but harmless) */
 .pokemon-card.banned-purple {
   filter: brightness(0.2) saturate(0.1) !important;
   border-color: rgba(159,83,236,0.3) !important;
@@ -687,8 +750,16 @@ body.overlay-mode #app { display: none; }
   filter: brightness(0.2) saturate(0.1) !important;
   border-color: rgba(255,157,0,0.3) !important;
 }
+
+/* ===== CHANGE 5: Fearless ban-mode — less dark for already-picked cards ===== */
+/* was brightness(0.18) saturate(0.08) — now slightly lighter */
 .pokemon-card.in-picks-ban-mode {
-  filter: brightness(0.18) saturate(0.08) !important;
+  filter: brightness(0.35) saturate(0.2) !important;
+}
+.pokemon-card.in-picks-ban-mode:hover {
+  filter: brightness(0.35) saturate(0.2) !important;
+  transform: none !important;
+  cursor: not-allowed;
 }
 
 /* Team selector */
@@ -790,15 +861,6 @@ body.overlay-mode #app { display: none; }
   border-color: rgba(255,215,64,0.45);
   box-shadow: 0 6px 18px rgba(0,0,0,0.5);
   z-index: 5;
-}
-
-/* In ban mode, don't brighten banned/picked cards on hover */
-.pokemon-card.banned-purple:hover,
-.pokemon-card.banned-orange:hover,
-.pokemon-card.in-picks-ban-mode:hover {
-  filter: brightness(0.2) saturate(0.1) !important;
-  transform: none !important;
-  cursor: not-allowed;
 }
 
 .pokemon-card.in-display {
@@ -1098,7 +1160,7 @@ body.overlay-mode #app { display: none; }
   animation: pulseOrange 1.5s ease-in-out infinite;
 }
 
-/* ===== UNITE-STYLE MAP BAR ===== */
+/* ===== CHANGE 4: MAP OVERLAY — active centered, inactive greyed but visible ===== */
 #overlay-map-bar {
   display: flex;
   align-items: stretch;
@@ -1113,7 +1175,7 @@ body.overlay-mode #app { display: none; }
   margin: 4px;
 }
 
-/* Each map card — inspired by UNITE draft tiles */
+/* Each map card */
 .overlay-map-item {
   position: relative;
   display: flex;
@@ -1125,18 +1187,19 @@ body.overlay-mode #app { display: none; }
   overflow: hidden;
   cursor: default;
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  opacity: 0.28;
-  filter: grayscale(0.8) brightness(0.5);
+  /* CHANGE 4: was opacity:0.28 — now much more visible */
+  opacity: 0.62;
+  filter: grayscale(0.55) brightness(0.7);
 }
 
-/* Inactive → shrink slightly */
+/* Inactive tiles — visible but clearly secondary */
 .overlay-map-item:not(.active) {
   width: 72px;
-  opacity: 0.28;
-  filter: grayscale(0.8) brightness(0.45);
+  opacity: 0.62;
+  filter: grayscale(0.55) brightness(0.7);
 }
 
-/* Active card expands + glows */
+/* Active card expands + full color */
 .overlay-map-item.active {
   width: 140px;
   opacity: 1;
@@ -1148,7 +1211,7 @@ body.overlay-mode #app { display: none; }
   border-left: 1px solid rgba(255,255,255,0.07);
 }
 
-/* Map background image — contain so the full sprite is visible */
+/* Map background image */
 .overlay-map-img {
   position: absolute;
   inset: 0;
@@ -1160,7 +1223,7 @@ body.overlay-mode #app { display: none; }
   padding: 4px 4px 22px;
 }
 
-/* Dark gradient so text stays legible */
+/* Dark gradient for text legibility */
 .overlay-map-item::after {
   content: '';
   position: absolute;
@@ -1204,7 +1267,7 @@ body.overlay-mode #app { display: none; }
   z-index: 3;
 }
 
-/* "SELECTED" chevron badge on active card */
+/* "SELECTED" badge */
 .overlay-map-item.active .overlay-map-badge {
   display: flex;
 }
@@ -1238,7 +1301,7 @@ body.overlay-mode #app { display: none; }
   letter-spacing: 0.12em;
   text-transform: uppercase;
   padding-bottom: 7px;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.7); /* CHANGE 4: was 0.5, now more visible on inactive */
   transition: color 0.3s, font-size 0.35s;
   text-shadow: 0 1px 4px rgba(0,0,0,0.9);
   white-space: nowrap;

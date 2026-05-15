@@ -69,7 +69,6 @@ const POKEMON_DATA = [
   {"name":"Rapidash","name_fr":"Galopa","file":"rapidash_spe.png","role":"spe"},
   {"name":"Sableye","name_fr":"Ténéfix","file":"sableye_sup.png","role":"sup"},
   {"name":"Scizor","name_fr":"Cizayox","file":"scizor_all.png","role":"all"},
-  {"name":"Scyther","name_fr":"Insécateur","file":"scyther_spe.png","role":"all"},
   {"name":"Sirfetchd","name_fr":"Palarticho","file":"sirfetchd_all.png","role":"all"},
   {"name":"Slowbro","name_fr":"Flagadoss","file":"slowbro_def.png","role":"def"},
   {"name":"Snorlax","name_fr":"Ronflex","file":"snorlax_def.png","role":"def"},
@@ -387,7 +386,8 @@ function renderList() {
       card.className = 'pokemon-card' + (inDisplay ? ' in-display' : '');
     } else {
       if (banEntry) {
-        card.className = `pokemon-card banned-${banEntry.team}`;
+        // MODIF: colored ban cards instead of greyed
+        card.className = `pokemon-card banned-${banEntry.team}-colored`;
       } else if (inDisplay) {
         card.className = 'pokemon-card in-picks-ban-mode';
       } else {
@@ -599,7 +599,7 @@ function initBansOverlay() {
   renderBansOverlay([], 'purple');
 }
 
-// ===== OVERLAY MODE (maps only) — NEW =====
+// ===== OVERLAY MODE (maps only) =====
 function initMapsOverlay() {
   document.body.classList.add('overlay-mode');
   document.body.style.background = 'transparent';
@@ -608,7 +608,6 @@ function initMapsOverlay() {
   root.id = 'map-overlay-root';
   document.body.appendChild(root);
 
-  // Reuse the same overlay-map-bar HTML structure
   const mapBar = document.createElement('div');
   mapBar.id = 'overlay-map-bar';
   root.appendChild(mapBar);
@@ -616,12 +615,22 @@ function initMapsOverlay() {
   function renderMapOverlay(mapData) {
     mapBar.innerHTML = '';
 
-    MAPS.forEach((m) => {
+    // MODIF: always show selected map centered, others greyed but visible
+    // Sort: active map in center position (index 1 of 3)
+    const sortedMaps = [...MAPS];
+    if (mapData) {
+      const activeIdx = sortedMaps.findIndex(m => m.id === mapData);
+      if (activeIdx !== -1) {
+        const [active] = sortedMaps.splice(activeIdx, 1);
+        sortedMaps.splice(1, 0, active); // insert at center
+      }
+    }
+
+    sortedMaps.forEach((m) => {
       const isActive = mapData === m.id;
       const item = document.createElement('div');
       item.className = 'overlay-map-item ' + m.id + (isActive ? ' active' : '');
 
-      // Use GIF for active map, static spawn for others
       const imgSrc = isActive ? MAP_BASE_GIF + m.id + '.gif' : MAP_BASE_SPAWN + m.id + '.png';
       const img = document.createElement('img');
       img.className = 'overlay-map-img';
@@ -653,7 +662,7 @@ function initMapsOverlay() {
       mapBar.appendChild(item);
     });
 
-    // Hide the whole bar if no map selected
+    // Hide if no map selected
     mapBar.style.display = mapData ? 'flex' : 'none';
   }
 
@@ -680,6 +689,42 @@ function checkOverlayMode() {
   return false;
 }
 
+// ===== RESIZABLE PANEL DIVIDER =====
+function initResizableDivider() {
+  const divider = document.getElementById('panel-divider');
+  const displayPanel = document.getElementById('display-panel');
+  if (!divider || !displayPanel) return;
+
+  let isDragging = false;
+  let startX = 0;
+  let startWidth = 0;
+
+  divider.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.clientX;
+    startWidth = displayPanel.offsetWidth;
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const delta = e.clientX - startX;
+    const newWidth = Math.max(200, startWidth + delta); // no min cap on max
+    displayPanel.style.flex = 'none';
+    displayPanel.style.width = newWidth + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    }
+  });
+}
+
 // ===== INIT =====
 loadState();
 if (!checkOverlayMode()) {
@@ -690,4 +735,5 @@ if (!checkOverlayMode()) {
   renderMapButtons();
   document.getElementById('btnBanPurpleFirst').classList.toggle('active', banFirstTeam === 'purple');
   document.getElementById('btnBanOrangeFirst').classList.toggle('active', banFirstTeam === 'orange');
+  initResizableDivider();
 }
