@@ -6,6 +6,30 @@
   <title>UNITE Draft Tracker</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./css/stream.css">
+  <style>
+    /* ===== FIX: transparent corners on display slots ===== */
+    /* The slot itself must have no background so rounded corners don't show black */
+    .display-slot {
+      background: transparent;
+    }
+    .display-slot img {
+      background: transparent;
+    }
+    /* Remove background from pokemon cards too so corners are transparent */
+    .display-slot img {
+      /* Force transparent corners by removing any background fill */
+      background-color: transparent !important;
+    }
+
+    /* ===== MAP OVERLAY root style ===== */
+    #map-overlay-root {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 8px;
+      background: transparent;
+    }
+  </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
   <script>
@@ -91,7 +115,7 @@
     <div class="obs-bar">
       <button class="obs-btn" onclick="openOverlay()">📺 PICKS OBS</button>
       <button class="obs-btn" onclick="openBansOverlay()">⛔ BANS OBS</button>
-      <button class="obs-btn" onclick="copyBansOverlayURL()" style="font-size:10px">📋 URL BANS</button>
+      <button class="obs-btn" onclick="openMapsOverlay()">🗺️ MAP OBS</button>
       <button class="clear-btn" onclick="clearAll()">✕ VIDER</button>
     </div>
   </div>
@@ -211,7 +235,7 @@
           <div class="step-num">4</div>
           <div class="step-content">
             <h4>Choisir la map</h4>
-            <p>Sélectionne la map du match en bas du panneau gauche : <span class="highlight" style="color:#4caf82">Rayquaza</span>, <span class="highlight" style="color:#ff7043">Groudon</span> ou <span class="highlight" style="color:#4fc3f7">Kyogre</span>.</p>
+            <p>Sélectionne la map du match en bas du panneau gauche : <span class="highlight" style="color:#4caf82">Rayquaza</span>, <span class="highlight" style="color:#ff7043">Groudon</span> ou <span class="highlight" style="color:#4fc3f7">Kyogre</span>. La map sélectionnée s'affiche automatiquement dans l'<strong>Overlay Map</strong> dédiée, indépendamment des picks et des bans.</p>
           </div>
         </div>
 
@@ -220,12 +244,21 @@
         <div class="setup-step">
           <div class="step-num">5</div>
           <div class="step-content">
-            <h4>Configurer dans OBS (3 sources)</h4>
-            <p>Tu dois créer <strong>trois sources Navigateur</strong> :</p>
+            <h4>Configurer dans OBS — 4 sources Browser</h4>
+            <p>Tu dois créer <strong>quatre sources Navigateur (Browser Source)</strong> dans OBS :</p>
             <ul>
-              <li><strong>Controller</strong> → <span class="highlight">https://unite-tools.com/stream.html</span></li>
-              <li><strong>Overlay Picks</strong> → <span class="highlight">https://unite-tools.com/stream.html?overlay=true</span></li>
-              <li><strong>Overlay Bans</strong> → <span class="highlight">https://unite-tools.com/stream.html?overlay=bans</span></li>
+              <li><strong>Controller</strong> — la fenêtre de contrôle principale (à garder ouverte mais hors stream) :<br>
+                <div class="code-block">https://unite-tools.com/stream.html</div>
+              </li>
+              <li><strong>Overlay Picks</strong> — affiche les Pokémon sélectionnés par chaque team :<br>
+                <div class="code-block">https://unite-tools.com/stream.html?overlay=true</div>
+              </li>
+              <li><strong>Overlay Bans</strong> — affiche les 6 bans (3 par team) :<br>
+                <div class="code-block">https://unite-tools.com/stream.html?overlay=bans</div>
+              </li>
+              <li><strong>Overlay Map</strong> — affiche uniquement la map sélectionnée, idéal pour la placer séparément sur la scène OBS :<br>
+                <div class="code-block">https://unite-tools.com/stream.html?overlay=maps</div>
+              </li>
             </ul>
           </div>
         </div>
@@ -233,17 +266,26 @@
         <div class="setup-step">
           <div class="step-num">6</div>
           <div class="step-content">
-            <h4>Dimensions recommandées</h4>
+            <h4>Dimensions recommandées pour chaque source</h4>
             <p>
-              • <strong>Controller</strong> : largeur ~460px, hauteur ~700px<br>
-              • <strong>Overlay Picks</strong> : largeur ~750px, hauteur ~220px<br>
-              • <strong>Overlay Bans</strong> : largeur ~580px, hauteur ~180px
+              • <strong>Controller</strong> : ~460 × 700 px (pas dans le stream)<br>
+              • <strong>Overlay Picks</strong> : ~750 × 220 px<br>
+              • <strong>Overlay Bans</strong> : ~580 × 180 px<br>
+              • <strong>Overlay Map</strong> : ~380 × 120 px
             </p>
           </div>
         </div>
 
+        <div class="setup-step">
+          <div class="step-num">7</div>
+          <div class="step-content">
+            <h4>Activer le fond transparent dans OBS</h4>
+            <p>Pour chaque Browser Source, coche l'option <strong>"Supprimer la couleur d'arrière-plan"</strong> (ou <em>Custom CSS</em> : <code>body { background-color: rgba(0,0,0,0) !important; }</code>) afin que les overlays s'intègrent proprement par-dessus ta scène de stream.</p>
+          </div>
+        </div>
+
         <div class="tip-box">
-          <strong>💡 Astuce :</strong> Les deux overlays se mettent à jour automatiquement (~500ms). Le bouton <strong>✕ VIDER</strong> réinitialise picks ET bans. Pour vider uniquement les bans, clique sur le × de chaque slot ou utilise le bouton dans l'onglet Bans (à venir).
+          <strong>💡 Astuce :</strong> Les boutons <strong>📺 PICKS OBS</strong>, <strong>⛔ BANS OBS</strong> et <strong>🗺️ MAP OBS</strong> ouvrent directement la fenêtre overlay dans les bonnes dimensions. Tu peux aussi copier l'URL manuellement avec <strong>📋 URL BANS</strong> pour la coller dans OBS. Le bouton <strong>✕ VIDER</strong> réinitialise tout (picks, bans et map).
         </div>
       </div>
 
@@ -278,7 +320,7 @@
           <div class="step-num">4</div>
           <div class="step-content">
             <h4>Select the map</h4>
-            <p>Choose the match map at the bottom of the left panel: <span class="highlight" style="color:#4caf82">Rayquaza</span>, <span class="highlight" style="color:#ff7043">Groudon</span> or <span class="highlight" style="color:#4fc3f7">Kyogre</span>.</p>
+            <p>Choose the match map at the bottom of the left panel: <span class="highlight" style="color:#4caf82">Rayquaza</span>, <span class="highlight" style="color:#ff7043">Groudon</span> or <span class="highlight" style="color:#4fc3f7">Kyogre</span>. The selected map is shown in its own dedicated <strong>Map Overlay</strong>, independently from picks and bans.</p>
           </div>
         </div>
 
@@ -287,12 +329,21 @@
         <div class="setup-step">
           <div class="step-num">5</div>
           <div class="step-content">
-            <h4>Setup in OBS (3 Browser Sources)</h4>
-            <p>You need to create <strong>three Browser Sources</strong>:</p>
+            <h4>Setup in OBS — 4 Browser Sources</h4>
+            <p>You need to create <strong>four Browser Sources</strong> in OBS:</p>
             <ul>
-              <li><strong>Controller</strong> → <span class="highlight">https://unite-tools.com/stream.html</span></li>
-              <li><strong>Picks Overlay</strong> → <span class="highlight">https://unite-tools.com/stream.html?overlay=true</span></li>
-              <li><strong>Bans Overlay</strong> → <span class="highlight">https://unite-tools.com/stream.html?overlay=bans</span></li>
+              <li><strong>Controller</strong> — the main control window (keep open, but off-stream):<br>
+                <div class="code-block">https://unite-tools.com/stream.html</div>
+              </li>
+              <li><strong>Picks Overlay</strong> — shows each team's selected Pokémon:<br>
+                <div class="code-block">https://unite-tools.com/stream.html?overlay=true</div>
+              </li>
+              <li><strong>Bans Overlay</strong> — shows all 6 bans (3 per team):<br>
+                <div class="code-block">https://unite-tools.com/stream.html?overlay=bans</div>
+              </li>
+              <li><strong>Map Overlay</strong> — shows only the selected map, great for placing it anywhere on your OBS scene independently:<br>
+                <div class="code-block">https://unite-tools.com/stream.html?overlay=maps</div>
+              </li>
             </ul>
           </div>
         </div>
@@ -300,17 +351,26 @@
         <div class="setup-step">
           <div class="step-num">6</div>
           <div class="step-content">
-            <h4>Recommended size</h4>
+            <h4>Recommended dimensions per source</h4>
             <p>
-              • <strong>Controller</strong>: width ~460px, height ~700px<br>
-              • <strong>Picks Overlay</strong>: width ~750px, height ~220px<br>
-              • <strong>Bans Overlay</strong>: width ~580px, height ~180px
+              • <strong>Controller</strong>: ~460 × 700 px (not in stream)<br>
+              • <strong>Picks Overlay</strong>: ~750 × 220 px<br>
+              • <strong>Bans Overlay</strong>: ~580 × 180 px<br>
+              • <strong>Map Overlay</strong>: ~380 × 120 px
             </p>
           </div>
         </div>
 
+        <div class="setup-step">
+          <div class="step-num">7</div>
+          <div class="step-content">
+            <h4>Enable transparent background in OBS</h4>
+            <p>For each Browser Source, check <strong>"Remove background color"</strong> (or add Custom CSS: <code>body { background-color: rgba(0,0,0,0) !important; }</code>) so the overlays blend cleanly over your stream scene.</p>
+          </div>
+        </div>
+
         <div class="tip-box">
-          <strong>💡 Tip:</strong> Both overlays update automatically (~500ms). The <strong>✕ CLEAR</strong> button resets picks AND bans. To clear only bans, click the × on each slot.
+          <strong>💡 Tip:</strong> The <strong>📺 PICKS OBS</strong>, <strong>⛔ BANS OBS</strong> and <strong>🗺️ MAP OBS</strong> buttons open each overlay window at the right size. You can also copy URLs manually. The <strong>✕ CLEAR</strong> button resets everything (picks, bans and map).
         </div>
       </div>
 

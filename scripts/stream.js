@@ -95,12 +95,11 @@ const POKEMON_DATA = [
 const IMG_BASE       = 'https://fizzeydev.github.io/UniteTools/assets/pokemon/';
 const MAP_BASE_SPAWN = 'https://fizzeydev.github.io/UniteTools/assets/maps/spawn/';
 const MAP_BASE_GIF   = 'https://fizzeydev.github.io/UniteTools/assets/maps/gifs/';
-// missing.png path — served from same folder as the HTML
 const MISSING_IMG    = './assets/pokemon/missing.png';
 
-const LS_KEY         = 'unite_tracker_picks';
-const LS_MAP_KEY     = 'unite_tracker_map';
-const LS_BANS_KEY    = 'unite_tracker_bans';
+const LS_KEY          = 'unite_tracker_picks';
+const LS_MAP_KEY      = 'unite_tracker_map';
+const LS_BANS_KEY     = 'unite_tracker_bans';
 const LS_BAN_MODE_KEY = 'unite_tracker_ban_mode';
 
 const MAPS = [
@@ -109,38 +108,27 @@ const MAPS = [
   { id: 'kyogre',   label: 'Kyogre',   emoji: '💧', color: '#4fc3f7' },
 ];
 
-// Ban order for 6 slots: [purple, orange, purple, orange, purple, orange]
-// banFirstTeam = 'purple' or 'orange' determines who bans slot 0
 const BAN_SEQUENCE_TEMPLATE = ['purple','orange','purple','orange','purple','orange'];
 
-let picks       = [];
-let activeMode  = null;
-let roleFilter  = 'any';
-let selectedMap = null;
-
-// Bans state
-// bans = array of {file, team} up to 6 entries, ordered by ban order
-let bans        = [];
-let banFirstTeam = 'purple'; // 'purple' or 'orange'
-let activeTab   = 'fearless'; // 'fearless' or 'bans'
+let picks        = [];
+let activeMode   = null;
+let roleFilter   = 'any';
+let selectedMap  = null;
+let bans         = [];
+let banFirstTeam = 'purple';
+let activeTab    = 'fearless';
 
 // ===== BAN ORDER HELPERS =====
 function getBanSequence() {
-  // Returns ['purple','orange','purple','orange','purple','orange']
-  // or ['orange','purple','orange','purple','orange','purple']
-  return BAN_SEQUENCE_TEMPLATE.map((t, i) =>
+  return BAN_SEQUENCE_TEMPLATE.map((t) =>
     banFirstTeam === 'purple' ? t : (t === 'purple' ? 'orange' : 'purple')
   );
 }
 
 function getNextBanTeam() {
   const seq = getBanSequence();
-  if (bans.length >= 6) return null; // all bans done
+  if (bans.length >= 6) return null;
   return seq[bans.length];
-}
-
-function getBansByTeam(team) {
-  return bans.filter(b => b.team === team);
 }
 
 // ===== LOCALSTORAGE =====
@@ -202,7 +190,6 @@ function setTab(tab) {
   fearlessControls.style.display = tab === 'fearless' ? '' : 'none';
   bansControls.style.display     = tab === 'bans'     ? '' : 'none';
 
-  // Role tabs stay visible in both modes, but update active styling
   if (tab === 'bans') {
     roleTabsEl.classList.add('ban-mode-active');
   } else {
@@ -248,10 +235,8 @@ function removePick(file) {
 
 // ===== BAN CARD CLICK =====
 function onBanCardClick(file) {
-  // If already banned, remove
   const existingIdx = bans.findIndex(b => b.file === file);
   if (existingIdx !== -1) {
-    // Remove and re-sequence the rest
     bans.splice(existingIdx, 1);
     saveState();
     renderBanDisplay();
@@ -260,13 +245,11 @@ function onBanCardClick(file) {
     return;
   }
 
-  // Already in picks → can't ban
   if (picks.some(p => p.file === file)) {
     showToast('Ce Pokémon est déjà dans les picks !');
     return;
   }
 
-  // Max 6 bans total
   if (bans.length >= 6) {
     showToast('Maximum 6 bans atteint !');
     return;
@@ -289,14 +272,6 @@ function removeBan(file) {
     renderNextBanIndicator();
     renderList();
   }
-}
-
-function clearBans() {
-  bans = [];
-  saveState();
-  renderBanDisplay();
-  renderNextBanIndicator();
-  renderList();
 }
 
 function clearAll() {
@@ -335,7 +310,7 @@ function renderDisplay() {
     const slot = document.createElement('div');
     slot.className = 'display-slot' + (team ? ' team-' + team : '');
     slot.innerHTML = `
-      <img src="${IMG_BASE}${file}" alt="${poke.name}" onerror="this.style.background='#152122'">
+      <img src="${IMG_BASE}${file}" alt="${poke.name}" onerror="this.style.opacity='0.2'">
       <div class="team-ring"></div>
       <div class="remove-btn" onclick="removePick('${file}')">×</div>
     `;
@@ -345,7 +320,6 @@ function renderDisplay() {
 
 // ===== RENDER BAN DISPLAY (left panel ban slots) =====
 function renderBanDisplay() {
-  const seq = getBanSequence();
   const purpleBans = bans.filter(b => b.team === 'purple');
   const orangeBans = bans.filter(b => b.team === 'orange');
   const nextTeam   = getNextBanTeam();
@@ -356,26 +330,21 @@ function renderBanDisplay() {
     if (!row) return;
     row.innerHTML = '';
 
-    // Count how many slots this team gets in the sequence = 3
     for (let i = 0; i < 3; i++) {
       const banEntry = teamBans[i];
       const slot = document.createElement('div');
 
-      // Is this the "next to be filled" slot?
-      const teamBanIndex = teamBans.length; // how many this team has so far
+      const teamBanIndex = teamBans.length;
       const isNextForThisTeam = (nextTeam === team && i === teamBanIndex);
 
       slot.className = `ban-display-slot ${team}-slot${!banEntry ? ' empty-slot' : ''}${isNextForThisTeam ? ' next-ban' : ''}`;
 
       if (banEntry) {
         slot.innerHTML = `
-          <img class="ban-poke-img" src="${IMG_BASE}${banEntry.file}" alt="" onerror="this.style.background='#152122'">
+          <img class="ban-poke-img" src="${IMG_BASE}${banEntry.file}" alt="" onerror="this.style.opacity='0'">
           <img class="ban-missing-img" src="${MISSING_IMG}" alt="banned">
           <div class="remove-btn" onclick="removeBan('${banEntry.file}')">×</div>
         `;
-      } else {
-        // Empty slot with pulsing border if it's next
-        slot.innerHTML = '';
       }
       row.appendChild(slot);
     }
@@ -417,7 +386,6 @@ function renderList() {
     if (activeTab === 'fearless') {
       card.className = 'pokemon-card' + (inDisplay ? ' in-display' : '');
     } else {
-      // Ban mode
       if (banEntry) {
         card.className = `pokemon-card banned-${banEntry.team}`;
       } else if (inDisplay) {
@@ -463,6 +431,12 @@ function openBansOverlay() {
   showToast('Overlay bans ouverte — ajoutez comme Browser Source dans OBS');
 }
 
+function openMapsOverlay() {
+  const url = window.location.href.split('?')[0] + '?overlay=maps';
+  window.open(url, '_blank', 'width=380,height=120,resizable=yes,scrollbars=no');
+  showToast('Overlay map ouverte — ajoutez comme Browser Source dans OBS');
+}
+
 function copyOverlayURL() {
   const url = window.location.href.split('?')[0] + '?overlay=true';
   navigator.clipboard.writeText(url).then(() => showToast('URL copiée ! Collez dans OBS > Browser Source'));
@@ -471,6 +445,11 @@ function copyOverlayURL() {
 function copyBansOverlayURL() {
   const url = window.location.href.split('?')[0] + '?overlay=bans';
   navigator.clipboard.writeText(url).then(() => showToast('URL bans copiée ! Collez dans OBS > Browser Source'));
+}
+
+function copyMapsOverlayURL() {
+  const url = window.location.href.split('?')[0] + '?overlay=maps';
+  navigator.clipboard.writeText(url).then(() => showToast('URL map copiée ! Collez dans OBS > Browser Source'));
 }
 
 function showToast(msg) {
@@ -599,7 +578,7 @@ function initBansOverlay() {
   function renderBansOverlay(bansData, banMode) {
     root.innerHTML = '';
 
-    const seq = BAN_SEQUENCE_TEMPLATE.map((t, i) =>
+    const seq = BAN_SEQUENCE_TEMPLATE.map((t) =>
       banMode === 'purple' ? t : (t === 'purple' ? 'orange' : 'purple')
     );
 
@@ -646,7 +625,6 @@ function initBansOverlay() {
       root.appendChild(row);
     });
 
-    // Only show if there's activity
     root.style.display = ((bansData && bansData.length > 0)) ? 'flex' : 'none';
   }
 
@@ -667,11 +645,84 @@ function initBansOverlay() {
   renderBansOverlay([], 'purple');
 }
 
+// ===== OVERLAY MODE (maps only) — NEW =====
+function initMapsOverlay() {
+  document.body.classList.add('overlay-mode');
+  document.body.style.background = 'transparent';
+
+  const root = document.createElement('div');
+  root.id = 'map-overlay-root';
+  document.body.appendChild(root);
+
+  // Reuse the same overlay-map-bar HTML structure
+  const mapBar = document.createElement('div');
+  mapBar.id = 'overlay-map-bar';
+  root.appendChild(mapBar);
+
+  function renderMapOverlay(mapData) {
+    mapBar.innerHTML = '';
+
+    MAPS.forEach((m) => {
+      const isActive = mapData === m.id;
+      const item = document.createElement('div');
+      item.className = 'overlay-map-item ' + m.id + (isActive ? ' active' : '');
+
+      // Use GIF for active map, static spawn for others
+      const imgSrc = isActive ? MAP_BASE_GIF + m.id + '.gif' : MAP_BASE_SPAWN + m.id + '.png';
+      const img = document.createElement('img');
+      img.className = 'overlay-map-img';
+      img.src = imgSrc;
+      img.alt = m.label;
+      img.onerror = function() {
+        if (isActive && this.src.includes('.gif')) {
+          this.src = MAP_BASE_SPAWN + m.id + '.png';
+        } else {
+          this.style.display = 'none';
+          const ph = document.createElement('div');
+          ph.className = 'overlay-map-placeholder';
+          ph.textContent = m.emoji;
+          item.insertBefore(ph, item.firstChild);
+        }
+      };
+
+      const badge = document.createElement('div');
+      badge.className = 'overlay-map-badge';
+      badge.textContent = 'SELECTED';
+
+      const name = document.createElement('div');
+      name.className = 'overlay-map-name';
+      name.textContent = m.label.toUpperCase();
+
+      item.appendChild(img);
+      item.appendChild(badge);
+      item.appendChild(name);
+      mapBar.appendChild(item);
+    });
+
+    // Hide the whole bar if no map selected
+    mapBar.style.display = mapData ? 'flex' : 'none';
+  }
+
+  let lastMap = null;
+  setInterval(() => {
+    try {
+      const rawMap = localStorage.getItem(LS_MAP_KEY) || '';
+      if (rawMap !== lastMap) {
+        lastMap = rawMap;
+        renderMapOverlay(rawMap || null);
+      }
+    } catch(e) {}
+  }, 500);
+
+  renderMapOverlay(null);
+}
+
 // ===== CHECK OVERLAY MODE =====
 function checkOverlayMode() {
   const param = new URLSearchParams(window.location.search).get('overlay');
   if (param === 'true') { initPicksOverlay(); return true; }
   if (param === 'bans') { initBansOverlay();  return true; }
+  if (param === 'maps') { initMapsOverlay();  return true; }
   return false;
 }
 
@@ -683,7 +734,6 @@ if (!checkOverlayMode()) {
   renderNextBanIndicator();
   renderList();
   renderMapButtons();
-  // Restore ban first team button states
   document.getElementById('btnBanPurpleFirst').classList.toggle('active', banFirstTeam === 'purple');
   document.getElementById('btnBanOrangeFirst').classList.toggle('active', banFirstTeam === 'orange');
 }
