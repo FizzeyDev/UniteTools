@@ -7,13 +7,13 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./css/stream.css">
   <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
-    <script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
+  <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-B7HW29S7HW');
-    </script>
+  </script>
 </head>
 <body>
 
@@ -22,13 +22,31 @@
   <div id="display-panel">
     <div class="panel-header">
       <h2>🎮 Display Overlay</h2>
-      <!-- Help button moved here, top right of panel header -->
       <button class="help-btn-header" onclick="openModal()">❓ HOW TO SETUP</button>
     </div>
     <div class="glow-line"></div>
 
+    <!-- Fearless picks display -->
     <div class="display-area">
       <div class="display-grid" id="displayGrid"></div>
+    </div>
+
+    <!-- Ban display slots -->
+    <div class="ban-display-section">
+      <div class="ban-display-label">⛔ Bans</div>
+      <div class="ban-teams-row">
+
+        <div class="ban-team-col purple-col">
+          <div class="ban-team-col-label">🟣 Violette</div>
+          <div class="ban-slots-row" id="banSlots_purple"></div>
+        </div>
+
+        <div class="ban-team-col orange-col">
+          <div class="ban-team-col-label">🟠 Orange</div>
+          <div class="ban-slots-row" id="banSlots_orange"></div>
+        </div>
+
+      </div>
     </div>
 
     <!-- Map selector -->
@@ -69,10 +87,11 @@
       </div>
     </div>
 
-    <!-- OBS controls (help button removed from here) -->
+    <!-- OBS controls -->
     <div class="obs-bar">
-      <button class="obs-btn" onclick="openOverlay()">📺 OBS SOURCE</button>
-      <button class="obs-btn" onclick="copyOverlayURL()">📋 COPIER URL</button>
+      <button class="obs-btn" onclick="openOverlay()">📺 PICKS OBS</button>
+      <button class="obs-btn" onclick="openBansOverlay()">⛔ BANS OBS</button>
+      <button class="obs-btn" onclick="copyBansOverlayURL()" style="font-size:10px">📋 URL BANS</button>
       <button class="clear-btn" onclick="clearAll()">✕ VIDER</button>
     </div>
   </div>
@@ -91,14 +110,44 @@
       </div>
     </div>
 
-    <div class="team-selector">
-      <span class="team-selector-label">Team :</span>
-      <button class="team-btn orange" id="btnOrange" onclick="setMode('orange')">🟠 Orange</button>
-      <button class="team-btn purple" id="btnPurple" onclick="setMode('purple')">🟣 Violette</button>
-      <button class="team-btn none-btn active" id="btnNone" onclick="setMode(null)">— Aucune</button>
+    <!-- ===== MODE TABS ===== -->
+    <div class="mode-tabs">
+      <button class="mode-tab fearless-tab active" id="tabFearless" onclick="setTab('fearless')">
+        🎮 Fearless Picks
+      </button>
+      <button class="mode-tab bans-tab" id="tabBans" onclick="setTab('bans')">
+        ⛔ Bans
+      </button>
     </div>
 
-    <div class="role-tabs">
+    <!-- ===== FEARLESS CONTROLS ===== -->
+    <div id="fearlessControls">
+      <div class="team-selector">
+        <span class="team-selector-label">Team :</span>
+        <button class="team-btn orange" id="btnOrange" onclick="setMode('orange')">🟠 Orange</button>
+        <button class="team-btn purple" id="btnPurple" onclick="setMode('purple')">🟣 Violette</button>
+        <button class="team-btn none-btn active" id="btnNone" onclick="setMode(null)">— Aucune</button>
+      </div>
+    </div>
+
+    <!-- ===== BAN CONTROLS ===== -->
+    <div id="bansControls" style="display:none">
+      <div class="ban-mode-header">
+        <span class="ban-mode-label">Premier ban :</span>
+        <button class="ban-mode-btn purple-first active" id="btnBanPurpleFirst" onclick="setBanFirstTeam('purple')">
+          🟣 Violet first
+        </button>
+        <button class="ban-mode-btn orange-first" id="btnBanOrangeFirst" onclick="setBanFirstTeam('orange')">
+          🟠 Orange first
+        </button>
+      </div>
+      <div class="next-ban-indicator" id="nextBanIndicator">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- ===== ROLE TABS (shared) ===== -->
+    <div class="role-tabs" id="roleTabs">
       <div class="role-tab active"  data-role="any" onclick="setRole(this,'any')">Tous</div>
       <div class="role-tab" data-role="atk" onclick="setRole(this,'atk')">Attaquant</div>
       <div class="role-tab" data-role="def" onclick="setRole(this,'def')">Défenseur</div>
@@ -137,7 +186,7 @@
         <div class="setup-step">
           <div class="step-num">1</div>
           <div class="step-content">
-            <h4>Choisir une team</h4>
+            <h4>Choisir une team (onglet Fearless)</h4>
             <p>Avant de sélectionner un Pokémon, clique sur <span class="highlight-orange">🟠 Orange</span> ou <span class="highlight-purple">🟣 Violette</span> pour assigner les picks à la bonne équipe. Si aucune team n'est sélectionnée, le Pokémon sera ajouté sans contour coloré.</p>
           </div>
         </div>
@@ -153,6 +202,14 @@
         <div class="setup-step">
           <div class="step-num">3</div>
           <div class="step-content">
+            <h4>Onglet Bans</h4>
+            <p>Passe dans l'onglet <strong>⛔ Bans</strong> et choisis quelle team ban en premier (<span class="highlight-purple">🟣 Violet first</span> ou <span class="highlight-orange">🟠 Orange first</span>). Clique ensuite sur les Pokémon à bannir — l'alternance se fait automatiquement (V→O→V→O→V→O). Les bans apparaissent dans le panneau gauche et sur l'overlay dédiée.</p>
+          </div>
+        </div>
+
+        <div class="setup-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
             <h4>Choisir la map</h4>
             <p>Sélectionne la map du match en bas du panneau gauche : <span class="highlight" style="color:#4caf82">Rayquaza</span>, <span class="highlight" style="color:#ff7043">Groudon</span> ou <span class="highlight" style="color:#4fc3f7">Kyogre</span>.</p>
           </div>
@@ -161,38 +218,32 @@
         <div class="setup-divider"></div>
 
         <div class="setup-step">
-          <div class="step-num">4</div>
-          <div class="step-content">
-            <h4>Configurer dans OBS (2 sources)</h4>
-            <p>Tu dois créer <strong>deux sources Navigateur</strong> :</p>
-            <ul>
-              <li><strong>Controller</strong> → <span class="highlight">https://unite-tools.com/stream.html</span></li>
-              <li><strong>Display / Overlay</strong> → <span class="highlight">https://unite-tools.com/stream.html?overlay=true</span></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="setup-step">
           <div class="step-num">5</div>
           <div class="step-content">
-            <h4>Dimensions recommandées</h4>
-            <p>
-              • <strong>Controller</strong> : largeur ~460px, hauteur ~700px<br>
-              • <strong>Overlay</strong> : largeur <strong>~750px</strong>, hauteur <strong>~220px</strong>
-            </p>
+            <h4>Configurer dans OBS (3 sources)</h4>
+            <p>Tu dois créer <strong>trois sources Navigateur</strong> :</p>
+            <ul>
+              <li><strong>Controller</strong> → <span class="highlight">https://unite-tools.com/stream.html</span></li>
+              <li><strong>Overlay Picks</strong> → <span class="highlight">https://unite-tools.com/stream.html?overlay=true</span></li>
+              <li><strong>Overlay Bans</strong> → <span class="highlight">https://unite-tools.com/stream.html?overlay=bans</span></li>
+            </ul>
           </div>
         </div>
 
         <div class="setup-step">
           <div class="step-num">6</div>
           <div class="step-content">
-            <h4>Utilisation</h4>
-            <p>Tu contrôles tout (picks, bans, map) via la fenêtre <strong>Controller</strong>. L'<strong>Overlay</strong> se met à jour automatiquement en temps réel (~500ms).</p>
+            <h4>Dimensions recommandées</h4>
+            <p>
+              • <strong>Controller</strong> : largeur ~460px, hauteur ~700px<br>
+              • <strong>Overlay Picks</strong> : largeur ~750px, hauteur ~220px<br>
+              • <strong>Overlay Bans</strong> : largeur ~580px, hauteur ~180px
+            </p>
           </div>
         </div>
 
         <div class="tip-box">
-          <strong>💡 Astuce :</strong> Utilise les filtres de rôle et la barre de recherche pour trouver rapidement les Pokémon. Le bouton <strong>✕ VIDER</strong> réinitialise tout.
+          <strong>💡 Astuce :</strong> Les deux overlays se mettent à jour automatiquement (~500ms). Le bouton <strong>✕ VIDER</strong> réinitialise picks ET bans. Pour vider uniquement les bans, clique sur le × de chaque slot ou utilise le bouton dans l'onglet Bans (à venir).
         </div>
       </div>
 
@@ -202,7 +253,7 @@
         <div class="setup-step">
           <div class="step-num">1</div>
           <div class="step-content">
-            <h4>Pick a team</h4>
+            <h4>Pick a team (Fearless tab)</h4>
             <p>Before selecting a Pokémon, click <span class="highlight-orange">🟠 Orange</span> or <span class="highlight-purple">🟣 Purple</span> to assign picks to the right team. If no team is selected, the Pokémon will be added without a colored border.</p>
           </div>
         </div>
@@ -218,6 +269,14 @@
         <div class="setup-step">
           <div class="step-num">3</div>
           <div class="step-content">
+            <h4>Bans tab</h4>
+            <p>Switch to the <strong>⛔ Bans</strong> tab and choose which team bans first (<span class="highlight-purple">🟣 Purple first</span> or <span class="highlight-orange">🟠 Orange first</span>). Click Pokémon to ban them — alternation is automatic (P→O→P→O→P→O). Bans appear in the left panel and on the dedicated overlay.</p>
+          </div>
+        </div>
+
+        <div class="setup-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
             <h4>Select the map</h4>
             <p>Choose the match map at the bottom of the left panel: <span class="highlight" style="color:#4caf82">Rayquaza</span>, <span class="highlight" style="color:#ff7043">Groudon</span> or <span class="highlight" style="color:#4fc3f7">Kyogre</span>.</p>
           </div>
@@ -226,38 +285,32 @@
         <div class="setup-divider"></div>
 
         <div class="setup-step">
-          <div class="step-num">4</div>
-          <div class="step-content">
-            <h4>Setup in OBS (2 Browser Sources)</h4>
-            <p>You need to create <strong>two Browser Sources</strong>:</p>
-            <ul>
-              <li><strong>Controller</strong> → <span class="highlight">https://unite-tools.com/stream.html</span></li>
-              <li><strong>Display / Overlay</strong> → <span class="highlight">https://unite-tools.com/stream.html?overlay=true</span></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="setup-step">
           <div class="step-num">5</div>
           <div class="step-content">
-            <h4>Recommended size</h4>
-            <p>
-              • <strong>Controller</strong>: width ~460px, height ~700px<br>
-              • <strong>Overlay</strong>: width <strong>~750px</strong>, height <strong>~220px</strong>
-            </p>
+            <h4>Setup in OBS (3 Browser Sources)</h4>
+            <p>You need to create <strong>three Browser Sources</strong>:</p>
+            <ul>
+              <li><strong>Controller</strong> → <span class="highlight">https://unite-tools.com/stream.html</span></li>
+              <li><strong>Picks Overlay</strong> → <span class="highlight">https://unite-tools.com/stream.html?overlay=true</span></li>
+              <li><strong>Bans Overlay</strong> → <span class="highlight">https://unite-tools.com/stream.html?overlay=bans</span></li>
+            </ul>
           </div>
         </div>
 
         <div class="setup-step">
           <div class="step-num">6</div>
           <div class="step-content">
-            <h4>How to use</h4>
-            <p>You control everything (picks, bans, map) from the <strong>Controller</strong> window. The <strong>Overlay</strong> updates automatically in real time (~500ms).</p>
+            <h4>Recommended size</h4>
+            <p>
+              • <strong>Controller</strong>: width ~460px, height ~700px<br>
+              • <strong>Picks Overlay</strong>: width ~750px, height ~220px<br>
+              • <strong>Bans Overlay</strong>: width ~580px, height ~180px
+            </p>
           </div>
         </div>
 
         <div class="tip-box">
-          <strong>💡 Tip:</strong> Use role filters and the search bar to find Pokémon quickly. The <strong>✕ CLEAR</strong> button resets everything.
+          <strong>💡 Tip:</strong> Both overlays update automatically (~500ms). The <strong>✕ CLEAR</strong> button resets picks AND bans. To clear only bans, click the × on each slot.
         </div>
       </div>
 

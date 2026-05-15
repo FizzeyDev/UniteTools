@@ -95,8 +95,13 @@ const POKEMON_DATA = [
 const IMG_BASE       = 'https://fizzeydev.github.io/UniteTools/assets/pokemon/';
 const MAP_BASE_SPAWN = 'https://fizzeydev.github.io/UniteTools/assets/maps/spawn/';
 const MAP_BASE_GIF   = 'https://fizzeydev.github.io/UniteTools/assets/maps/gifs/';
+// missing.png path — served from same folder as the HTML
+const MISSING_IMG    = './assets/pokemon/missing.png';
+
 const LS_KEY         = 'unite_tracker_picks';
 const LS_MAP_KEY     = 'unite_tracker_map';
+const LS_BANS_KEY    = 'unite_tracker_bans';
+const LS_BAN_MODE_KEY = 'unite_tracker_ban_mode';
 
 const MAPS = [
   { id: 'rayquaza', label: 'Rayquaza', emoji: '🌿', color: '#4caf82' },
@@ -104,26 +109,61 @@ const MAPS = [
   { id: 'kyogre',   label: 'Kyogre',   emoji: '💧', color: '#4fc3f7' },
 ];
 
+// Ban order for 6 slots: [purple, orange, purple, orange, purple, orange]
+// banFirstTeam = 'purple' or 'orange' determines who bans slot 0
+const BAN_SEQUENCE_TEMPLATE = ['purple','orange','purple','orange','purple','orange'];
+
 let picks       = [];
 let activeMode  = null;
 let roleFilter  = 'any';
 let selectedMap = null;
 
+// Bans state
+// bans = array of {file, team} up to 6 entries, ordered by ban order
+let bans        = [];
+let banFirstTeam = 'purple'; // 'purple' or 'orange'
+let activeTab   = 'fearless'; // 'fearless' or 'bans'
+
+// ===== BAN ORDER HELPERS =====
+function getBanSequence() {
+  // Returns ['purple','orange','purple','orange','purple','orange']
+  // or ['orange','purple','orange','purple','orange','purple']
+  return BAN_SEQUENCE_TEMPLATE.map((t, i) =>
+    banFirstTeam === 'purple' ? t : (t === 'purple' ? 'orange' : 'purple')
+  );
+}
+
+function getNextBanTeam() {
+  const seq = getBanSequence();
+  if (bans.length >= 6) return null; // all bans done
+  return seq[bans.length];
+}
+
+function getBansByTeam(team) {
+  return bans.filter(b => b.team === team);
+}
+
 // ===== LOCALSTORAGE =====
 function saveState() {
   try {
-    localStorage.setItem(LS_KEY,     JSON.stringify(picks));
-    localStorage.setItem(LS_MAP_KEY, selectedMap || '');
+    localStorage.setItem(LS_KEY,          JSON.stringify(picks));
+    localStorage.setItem(LS_MAP_KEY,      selectedMap || '');
+    localStorage.setItem(LS_BANS_KEY,     JSON.stringify(bans));
+    localStorage.setItem(LS_BAN_MODE_KEY, banFirstTeam);
   } catch(e) {}
 }
 
 function loadState() {
   try {
-    const raw    = localStorage.getItem(LS_KEY);
-    const rawMap = localStorage.getItem(LS_MAP_KEY);
-    if (raw)    picks       = JSON.parse(raw);
-    if (rawMap) selectedMap = rawMap || null;
-  } catch(e) { picks = []; }
+    const raw      = localStorage.getItem(LS_KEY);
+    const rawMap   = localStorage.getItem(LS_MAP_KEY);
+    const rawBans  = localStorage.getItem(LS_BANS_KEY);
+    const rawBMode = localStorage.getItem(LS_BAN_MODE_KEY);
+    if (raw)      picks        = JSON.parse(raw);
+    if (rawMap)   selectedMap  = rawMap || null;
+    if (rawBans)  bans         = JSON.parse(rawBans);
+    if (rawBMode) banFirstTeam = rawBMode;
+  } catch(e) { picks = []; bans = []; }
 }
 
 // ===== MAP =====
@@ -141,7 +181,7 @@ function renderMapButtons() {
   });
 }
 
-// ===== TEAM MODE =====
+// ===== TEAM MODE (fearless picks) =====
 function setMode(mode) {
   activeMode = mode;
   document.getElementById('btnOrange').classList.toggle('active', mode === 'orange');
@@ -149,8 +189,48 @@ function setMode(mode) {
   document.getElementById('btnNone').classList.toggle('active',   mode === null);
 }
 
-// ===== PICK / REMOVE =====
+// ===== TAB SWITCHING =====
+function setTab(tab) {
+  activeTab = tab;
+  document.getElementById('tabFearless').classList.toggle('active', tab === 'fearless');
+  document.getElementById('tabBans').classList.toggle('active',     tab === 'bans');
+
+  const fearlessControls = document.getElementById('fearlessControls');
+  const bansControls     = document.getElementById('bansControls');
+  const roleTabsEl       = document.getElementById('roleTabs');
+
+  fearlessControls.style.display = tab === 'fearless' ? '' : 'none';
+  bansControls.style.display     = tab === 'bans'     ? '' : 'none';
+
+  // Role tabs stay visible in both modes, but update active styling
+  if (tab === 'bans') {
+    roleTabsEl.classList.add('ban-mode-active');
+  } else {
+    roleTabsEl.classList.remove('ban-mode-active');
+  }
+
+  renderList();
+  renderBanDisplay();
+  renderNextBanIndicator();
+}
+
+// ===== BAN MODE (first team) =====
+function setBanFirstTeam(team) {
+  banFirstTeam = team;
+  document.getElementById('btnBanPurpleFirst').classList.toggle('active', team === 'purple');
+  document.getElementById('btnBanOrangeFirst').classList.toggle('active', team === 'orange');
+  saveState();
+  renderBanDisplay();
+  renderNextBanIndicator();
+  renderList();
+}
+
+// ===== PICK / REMOVE (fearless) =====
 function onCardClick(file) {
+  if (activeTab === 'bans') {
+    onBanCardClick(file);
+    return;
+  }
   const idx = picks.findIndex(p => p.file === file);
   if (idx !== -1) picks.splice(idx, 1);
   else picks.push({ file, team: activeMode });
@@ -166,16 +246,72 @@ function removePick(file) {
   renderList();
 }
 
+// ===== BAN CARD CLICK =====
+function onBanCardClick(file) {
+  // If already banned, remove
+  const existingIdx = bans.findIndex(b => b.file === file);
+  if (existingIdx !== -1) {
+    // Remove and re-sequence the rest
+    bans.splice(existingIdx, 1);
+    saveState();
+    renderBanDisplay();
+    renderNextBanIndicator();
+    renderList();
+    return;
+  }
+
+  // Already in picks → can't ban
+  if (picks.some(p => p.file === file)) {
+    showToast('Ce Pokémon est déjà dans les picks !');
+    return;
+  }
+
+  // Max 6 bans total
+  if (bans.length >= 6) {
+    showToast('Maximum 6 bans atteint !');
+    return;
+  }
+
+  const nextTeam = getNextBanTeam();
+  bans.push({ file, team: nextTeam });
+  saveState();
+  renderBanDisplay();
+  renderNextBanIndicator();
+  renderList();
+}
+
+function removeBan(file) {
+  const idx = bans.findIndex(b => b.file === file);
+  if (idx !== -1) {
+    bans.splice(idx, 1);
+    saveState();
+    renderBanDisplay();
+    renderNextBanIndicator();
+    renderList();
+  }
+}
+
+function clearBans() {
+  bans = [];
+  saveState();
+  renderBanDisplay();
+  renderNextBanIndicator();
+  renderList();
+}
+
 function clearAll() {
   picks       = [];
+  bans        = [];
   selectedMap = null;
   saveState();
   renderDisplay();
+  renderBanDisplay();
+  renderNextBanIndicator();
   renderList();
   renderMapButtons();
 }
 
-// ===== RENDER DISPLAY =====
+// ===== RENDER DISPLAY (fearless picks) =====
 function renderDisplay() {
   const grid = document.getElementById('displayGrid');
   grid.innerHTML = '';
@@ -207,6 +343,58 @@ function renderDisplay() {
   });
 }
 
+// ===== RENDER BAN DISPLAY (left panel ban slots) =====
+function renderBanDisplay() {
+  const seq = getBanSequence();
+  const purpleBans = bans.filter(b => b.team === 'purple');
+  const orangeBans = bans.filter(b => b.team === 'orange');
+  const nextTeam   = getNextBanTeam();
+
+  ['purple', 'orange'].forEach(team => {
+    const teamBans = team === 'purple' ? purpleBans : orangeBans;
+    const row = document.getElementById(`banSlots_${team}`);
+    if (!row) return;
+    row.innerHTML = '';
+
+    // Count how many slots this team gets in the sequence = 3
+    for (let i = 0; i < 3; i++) {
+      const banEntry = teamBans[i];
+      const slot = document.createElement('div');
+
+      // Is this the "next to be filled" slot?
+      const teamBanIndex = teamBans.length; // how many this team has so far
+      const isNextForThisTeam = (nextTeam === team && i === teamBanIndex);
+
+      slot.className = `ban-display-slot ${team}-slot${!banEntry ? ' empty-slot' : ''}${isNextForThisTeam ? ' next-ban' : ''}`;
+
+      if (banEntry) {
+        slot.innerHTML = `
+          <img class="ban-poke-img" src="${IMG_BASE}${banEntry.file}" alt="" onerror="this.style.background='#152122'">
+          <img class="ban-missing-img" src="${MISSING_IMG}" alt="banned">
+          <div class="remove-btn" onclick="removeBan('${banEntry.file}')">×</div>
+        `;
+      } else {
+        // Empty slot with pulsing border if it's next
+        slot.innerHTML = '';
+      }
+      row.appendChild(slot);
+    }
+  });
+}
+
+// ===== NEXT BAN INDICATOR =====
+function renderNextBanIndicator() {
+  const el = document.getElementById('nextBanIndicator');
+  if (!el) return;
+  const next = getNextBanTeam();
+  if (!next) {
+    el.innerHTML = `<div class="next-ban-dot done"></div><span class="next-ban-text done">Bans terminés</span>`;
+  } else {
+    const teamLabel = next === 'purple' ? '🟣 Violette' : '🟠 Orange';
+    el.innerHTML = `<div class="next-ban-dot ${next}"></div><span class="next-ban-text ${next}">Prochain ban : ${teamLabel} (${bans.length + 1}/6)</span>`;
+  }
+}
+
 // ===== RENDER LIST =====
 function renderList() {
   const grid   = document.getElementById('pokemonGrid');
@@ -222,12 +410,33 @@ function renderList() {
 
   filtered.forEach(poke => {
     const inDisplay = picks.some(p => p.file === poke.file);
+    const banEntry  = bans.find(b => b.file === poke.file);
+
     const card = document.createElement('div');
-    card.className = 'pokemon-card' + (inDisplay ? ' in-display' : '');
+
+    if (activeTab === 'fearless') {
+      card.className = 'pokemon-card' + (inDisplay ? ' in-display' : '');
+    } else {
+      // Ban mode
+      if (banEntry) {
+        card.className = `pokemon-card banned-${banEntry.team}`;
+      } else if (inDisplay) {
+        card.className = 'pokemon-card in-picks-ban-mode';
+      } else {
+        card.className = 'pokemon-card';
+      }
+    }
+
+    let extraHTML = '';
+    if (activeTab === 'bans' && banEntry) {
+      extraHTML = `<div class="banned-overlay"><img src="${MISSING_IMG}" alt="banned"></div>`;
+    }
+
     card.innerHTML = `
       <div class="role-dot ${poke.role}"></div>
       <img src="${IMG_BASE}${poke.file}" alt="${poke.name}" onerror="this.style.background='#152122';this.style.minHeight='60px'">
       <div class="card-name">${poke.name}</div>
+      ${extraHTML}
     `;
     card.addEventListener('click', () => onCardClick(poke.file));
     grid.appendChild(card);
@@ -248,9 +457,20 @@ function openOverlay() {
   showToast('Fenêtre overlay ouverte — ajoutez comme Browser Source dans OBS');
 }
 
+function openBansOverlay() {
+  const url = window.location.href.split('?')[0] + '?overlay=bans';
+  window.open(url, '_blank', 'width=600,height=200,resizable=yes,scrollbars=no');
+  showToast('Overlay bans ouverte — ajoutez comme Browser Source dans OBS');
+}
+
 function copyOverlayURL() {
   const url = window.location.href.split('?')[0] + '?overlay=true';
   navigator.clipboard.writeText(url).then(() => showToast('URL copiée ! Collez dans OBS > Browser Source'));
+}
+
+function copyBansOverlayURL() {
+  const url = window.location.href.split('?')[0] + '?overlay=bans';
+  navigator.clipboard.writeText(url).then(() => showToast('URL bans copiée ! Collez dans OBS > Browser Source'));
 }
 
 function showToast(msg) {
@@ -275,10 +495,8 @@ function setLang(lang, el) {
   document.getElementById('section-' + lang).classList.add('active');
 }
 
-// ===== OVERLAY MODE =====
-function checkOverlayMode() {
-  if (new URLSearchParams(window.location.search).get('overlay') !== 'true') return;
-
+// ===== OVERLAY MODE (picks) =====
+function initPicksOverlay() {
   document.body.classList.add('overlay-mode');
   document.body.style.background = 'transparent';
 
@@ -295,7 +513,6 @@ function checkOverlayMode() {
   root.appendChild(mapBar);
 
   function renderOverlay(picksData, mapData) {
-    // --- Picks row ---
     picksRow.innerHTML = '';
     (picksData || []).forEach(({ file, team }) => {
       const wrap = document.createElement('div');
@@ -313,23 +530,18 @@ function checkOverlayMode() {
       picksRow.appendChild(wrap);
     });
 
-    // --- UNITE-style map bar ---
     mapBar.innerHTML = '';
-
     MAPS.forEach((m) => {
       const isActive = mapData === m.id;
-
       const item = document.createElement('div');
       item.className = 'overlay-map-item ' + m.id + (isActive ? ' active' : '');
 
-      // Background image (GIF when active, static PNG otherwise)
       const imgSrc = isActive ? MAP_BASE_GIF + m.id + '.gif' : MAP_BASE_SPAWN + m.id + '.png';
       const img = document.createElement('img');
       img.className = 'overlay-map-img';
       img.src = imgSrc;
       img.alt = m.label;
       img.onerror = function() {
-        // GIF fallback → static
         if (isActive && this.src.includes('.gif')) {
           this.src = MAP_BASE_SPAWN + m.id + '.png';
         } else {
@@ -341,12 +553,10 @@ function checkOverlayMode() {
         }
       };
 
-      // "SELECTED" badge (only visible on active, via CSS)
       const badge = document.createElement('div');
       badge.className = 'overlay-map-badge';
       badge.textContent = 'SELECTED';
 
-      // Map name label
       const name = document.createElement('div');
       name.className = 'overlay-map-name';
       name.textContent = m.label.toUpperCase();
@@ -357,7 +567,6 @@ function checkOverlayMode() {
       mapBar.appendChild(item);
     });
 
-    // Only show map bar if there's something to display
     mapBar.style.display = (mapData || (picksData && picksData.length > 0)) ? 'flex' : 'none';
   }
 
@@ -378,9 +587,103 @@ function checkOverlayMode() {
   renderOverlay([], null);
 }
 
+// ===== OVERLAY MODE (bans) =====
+function initBansOverlay() {
+  document.body.classList.add('overlay-mode');
+  document.body.style.background = 'transparent';
+
+  const root = document.createElement('div');
+  root.id = 'bans-overlay-root';
+  document.body.appendChild(root);
+
+  function renderBansOverlay(bansData, banMode) {
+    root.innerHTML = '';
+
+    const seq = BAN_SEQUENCE_TEMPLATE.map((t, i) =>
+      banMode === 'purple' ? t : (t === 'purple' ? 'orange' : 'purple')
+    );
+
+    ['purple', 'orange'].forEach(team => {
+      const row = document.createElement('div');
+      row.className = 'bans-overlay-row';
+
+      const label = document.createElement('div');
+      label.className = `bans-overlay-team-label ${team}`;
+      label.textContent = team === 'purple' ? 'VIOLET' : 'ORANGE';
+      row.appendChild(label);
+
+      const slotsWrap = document.createElement('div');
+      slotsWrap.className = 'bans-overlay-slots';
+
+      const teamBans = (bansData || []).filter(b => b.team === team);
+      const totalBans = (bansData || []).length;
+      const nextTeam = totalBans < 6 ? seq[totalBans] : null;
+
+      for (let i = 0; i < 3; i++) {
+        const banEntry = teamBans[i];
+        const slot = document.createElement('div');
+        const isNext = (nextTeam === team && i === teamBans.length);
+        slot.className = `bans-overlay-slot ${team}${isNext ? ' next' : ''}`;
+
+        if (banEntry) {
+          const pokeImg = document.createElement('img');
+          pokeImg.className = 'slot-poke-img';
+          pokeImg.src = IMG_BASE + banEntry.file;
+          pokeImg.onerror = function() { this.style.display = 'none'; };
+
+          const missingImg = document.createElement('img');
+          missingImg.className = 'slot-missing-img';
+          missingImg.src = MISSING_IMG;
+
+          slot.appendChild(pokeImg);
+          slot.appendChild(missingImg);
+        }
+
+        slotsWrap.appendChild(slot);
+      }
+
+      row.appendChild(slotsWrap);
+      root.appendChild(row);
+    });
+
+    // Only show if there's activity
+    root.style.display = ((bansData && bansData.length > 0)) ? 'flex' : 'none';
+  }
+
+  let lastBans = null;
+  let lastMode = null;
+  setInterval(() => {
+    try {
+      const rawBans = localStorage.getItem(LS_BANS_KEY);
+      const rawMode = localStorage.getItem(LS_BAN_MODE_KEY) || 'purple';
+      if (rawBans !== lastBans || rawMode !== lastMode) {
+        lastBans = rawBans;
+        lastMode = rawMode;
+        renderBansOverlay(rawBans ? JSON.parse(rawBans) : [], rawMode);
+      }
+    } catch(e) {}
+  }, 500);
+
+  renderBansOverlay([], 'purple');
+}
+
+// ===== CHECK OVERLAY MODE =====
+function checkOverlayMode() {
+  const param = new URLSearchParams(window.location.search).get('overlay');
+  if (param === 'true') { initPicksOverlay(); return true; }
+  if (param === 'bans') { initBansOverlay();  return true; }
+  return false;
+}
+
 // ===== INIT =====
 loadState();
-checkOverlayMode();
-renderDisplay();
-renderList();
-renderMapButtons();
+if (!checkOverlayMode()) {
+  renderDisplay();
+  renderBanDisplay();
+  renderNextBanIndicator();
+  renderList();
+  renderMapButtons();
+  // Restore ban first team button states
+  document.getElementById('btnBanPurpleFirst').classList.toggle('active', banFirstTeam === 'purple');
+  document.getElementById('btnBanOrangeFirst').classList.toggle('active', banFirstTeam === 'orange');
+}

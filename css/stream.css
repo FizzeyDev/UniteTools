@@ -214,6 +214,135 @@ body.overlay-mode #app { display: none; }
   box-shadow: 0 2px 6px rgba(0,0,0,0.5);
 }
 
+/* ===== BAN DISPLAY PANEL (left side, bans section) ===== */
+.ban-display-section {
+  padding: 10px 14px 6px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  background: rgba(239,83,80,0.04);
+}
+
+.ban-display-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 8px;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ban-display-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(239,83,80,0.3), transparent);
+}
+
+.ban-teams-row {
+  display: flex;
+  gap: 10px;
+}
+
+.ban-team-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ban-team-col-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 2px 0;
+}
+.ban-team-col.purple-col .ban-team-col-label { color: var(--violet); }
+.ban-team-col.orange-col .ban-team-col-label { color: var(--orange); }
+
+.ban-slots-row {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+/* Individual ban slot in display panel */
+.ban-display-slot {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1.5px solid;
+  transition: transform 0.15s;
+  cursor: default;
+}
+.ban-display-slot:hover .remove-btn { opacity: 1; }
+.ban-display-slot.purple-slot { border-color: rgba(159,83,236,0.5); background: rgba(159,83,236,0.07); }
+.ban-display-slot.orange-slot { border-color: rgba(255,157,0,0.5); background: rgba(255,157,0,0.07); }
+.ban-display-slot.empty-slot { opacity: 0.4; }
+
+.ban-display-slot .ban-poke-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(0.6) brightness(0.5);
+}
+
+.ban-display-slot .ban-missing-img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  display: block;
+  z-index: 2;
+  opacity: 0.75;
+}
+
+.ban-display-slot .remove-btn {
+  position: absolute;
+  top: -5px; right: -5px;
+  width: 16px; height: 16px;
+  background: rgba(239,83,80,0.9);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+/* Glowing border on active (next to ban) slot */
+.ban-display-slot.next-ban.purple-slot {
+  border-color: var(--violet);
+  box-shadow: 0 0 10px rgba(159,83,236,0.6);
+  animation: pulsePurple 1.5s ease-in-out infinite;
+}
+.ban-display-slot.next-ban.orange-slot {
+  border-color: var(--orange);
+  box-shadow: 0 0 10px rgba(255,157,0,0.6);
+  animation: pulseOrange 1.5s ease-in-out infinite;
+}
+@keyframes pulsePurple {
+  0%,100% { box-shadow: 0 0 8px rgba(159,83,236,0.5); }
+  50%      { box-shadow: 0 0 18px rgba(159,83,236,0.9); }
+}
+@keyframes pulseOrange {
+  0%,100% { box-shadow: 0 0 8px rgba(255,157,0,0.5); }
+  50%      { box-shadow: 0 0 18px rgba(255,157,0,0.9); }
+}
+
 /* ===== MAP SELECTOR ===== */
 .map-section {
   padding: 12px 14px;
@@ -413,6 +542,155 @@ body.overlay-mode #app { display: none; }
   pointer-events: none;
 }
 
+/* ===== MODE TABS (Fearless / Bans) ===== */
+.mode-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.mode-tab {
+  flex: 1;
+  padding: 10px 14px;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: center;
+  color: var(--text-dim);
+  border-bottom: 2.5px solid transparent;
+  transition: all 0.2s;
+  background: transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+.mode-tab:hover { color: var(--text); background: rgba(255,255,255,0.02); }
+.mode-tab.active.fearless-tab {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
+  background: rgba(79,195,247,0.04);
+}
+.mode-tab.active.bans-tab {
+  color: var(--red);
+  border-bottom-color: var(--red);
+  background: rgba(239,83,80,0.04);
+}
+
+/* ===== BAN MODE HEADER ===== */
+.ban-mode-header {
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ban-mode-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.ban-mode-btn {
+  flex: 1;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  border: 1.5px solid;
+  transition: all 0.15s;
+  text-transform: uppercase;
+  text-align: center;
+  opacity: 0.4;
+  background: transparent;
+}
+.ban-mode-btn.active { opacity: 1; }
+.ban-mode-btn.purple-first {
+  border-color: var(--violet);
+  color: var(--violet);
+}
+.ban-mode-btn.purple-first.active {
+  background: var(--violet-dim);
+  box-shadow: 0 0 12px rgba(159,83,236,0.3);
+}
+.ban-mode-btn.orange-first {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+.ban-mode-btn.orange-first.active {
+  background: var(--orange-dim);
+  box-shadow: 0 0 12px rgba(255,157,0,0.3);
+}
+
+/* Next ban indicator */
+.next-ban-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 18px 0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.next-ban-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: blinkDot 1s ease-in-out infinite;
+}
+.next-ban-dot.purple { background: var(--violet); box-shadow: 0 0 8px var(--violet); }
+.next-ban-dot.orange { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+.next-ban-dot.done   { background: var(--green);  box-shadow: 0 0 8px var(--green); animation: none; }
+
+@keyframes blinkDot { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.next-ban-text.purple { color: var(--violet); }
+.next-ban-text.orange { color: var(--orange); }
+.next-ban-text.done   { color: var(--green); }
+
+/* Banned badge on card */
+.pokemon-card .banned-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+.pokemon-card .banned-overlay img {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+  opacity: 0.85;
+}
+
+/* Ban mode card states */
+.pokemon-card.banned-purple {
+  filter: brightness(0.2) saturate(0.1) !important;
+  border-color: rgba(159,83,236,0.3) !important;
+}
+.pokemon-card.banned-orange {
+  filter: brightness(0.2) saturate(0.1) !important;
+  border-color: rgba(255,157,0,0.3) !important;
+}
+.pokemon-card.in-picks-ban-mode {
+  filter: brightness(0.18) saturate(0.08) !important;
+}
+
 /* Team selector */
 .team-selector {
   padding: 10px 18px;
@@ -476,6 +754,12 @@ body.overlay-mode #app { display: none; }
 .role-tab:hover { color: var(--text); }
 .role-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
 
+/* Ban mode role tabs */
+.ban-mode-active .role-tab.active {
+  color: var(--red);
+  border-bottom-color: var(--red);
+}
+
 /* Pokemon grid */
 .pokemon-grid-wrapper {
   flex: 1; overflow-y: auto;
@@ -507,6 +791,16 @@ body.overlay-mode #app { display: none; }
   box-shadow: 0 6px 18px rgba(0,0,0,0.5);
   z-index: 5;
 }
+
+/* In ban mode, don't brighten banned/picked cards on hover */
+.pokemon-card.banned-purple:hover,
+.pokemon-card.banned-orange:hover,
+.pokemon-card.in-picks-ban-mode:hover {
+  filter: brightness(0.2) saturate(0.1) !important;
+  transform: none !important;
+  cursor: not-allowed;
+}
+
 .pokemon-card.in-display {
   filter: brightness(0.25) saturate(0.1);
 }
@@ -729,6 +1023,81 @@ body.overlay-mode #app { display: none; }
   padding: 4px;
 }
 
+/* ===== BANS OVERLAY ROOT ===== */
+#bans-overlay-root {
+  padding: 12px 16px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bans-overlay-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bans-overlay-team-label {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  width: 52px;
+  flex-shrink: 0;
+  text-align: right;
+  padding-right: 4px;
+}
+.bans-overlay-team-label.purple { color: var(--violet); text-shadow: 0 0 10px rgba(159,83,236,0.7); }
+.bans-overlay-team-label.orange { color: var(--orange); text-shadow: 0 0 10px rgba(255,157,0,0.7); }
+
+.bans-overlay-slots {
+  display: flex;
+  gap: 6px;
+}
+
+/* Individual ban slot in overlay */
+.bans-overlay-slot {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1.5px solid;
+}
+.bans-overlay-slot.purple { border-color: rgba(159,83,236,0.6); background: rgba(159,83,236,0.08); }
+.bans-overlay-slot.orange { border-color: rgba(255,157,0,0.6);  background: rgba(255,157,0,0.08); }
+
+.bans-overlay-slot .slot-poke-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(0.5) brightness(0.45);
+}
+.bans-overlay-slot .slot-missing-img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  display: block;
+  z-index: 2;
+  opacity: 0.7;
+}
+
+/* Active (next-to-ban) glow on overlay */
+.bans-overlay-slot.purple.next {
+  border-color: var(--violet);
+  box-shadow: 0 0 14px rgba(159,83,236,0.8), inset 0 0 6px rgba(159,83,236,0.2);
+  animation: pulsePurple 1.5s ease-in-out infinite;
+}
+.bans-overlay-slot.orange.next {
+  border-color: var(--orange);
+  box-shadow: 0 0 14px rgba(255,157,0,0.8), inset 0 0 6px rgba(255,157,0,0.2);
+  animation: pulseOrange 1.5s ease-in-out infinite;
+}
+
 /* ===== UNITE-STYLE MAP BAR ===== */
 #overlay-map-bar {
   display: flex;
@@ -788,7 +1157,7 @@ body.overlay-mode #app { display: none; }
   object-fit: contain;
   object-position: center 30%;
   display: block;
-  padding: 4px 4px 22px; /* leave room at bottom for the name label */
+  padding: 4px 4px 22px;
 }
 
 /* Dark gradient so text stays legible */
