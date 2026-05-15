@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>UNITE Draft Tracker</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./css/navbar.css">
   <link rel="stylesheet" href="./css/stream.css">
   <style>
     /* ===== FIX: transparent corners on display slots ===== */
@@ -36,6 +37,8 @@
 </head>
 <body>
 
+<div id="navbar-container"></div>
+
 <div id="app">
   <!-- ===== LEFT : DISPLAY PANEL ===== -->
   <div id="display-panel">
@@ -55,7 +58,6 @@
       <div class="ban-display-label">⛔ Bans</div>
       <div class="ban-teams-row">
 
-        <!-- MODIF: violet à gauche comme dans Unite -->
         <div class="ban-team-col purple-col">
           <div class="ban-team-col-label">🟣 Violette</div>
           <div class="ban-slots-row" id="banSlots_purple"></div>
@@ -147,7 +149,6 @@
     <div id="fearlessControls">
       <div class="team-selector">
         <span class="team-selector-label">Team :</span>
-        <!-- MODIF: violet à gauche, orange à droite -->
         <button class="team-btn purple" id="btnPurple" onclick="setMode('purple')">🟣 Violette</button>
         <button class="team-btn orange" id="btnOrange" onclick="setMode('orange')">🟠 Orange</button>
         <button class="team-btn none-btn active" id="btnNone" onclick="setMode(null)">— Aucune</button>
@@ -158,7 +159,6 @@
     <div id="bansControls" style="display:none">
       <div class="ban-mode-header">
         <span class="ban-mode-label">Premier ban :</span>
-        <!-- MODIF: violet à gauche -->
         <button class="ban-mode-btn purple-first active" id="btnBanPurpleFirst" onclick="setBanFirstTeam('purple')">
           🟣 Violet first
         </button>
@@ -380,5 +380,10 @@
 </div>
 
 <script src="./scripts/stream.js"></script>
+<script src="./scripts/navbar.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  lucide.createIcons();
+</script>
 </body>
 </html>

@@ -117,6 +117,24 @@ let bans         = [];
 let banFirstTeam = 'purple';
 let activeTab    = 'fearless';
 
+(function removeNavbarInOverlayMode() {
+  const params = new URLSearchParams(window.location.search);
+  const overlayParam = params.get('overlay');
+ 
+  if (overlayParam) {
+    /* Supprime le conteneur navbar s'il existe déjà dans le DOM */
+    const navbarContainer = document.getElementById('navbar-container');
+    if (navbarContainer) navbarContainer.remove();
+ 
+    /*
+     * body.overlay-mode est déjà géré dans stream.css pour
+     * background: transparent et margin-left: 0.
+     * On l'ajoute ici aussi pour le décalage navbar.
+     */
+    document.body.classList.add('overlay-mode');
+  }
+})();
+
 // ===== BAN ORDER HELPERS =====
 function getBanSequence() {
   return BAN_SEQUENCE_TEMPLATE.map((t) =>

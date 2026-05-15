@@ -2,31 +2,101 @@
 
   <!-- ══ HEADER ══ -->
   <div class="sidebar-header">
-    <h2 class="sidebar-title-full">Unite Tools</h2>
+    <div class="sb-logo-wrap">
+      <i data-lucide="hexagon" class="sb-logo-icon"></i>
+    </div>
+    <span class="sidebar-title-full">Unite Tools</span>
     <span class="sidebar-title-mini">UT</span>
   </div>
 
   <!-- ══ CONTENU NORMAL (sidebar ouverte) ══ -->
   <div class="sidebar-content">
     <ul>
+
       <li class="nav-title" data-lang="nav_tools_title">Tools</li>
-      <li><a id="nav-damage-calc"     href="damage-calc.html" data-lang="nav_damage_calc">Damage Calculator</a></li>
-      <li><a id="nav-damage-calc"     href="exp-calc.html" data-lang="nav_experience_calc">Experience Calculator</a></li>
-      <li><a id="nav-draft-simulator" href="draft.html" data-lang="nav_draft_simulator">Draft Simulator</a></li>
-      <li><a id="nav-map-timing"      href="map_timer.html" data-lang="nav_map_timing">Map Timer</a></li>
-      <li><a id="nav-map-interactive" href="map.html" data-lang="nav_map_interactive">Interactive Map</a></li>
-      <li><a id="nav-create-tierlist" href="tierlist.html" data-lang="nav_create_tierlist">Create Tierlist</a></li>
+
+      <li>
+        <a id="nav-damage-calc" href="damage-calc.html" data-lang="nav_damage_calc">
+          <span class="sb-icon"><i data-lucide="calculator"></i></span>
+          <span class="sb-link-text" data-lang="nav_damage_calc">Damage Calculator</span>
+        </a>
+      </li>
+      <li>
+        <a id="nav-exp-calc" href="exp-calc.html" data-lang="nav_experience_calc">
+          <span class="sb-icon"><i data-lucide="zap"></i></span>
+          <span class="sb-link-text" data-lang="nav_experience_calc">Experience Calculator</span>
+        </a>
+      </li>
+      <li>
+        <a id="nav-draft-simulator" href="draft.html" data-lang="nav_draft_simulator">
+          <span class="sb-icon"><i data-lucide="play-circle"></i></span>
+          <span class="sb-link-text" data-lang="nav_draft_simulator">Draft Simulator</span>
+        </a>
+      </li>
+      <li>
+        <a id="nav-map-timing" href="map_timer.html" data-lang="nav_map_timing">
+          <span class="sb-icon"><i data-lucide="clock-3"></i></span>
+          <span class="sb-link-text" data-lang="nav_map_timing">Map Timer</span>
+        </a>
+      </li>
+      <li>
+        <a id="nav-map-interactive" href="map.html" data-lang="nav_map_interactive">
+          <span class="sb-icon"><i data-lucide="map"></i></span>
+          <span class="sb-link-text" data-lang="nav_map_interactive">Interactive Map</span>
+        </a>
+      </li>
+      <li>
+        <a id="nav-create-tierlist" href="tierlist.html" data-lang="nav_create_tierlist">
+          <span class="sb-icon"><i data-lucide="list-ordered"></i></span>
+          <span class="sb-link-text" data-lang="nav_create_tierlist">Create Tierlist</span>
+        </a>
+      </li>
+      <li>
+        <a id="nav-patch-tracker" href="patch.html">
+          <span class="sb-icon"><i data-lucide="file-text"></i></span>
+          <span class="sb-link-text">Patch Tracker</span>
+        </a>
+      </li>
 
       <li class="nav-title">Other</li>
-      <li><a id="nav-patch-tracker"   href="patch.html">Patch Tracker</a></li>
-      <li><a id="nav-about"    href="about.html"    data-lang="nav_about">About Me</a></li>
-      <li><a id="nav-feedback" href="feedback.html" data-lang="nav_feedback">Feedback</a></li>
+
+      <li>
+        <a id="nav-stream" href="stream.html" data-lang="nav_stream">
+          <span class="sb-icon"><i data-lucide="monitor"></i></span>
+          <span class="sb-link-text" data-lang="nav_stream">Stream Overlay Tool</span>
+        </a>
+      </li>
+      <li>
+        <a id="nav-about" href="about.html" data-lang="nav_about">
+          <span class="sb-icon"><i data-lucide="user-round"></i></span>
+          <span class="sb-link-text" data-lang="nav_about">About Me</span>
+        </a>
+      </li>
+      <li>
+        <a id="nav-feedback" href="feedback.html" data-lang="nav_feedback">
+          <span class="sb-icon"><i data-lucide="message-square"></i></span>
+          <span class="sb-link-text" data-lang="nav_feedback">Feedback</span>
+        </a>
+      </li>
 
       <li class="nav-title">Games</li>
-      <li><a id="nav-udle" href="unite-dle.html" data-lang="nav_udle">Unitedle</a></li>
+
+      <li>
+        <a id="nav-udle" href="unite-dle.html" data-lang="nav_udle">
+          <span class="sb-icon"><i data-lucide="lock"></i></span>
+          <span class="sb-link-text" data-lang="nav_udle">Unitedle</span>
+        </a>
+      </li>
 
       <li class="nav-title">Informations</li>
-      <li><a id="nav-update" href="update.html" data-lang="nav_update">Update</a></li>
+
+      <li>
+        <a id="nav-update" href="update.html" data-lang="nav_update">
+          <span class="sb-icon"><i data-lucide="refresh-ccw"></i></span>
+          <span class="sb-link-text" data-lang="nav_update">Update</span>
+        </a>
+      </li>
+
     </ul>
   </div>
 
@@ -34,18 +104,28 @@
   <div class="useful-links">
     <div class="useful-links-title" data-lang="nav_useful_links">Useful Links</div>
     <a href="https://uniteapi.dev/fr" class="useful-link" target="_blank">
-      <span class="useful-link-name">Unite API</span>
-      <span class="useful-link-desc">Player Database</span>
+      <span class="useful-link-icon"><i data-lucide="database"></i></span>
+      <span class="useful-link-body">
+        <span class="useful-link-name">Unite API</span>
+        <span class="useful-link-desc">Player Database</span>
+      </span>
+      <i data-lucide="external-link" class="useful-link-arrow"></i>
     </a>
     <a href="https://unite-db.com" class="useful-link" target="_blank">
-      <span class="useful-link-name">Unite-DB</span>
-      <span class="useful-link-desc">Game Database</span>
+      <span class="useful-link-icon"><i data-lucide="book-open"></i></span>
+      <span class="useful-link-body">
+        <span class="useful-link-name">Unite-DB</span>
+        <span class="useful-link-desc">Game Database</span>
+      </span>
+      <i data-lucide="external-link" class="useful-link-arrow"></i>
     </a>
   </div>
 
   <!-- ══ LANG SWITCH + HIDE BTN ══ -->
   <div class="lang-switch">
-    <button id="hide-sidebar-btn" class="hide-sidebar-btn" aria-label="Masquer">◀</button>
+    <button id="hide-sidebar-btn" class="hide-sidebar-btn" aria-label="Masquer">
+      <i data-lucide="chevrons-left"></i>
+    </button>
     <button class="lang-btn active" data-lang="fr" aria-label="Français">
       <img src="/assets/flags/fr.svg" alt="Français">
     </button>
@@ -57,59 +137,54 @@
   <!-- ══ MINI SIDEBAR (visible quand .sidebar.hidden) ══ -->
   <div class="sidebar-mini">
 
-    <!-- Icônes scrollables -->
     <div class="sidebar-mini-scroll">
 
       <!-- Tools -->
-     <a href="damage-calc.html" class="sidebar-mini-icon" title="Damage Calculator">
-      <i data-lucide="calculator"></i>
-    </a>
+      <a href="damage-calc.html" class="sidebar-mini-icon" title="Damage Calculator">
+        <i data-lucide="calculator"></i>
+      </a>
+      <a href="exp-calc.html" class="sidebar-mini-icon" title="Experience Calculator">
+        <i data-lucide="zap"></i>
+      </a>
+      <a href="draft.html" class="sidebar-mini-icon" title="Draft Simulator">
+        <i data-lucide="play-circle"></i>
+      </a>
+      <a href="map_timer.html" class="sidebar-mini-icon" title="Map Timer">
+        <i data-lucide="clock-3"></i>
+      </a>
+      <a href="map.html" class="sidebar-mini-icon" title="Interactive Map">
+        <i data-lucide="map"></i>
+      </a>
+      <a href="tierlist.html" class="sidebar-mini-icon" title="Create Tierlist">
+        <i data-lucide="list-ordered"></i>
+      </a>
+      <a href="patch.html" class="sidebar-mini-icon" title="Patch Tracker">
+        <i data-lucide="file-text"></i>
+      </a>
 
-    <a href="exp-calc.html" class="sidebar-mini-icon" title="Experience Calculator">
-      <i data-lucide="zap"></i>
-    </a>
+      <div class="sidebar-mini-sep"></div>
 
-    <a href="draft.html" class="sidebar-mini-icon" title="Draft Simulator">
-      <i data-lucide="play-circle"></i>
-    </a>
+      <a href="stream.html" class="sidebar-mini-icon" title="Stream Overlay Tool">
+        <i data-lucide="monitor"></i>
+      </a>
+      <a href="about.html" class="sidebar-mini-icon" title="About Me">
+        <i data-lucide="user-round"></i>
+      </a>
+      <a href="feedback.html" class="sidebar-mini-icon" title="Feedback">
+        <i data-lucide="message-square"></i>
+      </a>
 
-    <a href="map_timer.html" class="sidebar-mini-icon" title="Map Timing">
-      <i data-lucide="clock-3"></i>
-    </a>
+      <div class="sidebar-mini-sep"></div>
 
-    <a href="map.html" class="sidebar-mini-icon" title="Interactive Map">
-      <i data-lucide="map"></i>
-    </a>
+      <a href="unite-dle.html" class="sidebar-mini-icon" title="Unitedle">
+        <i data-lucide="lock"></i>
+      </a>
 
-    <a href="tierlist.html" class="sidebar-mini-icon" title="Create Tierlist">
-      <i data-lucide="list-ordered"></i>
-    </a>
+      <div class="sidebar-mini-sep"></div>
 
-    <div class="sidebar-mini-sep"></div>
-
-    <a href="patch.html" class="sidebar-mini-icon" title="Patch Tracker">
-      <i data-lucide="file-text"></i>
-    </a>
-  
-    <a href="about.html" class="sidebar-mini-icon" title="About Me">
-      <i data-lucide="user-round"></i>
-    </a>
-
-    <a href="feedback.html" class="sidebar-mini-icon" title="Feedback">
-      <i data-lucide="message-square"></i>
-    </a>
-
-    <div class="sidebar-mini-sep"></div>
-
-    <a href="unite-dle.html" class="sidebar-mini-icon" title="Unitedle">
-      <i data-lucide="lock"></i>
-    </a>
-
-    <div class="sidebar-mini-sep"></div>
-
-    <a href="update.html" class="sidebar-mini-icon" title="Update">
-      <i data-lucide="refresh-ccw"></i>
-    </a>
+      <a href="update.html" class="sidebar-mini-icon" title="Update">
+        <i data-lucide="refresh-ccw"></i>
+      </a>
 
     </div><!-- fin .sidebar-mini-scroll -->
 
@@ -121,11 +196,15 @@
       <button class="lang-btn" data-lang="en" aria-label="English">
         <img src="/assets/flags/en.svg" alt="English">
       </button>
-      <button id="show-sidebar-btn" class="hide-sidebar-btn" aria-label="Ouvrir">▶</button>
+      <button id="show-sidebar-btn" class="hide-sidebar-btn" aria-label="Ouvrir">
+        <i data-lucide="chevrons-right"></i>
+      </button>
     </div>
 
   </div><!-- fin .sidebar-mini -->
 
 </nav>
 
-<button id="toggle-sidebar" class="toggle-sidebar-btn" aria-label="Ouvrir/fermer la navigation">☰</button>
+<button id="toggle-sidebar" class="toggle-sidebar-btn" aria-label="Ouvrir/fermer la navigation">
+  <i data-lucide="menu"></i>
+</button>
