@@ -16,11 +16,13 @@
   padding: 5px 10px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  transition: color 0.2s, border-color 0.2s;
+  background: var(--surface-2);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
 .skindle-back-btn:hover {
   color: var(--orange);
   border-color: rgba(255,157,0,0.4);
+  background: var(--orange-dim);
 }
 
 .skindle-wrapper .udle-header {
@@ -39,12 +41,12 @@
 .skindle-zoom-container {
   width: 320px;
   height: 320px;
-  border-radius: 16px;
+  border-radius: var(--radius);
   overflow: hidden;
-  border: 2px solid var(--border);
+  border: 1px solid var(--border-md);
   background: var(--surface-2);
   position: relative;
-  box-shadow: 0 0 0 1px rgba(255,157,0,0.08), 0 20px 60px rgba(0,0,0,0.5);
+  box-shadow: var(--shadow-lg);
 }
 
 .skindle-zoom-container img {
@@ -53,11 +55,10 @@
   object-fit: cover;
   object-position: center;
   transform-origin: center center;
-  /* zoom is set via JS with transform: scale() + translate() */
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Scanline effect overlay */
+/* Scanline overlay */
 .skindle-zoom-container::after {
   content: '';
   position: absolute;
@@ -70,7 +71,7 @@
     rgba(0,0,0,0.04) 4px
   );
   pointer-events: none;
-  border-radius: 14px;
+  border-radius: calc(var(--radius) - 1px);
 }
 
 /* ── Zoom step indicators ── */
@@ -82,21 +83,20 @@
 
 .skindle-zoom-step {
   width: 28px;
-  height: 6px;
+  height: 5px;
   border-radius: 3px;
   background: var(--surface-3);
   border: 1px solid var(--border);
-  transition: background 0.3s, border-color 0.3s;
-  position: relative;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 .skindle-zoom-step.active {
   background: var(--orange);
   border-color: rgba(255,157,0,0.6);
-  box-shadow: 0 0 8px rgba(255,157,0,0.4);
+  box-shadow: 0 0 8px rgba(255,157,0,0.3);
 }
 .skindle-zoom-step.done {
-  background: var(--surface-3);
-  border-color: rgba(255,157,0,0.25);
+  background: var(--surface-4);
+  border-color: rgba(255,157,0,0.2);
 }
 
 /* ── Phase label ── */
@@ -109,7 +109,7 @@
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-left: 3px solid var(--violet);
-  border-radius: var(--radius-sm);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 .skindle-phase-label--skin {
   border-left-color: var(--orange);
@@ -122,14 +122,14 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--violet);
-  background: rgba(159,83,236,0.12);
+  background: var(--violet-dim);
   padding: 2px 8px;
   border-radius: 20px;
   white-space: nowrap;
 }
 .skindle-phase-label--skin .skindle-phase-num {
   color: var(--orange);
-  background: rgba(255,157,0,0.12);
+  background: var(--orange-dim);
 }
 
 .skindle-phase-title {
@@ -147,7 +147,7 @@
   align-items: center;
   gap: 14px;
   padding: 12px 16px;
-  background: rgba(76,175,130,0.08);
+  background: var(--green-dim);
   border: 1px solid rgba(76,175,130,0.3);
   border-radius: var(--radius-sm);
   margin-bottom: 18px;
@@ -158,9 +158,7 @@
   height: 44px;
   object-fit: contain;
 }
-.skindle-found-poke-info {
-  flex: 1;
-}
+.skindle-found-poke-info { flex: 1; }
 .skindle-found-poke-label {
   font-size: 0.7rem;
   font-weight: 700;
@@ -194,11 +192,13 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   animation: udle-fadein 0.3s ease;
+  transition: border-color 0.2s;
 }
+.skindle-guess-row-poke:hover { border-color: var(--border-md); }
 
 .skindle-guess-row-poke.wrong-poke {
-  border-color: rgba(239,83,80,0.35);
-  background: rgba(45,20,20,0.6);
+  border-color: rgba(239,83,80,0.3);
+  background: rgba(239,83,80,0.06);
 }
 
 .skindle-guess-row-poke img {
@@ -222,12 +222,12 @@
   letter-spacing: 0.06em;
 }
 .skindle-guess-poke-result.wrong {
-  background: rgba(239,83,80,0.15);
+  background: rgba(239,83,80,0.12);
   color: #f88b89;
   border: 1px solid rgba(239,83,80,0.35);
 }
 .skindle-guess-poke-result.correct {
-  background: rgba(76,175,130,0.15);
+  background: var(--green-dim);
   color: #6ee7b2;
   border: 1px solid rgba(76,175,130,0.35);
 }
@@ -242,11 +242,13 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   animation: udle-fadein 0.3s ease;
+  transition: border-color 0.2s;
 }
+.skindle-guess-row-skin:hover { border-color: var(--border-md); }
 
 .skindle-guess-row-skin.wrong-skin {
-  border-color: rgba(239,83,80,0.35);
-  background: rgba(45,20,20,0.6);
+  border-color: rgba(239,83,80,0.3);
+  background: rgba(239,83,80,0.06);
 }
 
 .skindle-guess-skin-name {
@@ -264,12 +266,12 @@
   letter-spacing: 0.06em;
 }
 .skindle-guess-skin-result.wrong {
-  background: rgba(239,83,80,0.15);
+  background: rgba(239,83,80,0.12);
   color: #f88b89;
   border: 1px solid rgba(239,83,80,0.35);
 }
 .skindle-guess-skin-result.correct {
-  background: rgba(76,175,130,0.15);
+  background: var(--green-dim);
   color: #6ee7b2;
   border: 1px solid rgba(76,175,130,0.35);
 }
@@ -284,9 +286,7 @@
   color: var(--text-dim);
   margin-top: -6px;
 }
-.skindle-zoom-label span {
-  color: var(--orange);
-}
+.skindle-zoom-label span { color: var(--orange); }
 
 /* ── Shake animation on wrong guess ── */
 @keyframes skindle-shake {
@@ -296,18 +296,17 @@
   60% { transform: translateX(-4px); }
   80% { transform: translateX(4px); }
 }
-.skindle-shake {
-  animation: skindle-shake 0.35s ease;
-}
+.skindle-shake { animation: skindle-shake 0.35s ease; }
 
-/* ── End message overrides for skindle ── */
+/* ── End message skin reveal ── */
 .skindle-end-skin-reveal {
   display: flex;
   align-items: center;
   gap: 14px;
   margin: 14px 0;
   padding: 12px 18px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   flex-wrap: wrap;
   justify-content: center;
@@ -316,12 +315,10 @@
   width: 96px;
   height: 96px;
   object-fit: contain;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: var(--surface-3);
 }
-.skindle-end-skin-info {
-  text-align: left;
-}
+.skindle-end-skin-info { text-align: left; }
 .skindle-end-skin-poke {
   font-size: 0.8rem;
   color: var(--text-dim);
@@ -338,12 +335,6 @@
 
 /* ── Responsive ── */
 @media (max-width: 480px) {
-  .skindle-zoom-container {
-    width: 280px;
-    height: 280px;
-  }
-  .skindle-back-btn {
-    font-size: 0.75rem;
-    padding: 4px 8px;
-  }
+  .skindle-zoom-container { width: 280px; height: 280px; }
+  .skindle-back-btn { font-size: 0.75rem; padding: 4px 8px; }
 }

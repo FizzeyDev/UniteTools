@@ -1,49 +1,85 @@
 @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg:           #0e1a1b;
-  --surface:      #141f20;
-  --surface-2:    #1a2a2b;
-  --surface-3:    #243536;
+  --bg:           #090f10;
+  --surface:      #101a1b;
+  --surface-2:    #152122;
+  --surface-3:    #1d2e2f;
+  --surface-4:    #243839;
   --border:       rgba(255,255,255,0.07);
+  --border-md:    rgba(255,255,255,0.12);
   --violet:       #9f53ec;
-  --violet-dim:   rgba(159, 83, 236, 0.18);
+  --violet-dim:   rgba(159,83,236,0.15);
   --orange:       #ff9d00;
-  --orange-dim:   rgba(255, 157, 0, 0.18);
+  --orange-dim:   rgba(255,157,0,0.15);
   --blue:         #4fc3f7;
-  --blue-dim:     rgba(79, 195, 247, 0.12);
+  --blue-dim:     rgba(79,195,247,0.12);
+  --blue-glow:    rgba(79,195,247,0.25);
   --green:        #4caf82;
+  --green-dim:    rgba(76,175,130,0.15);
   --red:          #ef5350;
+  --red-dim:      rgba(239,83,80,0.12);
   --yellow:       #ffd740;
+  --yellow-dim:   rgba(255,215,64,0.15);
   --text:         #cfe0e2;
-  --text-dim:     #6a8587;
-  --radius:       14px;
+  --text-dim:     #5a7577;
+  --text-mid:     #8aacaf;
+  --radius:       12px;
   --radius-sm:    8px;
+  --radius-xs:    5px;
+  --shadow-lg:    0 8px 32px rgba(0,0,0,0.6);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.4);
+  --shadow-sm:    0 2px 8px rgba(0,0,0,0.3);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Rajdhani', sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  padding: 1.5rem 1.5rem 3rem;
+  padding: 1.5rem 1.5rem 4rem;
   margin-left: 250px;
   transition: margin-left 0.3s ease;
 }
 body.sidebar-collapsed { margin-left: 0; }
 
+/* Subtle grid bg — same as home.css / tierlist.css */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(79,195,247,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,195,247,0.018) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
 h1 {
   font-family: 'Exo 2', sans-serif;
   text-align: center;
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #fff;
   margin-bottom: 1.5rem;
-  text-shadow: 0 0 40px rgba(159,83,236,0.4);
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 0 60px rgba(79,195,247,0.3), 0 0 120px rgba(159,83,236,0.15);
+}
+h1::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 2px;
+  margin: 8px auto 0;
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  border-radius: 2px;
 }
 
 .draft-controls {
@@ -166,9 +202,9 @@ button:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
   gap: 0;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: 0 8px 48px rgba(0,0,0,0.6);
+  box-shadow: var(--shadow-lg);
   margin-bottom: 1.5rem;
   height: 78vh;
   min-height: 500px;
@@ -1090,6 +1126,11 @@ input:checked + .slider::before { transform: translateX(18px); }
   color: var(--text-dim);
   font-weight: 600;
 }
+
+/* ── Global scrollbar — same as home.css / tierlist.css ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 3px; }
 
 @media (max-width: 860px) {
   body { margin-left: 0; padding: 1rem 0.75rem 2rem; }

@@ -650,6 +650,16 @@
     "dex": 54
   },
   {
+    "name": "Feraligatr",
+    "name_fr": "Aligatueur",
+    "name_es": "Feraligatr",
+    "name_de": "Impergator",
+    "name_it": "Feraligatr",
+    "file": "feraligatr_all.png",
+    "role": "all",
+    "dex": 160
+  },
+  {
     "name": "Slowbro",
     "name_fr": "Flagadoss",
     "name_es": "Slowbro",

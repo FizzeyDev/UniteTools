@@ -1,26 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+
 :root {
-  --bg:         #0e1a1b;
-  --surface:    #141f20;
-  --surface-2:  #1a2a2b;
-  --surface-3:  #243536;
-  --border:     rgba(255,255,255,0.07);
-  --violet:     #9f53ec;
-  --violet-dim: rgba(159,83,236,0.15);
-  --orange:     #ff9d00;
-  --orange-dim: rgba(255,157,0,0.15);
-  --blue:       #4fc3f7;
-  --blue-dim:   rgba(79,195,247,0.12);
-  --green:      #4caf82;
-  --green-dim:  rgba(76,175,130,0.12);
-  --red:        #ef5350;
-  --yellow:     #ffd740;
-  --text:       #cfe0e2;
-  --text-dim:   #6a8587;
-  --radius:     14px;
-  --radius-sm:  8px;
+  --bg:           #090f10;
+  --surface:      #101a1b;
+  --surface-2:    #152122;
+  --surface-3:    #1d2e2f;
+  --surface-4:    #243839;
+  --border:       rgba(255,255,255,0.07);
+  --border-md:    rgba(255,255,255,0.12);
+  --violet:       #9f53ec;
+  --violet-dim:   rgba(159,83,236,0.15);
+  --orange:       #ff9d00;
+  --orange-dim:   rgba(255,157,0,0.15);
+  --blue:         #4fc3f7;
+  --blue-dim:     rgba(79,195,247,0.12);
+  --blue-glow:    rgba(79,195,247,0.25);
+  --green:        #4caf82;
+  --green-dim:    rgba(76,175,130,0.15);
+  --red:          #ef5350;
+  --red-dim:      rgba(239,83,80,0.12);
+  --yellow:       #ffd740;
+  --yellow-dim:   rgba(255,215,64,0.15);
+  --text:         #cfe0e2;
+  --text-dim:     #5a7577;
+  --text-mid:     #8aacaf;
+  --radius:       12px;
+  --radius-sm:    8px;
+  --radius-xs:    5px;
+  --shadow-lg:    0 8px 32px rgba(0,0,0,0.6);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.4);
+  --shadow-sm:    0 2px 8px rgba(0,0,0,0.3);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Rajdhani', sans-serif;
@@ -33,12 +46,26 @@ body {
 }
 body.sidebar-collapsed { margin-left: 0; }
 
+/* Subtle grid bg — same as home.css / tierlist.css / draft.css */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(79,195,247,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,195,247,0.018) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
 /* ── Hero ── */
 .hero {
   text-align: center;
   padding: 4rem 2rem 3rem;
   margin-bottom: 2.5rem;
   position: relative;
+  z-index: 1;
   overflow: hidden;
 }
 
@@ -110,6 +137,8 @@ body.sidebar-collapsed { margin-left: 0; }
   grid-template-columns: 1fr 260px;
   gap: 1.8rem;
   align-items: start;
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Form Card ── */
@@ -118,7 +147,7 @@ body.sidebar-collapsed { margin-left: 0; }
   border-radius: var(--radius);
   padding: 2rem;
   border: 1px solid rgba(159,83,236,0.25);
-  box-shadow: 0 0 32px rgba(159,83,236,0.07);
+  box-shadow: var(--shadow-lg), 0 0 32px rgba(159,83,236,0.07);
 }
 
 .feedback-card h2 {
@@ -172,14 +201,14 @@ body.sidebar-collapsed { margin-left: 0; }
 }
 
 .type-btn.active[data-type="bug"] {
-  background: rgba(239,83,80,0.12);
+  background: var(--red-dim);
   border-color: var(--red);
   color: var(--red);
   box-shadow: 0 0 12px rgba(239,83,80,0.15);
 }
 
 .type-btn.active[data-type="suggestion"] {
-  background: rgba(255,215,64,0.1);
+  background: var(--yellow-dim);
   border-color: var(--yellow);
   color: var(--yellow);
   box-shadow: 0 0 12px rgba(255,215,64,0.15);
@@ -291,14 +320,14 @@ body.sidebar-collapsed { margin-left: 0; }
 
 .status-msg.success {
   display: block;
-  background: rgba(76,175,130,0.12);
+  background: var(--green-dim);
   border: 1px solid rgba(76,175,130,0.35);
   color: var(--green);
 }
 
 .status-msg.error {
   display: block;
-  background: rgba(239,83,80,0.1);
+  background: var(--red-dim);
   border: 1px solid rgba(239,83,80,0.3);
   color: var(--red);
 }
@@ -315,6 +344,7 @@ body.sidebar-collapsed { margin-left: 0; }
   border-radius: var(--radius);
   padding: 1.2rem;
   border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
 }
 
 .info-card h3 {
@@ -398,11 +428,21 @@ footer {
   margin-top: 3rem;
   font-size: 0.78rem;
   color: var(--text-dim);
+  position: relative;
+  z-index: 1;
 }
 
+/* ── Global scrollbar — same as home.css / tierlist.css / draft.css ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 3px; }
+
 /* ── Responsive ── */
-@media (max-width: 768px) {
+@media (max-width: 860px) {
   body { margin-left: 0; padding: 1rem 0.75rem 2rem; }
+}
+
+@media (max-width: 768px) {
   .hero { padding: 2.5rem 1rem 2rem; }
   .hero h1 { font-size: 2rem; }
   .feedback-layout { grid-template-columns: 1fr; }

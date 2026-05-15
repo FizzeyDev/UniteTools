@@ -4637,6 +4637,107 @@
     ]
   },
   {
+    "pokemonId": "feraligatr",
+    "dex": 160,
+    "role": "allrounder",
+    "style": "physical",
+    "stats": [
+      {"level": 1,  "hp": 3460, "atk": 156, "def": 98,  "sp_atk": 20,  "sp_def": 94,  "crit": 0,  "lifesteal": 0,  "attack_speed": 10,    "move_speed": 3700},
+      {"level": 2,  "hp": 3528, "atk": 161, "def": 104, "sp_atk": 21,  "sp_def": 100, "crit": 0,  "lifesteal": 0,  "attack_speed": 10.43, "move_speed": 3700},
+      {"level": 3,  "hp": 3610, "atk": 167, "def": 111, "sp_atk": 23,  "sp_def": 106, "crit": 0,  "lifesteal": 0,  "attack_speed": 10.95, "move_speed": 3700},
+      {"level": 4,  "hp": 3708, "atk": 174, "def": 120, "sp_atk": 25,  "sp_def": 114, "crit": 0,  "lifesteal": 0,  "attack_speed": 11.57, "move_speed": 3700},
+      {"level": 5,  "hp": 4062, "atk": 200, "def": 152, "sp_atk": 32,  "sp_def": 144, "crit": 10, "lifesteal": 5,  "attack_speed": 13.81, "move_speed": 3850},
+      {"level": 6,  "hp": 4203, "atk": 211, "def": 164, "sp_atk": 35,  "sp_def": 155, "crit": 10, "lifesteal": 5,  "attack_speed": 14.71, "move_speed": 3850},
+      {"level": 7,  "hp": 4847, "atk": 258, "def": 221, "sp_atk": 48,  "sp_def": 208, "crit": 10, "lifesteal": 5,  "attack_speed": 18.78, "move_speed": 4000},
+      {"level": 8,  "hp": 5050, "atk": 273, "def": 240, "sp_atk": 52,  "sp_def": 225, "crit": 10, "lifesteal": 5,  "attack_speed": 20.06, "move_speed": 4000},
+      {"level": 9,  "hp": 5294, "atk": 291, "def": 261, "sp_atk": 57,  "sp_def": 245, "crit": 20, "lifesteal": 10, "attack_speed": 21.61, "move_speed": 4150},
+      {"level": 10, "hp": 5587, "atk": 313, "def": 287, "sp_atk": 63,  "sp_def": 269, "crit": 20, "lifesteal": 10, "attack_speed": 23.46, "move_speed": 4150},
+      {"level": 11, "hp": 5938, "atk": 338, "def": 319, "sp_atk": 70,  "sp_def": 298, "crit": 20, "lifesteal": 10, "attack_speed": 25.68, "move_speed": 4300},
+      {"level": 12, "hp": 6359, "atk": 369, "def": 356, "sp_atk": 79,  "sp_def": 333, "crit": 20, "lifesteal": 10, "attack_speed": 28.35, "move_speed": 4300},
+      {"level": 13, "hp": 6865, "atk": 407, "def": 401, "sp_atk": 89,  "sp_def": 375, "crit": 20, "lifesteal": 15, "attack_speed": 31.55, "move_speed": 4300},
+      {"level": 14, "hp": 7472, "atk": 451, "def": 455, "sp_atk": 101, "sp_def": 425, "crit": 20, "lifesteal": 15, "attack_speed": 35.39, "move_speed": 4300},
+      {"level": 15, "hp": 8200, "atk": 505, "def": 520, "sp_atk": 116, "sp_def": 485, "crit": 20, "lifesteal": 15, "attack_speed": 40,    "move_speed": 4300}
+    ],
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "true",
+        "image": "assets/moves/basic_attack.png",
+        "damages": [
+          {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Bite",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/feraligatr/bite.png",
+        "damages": [
+          {"name": "Damage - Bonus", "multiplier": 140, "levelCoef": 0, "constant": 420, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Crunch",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "image": "assets/moves/feraligatr/crunch.png",
+        "damages": [
+          {"name": "Damage - Bonus", "multiplier": 240, "levelCoef": 0, "constant": 720, "dealDamage": true},
+          {"name": "Damage - Bonus +", "multiplier": 276, "levelCoef": 0, "constant": 827, "dealDamage": true, "upgraded": true},
+          {"name": "Damage - Bonus (Destructive Fangs)", "multiplier": 279, "levelCoef": 0, "constant": 837, "dealDamage": true},
+          {"name": "Damage - Bonus + (Destructive Fangs)", "multiplier": 320, "levelCoef": 0, "constant": 963, "dealDamage": true, "upgraded": true}
+        ],
+        "heals": [
+          {"name": "Healing - Gluttonous Fangs", "scaling": "atk", "multiplier": 38, "levelCoef": 0, "constant": 115}
+        ]
+      },
+      {
+        "name": "Scratch",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/feraligatr/scratch.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 105, "levelCoef": 0, "constant": 315, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Waterfall",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/feraligatr/waterfall.png",
+        "damages": [
+          {"name": "Damage - Point Blank",    "multiplier": 170, "levelCoef": 0, "constant": 510, "dealDamage": true},
+          {"name": "Damage - Medium Distance","multiplier": 221, "levelCoef": 0, "constant": 663, "dealDamage": true},
+          {"name": "Damage - Max Distance",   "multiplier": 272, "levelCoef": 0, "constant": 816, "dealDamage": true}
+        ],
+        "shields": [
+          {"name": "Shield", "scaling": "atk", "multiplier": 240, "levelCoef": 0, "constant": 720, "target": "self"}
+        ]
+      },
+      {
+        "name": "Big Jaw Bite (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/feraligatr/big_jaw_bite.png",
+        "damages": [
+          {"name": "Damage - 0 Fang Marks", "multiplier": 300, "levelCoef": 0, "constant": 900,  "dealDamage": true},
+          {"name": "Damage - 1 Fang Mark",  "multiplier": 390, "levelCoef": 0, "constant": 1170, "dealDamage": true},
+          {"name": "Damage - 2 Fang Marks", "multiplier": 480, "levelCoef": 0, "constant": 1440, "dealDamage": true},
+          {"name": "Damage - 3 Fang Marks", "multiplier": 570, "levelCoef": 0, "constant": 1709, "dealDamage": true}
+        ]
+      }
+    ]
+  },
+  {
     "pokemonId": "garchomp",
     "dex": 445,
     "role": "fighter",
