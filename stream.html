@@ -8,16 +8,8 @@
   <link rel="stylesheet" href="./css/navbar.css">
   <link rel="stylesheet" href="./css/stream.css">
   <style>
-    /* ===== FIX: transparent corners on display slots ===== */
-    .display-slot {
-      background: transparent;
-    }
-    .display-slot img {
-      background: transparent;
-      background-color: transparent !important;
-    }
-
-    /* ===== MAP OVERLAY root style ===== */
+    .display-slot { background: transparent; }
+    .display-slot img { background: transparent; background-color: transparent !important; }
     #map-overlay-root {
       display: flex;
       align-items: center;
@@ -26,7 +18,6 @@
       background: transparent;
     }
   </style>
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -44,38 +35,31 @@
   <div id="display-panel">
     <div class="panel-header">
       <h2>🎮 Display Overlay</h2>
-      <button class="help-btn-header" onclick="openModal()">❓ HOW TO SETUP</button>
+      <button class="help-btn-header" onclick="openModal()" data-lang="stream_how_to_btn">❓ HOW TO SETUP</button>
     </div>
     <div class="glow-line"></div>
 
-    <!-- Fearless picks display -->
     <div class="display-area">
       <div class="display-grid" id="displayGrid"></div>
     </div>
 
-    <!-- Ban display slots -->
     <div class="ban-display-section">
-      <div class="ban-display-label">⛔ Bans</div>
+      <div class="ban-display-label">⛔ <span data-lang="stream_bans_label">Bans</span></div>
       <div class="ban-teams-row">
-
         <div class="ban-team-col purple-col">
-          <div class="ban-team-col-label">🟣 Violette</div>
+          <div class="ban-team-col-label" data-lang="stream_team_purple">🟣 Violette</div>
           <div class="ban-slots-row" id="banSlots_purple"></div>
         </div>
-
         <div class="ban-team-col orange-col">
-          <div class="ban-team-col-label">🟠 Orange</div>
+          <div class="ban-team-col-label" data-lang="stream_team_orange">🟠 Orange</div>
           <div class="ban-slots-row" id="banSlots_orange"></div>
         </div>
-
       </div>
     </div>
 
-    <!-- Map selector -->
     <div class="map-section">
-      <div class="map-section-label">🗺️ Map variant</div>
+      <div class="map-section-label" data-lang="stream_map_label">🗺️ Map variant</div>
       <div class="map-buttons">
-
         <div class="map-btn rayquaza" id="mapBtnRayquaza" onclick="setMap('rayquaza')">
           <img class="map-icon"
                src="https://fizzeydev.github.io/UniteTools/assets/maps/spawn/rayquaza.png"
@@ -85,7 +69,6 @@
           <div class="map-name">Rayquaza</div>
           <div class="map-active-dot"></div>
         </div>
-
         <div class="map-btn groudon" id="mapBtnGroudon" onclick="setMap('groudon')">
           <img class="map-icon"
                src="https://fizzeydev.github.io/UniteTools/assets/maps/spawn/groudon.png"
@@ -95,7 +78,6 @@
           <div class="map-name">Groudon</div>
           <div class="map-active-dot"></div>
         </div>
-
         <div class="map-btn kyogre" id="mapBtnKyogre" onclick="setMap('kyogre')">
           <img class="map-icon"
                src="https://fizzeydev.github.io/UniteTools/assets/maps/spawn/kyogre.png"
@@ -105,16 +87,14 @@
           <div class="map-name">Kyogre</div>
           <div class="map-active-dot"></div>
         </div>
-
       </div>
     </div>
 
-    <!-- OBS controls -->
     <div class="obs-bar">
-      <button class="obs-btn" onclick="openOverlay()">📺 PICKS OBS</button>
-      <button class="obs-btn" onclick="openBansOverlay()">⛔ BANS OBS</button>
-      <button class="obs-btn" onclick="openMapsOverlay()">🗺️ MAP OBS</button>
-      <button class="clear-btn" onclick="clearAll()">✕ VIDER</button>
+      <button class="obs-btn" onclick="openOverlay()" data-lang="stream_obs_picks">📺 PICKS OBS</button>
+      <button class="obs-btn" onclick="openBansOverlay()" data-lang="stream_obs_bans">⛔ BANS OBS</button>
+      <button class="obs-btn" onclick="openMapsOverlay()" data-lang="stream_obs_map">🗺️ MAP OBS</button>
+      <button class="clear-btn" onclick="clearAll()" data-lang="stream_clear">✕ VIDER</button>
     </div>
   </div>
 
@@ -126,59 +106,53 @@
 
     <div class="list-header">
       <div class="list-title">
-        Fearless Draft Stream Overlay
+        <span data-lang="stream_title">Fearless Draft Stream Overlay</span>
         <span class="count-badge" id="countBadge">0</span>
       </div>
       <div class="search-bar">
         <span class="search-icon">🔍</span>
-        <input type="text" id="searchInput" placeholder="Rechercher (EN / FR)..." oninput="renderList()">
+        <input type="text" id="searchInput" data-lang-placeholder="stream_search_placeholder" placeholder="Rechercher (EN / FR)..." oninput="renderList()">
       </div>
     </div>
 
-    <!-- ===== MODE TABS ===== -->
     <div class="mode-tabs">
-      <button class="mode-tab fearless-tab active" id="tabFearless" onclick="setTab('fearless')">
+      <button class="mode-tab fearless-tab active" id="tabFearless" onclick="setTab('fearless')" data-lang="stream_tab_fearless">
         🎮 Fearless Picks
       </button>
-      <button class="mode-tab bans-tab" id="tabBans" onclick="setTab('bans')">
+      <button class="mode-tab bans-tab" id="tabBans" onclick="setTab('bans')" data-lang="stream_tab_bans">
         ⛔ Bans
       </button>
     </div>
 
-    <!-- ===== FEARLESS CONTROLS ===== -->
     <div id="fearlessControls">
       <div class="team-selector">
-        <span class="team-selector-label">Team :</span>
-        <button class="team-btn purple" id="btnPurple" onclick="setMode('purple')">🟣 Violette</button>
-        <button class="team-btn orange" id="btnOrange" onclick="setMode('orange')">🟠 Orange</button>
-        <button class="team-btn none-btn active" id="btnNone" onclick="setMode(null)">— Aucune</button>
+        <span class="team-selector-label" data-lang="stream_team_label">Team :</span>
+        <button class="team-btn purple" id="btnPurple" onclick="setMode('purple')" data-lang="stream_team_purple_btn">🟣 Violette</button>
+        <button class="team-btn orange" id="btnOrange" onclick="setMode('orange')" data-lang="stream_team_orange_btn">🟠 Orange</button>
+        <button class="team-btn none-btn active" id="btnNone" onclick="setMode(null)" data-lang="stream_team_none">— Aucune</button>
       </div>
     </div>
 
-    <!-- ===== BAN CONTROLS ===== -->
     <div id="bansControls" style="display:none">
       <div class="ban-mode-header">
-        <span class="ban-mode-label">Premier ban :</span>
-        <button class="ban-mode-btn purple-first active" id="btnBanPurpleFirst" onclick="setBanFirstTeam('purple')">
+        <span class="ban-mode-label" data-lang="stream_ban_first_label">Premier ban :</span>
+        <button class="ban-mode-btn purple-first active" id="btnBanPurpleFirst" onclick="setBanFirstTeam('purple')" data-lang="stream_ban_purple_first">
           🟣 Violet first
         </button>
-        <button class="ban-mode-btn orange-first" id="btnBanOrangeFirst" onclick="setBanFirstTeam('orange')">
+        <button class="ban-mode-btn orange-first" id="btnBanOrangeFirst" onclick="setBanFirstTeam('orange')" data-lang="stream_ban_orange_first">
           🟠 Orange first
         </button>
       </div>
-      <div class="next-ban-indicator" id="nextBanIndicator">
-        <!-- Populated by JS -->
-      </div>
+      <div class="next-ban-indicator" id="nextBanIndicator"></div>
     </div>
 
-    <!-- ===== ROLE TABS (shared) ===== -->
     <div class="role-tabs" id="roleTabs">
-      <div class="role-tab active"  data-role="any" onclick="setRole(this,'any')">Tous</div>
-      <div class="role-tab" data-role="atk" onclick="setRole(this,'atk')">Attaquant</div>
-      <div class="role-tab" data-role="def" onclick="setRole(this,'def')">Défenseur</div>
-      <div class="role-tab" data-role="sup" onclick="setRole(this,'sup')">Support</div>
-      <div class="role-tab" data-role="all" onclick="setRole(this,'all')">Polyvalent</div>
-      <div class="role-tab" data-role="spe" onclick="setRole(this,'spe')">Rapide</div>
+      <div class="role-tab active"  data-role="any" onclick="setRole(this,'any')" data-lang="stream_role_all">Tous</div>
+      <div class="role-tab" data-role="atk" onclick="setRole(this,'atk')" data-lang="stream_role_atk">Attaquant</div>
+      <div class="role-tab" data-role="def" onclick="setRole(this,'def')" data-lang="stream_role_def">Défenseur</div>
+      <div class="role-tab" data-role="sup" onclick="setRole(this,'sup')" data-lang="stream_role_sup">Support</div>
+      <div class="role-tab" data-role="all" onclick="setRole(this,'all')" data-lang="stream_role_allaround">Polyvalent</div>
+      <div class="role-tab" data-role="spe" onclick="setRole(this,'spe')" data-lang="stream_role_spe">Rapide</div>
     </div>
 
     <div class="pokemon-grid-wrapper">
@@ -195,184 +169,98 @@
   <div id="modal-box">
 
     <div class="modal-header">
-      <h3>⚙️ How to Setup</h3>
+      <h3 data-lang="stream_modal_title">⚙️ How to Setup</h3>
       <div class="modal-close" onclick="closeModal()">×</div>
     </div>
 
     <div class="modal-body">
-      <div class="modal-lang-tabs">
-        <button class="modal-lang-tab active" onclick="setLang('fr', this)">🇫🇷 Français</button>
-        <button class="modal-lang-tab"        onclick="setLang('en', this)">🇬🇧 English</button>
-      </div>
 
-      <!-- FRANÇAIS -->
-      <div class="modal-section active" id="section-fr">
-
-        <div class="setup-step">
-          <div class="step-num">1</div>
-          <div class="step-content">
-            <h4>Choisir une team (onglet Fearless)</h4>
-            <p>Avant de sélectionner un Pokémon, clique sur <span class="highlight-purple">🟣 Violette</span> ou <span class="highlight-orange">🟠 Orange</span> pour assigner les picks à la bonne équipe. Si aucune team n'est sélectionnée, le Pokémon sera ajouté sans contour coloré.</p>
-          </div>
-        </div>
-
-        <div class="setup-step">
-          <div class="step-num">2</div>
-          <div class="step-content">
-            <h4>Sélectionner les Pokémon</h4>
-            <p>Clique sur les cartes Pokémon dans la liste de droite. Ils apparaissent dans le panneau gauche avec le contour de la team active. Clique à nouveau sur un Pokémon pour le retirer.</p>
-          </div>
-        </div>
-
-        <div class="setup-step">
-          <div class="step-num">3</div>
-          <div class="step-content">
-            <h4>Onglet Bans</h4>
-            <p>Passe dans l'onglet <strong>⛔ Bans</strong> et choisis quelle team ban en premier (<span class="highlight-purple">🟣 Violet first</span> ou <span class="highlight-orange">🟠 Orange first</span>). Clique ensuite sur les Pokémon à bannir — l'alternance se fait automatiquement (V→O→V→O→V→O). Les bans apparaissent dans le panneau gauche et sur l'overlay dédiée.</p>
-          </div>
-        </div>
-
-        <div class="setup-step">
-          <div class="step-num">4</div>
-          <div class="step-content">
-            <h4>Choisir la map</h4>
-            <p>Sélectionne la map du match en bas du panneau gauche : <span class="highlight" style="color:#4caf82">Rayquaza</span>, <span class="highlight" style="color:#ff7043">Groudon</span> ou <span class="highlight" style="color:#4fc3f7">Kyogre</span>. La map sélectionnée s'affiche automatiquement dans l'<strong>Overlay Map</strong> dédiée, indépendamment des picks et des bans.</p>
-          </div>
-        </div>
-
-        <div class="setup-divider"></div>
-
-        <div class="setup-step">
-          <div class="step-num">5</div>
-          <div class="step-content">
-            <h4>Configurer dans OBS — 4 sources Browser</h4>
-            <p>Tu dois créer <strong>quatre sources Navigateur (Browser Source)</strong> dans OBS :</p>
-            <ul>
-              <li><strong>Controller</strong> — la fenêtre de contrôle principale (à garder ouverte mais hors stream) :<br>
-                <div class="code-block">https://unite-tools.com/stream.html</div>
-              </li>
-              <li><strong>Overlay Picks</strong> — affiche les Pokémon sélectionnés par chaque team :<br>
-                <div class="code-block">https://unite-tools.com/stream.html?overlay=true</div>
-              </li>
-              <li><strong>Overlay Bans</strong> — affiche les 6 bans (3 par team) :<br>
-                <div class="code-block">https://unite-tools.com/stream.html?overlay=bans</div>
-              </li>
-              <li><strong>Overlay Map</strong> — affiche uniquement la map sélectionnée, idéal pour la placer séparément sur la scène OBS :<br>
-                <div class="code-block">https://unite-tools.com/stream.html?overlay=maps</div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="setup-step">
-          <div class="step-num">6</div>
-          <div class="step-content">
-            <h4>Dimensions recommandées pour chaque source</h4>
-            <p>
-              • <strong>Controller</strong> : ~460 × 700 px (pas dans le stream)<br>
-              • <strong>Overlay Picks</strong> : ~750 × 220 px<br>
-              • <strong>Overlay Bans</strong> : ~580 × 180 px<br>
-              • <strong>Overlay Map</strong> : ~380 × 120 px
-            </p>
-          </div>
-        </div>
-
-        <div class="setup-step">
-          <div class="step-num">7</div>
-          <div class="step-content">
-            <h4>Activer le fond transparent dans OBS</h4>
-            <p>Pour chaque Browser Source, coche l'option <strong>"Supprimer la couleur d'arrière-plan"</strong> (ou <em>Custom CSS</em> : <code>body { background-color: rgba(0,0,0,0) !important; }</code>) afin que les overlays s'intègrent proprement par-dessus ta scène de stream.</p>
-          </div>
-        </div>
-
-        <div class="tip-box">
-          <strong>💡 Astuce :</strong> Les boutons <strong>📺 PICKS OBS</strong>, <strong>⛔ BANS OBS</strong> et <strong>🗺️ MAP OBS</strong> ouvrent directement la fenêtre overlay dans les bonnes dimensions. Le bouton <strong>✕ VIDER</strong> réinitialise tout (picks, bans et map).
+      <!-- STEP 1 -->
+      <div class="setup-step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4 data-lang="stream_step1_title">Choisir une team (onglet Fearless)</h4>
+          <p data-lang="stream_step1_desc">Avant de sélectionner un Pokémon, clique sur 🟣 Violette ou 🟠 Orange pour assigner les picks à la bonne équipe.</p>
         </div>
       </div>
 
-      <!-- ENGLISH -->
-      <div class="modal-section" id="section-en">
-
-        <div class="setup-step">
-          <div class="step-num">1</div>
-          <div class="step-content">
-            <h4>Pick a team (Fearless tab)</h4>
-            <p>Before selecting a Pokémon, click <span class="highlight-purple">🟣 Purple</span> or <span class="highlight-orange">🟠 Orange</span> to assign picks to the right team. If no team is selected, the Pokémon will be added without a colored border.</p>
-          </div>
+      <!-- STEP 2 -->
+      <div class="setup-step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4 data-lang="stream_step2_title">Sélectionner les Pokémon</h4>
+          <p data-lang="stream_step2_desc">Clique sur les cartes Pokémon dans la liste de droite. Ils apparaissent dans le panneau gauche. Clique à nouveau pour retirer.</p>
         </div>
+      </div>
 
-        <div class="setup-step">
-          <div class="step-num">2</div>
-          <div class="step-content">
-            <h4>Select Pokémon</h4>
-            <p>Click on Pokémon cards in the right list. They appear in the left panel with the active team's border color. Click again to remove them.</p>
-          </div>
+      <!-- STEP 3 -->
+      <div class="setup-step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4 data-lang="stream_step3_title">Onglet Bans</h4>
+          <p data-lang="stream_step3_desc">Passe dans l'onglet ⛔ Bans et choisis quelle team ban en premier. L'alternance se fait automatiquement (V→O→V→O→V→O).</p>
         </div>
+      </div>
 
-        <div class="setup-step">
-          <div class="step-num">3</div>
-          <div class="step-content">
-            <h4>Bans tab</h4>
-            <p>Switch to the <strong>⛔ Bans</strong> tab and choose which team bans first (<span class="highlight-purple">🟣 Purple first</span> or <span class="highlight-orange">🟠 Orange first</span>). Click Pokémon to ban them — alternation is automatic (P→O→P→O→P→O). Bans appear in the left panel and on the dedicated overlay.</p>
-          </div>
+      <!-- STEP 4 -->
+      <div class="setup-step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4 data-lang="stream_step4_title">Choisir la map</h4>
+          <p data-lang="stream_step4_desc">Sélectionne la map du match en bas du panneau gauche : Rayquaza, Groudon ou Kyogre. Elle s'affiche dans l'Overlay Map dédiée.</p>
         </div>
+      </div>
 
-        <div class="setup-step">
-          <div class="step-num">4</div>
-          <div class="step-content">
-            <h4>Select the map</h4>
-            <p>Choose the match map at the bottom of the left panel: <span class="highlight" style="color:#4caf82">Rayquaza</span>, <span class="highlight" style="color:#ff7043">Groudon</span> or <span class="highlight" style="color:#4fc3f7">Kyogre</span>. The selected map is shown in its own dedicated <strong>Map Overlay</strong>, independently from picks and bans.</p>
-          </div>
+      <div class="setup-divider"></div>
+
+      <!-- STEP 5 -->
+      <div class="setup-step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4 data-lang="stream_step5_title">Configurer dans OBS — 4 sources Browser</h4>
+          <p data-lang="stream_step5_intro">Tu dois créer quatre sources Navigateur (Browser Source) dans OBS :</p>
+          <ul>
+            <li><strong data-lang="stream_step5_controller_label">Controller</strong> — <span data-lang="stream_step5_controller_desc">la fenêtre de contrôle principale</span> :<br>
+              <div class="code-block">https://unite-tools.com/stream.html</div>
+            </li>
+            <li><strong data-lang="stream_step5_picks_label">Overlay Picks</strong> — <span data-lang="stream_step5_picks_desc">affiche les Pokémon sélectionnés</span> :<br>
+              <div class="code-block">https://unite-tools.com/stream.html?overlay=true</div>
+            </li>
+            <li><strong data-lang="stream_step5_bans_label">Overlay Bans</strong> — <span data-lang="stream_step5_bans_desc">affiche les 6 bans</span> :<br>
+              <div class="code-block">https://unite-tools.com/stream.html?overlay=bans</div>
+            </li>
+            <li><strong data-lang="stream_step5_map_label">Overlay Map</strong> — <span data-lang="stream_step5_map_desc">affiche uniquement la map sélectionnée</span> :<br>
+              <div class="code-block">https://unite-tools.com/stream.html?overlay=maps</div>
+            </li>
+          </ul>
         </div>
+      </div>
 
-        <div class="setup-divider"></div>
-
-        <div class="setup-step">
-          <div class="step-num">5</div>
-          <div class="step-content">
-            <h4>Setup in OBS — 4 Browser Sources</h4>
-            <p>You need to create <strong>four Browser Sources</strong> in OBS:</p>
-            <ul>
-              <li><strong>Controller</strong> — the main control window (keep open, but off-stream):<br>
-                <div class="code-block">https://unite-tools.com/stream.html</div>
-              </li>
-              <li><strong>Picks Overlay</strong> — shows each team's selected Pokémon:<br>
-                <div class="code-block">https://unite-tools.com/stream.html?overlay=true</div>
-              </li>
-              <li><strong>Bans Overlay</strong> — shows all 6 bans (3 per team):<br>
-                <div class="code-block">https://unite-tools.com/stream.html?overlay=bans</div>
-              </li>
-              <li><strong>Map Overlay</strong> — shows only the selected map, great for placing it anywhere on your OBS scene independently:<br>
-                <div class="code-block">https://unite-tools.com/stream.html?overlay=maps</div>
-              </li>
-            </ul>
-          </div>
+      <!-- STEP 6 -->
+      <div class="setup-step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h4 data-lang="stream_step6_title">Dimensions recommandées</h4>
+          <p data-lang="stream_step6_desc">
+            • Controller : ~460 × 700 px<br>
+            • Overlay Picks : ~750 × 220 px<br>
+            • Overlay Bans : ~580 × 180 px<br>
+            • Overlay Map : ~380 × 120 px
+          </p>
         </div>
+      </div>
 
-        <div class="setup-step">
-          <div class="step-num">6</div>
-          <div class="step-content">
-            <h4>Recommended dimensions per source</h4>
-            <p>
-              • <strong>Controller</strong>: ~460 × 700 px (not in stream)<br>
-              • <strong>Picks Overlay</strong>: ~750 × 220 px<br>
-              • <strong>Bans Overlay</strong>: ~580 × 180 px<br>
-              • <strong>Map Overlay</strong>: ~380 × 120 px
-            </p>
-          </div>
+      <!-- STEP 7 -->
+      <div class="setup-step">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <h4 data-lang="stream_step7_title">Activer le fond transparent dans OBS</h4>
+          <p data-lang="stream_step7_desc">Pour chaque Browser Source, coche "Supprimer la couleur d'arrière-plan" afin que les overlays s'intègrent proprement.</p>
         </div>
+      </div>
 
-        <div class="setup-step">
-          <div class="step-num">7</div>
-          <div class="step-content">
-            <h4>Enable transparent background in OBS</h4>
-            <p>For each Browser Source, check <strong>"Remove background color"</strong> (or add Custom CSS: <code>body { background-color: rgba(0,0,0,0) !important; }</code>) so the overlays blend cleanly over your stream scene.</p>
-          </div>
-        </div>
-
-        <div class="tip-box">
-          <strong>💡 Tip:</strong> The <strong>📺 PICKS OBS</strong>, <strong>⛔ BANS OBS</strong> and <strong>🗺️ MAP OBS</strong> buttons open each overlay window at the right size. The <strong>✕ CLEAR</strong> button resets everything (picks, bans and map).
-        </div>
+      <div class="tip-box" data-lang="stream_tip">
+        <strong>💡 Astuce :</strong> Les boutons 📺 PICKS OBS, ⛔ BANS OBS et 🗺️ MAP OBS ouvrent directement la fenêtre overlay. Le bouton ✕ VIDER réinitialise tout.
       </div>
 
     </div>

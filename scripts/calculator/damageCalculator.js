@@ -126,7 +126,7 @@ function applyPokemonBuffs(pokemon, stats) {
 
   // Charizard Y
   if (pokemon?.pokemonId==="mega-charizard-y" && pokemon===state.currentAttacker && state.attackerBlazeActive) {
-    atk += Math.floor(stats.atk*0.20);
+    atk += Math.floor(stats.atk*0.08);
   }
 
   return { hp, atk, sp_atk, def, sp_def };

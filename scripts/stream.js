@@ -117,20 +117,21 @@ let bans         = [];
 let banFirstTeam = 'purple';
 let activeTab    = 'fearless';
 
+/* ── Helper traduction ── */
+function t(key, fallback) {
+  try {
+    const lang = window.translations && window.translations[currentLang];
+    return (lang && lang[key]) ? lang[key] : fallback;
+  } catch(e) { return fallback; }
+}
+
 (function removeNavbarInOverlayMode() {
   const params = new URLSearchParams(window.location.search);
   const overlayParam = params.get('overlay');
- 
+
   if (overlayParam) {
-    /* Supprime le conteneur navbar s'il existe déjà dans le DOM */
     const navbarContainer = document.getElementById('navbar-container');
     if (navbarContainer) navbarContainer.remove();
- 
-    /*
-     * body.overlay-mode est déjà géré dans stream.css pour
-     * background: transparent et margin-left: 0.
-     * On l'ajoute ici aussi pour le décalage navbar.
-     */
     document.body.classList.add('overlay-mode');
   }
 })();
@@ -263,12 +264,12 @@ function onBanCardClick(file) {
   }
 
   if (picks.some(p => p.file === file)) {
-    showToast('Ce Pokémon est déjà dans les picks !');
+    showToast(t('stream_toast_already_picked', 'Ce Pokémon est déjà dans les picks !'));
     return;
   }
 
   if (bans.length >= 6) {
-    showToast('Maximum 6 bans atteint !');
+    showToast(t('stream_toast_max_bans', 'Maximum 6 bans atteint !'));
     return;
   }
 
@@ -309,15 +310,26 @@ function renderDisplay() {
   grid.innerHTML = '';
 
   if (picks.length === 0) {
-    grid.innerHTML = `<div class="empty-display">
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="18" stroke="#cfe0e2" stroke-width="1.5"/>
-        <line x1="2" y1="20" x2="38" y2="20" stroke="#cfe0e2" stroke-width="1.5"/>
-        <circle cx="20" cy="20" r="5" stroke="#cfe0e2" stroke-width="1.5" fill="#090f10"/>
-      </svg>
-      <span>Sélectionnez une team puis</span>
-      <span>cliquez sur un Pokémon</span>
-    </div>`;
+    grid.innerHTML = `
+      <div class="empty-display" style="
+        width:100%;
+        height:100%;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        gap:8px;
+      ">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="18" stroke="#cfe0e2" stroke-width="1.5"/>
+          <line x1="2" y1="20" x2="38" y2="20" stroke="#cfe0e2" stroke-width="1.5"/>
+          <circle cx="20" cy="20" r="5" stroke="#cfe0e2" stroke-width="1.5" fill="#090f10"/>
+        </svg>
+        <span>${t('stream_empty_display_1', 'Select a team and')}</span>
+        <span>${t('stream_empty_display_2', 'click on a Pokemon')}</span>
+      </div>
+    `;
     return;
   }
 
@@ -335,7 +347,7 @@ function renderDisplay() {
   });
 }
 
-// ===== RENDER BAN DISPLAY (left panel ban slots) =====
+// ===== RENDER BAN DISPLAY =====
 function renderBanDisplay() {
   const purpleBans = bans.filter(b => b.team === 'purple');
   const orangeBans = bans.filter(b => b.team === 'orange');
@@ -374,10 +386,12 @@ function renderNextBanIndicator() {
   if (!el) return;
   const next = getNextBanTeam();
   if (!next) {
-    el.innerHTML = `<div class="next-ban-dot done"></div><span class="next-ban-text done">Bans terminés</span>`;
+    el.innerHTML = `<div class="next-ban-dot done"></div><span class="next-ban-text done">${t('stream_bans_done', 'Bans terminés')}</span>`;
   } else {
-    const teamLabel = next === 'purple' ? '🟣 Violette' : '🟠 Orange';
-    el.innerHTML = `<div class="next-ban-dot ${next}"></div><span class="next-ban-text ${next}">Prochain ban : ${teamLabel} (${bans.length + 1}/6)</span>`;
+    const teamLabel = next === 'purple'
+      ? t('stream_team_purple', '🟣 Violette')
+      : t('stream_team_orange', '🟠 Orange');
+    el.innerHTML = `<div class="next-ban-dot ${next}"></div><span class="next-ban-text ${next}">${t('stream_next_ban', 'Prochain ban :')} ${teamLabel} (${bans.length + 1}/6)</span>`;
   }
 }
 
@@ -404,7 +418,6 @@ function renderList() {
       card.className = 'pokemon-card' + (inDisplay ? ' in-display' : '');
     } else {
       if (banEntry) {
-        // MODIF: colored ban cards instead of greyed
         card.className = `pokemon-card banned-${banEntry.team}-colored`;
       } else if (inDisplay) {
         card.className = 'pokemon-card in-picks-ban-mode';
@@ -440,41 +453,41 @@ function setRole(el, role) {
 function openOverlay() {
   const url = window.location.href.split('?')[0] + '?overlay=true';
   window.open(url, '_blank', 'width=750,height=220,resizable=yes,scrollbars=no');
-  showToast('Fenêtre overlay ouverte — ajoutez comme Browser Source dans OBS');
+  showToast(t('stream_toast_overlay_picks', 'Fenêtre overlay ouverte — ajoutez comme Browser Source dans OBS'));
 }
 
 function openBansOverlay() {
   const url = window.location.href.split('?')[0] + '?overlay=bans';
   window.open(url, '_blank', 'width=600,height=200,resizable=yes,scrollbars=no');
-  showToast('Overlay bans ouverte — ajoutez comme Browser Source dans OBS');
+  showToast(t('stream_toast_overlay_bans', 'Overlay bans ouverte — ajoutez comme Browser Source dans OBS'));
 }
 
 function openMapsOverlay() {
   const url = window.location.href.split('?')[0] + '?overlay=maps';
   window.open(url, '_blank', 'width=380,height=120,resizable=yes,scrollbars=no');
-  showToast('Overlay map ouverte — ajoutez comme Browser Source dans OBS');
+  showToast(t('stream_toast_overlay_maps', 'Overlay map ouverte — ajoutez comme Browser Source dans OBS'));
 }
 
 function copyOverlayURL() {
   const url = window.location.href.split('?')[0] + '?overlay=true';
-  navigator.clipboard.writeText(url).then(() => showToast('URL copiée ! Collez dans OBS > Browser Source'));
+  navigator.clipboard.writeText(url).then(() => showToast(t('stream_toast_url_picks', 'URL copiée ! Collez dans OBS > Browser Source')));
 }
 
 function copyBansOverlayURL() {
   const url = window.location.href.split('?')[0] + '?overlay=bans';
-  navigator.clipboard.writeText(url).then(() => showToast('URL bans copiée ! Collez dans OBS > Browser Source'));
+  navigator.clipboard.writeText(url).then(() => showToast(t('stream_toast_url_bans', 'URL bans copiée ! Collez dans OBS > Browser Source')));
 }
 
 function copyMapsOverlayURL() {
   const url = window.location.href.split('?')[0] + '?overlay=maps';
-  navigator.clipboard.writeText(url).then(() => showToast('URL map copiée ! Collez dans OBS > Browser Source'));
+  navigator.clipboard.writeText(url).then(() => showToast(t('stream_toast_url_maps', 'URL map copiée ! Collez dans OBS > Browser Source')));
 }
 
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3500);
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
 }
 
 // ===== MODAL =====
@@ -483,13 +496,6 @@ function closeModal() { document.getElementById('modal-overlay').classList.remov
 
 function onModalOverlayClick(e) {
   if (e.target === document.getElementById('modal-overlay')) closeModal();
-}
-
-function setLang(lang, el) {
-  document.querySelectorAll('.modal-lang-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  document.querySelectorAll('.modal-section').forEach(s => s.classList.remove('active'));
-  document.getElementById('section-' + lang).classList.add('active');
 }
 
 // ===== OVERLAY MODE (picks) =====
@@ -590,7 +596,6 @@ function initBansOverlay() {
           slot.appendChild(pokeImg);
           slot.appendChild(missingImg);
 
-          // Couleur selon l'équipe
           if (team === 'purple') {
             slot.style.borderColor = 'var(--violet)';
             slot.style.background = 'rgba(159,83,236,0.18)';
@@ -645,14 +650,12 @@ function initMapsOverlay() {
   function renderMapOverlay(mapData) {
     mapBar.innerHTML = '';
 
-    // MODIF: always show selected map centered, others greyed but visible
-    // Sort: active map in center position (index 1 of 3)
     const sortedMaps = [...MAPS];
     if (mapData) {
       const activeIdx = sortedMaps.findIndex(m => m.id === mapData);
       if (activeIdx !== -1) {
         const [active] = sortedMaps.splice(activeIdx, 1);
-        sortedMaps.splice(1, 0, active); // insert at center
+        sortedMaps.splice(1, 0, active);
       }
     }
 
@@ -692,7 +695,6 @@ function initMapsOverlay() {
       mapBar.appendChild(item);
     });
 
-    // Hide if no map selected
     mapBar.style.display = mapData ? 'flex' : 'none';
   }
 
@@ -741,7 +743,7 @@ function initResizableDivider() {
   document.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
     const delta = e.clientX - startX;
-    const newWidth = Math.max(200, startWidth + delta); // no min cap on max
+    const newWidth = Math.max(200, startWidth + delta);
     displayPanel.style.flex = 'none';
     displayPanel.style.width = newWidth + 'px';
   });
@@ -754,6 +756,11 @@ function initResizableDivider() {
     }
   });
 }
+
+// ===== Re-render quand la langue change =====
+document.addEventListener('translationsReady', () => {
+  renderNextBanIndicator();
+});
 
 // ===== INIT =====
 loadState();
