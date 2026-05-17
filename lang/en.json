@@ -561,8 +561,6 @@
   "stream_step1_desc": "Before selecting a Pokémon, click <span class=\"highlight-purple\">🟣 Purple</span> or <span class=\"highlight-orange\">🟠 Orange</span> to assign picks to the right team. If no team is selected, the Pokémon will be added without a colored border.",
   "stream_step2_title": "Select Pokémon",
   "stream_step2_desc": "Click on Pokémon cards in the right list. They appear in the left panel with the active team's border color. Click again to remove them.",
-  "stream_step3_title": "Bans tab",
-  "stream_step3_desc": "Switch to the <strong>⛔ Bans</strong> tab and choose which team bans first (<span class=\"highlight-purple\">🟣 Purple first</span> or <span class=\"highlight-orange\">🟠 Orange first</span>). Click Pokémon to ban them — alternation is automatic (P→O→P→O→P→O).",
   "stream_step4_title": "Select the map",
   "stream_step4_desc": "Choose the match map at the bottom of the left panel: <span class=\"highlight\" style=\"color:#4caf82\">Rayquaza</span>, <span class=\"highlight\" style=\"color:#ff7043\">Groudon</span> or <span class=\"highlight\" style=\"color:#4fc3f7\">Kyogre</span>. The selected map is shown in its own dedicated <strong>Map Overlay</strong>.",
   "stream_step5_title": "Setup in OBS — 4 Browser Sources",
@@ -579,5 +577,29 @@
   "stream_step6_desc": "• <strong>Controller</strong>: ~460 × 700 px (not in stream)<br>• <strong>Picks Overlay</strong>: ~750 × 220 px<br>• <strong>Bans Overlay</strong>: ~580 × 180 px<br>• <strong>Map Overlay</strong>: ~380 × 120 px",
   "stream_step7_title": "Enable transparent background in OBS",
   "stream_step7_desc": "For each Browser Source, check <strong>\"Remove background color\"</strong> (or add Custom CSS: <code>body { background-color: rgba(0,0,0,0) !important; }</code>) so the overlays blend cleanly over your stream scene.",
-  "stream_tip": "<strong>💡 Tip:</strong> The <strong>📺 PICKS OBS</strong>, <strong>⛔ BANS OBS</strong> and <strong>🗺️ MAP OBS</strong> buttons open each overlay window at the right size. The <strong>✕ CLEAR</strong> button resets everything (picks, bans and map)."
+  "stream_tip": "<strong>💡 Tip:</strong> The <strong>📺 PICKS OBS</strong>, <strong>⛔ BANS OBS</strong> and <strong>🗺️ MAP OBS</strong> buttons open each overlay window at the right size. The <strong>✕ CLEAR</strong> button resets everything (picks, bans and map).",
+  "_comment_new_keys": "New keys to merge into lang/en.json",
+
+  "stream_ban_order_label": "Ban order:",
+  "stream_ban_order_purple": "🟣 P-O-P-O-P-O",
+  "stream_ban_order_orange": "🟠 O-P-O-P-O-P",
+  "stream_ban_order_free": "🔓 Free",
+
+  "stream_ban_empty_label": "Empty ban",
+  "stream_ban_empty_title": "Add an empty ban (Pokémon not shown)",
+
+  "stream_team_color_label": "Team color",
+
+  "stream_clear_title": "Clear",
+  "stream_clear_desc": "What do you want to clear?",
+  "stream_clear_fearless": "Fearless only",
+  "stream_clear_bans": "Bans only",
+  "stream_clear_both": "Clear everything",
+  "stream_clear_cancel": "Cancel",
+
+  "stream_empty_display_1": "Select a team and",
+  "stream_empty_display_2": "click a Pokémon",
+
+  "stream_step3_title": "Bans tab",
+  "stream_step3_desc": "In the ⛔ Bans tab, choose the ban order: Purple first (P-O-P-O-P-O), Orange first (O-P-O-P-O-P), or Free (3 Purple then 3 Orange automatically). Click Pokémon to ban them — the team color is assigned automatically. Use the '+ Empty ban' card to add a ban without showing a Pokémon."
 }

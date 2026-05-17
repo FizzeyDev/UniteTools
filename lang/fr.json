@@ -561,8 +561,6 @@
   "stream_step1_desc": "Avant de sélectionner un Pokémon, clique sur <span class=\"highlight-purple\">🟣 Violette</span> ou <span class=\"highlight-orange\">🟠 Orange</span> pour assigner les picks à la bonne équipe. Si aucune team n'est sélectionnée, le Pokémon sera ajouté sans contour coloré.",
   "stream_step2_title": "Sélectionner les Pokémon",
   "stream_step2_desc": "Clique sur les cartes Pokémon dans la liste de droite. Ils apparaissent dans le panneau gauche avec le contour de la team active. Clique à nouveau sur un Pokémon pour le retirer.",
-  "stream_step3_title": "Onglet Bans",
-  "stream_step3_desc": "Passe dans l'onglet <strong>⛔ Bans</strong> et choisis quelle team ban en premier (<span class=\"highlight-purple\">🟣 Violet en premier</span> ou <span class=\"highlight-orange\">🟠 Orange en premier</span>). Clique ensuite sur les Pokémon à bannir — l'alternance se fait automatiquement (V→O→V→O→V→O).",
   "stream_step4_title": "Choisir la map",
   "stream_step4_desc": "Sélectionne la map du match en bas du panneau gauche : <span class=\"highlight\" style=\"color:#4caf82\">Rayquaza</span>, <span class=\"highlight\" style=\"color:#ff7043\">Groudon</span> ou <span class=\"highlight\" style=\"color:#4fc3f7\">Kyogre</span>. La map sélectionnée s'affiche dans l'<strong>Overlay Map</strong> dédiée.",
   "stream_step5_title": "Configurer dans OBS — 4 sources Browser",
@@ -579,5 +577,29 @@
   "stream_step6_desc": "• <strong>Controller</strong> : ~460 × 700 px (pas dans le stream)<br>• <strong>Overlay Picks</strong> : ~750 × 220 px<br>• <strong>Overlay Bans</strong> : ~580 × 180 px<br>• <strong>Overlay Map</strong> : ~380 × 120 px",
   "stream_step7_title": "Activer le fond transparent dans OBS",
   "stream_step7_desc": "Pour chaque Browser Source, coche l'option <strong>\"Supprimer la couleur d'arrière-plan\"</strong> (ou <em>Custom CSS</em> : <code>body { background-color: rgba(0,0,0,0) !important; }</code>) afin que les overlays s'intègrent proprement par-dessus ta scène.",
-  "stream_tip": "<strong>💡 Astuce :</strong> Les boutons <strong>📺 PICKS OBS</strong>, <strong>⛔ BANS OBS</strong> et <strong>🗺️ MAP OBS</strong> ouvrent directement la fenêtre overlay dans les bonnes dimensions. Le bouton <strong>✕ VIDER</strong> réinitialise tout (picks, bans et map)."
+  "stream_tip": "<strong>💡 Astuce :</strong> Les boutons <strong>📺 PICKS OBS</strong>, <strong>⛔ BANS OBS</strong> et <strong>🗺️ MAP OBS</strong> ouvrent directement la fenêtre overlay dans les bonnes dimensions. Le bouton <strong>✕ VIDER</strong> réinitialise tout (picks, bans et map).",
+  "_comment_new_keys": "Nouvelles clés à fusionner dans lang/fr.json",
+
+  "stream_ban_order_label": "Ordre des bans :",
+  "stream_ban_order_purple": "🟣 V-O-V-O-V-O",
+  "stream_ban_order_orange": "🟠 O-V-O-V-O-V",
+  "stream_ban_order_free": "🔓 Libre",
+
+  "stream_ban_empty_label": "Ban vide",
+  "stream_ban_empty_title": "Ajouter un ban vide (Pokémon non affiché)",
+
+  "stream_team_color_label": "Couleur équipe",
+
+  "stream_clear_title": "Vider",
+  "stream_clear_desc": "Que souhaitez-vous effacer ?",
+  "stream_clear_fearless": "Fearless uniquement",
+  "stream_clear_bans": "Bans uniquement",
+  "stream_clear_both": "Tout effacer",
+  "stream_clear_cancel": "Annuler",
+
+  "stream_empty_display_1": "Sélectionne une équipe et",
+  "stream_empty_display_2": "clique sur un Pokémon",
+
+  "stream_step3_title": "Onglet Bans",
+  "stream_step3_desc": "Dans l'onglet ⛔ Bans, choisis l'ordre des bans : Violet en premier (V-O-V-O-V-O), Orange en premier (O-V-O-V-O-V), ou Libre (3 Violet puis 3 Orange automatiquement). Clique ensuite sur les Pokémon à bannir — la couleur est assignée automatiquement. Utilise la carte '+ Ban vide' pour ajouter un ban sans afficher de Pokémon."
 }

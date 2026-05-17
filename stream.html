@@ -17,6 +17,303 @@
       padding: 8px;
       background: transparent;
     }
+
+    /* ===== COLOR PICKER POPUP ===== */
+    .color-picker-popup {
+      position: fixed;
+      z-index: 99999;
+      background: #1d2e2f;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 10px 12px 12px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+      min-width: 170px;
+      animation: popIn 0.15s cubic-bezier(0.34,1.3,0.64,1);
+    }
+    @keyframes popIn {
+      from { transform: scale(0.88) translateY(-4px); opacity: 0; }
+      to   { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    .color-picker-title {
+      font-family: 'Exo 2', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #5a7577;
+      margin-bottom: 8px;
+    }
+    .color-picker-options {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .cpick-btn {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 6px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+      border: 1.5px solid;
+      transition: all 0.15s;
+      text-align: left;
+      opacity: 0.6;
+      background: transparent;
+    }
+    .cpick-btn:hover, .cpick-btn.active { opacity: 1; }
+    .cpick-btn.cpick-purple {
+      border-color: #9f53ec;
+      color: #c085ff;
+    }
+    .cpick-btn.cpick-purple.active, .cpick-btn.cpick-purple:hover {
+      background: rgba(159,83,236,0.18);
+      box-shadow: 0 0 10px rgba(159,83,236,0.3);
+    }
+    .cpick-btn.cpick-orange {
+      border-color: #ff9d00;
+      color: #ffc06e;
+    }
+    .cpick-btn.cpick-orange.active, .cpick-btn.cpick-orange:hover {
+      background: rgba(255,157,0,0.15);
+      box-shadow: 0 0 10px rgba(255,157,0,0.3);
+    }
+    .cpick-btn.cpick-none {
+      border-color: rgba(255,255,255,0.15);
+      color: #8aacaf;
+    }
+    .cpick-btn.cpick-none.active, .cpick-btn.cpick-none:hover {
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* ===== CLEAR MODAL ===== */
+    .clear-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(4px);
+      z-index: 90000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .clear-modal-box {
+      background: linear-gradient(160deg, #1d2e2f 0%, #152122 100%);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 24px 28px 20px;
+      min-width: 280px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+      animation: modalIn 0.2s cubic-bezier(0.34,1.2,0.64,1);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+    }
+    .clear-modal-title {
+      font-family: 'Exo 2', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #ef5350;
+      text-align: center;
+    }
+    .clear-modal-desc {
+      font-size: 12px;
+      color: #8aacaf;
+      text-align: center;
+      letter-spacing: 0.04em;
+    }
+    .clear-modal-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .clear-modal-btn {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 9px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1.5px solid;
+      transition: all 0.15s;
+      text-align: center;
+    }
+    .clear-modal-btn.fearless {
+      border-color: #4fc3f7;
+      color: #4fc3f7;
+      background: rgba(79,195,247,0.08);
+    }
+    .clear-modal-btn.fearless:hover { background: rgba(79,195,247,0.18); }
+    .clear-modal-btn.bans {
+      border-color: #ef5350;
+      color: #ef5350;
+      background: rgba(239,83,80,0.08);
+    }
+    .clear-modal-btn.bans:hover { background: rgba(239,83,80,0.18); }
+    .clear-modal-btn.both {
+      border-color: #ffd740;
+      color: #ffd740;
+      background: rgba(255,215,64,0.08);
+    }
+    .clear-modal-btn.both:hover { background: rgba(255,215,64,0.18); }
+    .clear-modal-cancel {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #5a7577;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      padding: 4px;
+      transition: color 0.15s;
+    }
+    .clear-modal-cancel:hover { color: #cfe0e2; }
+
+    /* ===== DRAG & DROP ===== */
+    .display-slot[draggable="true"] { cursor: grab; }
+    .display-slot[draggable="true"]:active { cursor: grabbing; }
+    .display-slot.dragging { opacity: 0.35; }
+    .display-slot.drag-over {
+      outline: 2px dashed rgba(79,195,247,0.7);
+      outline-offset: 2px;
+    }
+
+    /* ===== BAN ORDER MODE SELECTOR ===== */
+    .ban-order-header {
+      padding: 8px 18px 0;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .ban-order-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #5a7577;
+      flex-shrink: 0;
+      width: 100%;
+      margin-bottom: 2px;
+    }
+    .ban-order-btn {
+      flex: 1;
+      min-width: 0;
+      padding: 7px 8px;
+      border-radius: 8px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      border: 1.5px solid;
+      transition: all 0.15s;
+      text-transform: uppercase;
+      text-align: center;
+      opacity: 0.4;
+      background: transparent;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ban-order-btn.active { opacity: 1; }
+    .ban-order-btn.purple-order {
+      border-color: #9f53ec;
+      color: #c085ff;
+    }
+    .ban-order-btn.purple-order.active {
+      background: rgba(159,83,236,0.15);
+      box-shadow: 0 0 10px rgba(159,83,236,0.3);
+    }
+    .ban-order-btn.orange-order {
+      border-color: #ff9d00;
+      color: #ffc06e;
+    }
+    .ban-order-btn.orange-order.active {
+      background: rgba(255,157,0,0.12);
+      box-shadow: 0 0 10px rgba(255,157,0,0.3);
+    }
+    .ban-order-btn.free-order {
+      border-color: rgba(255,255,255,0.25);
+      color: #8aacaf;
+    }
+    .ban-order-btn.free-order.active {
+      background: rgba(255,255,255,0.07);
+      opacity: 1;
+    }
+
+    /* sequence hint displayed under the buttons */
+    .ban-seq-hint {
+      padding: 4px 18px 8px;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #5a7577;
+      display: flex;
+      gap: 3px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .ban-seq-dot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      font-size: 8px;
+      font-weight: 900;
+      font-family: 'Exo 2', sans-serif;
+    }
+    .ban-seq-dot.p { background: rgba(159,83,236,0.35); color: #c085ff; border: 1px solid rgba(159,83,236,0.6); }
+    .ban-seq-dot.o { background: rgba(255,157,0,0.25); color: #ffc06e; border: 1px solid rgba(255,157,0,0.5); }
+    .ban-seq-arrow { color: #3a5254; font-size: 8px; }
+
+    /* ===== BAN EMPTY CARD in grid ===== */
+    .pokemon-card.ban-empty-card {
+      border: 1.5px dashed rgba(239,83,80,0.45);
+      background: rgba(239,83,80,0.06);
+      cursor: pointer;
+      filter: none !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 90px;
+    }
+    .pokemon-card.ban-empty-card:hover {
+      border-color: rgba(239,83,80,0.75);
+      background: rgba(239,83,80,0.14);
+      transform: translateY(-2px) scale(1.03);
+    }
+    .ban-empty-card-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 8px 4px;
+      pointer-events: none;
+    }
+    .ban-empty-card-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ef5350;
+      text-align: center;
+    }
   </style>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
   <script>
@@ -134,16 +431,24 @@
     </div>
 
     <div id="bansControls" style="display:none">
-      <div class="ban-mode-header">
-        <span class="ban-mode-label" data-lang="stream_ban_first_label">Premier ban :</span>
-        <button class="ban-mode-btn purple-first active" id="btnBanPurpleFirst" onclick="setBanFirstTeam('purple')" data-lang="stream_ban_purple_first">
-          🟣 Violet first
+      <!-- Ban order mode selector -->
+      <div class="ban-order-header">
+        <div class="ban-order-label" data-lang="stream_ban_order_label">Ordre des bans :</div>
+        <button class="ban-order-btn purple-order active" id="btnBanOrderPurple"
+                onclick="setBanOrderMode('purple_first')" data-lang="stream_ban_order_purple">
+          🟣 V-O-V-O-V-O
         </button>
-        <button class="ban-mode-btn orange-first" id="btnBanOrangeFirst" onclick="setBanFirstTeam('orange')" data-lang="stream_ban_orange_first">
-          🟠 Orange first
+        <button class="ban-order-btn orange-order" id="btnBanOrderOrange"
+                onclick="setBanOrderMode('orange_first')" data-lang="stream_ban_order_orange">
+          🟠 O-V-O-V-O-V
+        </button>
+        <button class="ban-order-btn free-order" id="btnBanOrderFree"
+                onclick="setBanOrderMode('free')" data-lang="stream_ban_order_free">
+          🔓 Libre
         </button>
       </div>
-      <div class="next-ban-indicator" id="nextBanIndicator"></div>
+      <!-- Sequence hint -->
+      <div class="ban-seq-hint" id="banSeqHint"></div>
     </div>
 
     <div class="role-tabs" id="roleTabs">
@@ -180,7 +485,7 @@
         <div class="step-num">1</div>
         <div class="step-content">
           <h4 data-lang="stream_step1_title">Choisir une team (onglet Fearless)</h4>
-          <p data-lang="stream_step1_desc">Avant de sélectionner un Pokémon, clique sur 🟣 Violette ou 🟠 Orange pour assigner les picks à la bonne équipe.</p>
+          <p data-lang="stream_step1_desc">Avant de sélectionner un Pokémon, clique sur 🟣 Violette ou 🟠 Orange pour assigner les picks à la bonne équipe. Tu peux aussi modifier la couleur d'un pick en cliquant dessus dans le panneau gauche.</p>
         </div>
       </div>
 
@@ -189,7 +494,7 @@
         <div class="step-num">2</div>
         <div class="step-content">
           <h4 data-lang="stream_step2_title">Sélectionner les Pokémon</h4>
-          <p data-lang="stream_step2_desc">Clique sur les cartes Pokémon dans la liste de droite. Ils apparaissent dans le panneau gauche. Clique à nouveau pour retirer.</p>
+          <p data-lang="stream_step2_desc">Clique sur les cartes Pokémon dans la liste de droite. Ils apparaissent dans le panneau gauche. Clique à nouveau pour retirer. Tu peux réorganiser les picks par drag & drop.</p>
         </div>
       </div>
 
@@ -198,7 +503,7 @@
         <div class="step-num">3</div>
         <div class="step-content">
           <h4 data-lang="stream_step3_title">Onglet Bans</h4>
-          <p data-lang="stream_step3_desc">Passe dans l'onglet ⛔ Bans et choisis quelle team ban en premier. L'alternance se fait automatiquement (V→O→V→O→V→O).</p>
+          <p data-lang="stream_step3_desc">Dans l'onglet ⛔ Bans, choisis l'ordre des bans : Violet en premier (V-O-V-O-V-O), Orange en premier (O-V-O-V-O-V), ou Libre (3 Violet puis 3 Orange automatiquement). Clique ensuite sur les Pokémon à bannir — la couleur est assignée automatiquement. Utilise la carte "+ Ban vide" pour ajouter un ban sans afficher de Pokémon.</p>
         </div>
       </div>
 
@@ -207,7 +512,7 @@
         <div class="step-num">4</div>
         <div class="step-content">
           <h4 data-lang="stream_step4_title">Choisir la map</h4>
-          <p data-lang="stream_step4_desc">Sélectionne la map du match en bas du panneau gauche : Rayquaza, Groudon ou Kyogre. Elle s'affiche dans l'Overlay Map dédiée.</p>
+          <p data-lang="stream_step4_desc">Sélectionne la map du match en bas du panneau gauche : Rayquaza, Groudon ou Kyogre.</p>
         </div>
       </div>
 
@@ -220,16 +525,16 @@
           <h4 data-lang="stream_step5_title">Configurer dans OBS — 4 sources Browser</h4>
           <p data-lang="stream_step5_intro">Tu dois créer quatre sources Navigateur (Browser Source) dans OBS :</p>
           <ul>
-            <li><strong data-lang="stream_step5_controller_label">Controller</strong> — <span data-lang="stream_step5_controller_desc">la fenêtre de contrôle principale</span> :<br>
+            <li><strong>Controller</strong> :<br>
               <div class="code-block">https://unite-tools.com/stream.html</div>
             </li>
-            <li><strong data-lang="stream_step5_picks_label">Overlay Picks</strong> — <span data-lang="stream_step5_picks_desc">affiche les Pokémon sélectionnés</span> :<br>
+            <li><strong>Overlay Picks</strong> :<br>
               <div class="code-block">https://unite-tools.com/stream.html?overlay=true</div>
             </li>
-            <li><strong data-lang="stream_step5_bans_label">Overlay Bans</strong> — <span data-lang="stream_step5_bans_desc">affiche les 6 bans</span> :<br>
+            <li><strong>Overlay Bans</strong> :<br>
               <div class="code-block">https://unite-tools.com/stream.html?overlay=bans</div>
             </li>
-            <li><strong data-lang="stream_step5_map_label">Overlay Map</strong> — <span data-lang="stream_step5_map_desc">affiche uniquement la map sélectionnée</span> :<br>
+            <li><strong>Overlay Map</strong> :<br>
               <div class="code-block">https://unite-tools.com/stream.html?overlay=maps</div>
             </li>
           </ul>
@@ -240,8 +545,8 @@
       <div class="setup-step">
         <div class="step-num">6</div>
         <div class="step-content">
-          <h4 data-lang="stream_step6_title">Dimensions recommandées</h4>
-          <p data-lang="stream_step6_desc">
+          <h4>Dimensions recommandées</h4>
+          <p>
             • Controller : ~460 × 700 px<br>
             • Overlay Picks : ~750 × 220 px<br>
             • Overlay Bans : ~580 × 180 px<br>
@@ -254,13 +559,13 @@
       <div class="setup-step">
         <div class="step-num">7</div>
         <div class="step-content">
-          <h4 data-lang="stream_step7_title">Activer le fond transparent dans OBS</h4>
-          <p data-lang="stream_step7_desc">Pour chaque Browser Source, coche "Supprimer la couleur d'arrière-plan" afin que les overlays s'intègrent proprement.</p>
+          <h4>Activer le fond transparent dans OBS</h4>
+          <p>Pour chaque Browser Source, coche "Supprimer la couleur d'arrière-plan" afin que les overlays s'intègrent proprement.</p>
         </div>
       </div>
 
-      <div class="tip-box" data-lang="stream_tip">
-        <strong>💡 Astuce :</strong> Les boutons 📺 PICKS OBS, ⛔ BANS OBS et 🗺️ MAP OBS ouvrent directement la fenêtre overlay. Le bouton ✕ VIDER réinitialise tout.
+      <div class="tip-box">
+        <strong>💡 Astuce :</strong> Le bouton ✕ VIDER affiche un menu pour choisir : Fearless uniquement, Bans uniquement, ou tout effacer. Dans l'onglet Bans, la couleur d'équipe est assignée <strong>automatiquement</strong> selon l'ordre choisi. Un clic sur un Pokémon sélectionné (en fearless) ouvre un sélecteur de couleur d'équipe.
       </div>
 
     </div>
@@ -272,6 +577,33 @@
 <script src="https://unpkg.com/lucide@latest"></script>
 <script>
   lucide.createIcons();
+
+  // Render the sequence hint dots based on current ban order mode
+  function renderBanSeqHint() {
+    const hint = document.getElementById('banSeqHint');
+    if (!hint) return;
+    const seqMap = {
+      purple_first: ['p','o','p','o','p','o'],
+      orange_first: ['o','p','o','p','o','p'],
+      free:         ['p','p','p','o','o','o'],
+    };
+    const seq = seqMap[banOrderMode] || seqMap['purple_first'];
+    const labels = { p: 'V', o: 'O' };
+    hint.innerHTML = seq.map((c, i) =>
+      `<span class="ban-seq-dot ${c}">${labels[c]}</span>${i < seq.length-1 ? '<span class="ban-seq-arrow">›</span>' : ''}`
+    ).join('');
+  }
+
+  // Patch setBanOrderMode to also update the hint
+  const _origSetBanOrderMode = setBanOrderMode;
+  setBanOrderMode = function(mode) {
+    _origSetBanOrderMode(mode);
+    renderBanSeqHint();
+  };
+
+  // Init
+  setBanOrderMode(banOrderMode);
+  renderBanSeqHint();
 </script>
 </body>
 </html>

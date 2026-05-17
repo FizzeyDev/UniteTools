@@ -1,0 +1,187 @@
+{
+  "absol": {
+    "move1": [ "feint.png", "pursuit.png", "night_slash.png" ],
+    "move2": [ "slash.png", "psycho_cut.png", "sucker_punch.png" ]
+  },
+  "aegislash":  {
+    "move1": [ "shadow_sneak.png", "sacred_sword.png", "shadow_claw.png" ],
+    "move2": [ "iron_defense.png", "wide_guard.png", "iron_head.png" ]
+  },
+  "alcremie": {
+    "move1": [ "helping_hand.png", "decorate.png", "recover.png" ],
+    "move2": [ "charm.png", "dazzling_gleam.png", "sweet_scent.png" ]
+  },
+  "armarouge": {
+    "move1": [ "incinerate.png", "fire_spin.png", "armor_cannon.png" ],
+    "move2": [ "will_o_wisp.png", "flame_charge.png", "psychock.png" ]
+  },
+  "articuno": {
+    "move1": [ "icy_wind.png", "blizzard.png" ],
+    "move2": [ "ice_shard.png", "ice_beam.png" ]
+  },
+  "azumarill": {
+    "move1": [ "tackle.png", "play_rough.png", "water_pulse.png" ],
+    "move2": [ "bubble.png", "whirlpool.png", "aqua_tail.png" ]
+  },
+  "blastoise": {
+    "move1": [ "water_gun.png", "hydro_pump.png", "water_spout.png" ],
+    "move2": [ "skull_bash.png", "surf.png", "rapid_spin.png" ]
+  },
+  "blaziken": {
+    "move1": [ "aerial_ace.png", "fire_punch.png", "overheat.png" ],
+    "move2": [ "ember.png", "focus_blast.png", "blaze_kick.png" ]
+  },
+  "blissey":  {
+    "move1": [ "pound.png", "egg_bomb.png", "helping_hand.png" ],
+    "move2": [ "heal_pulse.png", "soft_boiled.png", "safeguard.png" ]
+  },
+  "buzzwole": {
+    "move1": [ "mega_punch.png", "lunge.png", "smack_down.png" ],
+    "move2": [ "fell_stinger.png", "leech_life.png", "superpower.png" ]
+  },
+  "ceruledge": {
+    "move1": [ "lava_plume.png", "bitter_blade.png", "psycho_cut.png" ],
+    "move2": [ "take_down.png", "phantom_force.png", "flame_charge.png" ]
+  },
+  "chandelure": {
+    "move1": [ "ember.png", "flamethrower.png", "overheat.png" ],
+    "move2": [ "night_shade.png", "poltergeist.png", "imprison.png" ]
+  },
+  "charizard": {
+    "move1": [ "flame_burst.png", "flamethrower.png", "fire_punch.png" ],
+    "move2": [ "fire_spin.png", "fire_blast.png", "flare_blitz.png" ]
+  },
+  "charizard-x": {
+    "move1": [ "flame_burst.png", "fire_punch.png" ],
+    "move2": [ "fire_spin.png", "flare_blitz.png" ]
+  },
+  "charizard-y": {
+    "move1": [ "flame_burst.png", "flamethrower.png" ],
+    "move2": [ "fire_spin.png", "fire_blast.png" ]
+  },
+  "cinderace": {
+    "move1": [ "ember.png", "pyro_ball.png", "blaze_kick.png" ],
+    "move2": [ "low_sweep.png", "flame_charge.png", "feint.png" ]
+  },
+  "clefable": {
+    "move1": [ "heal_pulse.png", "moonlight.png", "draining_kiss.png" ],
+    "move2": [ "disarming_voice.png", "gravity.png", "follow_me.png" ]
+  },
+  "comfey":  {
+    "move1": [ "synthesis.png", "floral_healing.png", "sweet_kiss.png" ],
+    "move2": [ "vine_whip.png", "magical_leaf.png", "grass_knot.png" ]
+  },
+  "cramorant": {
+    "move1": [ "whirlpool.png", "surf.png", "dive.png" ],
+    "move2": [ "feather_dance.png", "hurricane.png", "air_slash.png" ]
+  },
+  "crustle": {
+    "move1": [ "rock_slide.png", "rock_tomb.png", "shell_smash.png" ],
+    "move2": [ "fury_cutter.png", "stealth_rock.png", "x_scissor.png" ]
+  },
+  "darkrai": {
+    "move1": [ "hypnosis.png", "dark_void.png", "shadow_claw.png" ],
+    "move2": [ "calm_mind.png", "nasty_plot.png", "dark_pulse.png" ]
+  },
+  "decidueye": {
+    "move1": [ "leafage.png", "razor_leaf.png", "spirit_shackle.png" ],
+    "move2": [ "astonish.png", "leaf_storm.png", "shadow_sneak.png" ]
+  },
+  "delphox": {
+    "move1": [ "ember.png", "fire_blast.png", "mystical_fire.png" ],
+    "move2": [ "will_o_wisp.png", "fire_spin.png", "flame_charge.png" ]
+  },
+  "dhelmise": {
+    "move1": [ "payback.png", "power_whip.png", "whirlpool.png" ],
+    "move2": [ "bulldoze.png", "anchor_shot.png", "heavy_slam.png" ]
+  },
+  "dodrio": {
+    "move1": [ "peck.png", "tri_attack.png", "drill_peck.png" ],
+    "move2": [ "quick_attack.png", "agility.png", "jump_kick.png" ]
+  },
+  "dragapult": {
+    "move1": [ "astonish.png", "dragon_breath.png", "shadow_ball.png" ],
+    "move2": [ "quick_attack.png", "dragon_dance.png", "phantom_force.png" ]
+  },
+  "dragonite": {
+    "move1": [ "twister.png", "dragon_dance.png", "extreme_speed.png" ],
+    "move2": [ "dragon_breath.png", "hyper_beam.png", "outrage.png" ]
+  },
+  "duraludon":  {
+    "move1": [ "laser_focus.png", "flash_cannon.png", "dragon_pulse.png" ],
+    "move2": [ "metal_claw.png", "dragon_tail.png", "stealth_rock.png" ]
+  },
+  "eldegoss": {
+    "move1": [ "leafage.png", "pollen_puff.png", "leaf_tornado.png" ],
+    "move2": [ "synthesis.png", "cotton_guard.png", "cotton_spore.png" ]
+  },
+  "empoleon": {
+    "move1": [ "water_gun.png", "hydro_cannon.png", "whirlpool.png" ],
+    "move2": [ "peck.png", "metal_claw.png", "aqua_jet.png" ]
+  },
+  "espeon": {
+    "move1": [ "swift.png", "psyshock.png", "stored_power.png" ],
+    "move2": [ "growl.png", "psybeam.png", "future_sight.png" ]
+  },
+  "falinks": {
+    "move1": [ "leafage.png", "razor_leaf.png", "spirit_shackle.png" ],
+    "move2": [ "astonish.png", "leaf_storm.png", "shadow_sneak.png" ]
+  },
+  "feraligatr": {
+    "move1": [ "bite.png", "crunch.png" ],
+    "move2": [ "scratch.png", "waterfall.png" ]
+  },
+  "garchomp": {
+    "move1": [ "sand_attack.png", "dig.png", "dragon_rush.png" ],
+    "move2": [ "bulldoze.png", "earthquake.png", "dragon_claw.png" ]
+  },
+  "gardevoir": {
+    "move1": [ "confusion.png", "psychic.png", "moonblast.png" ],
+    "move2": [ "teleport.png", "psychock.png", "future_sight.png" ]
+  },
+  "gengar": {
+    "move1": [ "will_o_wisp.png", "shadow_ball.png", "sludge_bomb.png" ],
+    "move2": [ "tail_whip.png", "dream_eater.png", "hex.png" ]
+  },
+
+  "glaceon": {
+    "move1": [ "swift.png", "icicle_spear.png", "icy_wind.png" ],
+    "move2": [ "tail_whip.png", "ice_shard.png", "freeze_dry.png" ]
+  },
+  "goodra":  {
+    "move1": [ "bubble.png", "muddy_water.png", "dragon_pulse.png" ],
+    "move2": [ "tackle.png", "power_whip.png", "acid_spray.png" ]
+  },
+  "greedent": {
+    "move1": [ "tackle.png", "bullet_seed.png", "belch.png" ],
+    "move2": [ "defense_curl.png", "stuff_cheeks.png", "covet.png" ]
+  },
+  "greninja": {
+    "move1": [ "double_team.png", "water_shuriken.png", "surf.png" ],
+    "move2": [ "substitute.png", "smokescreen.png", "double_team.png" ]
+  },
+  "gyarados": {
+    "move1": [ "flail.png", "dragon_breath.png", "aqua_tail.png" ],
+    "move2": [ "splash.png", "waterfall.png", "bounce.png" ]
+  },
+  "gyarados-mega": {
+    "move1": [ "flail.png", "dragon_breath.png" ],
+    "move2": [ "splash.png", "waterfall.png"  ]
+  },
+  "ho-oh": {
+    "move1": [ "safeguard.png", "sacred_fire.png", "fire_spin.png" ],
+    "move2": [ "tailwind.png", "flamethrower.png", "sky_attack.png" ]
+  },
+  "hoopa": {
+    "move2": [ "confusion", "hyperspace_hole.png", "trick.png" ],
+    "move1": [ "astonish.png", "phantom_force.png", "shadow_ball.png" ]
+  },
+  "inteleon": {
+    "move2": [ "water_gun.png", "snipe_shot.png", "liquidation.png" ],
+    "move1": [ "tearful_look.png", "fell_stinger.png", "acrobatics.png" ]
+  },
+  "lapras": {
+    "move1": [ "whirlpool.png", "water_pulse.png", "perish_song.png" ],
+    "move2": [ "ice_shard.png", "bubble_beam.png", "ice_beam.png" ]
+  }
+}
