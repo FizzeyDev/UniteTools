@@ -42,6 +42,22 @@ body {
   color: var(--text);
   min-height: 100vh;
   overflow: hidden;
+
+  /* Navbar — décalage sidebar */
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Sidebar réduite (mini mode) */
+body.sidebar-hidden {
+  margin-left: 54px;
+}
+
+/* Mode overlay OBS — pas de navbar, pas de décalage */
+body.overlay-mode {
+  margin-left: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 /* Subtle grid texture */
@@ -63,7 +79,7 @@ body.overlay-mode #app { display: none; }
 #app {
   display: flex;
   height: 100vh;
-  width: 100vw;
+  width: 100%;          /* était 100vw — s'adapte au margin-left de la navbar */
   position: relative;
   z-index: 1;
 }
@@ -76,12 +92,10 @@ body.overlay-mode #app { display: none; }
   flex-direction: column;
   background: linear-gradient(160deg, var(--surface-2) 0%, var(--surface) 100%);
   border-right: 1px solid var(--border-md);
-  /* No min-width cap — resizable */
   min-width: 160px;
 }
 
 /* ===== RESIZABLE DIVIDER ===== */
-/* CHANGE 3: cursor + visual indicator for the draggable divider */
 #panel-divider {
   width: 6px;
   height: 100vh;
@@ -96,7 +110,6 @@ body.overlay-mode #app { display: none; }
 #panel-divider:active {
   background: rgba(79,195,247,0.35);
 }
-/* Grippy dots */
 #panel-divider::after {
   content: '';
   position: absolute;
@@ -251,7 +264,7 @@ body.overlay-mode #app { display: none; }
   box-shadow: 0 2px 6px rgba(0,0,0,0.5);
 }
 
-/* ===== BAN DISPLAY PANEL (left side, bans section) ===== */
+/* ===== BAN DISPLAY PANEL ===== */
 .ban-display-section {
   padding: 10px 14px 6px;
   border-top: 1px solid var(--border);
@@ -309,7 +322,6 @@ body.overlay-mode #app { display: none; }
   justify-content: center;
 }
 
-/* Individual ban slot in display panel */
 .ban-display-slot {
   position: relative;
   width: 56px;
@@ -360,7 +372,6 @@ body.overlay-mode #app { display: none; }
   box-shadow: 0 2px 6px rgba(0,0,0,0.5);
 }
 
-/* Glowing border on active (next to ban) slot */
 .ban-display-slot.next-ban.purple-slot {
   border-color: var(--violet);
   box-shadow: 0 0 10px rgba(159,83,236,0.6);
@@ -716,7 +727,7 @@ body.overlay-mode #app { display: none; }
   opacity: 0.85;
 }
 
-/* ===== CHANGE 1: Bans tab — colored banned cards instead of greyed ===== */
+/* Bans tab — colored banned cards */
 .pokemon-card.banned-purple-colored {
   filter: none !important;
   border-color: var(--violet) !important;
@@ -729,7 +740,6 @@ body.overlay-mode #app { display: none; }
   box-shadow: 0 0 12px rgba(255,157,0,0.45), inset 0 0 18px rgba(255,157,0,0.12) !important;
   background: rgba(255,157,0,0.08) !important;
 }
-/* Hover override — keep colored, just brighten slightly */
 .pokemon-card.banned-purple-colored:hover {
   filter: brightness(1.1) !important;
   transform: none !important;
@@ -741,7 +751,7 @@ body.overlay-mode #app { display: none; }
   cursor: default;
 }
 
-/* Keep old grey classes for backwards-compat (no longer assigned but harmless) */
+/* Backwards-compat grey classes */
 .pokemon-card.banned-purple {
   filter: brightness(0.2) saturate(0.1) !important;
   border-color: rgba(159,83,236,0.3) !important;
@@ -751,8 +761,7 @@ body.overlay-mode #app { display: none; }
   border-color: rgba(255,157,0,0.3) !important;
 }
 
-/* ===== CHANGE 5: Fearless ban-mode — less dark for already-picked cards ===== */
-/* was brightness(0.18) saturate(0.08) — now slightly lighter */
+/* Already-picked cards in ban mode */
 .pokemon-card.in-picks-ban-mode {
   filter: brightness(0.35) saturate(0.2) !important;
 }
@@ -825,7 +834,6 @@ body.overlay-mode #app { display: none; }
 .role-tab:hover { color: var(--text); }
 .role-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
 
-/* Ban mode role tabs */
 .ban-mode-active .role-tab.active {
   color: var(--red);
   border-bottom-color: var(--red);
@@ -1119,7 +1127,6 @@ body.overlay-mode #app { display: none; }
   gap: 6px;
 }
 
-/* Individual ban slot in overlay */
 .bans-overlay-slot {
   position: relative;
   width: 68px;
@@ -1129,8 +1136,8 @@ body.overlay-mode #app { display: none; }
   flex-shrink: 0;
   border: 1.5px solid;
 }
-.bans-overlay-slot.purple { border-color: rgba(159,83,236,0.6); background: rgba(159,83,236,0.08); }
-.bans-overlay-slot.orange { border-color: rgba(255,157,0,0.6);  background: rgba(255,157,0,0.08); }
+.bans-overlay-slot.purple { border-color: var(--violet); background: rgba(159,83,236,0.25); box-shadow: 0 0 14px rgba(159,83,236,0.5); }
+.bans-overlay-slot.orange { border-color: var(--orange); background: rgba(255,157,0,0.2);   box-shadow: 0 0 14px rgba(255,157,0,0.5); }
 
 .bans-overlay-slot .slot-poke-img {
   width: 100%; height: 100%;
@@ -1148,27 +1155,6 @@ body.overlay-mode #app { display: none; }
   opacity: 0.7;
 }
 
-body.overlay-mode {
-  background: transparent !important;
-  background-color: transparent !important;
-}
-
-#bans-overlay-root {
-  background: transparent !important;
-}
-
-.bans-overlay-slot.purple {
-  border-color: var(--violet);
-  background: rgba(159,83,236,0.25);
-  box-shadow: 0 0 14px rgba(159,83,236,0.5);
-}
-.bans-overlay-slot.orange {
-  border-color: var(--orange);
-  background: rgba(255,157,0,0.2);
-  box-shadow: 0 0 14px rgba(255,157,0,0.5);
-}
-
-/* Active (next-to-ban) glow on overlay */
 .bans-overlay-slot.purple.next {
   border-color: var(--violet);
   box-shadow: 0 0 14px rgba(159,83,236,0.8), inset 0 0 6px rgba(159,83,236,0.2);
@@ -1180,7 +1166,7 @@ body.overlay-mode {
   animation: pulseOrange 1.5s ease-in-out infinite;
 }
 
-/* ===== CHANGE 4: MAP OVERLAY — active centered, inactive greyed but visible ===== */
+/* ===== MAP OVERLAY ===== */
 #overlay-map-bar {
   display: flex;
   align-items: stretch;
@@ -1195,7 +1181,6 @@ body.overlay-mode {
   margin: 4px;
 }
 
-/* Each map card */
 .overlay-map-item {
   position: relative;
   display: flex;
@@ -1207,31 +1192,26 @@ body.overlay-mode {
   overflow: hidden;
   cursor: default;
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  /* CHANGE 4: was opacity:0.28 — now much more visible */
   opacity: 0.62;
   filter: grayscale(0.55) brightness(0.7);
 }
 
-/* Inactive tiles — visible but clearly secondary */
 .overlay-map-item:not(.active) {
   width: 72px;
   opacity: 0.62;
   filter: grayscale(0.55) brightness(0.7);
 }
 
-/* Active card expands + full color */
 .overlay-map-item.active {
   width: 140px;
   opacity: 1;
   filter: none;
 }
 
-/* Vertical separator between tiles */
 .overlay-map-item + .overlay-map-item {
   border-left: 1px solid rgba(255,255,255,0.07);
 }
 
-/* Map background image */
 .overlay-map-img {
   position: absolute;
   inset: 0;
@@ -1243,7 +1223,6 @@ body.overlay-mode {
   padding: 4px 4px 22px;
 }
 
-/* Dark gradient for text legibility */
 .overlay-map-item::after {
   content: '';
   position: absolute;
@@ -1258,7 +1237,6 @@ body.overlay-mode {
   transition: opacity 0.35s;
 }
 
-/* Active card — colored bottom glow line */
 .overlay-map-item.active.rayquaza::before {
   content: '';
   position: absolute;
@@ -1287,7 +1265,6 @@ body.overlay-mode {
   z-index: 3;
 }
 
-/* "SELECTED" badge */
 .overlay-map-item.active .overlay-map-badge {
   display: flex;
 }
@@ -1311,7 +1288,6 @@ body.overlay-mode {
 .overlay-map-item.active.groudon  .overlay-map-badge { background: rgba(255,112,67,0.3);  border-color: rgba(255,112,67,0.5);  color: #ffd4c4; }
 .overlay-map-item.active.kyogre   .overlay-map-badge { background: rgba(79,195,247,0.3);  border-color: rgba(79,195,247,0.5);  color: #c4eeff; }
 
-/* Map label text */
 .overlay-map-name {
   position: relative;
   z-index: 2;
@@ -1321,7 +1297,7 @@ body.overlay-mode {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   padding-bottom: 7px;
-  color: rgba(255,255,255,0.7); /* CHANGE 4: was 0.5, now more visible on inactive */
+  color: rgba(255,255,255,0.7);
   transition: color 0.3s, font-size 0.35s;
   text-shadow: 0 1px 4px rgba(0,0,0,0.9);
   white-space: nowrap;
@@ -1335,7 +1311,6 @@ body.overlay-mode {
 .overlay-map-item.active.groudon  .overlay-map-name { color: #ffe4d8; }
 .overlay-map-item.active.kyogre   .overlay-map-name { color: #d0f4ff; }
 
-/* Placeholder when image fails */
 .overlay-map-placeholder {
   position: absolute;
   inset: 0;
@@ -1353,3 +1328,58 @@ body.overlay-mode {
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 3px; }
+
+/* ===== RESPONSIVE — mobile ===== */
+@media (max-width: 768px) {
+  body {
+    margin-left: 0 !important;
+  }
+}
+
+/* Bans — bouton "aucune équipe" dans le header ban */
+.ban-mode-btn.none-btn {
+  border-color: rgba(255,255,255,0.18);
+  color: #8aacaf;
+  flex: 0 0 auto;
+  padding: 7px 10px;
+}
+.ban-mode-btn.none-btn.active {
+  background: rgba(255,255,255,0.07);
+  opacity: 1;
+}
+.ban-mode-btn.none-btn:not(.active) {
+  opacity: 0.45;
+}
+
+/* Bans — "neutral" (sans équipe) */
+.pokemon-card.banned-neutral-colored {
+  filter: none !important;
+  border-color: rgba(255,255,255,0.3) !important;
+  box-shadow: 0 0 10px rgba(255,255,255,0.2), inset 0 0 14px rgba(255,255,255,0.06) !important;
+  background: rgba(255,255,255,0.06) !important;
+}
+
+/* Fearless in-display — moins grisé (était brightness(0.25)) */
+.pokemon-card.in-display {
+  filter: brightness(0.45) saturate(0.25);
+}
+
+/* Display slot — cursor pointer clair et hint qu'on peut cliquer */
+.display-slot {
+  cursor: pointer;
+}
+.display-slot:hover::after {
+  content: '✎';
+  position: absolute;
+  bottom: -6px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  color: rgba(79,195,247,0.7);
+  pointer-events: none;
+  letter-spacing: 0;
+}
+
+/* Overlay picks — un peu moins grisé aussi */
+#overlay-picks-row img {
+  filter: grayscale(1) brightness(0.65);
+}
