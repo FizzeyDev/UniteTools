@@ -1,187 +1,556 @@
 {
   "absol": {
     "move1": [ "feint.png", "pursuit.png", "night_slash.png" ],
-    "move2": [ "slash.png", "psycho_cut.png", "sucker_punch.png" ]
+    "move2": [ "slash.png", "psycho_cut.png", "sucker_punch.png" ],
+    "passive": [ "super_luck.png" ],
+    "unite": [ "midnight_slash.png" ]
   },
   "aegislash":  {
     "move1": [ "shadow_sneak.png", "sacred_sword.png", "shadow_claw.png" ],
-    "move2": [ "iron_defense.png", "wide_guard.png", "iron_head.png" ]
+    "move2": [ "iron_defense.png", "wide_guard.png", "iron_head.png" ],
+    "passive": [ "no_guard.png", "stance_change.png" ],
+    "unite": [ "coup_de_grace.png" ]
   },
   "alcremie": {
     "move1": [ "helping_hand.png", "decorate.png", "recover.png" ],
-    "move2": [ "charm.png", "dazzling_gleam.png", "sweet_scent.png" ]
+    "move2": [ "charm.png", "dazzling_gleam.png", "sweet_scent.png" ],
+    "passive": [ "aroma_veil.png" ],
+    "unite": [ "fluffy_cream_supreme.png" ]
   },
   "armarouge": {
     "move1": [ "incinerate.png", "fire_spin.png", "armor_cannon.png" ],
-    "move2": [ "will_o_wisp.png", "flame_charge.png", "psychock.png" ]
+    "move2": [ "will_o_wisp.png", "flame_charge.png", "psychock.png" ],
+    "passive": [ "flash_fire.png" ],
+    "unite": [ "psykaboom.png" ]
   },
   "articuno": {
     "move1": [ "icy_wind.png", "blizzard.png" ],
-    "move2": [ "ice_shard.png", "ice_beam.png" ]
+    "move2": [ "ice_shard.png", "ice_beam.png" ],
+    "passive": [ "snow_cloak.png" ],
+    "unite": [ "ice_wing_whiteout.png" ]
   },
   "azumarill": {
     "move1": [ "tackle.png", "play_rough.png", "water_pulse.png" ],
-    "move2": [ "bubble.png", "whirlpool.png", "aqua_tail.png" ]
+    "move2": [ "bubble.png", "whirlpool.png", "aqua_tail.png" ],
+    "passive": [ "huge_power.png" ],
+    "unite": [ "belly_bash.png" ]
   },
   "blastoise": {
     "move1": [ "water_gun.png", "hydro_pump.png", "water_spout.png" ],
-    "move2": [ "skull_bash.png", "surf.png", "rapid_spin.png" ]
+    "move2": [ "skull_bash.png", "surf.png", "rapid_spin.png" ],
+    "passive": [ "torrent.png" ],
+    "unite": [ "hydro_typhoon.png" ]
   },
   "blaziken": {
     "move1": [ "aerial_ace.png", "fire_punch.png", "overheat.png" ],
-    "move2": [ "ember.png", "focus_blast.png", "blaze_kick.png" ]
+    "move2": [ "ember.png", "focus_blast.png", "blaze_kick.png" ],
+    "passive": [ "blaze.png" ],
+    "unite": [ "spinning_flame_fist.png", "spinning_flame_kick" ]
   },
   "blissey":  {
     "move1": [ "pound.png", "egg_bomb.png", "helping_hand.png" ],
-    "move2": [ "heal_pulse.png", "soft_boiled.png", "safeguard.png" ]
+    "move2": [ "heal_pulse.png", "soft_boiled.png", "safeguard.png" ],
+    "passive": [ "natural_cure.png" ],
+    "unite": [ "bliss_assistance.png" ]
   },
   "buzzwole": {
     "move1": [ "mega_punch.png", "lunge.png", "smack_down.png" ],
-    "move2": [ "fell_stinger.png", "leech_life.png", "superpower.png" ]
+    "move2": [ "fell_stinger.png", "leech_life.png", "superpower.png" ],
+    "passive": [ "beast_boost.png" ],
+    "unite": [ "ultra_swole_slam.png" ]
   },
   "ceruledge": {
     "move1": [ "lava_plume.png", "bitter_blade.png", "psycho_cut.png" ],
-    "move2": [ "take_down.png", "phantom_force.png", "flame_charge.png" ]
+    "move2": [ "take_down.png", "phantom_force.png", "flame_charge.png" ],
+    "passive": [ "flame_body.png", "weak_armor.png" ],
+    "unite": [ "revenant_rend.png" ]
   },
   "chandelure": {
     "move1": [ "ember.png", "flamethrower.png", "overheat.png" ],
-    "move2": [ "night_shade.png", "poltergeist.png", "imprison.png" ]
+    "move2": [ "night_shade.png", "poltergeist.png", "imprison.png" ],
+    "passive": [ "infiltrator.png" ],
+    "unite": [ "ignite_midnight.png" ]
   },
   "charizard": {
     "move1": [ "flame_burst.png", "flamethrower.png", "fire_punch.png" ],
-    "move2": [ "fire_spin.png", "fire_blast.png", "flare_blitz.png" ]
+    "move2": [ "fire_spin.png", "fire_blast.png", "flare_blitz.png" ],
+    "passive": [ "blaze.png" ],
+    "unite": [ "seismic_slam.png" ]
   },
   "charizard-x": {
     "move1": [ "flame_burst.png", "fire_punch.png" ],
-    "move2": [ "fire_spin.png", "flare_blitz.png" ]
+    "move2": [ "fire_spin.png", "flare_blitz.png" ],
+    "passive": [ "solar_power.png", "tough_claws.png" ],
+    "unite": [ "seismic_slam.png" ]
   },
   "charizard-y": {
     "move1": [ "flame_burst.png", "flamethrower.png" ],
-    "move2": [ "fire_spin.png", "fire_blast.png" ]
+    "move2": [ "fire_spin.png", "fire_blast.png" ],
+    "passive": [ "blaze.png", "drought.png" ],
+    "unite": [ "seismic_slam.png" ]
   },
   "cinderace": {
     "move1": [ "ember.png", "pyro_ball.png", "blaze_kick.png" ],
-    "move2": [ "low_sweep.png", "flame_charge.png", "feint.png" ]
+    "move2": [ "low_sweep.png", "flame_charge.png", "feint.png" ],
+    "passive": [ "blaze.png" ],
+    "unite": [ "blazing_bicycle_kick.png" ]
   },
   "clefable": {
     "move1": [ "heal_pulse.png", "moonlight.png", "draining_kiss.png" ],
-    "move2": [ "disarming_voice.png", "gravity.png", "follow_me.png" ]
+    "move2": [ "disarming_voice.png", "gravity.png", "follow_me.png" ],
+    "passive": [ "magic_guard.png" ],
+    "unite": [ "wonder_wish.png", "splash.png", "explosion.png", "hydro_pump.png", "hyper_beam.png", "block.png", "close_combat.png", "fly.png" ]
   },
   "comfey":  {
     "move1": [ "synthesis.png", "floral_healing.png", "sweet_kiss.png" ],
-    "move2": [ "vine_whip.png", "magical_leaf.png", "grass_knot.png" ]
+    "move2": [ "vine_whip.png", "magical_leaf.png", "grass_knot.png" ],
+    "passive": [ "triage.png" ],
+    "unite": [ "flowery_fields_forever.png" ]
   },
   "cramorant": {
     "move1": [ "whirlpool.png", "surf.png", "dive.png" ],
-    "move2": [ "feather_dance.png", "hurricane.png", "air_slash.png" ]
+    "move2": [ "feather_dance.png", "hurricane.png", "air_slash.png" ],
+    "passive": [ "gulp_missile.png" ],
+    "unite": [ "gatling_gulp_missile.png" ]
   },
   "crustle": {
     "move1": [ "rock_slide.png", "rock_tomb.png", "shell_smash.png" ],
-    "move2": [ "fury_cutter.png", "stealth_rock.png", "x_scissor.png" ]
+    "move2": [ "fury_cutter.png", "stealth_rock.png", "x_scissor.png" ],
+    "passive": [ "sturdy.png" ],
+    "unite": [ "rubble_rouser.png" ]
   },
   "darkrai": {
     "move1": [ "hypnosis.png", "dark_void.png", "shadow_claw.png" ],
-    "move2": [ "calm_mind.png", "nasty_plot.png", "dark_pulse.png" ]
+    "move2": [ "calm_mind.png", "nasty_plot.png", "dark_pulse.png" ],
+    "passive": [ "bad_dreams.png" ],
+    "unite": [ "worst_nightmare.png" ]
   },
   "decidueye": {
     "move1": [ "leafage.png", "razor_leaf.png", "spirit_shackle.png" ],
-    "move2": [ "astonish.png", "leaf_storm.png", "shadow_sneak.png" ]
+    "move2": [ "astonish.png", "leaf_storm.png", "shadow_sneak.png" ],
+    "passive": [ "long_reach.png" ],
+    "unite": [ "nock_nock.png" ]
   },
   "delphox": {
     "move1": [ "ember.png", "fire_blast.png", "mystical_fire.png" ],
-    "move2": [ "will_o_wisp.png", "fire_spin.png", "flame_charge.png" ]
+    "move2": [ "will_o_wisp.png", "fire_spin.png", "flame_charge.png" ],
+    "passive": [ "blaze.png" ],
+    "unite": [ "fanciful_fireworks.png" ]
   },
   "dhelmise": {
     "move1": [ "payback.png", "power_whip.png", "whirlpool.png" ],
-    "move2": [ "bulldoze.png", "anchor_shot.png", "heavy_slam.png" ]
+    "move2": [ "bulldoze.png", "anchor_shot.png", "heavy_slam.png" ],
+    "passive": [ "steelworker.png" ],
+    "unite": [ "seaweed_snare.png" ]
   },
   "dodrio": {
     "move1": [ "peck.png", "tri_attack.png", "drill_peck.png" ],
-    "move2": [ "quick_attack.png", "agility.png", "jump_kick.png" ]
+    "move2": [ "quick_attack.png", "agility.png", "jump_kick.png" ],
+    "passive": [ "run_away.png" ],
+    "unite": [ "triple_trample.png" ]
   },
   "dragapult": {
     "move1": [ "astonish.png", "dragon_breath.png", "shadow_ball.png" ],
-    "move2": [ "quick_attack.png", "dragon_dance.png", "phantom_force.png" ]
+    "move2": [ "quick_attack.png", "dragon_dance.png", "phantom_force.png" ],
+    "passive": [ "clear_body.png" ],
+    "unite": [ "dreep_and_destroy.png" ]
   },
   "dragonite": {
     "move1": [ "twister.png", "dragon_dance.png", "extreme_speed.png" ],
-    "move2": [ "dragon_breath.png", "hyper_beam.png", "outrage.png" ]
+    "move2": [ "dragon_breath.png", "hyper_beam.png", "outrage.png" ],
+    "passive": [ "marvel_scale.png", "multiscale.png" ],
+    "unite": [ "draco_impact.png" ]
   },
   "duraludon":  {
     "move1": [ "laser_focus.png", "flash_cannon.png", "dragon_pulse.png" ],
-    "move2": [ "metal_claw.png", "dragon_tail.png", "stealth_rock.png" ]
+    "move2": [ "metal_claw.png", "dragon_tail.png", "stealth_rock.png" ],
+    "passive": [ "heavy_metal.png" ],
+    "unite": [ "revolving_ruin.png" ]
   },
   "eldegoss": {
     "move1": [ "leafage.png", "pollen_puff.png", "leaf_tornado.png" ],
-    "move2": [ "synthesis.png", "cotton_guard.png", "cotton_spore.png" ]
+    "move2": [ "synthesis.png", "cotton_guard.png", "cotton_spore.png" ],
+    "passive": [ "cotton_down.png" ],
+    "unite": [ "cotton_cloud_crash.png" ]
   },
   "empoleon": {
     "move1": [ "water_gun.png", "hydro_cannon.png", "whirlpool.png" ],
-    "move2": [ "peck.png", "metal_claw.png", "aqua_jet.png" ]
+    "move2": [ "peck.png", "metal_claw.png", "aqua_jet.png" ],
+    "passive": [ "torrent.png" ],
+    "unite": [ "sovereign_slide.png" ]
   },
   "espeon": {
     "move1": [ "swift.png", "psyshock.png", "stored_power.png" ],
-    "move2": [ "growl.png", "psybeam.png", "future_sight.png" ]
+    "move2": [ "growl.png", "psybeam.png", "future_sight.png" ],
+    "passive": [ "anticipation.png", "magic_bounce.png" ],
+    "unite": [ "psychic_solare.png" ]
   },
   "falinks": {
     "move1": [ "leafage.png", "razor_leaf.png", "spirit_shackle.png" ],
-    "move2": [ "astonish.png", "leaf_storm.png", "shadow_sneak.png" ]
+    "move2": [ "astonish.png", "leaf_storm.png", "shadow_sneak.png" ],
+    "passive": [ "battle_armor.png" ],
+    "unite": [ "dust_devil_formation.png" ]
   },
   "feraligatr": {
     "move1": [ "bite.png", "crunch.png" ],
-    "move2": [ "scratch.png", "waterfall.png" ]
+    "move2": [ "scratch.png", "waterfall.png" ],
+    "passive": [ "torrent.png" ],
+    "unite": [ "big_jaw_bite.png" ]
   },
   "garchomp": {
     "move1": [ "sand_attack.png", "dig.png", "dragon_rush.png" ],
-    "move2": [ "bulldoze.png", "earthquake.png", "dragon_claw.png" ]
+    "move2": [ "bulldoze.png", "earthquake.png", "dragon_claw.png" ],
+    "passive": [ "rough_skin.png" ],
+    "unite": [ "livid_outrage.png" ]
   },
   "gardevoir": {
     "move1": [ "confusion.png", "psychic.png", "moonblast.png" ],
-    "move2": [ "teleport.png", "psychock.png", "future_sight.png" ]
+    "move2": [ "teleport.png", "psychock.png", "future_sight.png" ],
+    "passive": [ "synchronize.png" ],
+    "unite": [ "fairy_singularity.png" ]
   },
   "gengar": {
     "move1": [ "will_o_wisp.png", "shadow_ball.png", "sludge_bomb.png" ],
-    "move2": [ "tail_whip.png", "dream_eater.png", "hex.png" ]
+    "move2": [ "tail_whip.png", "dream_eater.png", "hex.png" ],
+    "passive": [ "levitate.png" ],
+    "unite": [ "phantom_ambush.png" ]
   },
 
   "glaceon": {
     "move1": [ "swift.png", "icicle_spear.png", "icy_wind.png" ],
-    "move2": [ "tail_whip.png", "ice_shard.png", "freeze_dry.png" ]
+    "move2": [ "tail_whip.png", "ice_shard.png", "freeze_dry.png" ],
+    "passive": [ "run_away.png", "snow_cloak.png" ],
+    "unite": [ "glacial_stage.png" ]
   },
   "goodra":  {
     "move1": [ "bubble.png", "muddy_water.png", "dragon_pulse.png" ],
-    "move2": [ "tackle.png", "power_whip.png", "acid_spray.png" ]
+    "move2": [ "tackle.png", "power_whip.png", "acid_spray.png" ],
+    "passive": [ "gooey.png" ],
+    "unite": [ "right_as_rain.png" ]
   },
   "greedent": {
     "move1": [ "tackle.png", "bullet_seed.png", "belch.png" ],
-    "move2": [ "defense_curl.png", "stuff_cheeks.png", "covet.png" ]
+    "move2": [ "defense_curl.png", "stuff_cheeks.png", "covet.png" ],
+    "passive": [ "cheek_pouch.png" ],
+    "unite": [ "berry_belly_flop.png" ]
   },
   "greninja": {
     "move1": [ "double_team.png", "water_shuriken.png", "surf.png" ],
-    "move2": [ "substitute.png", "smokescreen.png", "double_team.png" ]
+    "move2": [ "substitute.png", "smokescreen.png", "double_team.png" ],
+    "passive": [ "torrent.png" ],
+    "unite": [ "waterburst_shuriken.png" ]
   },
   "gyarados": {
     "move1": [ "flail.png", "dragon_breath.png", "aqua_tail.png" ],
-    "move2": [ "splash.png", "waterfall.png", "bounce.png" ]
+    "move2": [ "splash.png", "waterfall.png", "bounce.png" ],
+    "passive": [ "rattled.png", "moxie.png" ],
+    "unite": [ "dragon_current.png" ]
   },
   "gyarados-mega": {
     "move1": [ "flail.png", "dragon_breath.png" ],
-    "move2": [ "splash.png", "waterfall.png"  ]
+    "move2": [ "splash.png", "waterfall.png"  ],
+    "passive": [ "swift_swim.png", "intimidate.png", "mold_breaker.png" ],
+    "unite": [ "dragon_current.png" ]
   },
   "ho-oh": {
     "move1": [ "safeguard.png", "sacred_fire.png", "fire_spin.png" ],
-    "move2": [ "tailwind.png", "flamethrower.png", "sky_attack.png" ]
+    "move2": [ "tailwind.png", "flamethrower.png", "sky_attack.png" ],
+    "passive": [ "regenerator.png" ],
+    "unite": [ "rekindling_flame.png" ]
   },
   "hoopa": {
     "move2": [ "confusion", "hyperspace_hole.png", "trick.png" ],
-    "move1": [ "astonish.png", "phantom_force.png", "shadow_ball.png" ]
+    "move1": [ "astonish.png", "phantom_force.png", "shadow_ball.png" ],
+    "passive": [ "magician.png" ],
+    "unite": [ "rings_unbound.png" ]
   },
   "inteleon": {
     "move2": [ "water_gun.png", "snipe_shot.png", "liquidation.png" ],
-    "move1": [ "tearful_look.png", "fell_stinger.png", "acrobatics.png" ]
+    "move1": [ "tearful_look.png", "fell_stinger.png", "acrobatics.png" ],
+    "passive": [ "sniper.png" ],
+    "unite": [ "azure_spy_vision.png" ]
   },
   "lapras": {
     "move1": [ "whirlpool.png", "water_pulse.png", "perish_song.png" ],
-    "move2": [ "ice_shard.png", "bubble_beam.png", "ice_beam.png" ]
+    "move2": [ "ice_shard.png", "bubble_beam.png", "ice_beam.png" ],
+    "passive": [ "shell_armor.png" ],
+    "unite": [ "lapras_express.png" ]
+  },
+  "latias": {
+    "move1": [ "confusion.png", "mist_ball.png", "dragon_cheer.png" ],
+    "move2": [ "swift.png", "dragon_pulse.png", "dragon_breath.png" ],
+    "passive": [ "levitate.png" ],
+    "unite": [ "mist_blast.png" ]
+  },
+  "latios": {
+    "move1": [ "confusion.png", "luster_purge.png", "telekinesis.png" ],
+    "move2": [ "swift.png", "dragon_pulse.png", "draco_meteor.png" ],
+    "passive": [ "levitate.png" ],
+    "unite": [ "eon_blast.png"]
+  },
+  "leafeon": {
+    "move1": [ "swift.png", "razor_leaf.png", "solar_blade.png" ],
+    "move2": [ "quick_attack.png", "aerial_ace.png", "leaf_blade.png" ],
+    "passive": [ "run_away.png", "chlorophyll.png" ],
+    "unite": [ "emerald_two_step.png" ]
+  },
+  "lucario": {
+    "move1": [ "quick_attack.png", "extreme_speed.png", "power_up_punch.png" ],
+    "move2": [ "meteor_mash.png", "bone_rush.png", "close_combat.png" ],
+    "passive": [ "steadfast.png" ],
+    "unite": [ "aura_cannon.png" ]
+  },
+  "lucario-mega": {
+    "move1": [ "quick_attack.png", "power_up_punch.png" ],
+    "move2": [ "meteor_mash.png", "close_combat.png" ],
+    "passive": [ "justified.png", "adaptability.png" ],
+    "unite": [ "aura_cannon.png" ]
+  },
+  "machamp": {
+    "move1": [ "karate_chop.png", "close_combat.png", "cross_chop.png" ],
+    "move2": [ "bulk_up.png", "dynamic_punch.png", "submission.png" ],
+    "passive": [ "guts.png" ],
+    "unite": [ "barrage_blow.png"]
+  },
+  "mamoswine": {
+    "move1": [ "ice_shard.png", "icicle_crash.png", "ice_fang.png" ],
+    "move2": [ "tackle.png", "high_horsepower.png", "earthquake.png" ],
+    "passive": [ "thick_fat.png" ],
+    "unite": [ "mammoth_mash.png" ]
+  },
+  "meowscarada": {
+    "move1": [ "leafage.png", "flower_trick.png", "night_slash.png" ],
+    "move2": [ "hone_claws.png", "double_team.png", "trailblaze.png" ],
+    "passive": [ "overgrow.png" ],
+    "unite": [ "floral_flourish.png" ]
+  },
+  "meowth": {
+    "move1": [ "scratch.png", "pay_day.png", "fury_swipes.png" ],
+    "move2": [ "feint.png", "feint_attack.png", "assurance.png" ],
+    "passive": [ "pickup.png" ],
+    "unite": [ "gold_coin_barrage.png" ]
+  },
+  "metagross": {
+    "move1": [ "iron_defense.png", "meteor_mash.png", "gyro_ball.png" ],
+    "move2": [ "tackle.png", "zen_headbutt.png", "magnet_rise.png" ],
+    "passive": [ "clear_body.png" ],
+    "unite": [ "compute_and_crush.png"]
+  },
+  "mew": {
+    "move1": [ "electro_ball.png", "solar_beam.png", "surf.png" ],
+    "move2": [ "coaching.png", "light_screen.png", "agility.png" ],
+    "passive": [ "synchronize.png", "move_reset.png" ],
+    "unite": [ "mystical_mirage.png" ]
+  },
+  "mewtwo-x": {
+    "move1": [ "confusion.png", "future_sight.png", "psystrike.png" ],
+    "move2": [ "barrier.png", "recover.png", "teleport.png" ],
+    "passive": [ "pressure.png" ],
+    "unite": [ "infinite_psyburn.png" ]
+  },
+  "mewtwo-y": {
+    "move1": [ "confusion.png", "future_sight.png", "psystrike.png" ],
+    "move2": [ "barrier.png", "recover.png", "teleport.png" ],
+    "passive": [ "pressure.png" ],
+    "unite": [ "infinite_psyburn.png" ]
+  },
+  "mimikyu": {
+    "move1": [ "astonish.png", "play_rough.png", "shadow_claw.png" ],
+    "move2": [ "scratch.png", "shadow_sneak.png", "trick_room.png" ],
+    "passive": [ "disguise.png" ],
+    "unite": [ "play_with_me.png"]
+  },
+  "miraidon": {
+    "move1": [ "thunder_shock.png", "charge_beam.png", "electro_drift.png" ],
+    "move2": [ "thunder_wave.png", "thunder.png", "parobalic_charge.png" ],
+    "passive": [ "hadron_engine.png" ],
+    "unite": [ "bright_future_meteor_storm.png" ]
+  },
+  "moltres": {
+    "move1": [ "wing_attack.png", "sky_attack.png" ],
+    "move2": [ "incinerate.png", "heat_wave.png" ],
+    "passive": [ "flame_body.png" ],
+    "unite": [ "firebird_inferno.png" ]
+  },
+  "mr_mime": {
+    "move1": [ "fake_out.png", "confusion.png", "psychic.png" ],
+    "move2": [ "light_screen.png", "barrier.png", "power_swap.png" ],
+    "passive": [ "filter.png" ],
+    "unite": [ "showtime.png" ]
+  },
+  "ninetales": {
+    "move1": [ "powder_snow.png", "avalanche.png", "dazzling_gleam.png" ],
+    "move2": [ "icy_wind.png", "blizzard.png", "aurora_veil.png" ],
+    "passive": [ "snow_warning.png" ],
+    "unite": [ "snow_globe.png" ]
+  },
+  "pawmot": {
+    "move1": [ "nuzzle.png", "thunder_punch.png", "supercell_slam.png" ],
+    "move2": [ "scratch.png", "volt_switch.png", "mach_punch.png" ],
+    "passive": [ "iron_fist.png" ],
+    "unite": [ "zip_zap_full_charge_spark.png" ]
+  },
+  "pikachu": {
+    "move1": [ "thunder_shock.png", "electro_ball.png", "thunder.png" ],
+    "move2": [ "electroweb.png", "volt_tackle.png", "thunderbolt.png" ],
+    "passive": [ "static.png" ],
+    "unite": [ "thunderstorm.png"]
+  },
+  "psyduck": {
+    "move1": [ "confusion.png", "surf.png", "bubble_beam.png" ],
+    "move2": [ "tail_whip.png", "disable.png", "psychic.png" ],
+    "passive": [ "swift_swim.png" ],
+    "unite": [ "full_power_psy_ay_ay.png" ]
+  },
+  "raichu": {
+    "move1": [ "thunder_shock.png", "stored_power.png", "electro_ball.png" ],
+    "move2": [ "thunder_wave.png", "thunderbolt.png", "psychic.png" ],
+    "passive": [ "static.png", "surge_surfer.png" ],
+    "unite": [ "thunderstorm_aerial.png" ]
+  },
+  "rapidash": {
+    "move1": [ "confusion.png", "dazzling_gleam.png", "fairy_wind.png" ],
+    "move2": [ "tackle.png", "smart_strike.png", "agility.png" ],
+    "passive": [ "pastel_veil.png" ],
+    "unite": [ "triad_blitz.png" ]
+  },
+  "sableye": {
+    "move1": [ "thief.png", "knock_off.png", "shadow_sneak.png" ],
+    "move2": [ "astonish.png", "feint_attack.png", "confuse_ray.png" ],
+    "passive": [ "prankster.png" ],
+    "unite": [ "chaos_glower.png"]
+  },
+  "scizor": {
+    "move1": [ "fury_cutter.png", "bullet_punch.png" ],
+    "move2": [ "quick_attack.png", "double_hit.png", "swords_dance.png" ],
+    "passive": [ "technician.png" ],
+    "unite": [ "red_illusion_dive.png" ]
+  },
+  "scyther": {
+    "move1": [ "fury_cutter.png", "dual_wingbeat.png" ],
+    "move2": [ "quick_attack.png", "double_hit.png", "swords_dance.png" ],
+    "passive": [ "technician.png" ],
+    "unite": [ "green_illusion_dive.png" ]
+  },
+  "sirfetchd": {
+    "move1": [ "dual_wingbeat.png", "fury_cutter.png", "leaf_blade.png" ],
+    "move2": [ "quick_attack.png", "brutal_swing.png", "detect.png" ],
+    "passive": [ "steadfast.png" ],
+    "unite": [ "lunging_leek_nova_blast.png" ]
+  },
+  "slowbro": {
+    "move1": [ "water_gun.png", "scald.png", "surf.png" ],
+    "move2": [ "slack_off.png", "amnesia.png", "telekinesis.png" ],
+    "passive": [ "oblivious.png" ],
+    "unite": [ "slowbeam.png" ]
+  },
+  "snorlax": {
+    "move1": [ "tackle.png", "heavy_slam.png", "flail.png" ],
+    "move2": [ "rest.png", "block.png", "yawn.png" ],
+    "passive": [ "gluttony.png" ],
+    "unite": [ "power_nap.png" ]
+  },
+  "suicune": {
+    "move1": [ "water_pulse.png", "whirlpool.png", "surf.png" ],
+    "move2": [ "avalanche.png", "ice_beam.png", "icy_wind.png" ],
+    "passive": [ "pressure.png" ],
+    "unite": [ "endless_ice_spikes.png"]
+  },
+  "sylveon": {
+    "move1": [ "swift.png", "mystical_fire.png", "hyper_voice.png" ],
+    "move2": [ "baby_doll_eyes.png", "draining_kiss.png", "calm_mind.png" ],
+    "passive": [ "adaptability.png", "pixilate.png" ],
+    "unite": [ "fairy_frolic.png" ]
+  },
+  "talonflame": {
+    "move1": [ "peck.png", "flame_charge.png", "aerial_ace.png" ],
+    "move2": [ "acrobatics.png", "fly.png", "brave_bird.png" ],
+    "passive": [ "gale_wings.png" ],
+    "unite": [ "flame_sweep.png" ]
+  },
+  "tinkaton": {
+    "move1": [ "rock_smash.png", "gigaton_hammer.png", "smack_down.png" ],
+    "move2": [ "fairy_wind.png", "ice_hammer.png", "thief.png" ],
+    "passive": [ "mold_breaker.png" ],
+    "unite": [ "kiss_bliss_kaboom.png" ]
+  },
+  "trevenant": {
+    "move1": [ "will_o_wisp.png", "wood_hammer.png", "curse.png" ],
+    "move2": [ "branch_poke.png", "horn_leech.png", "pain_split.png" ],
+    "passive": [ "natural_cure.png" ],
+    "unite": [ "phantom_forest.png"]
+  },
+  "tsareena": {
+    "move1": [ "razor_leaf.png", "triple_axel.png", "stomp.png" ],
+    "move2": [ "rapid_spin.png", "trop_kick.png", "grassy_slide.png" ],
+    "passive": [ "oblivious.png", "queely_majesty" ],
+    "unite": [ "queen_ascendant.png" ]
+  },
+  "typhlosion": {
+    "move1": [ "ember.png", "eruption.png" ],
+    "move2": [ "tackle.png", "flame_wheel.png" ],
+    "passive": [ "blaze.png" ],
+    "unite": [ "explosive_heat_haze.png" ]
+  },
+
+  "tyranitar": {
+    "move1": [ "bite.png", "dark_pulse.png", "stone_edge.png" ],
+    "move2": [ "rock_polish.png", "ancient_power.png", "sand_tomb.png" ],
+    "passive": [ "guts.png", "shed_skin.png", "sand_stream.png" ],
+    "unite": [ "tyrannical_rampage.png" ]
+  },
+  "umbreon": {
+    "move1": [ "swift.png", "mean_look.png", "foul_play.png" ],
+    "move2": [ "fake_tears.png", "wish.png", "snarl.png" ],
+    "passive": [ "anticipation.png", "inner_focus" ],
+    "unite": [ "moonlight_prance.png" ]
+  },
+  "urshifu": {
+    "move1": [ "rock_smash.png", "wicked_blow.png", "surging_strikes.png" ],
+    "move2": [ "headbutt.png", "throat_chop.png", "liquidation.png" ],
+    "passive": [ "inner_focus.png", "unseen_fist.png" ],
+    "unite": [ "ebon_fist.png", "flowing_fists.png" ]
+  },
+  "vaporeon": {
+    "move1": [ "swift.png", "hydro_pump.png", "muddy_water.png" ],
+    "move2": [ "tackle.png", "aqua_ring.png", "flip_turn.png" ],
+    "passive": [ "run_away.png", "water_absorb.png" ],
+    "unite": [ "aquamarine_splash.png"]
+  },
+  "venusaur": {
+    "move1": [ "seed_bomb.png", "sludge_bomb.png", "giga_drain.png" ],
+    "move2": [ "razor_leaf.png", "solar_beam.png", "petal_dance.png" ],
+    "passive": [ "overgrow.png" ],
+    "unite": [ "verdant_anger.png" ]
+  },
+  "wigglytuff": {
+    "move1": [ "pound.png", "double_slap.png", "dazzling_gleam.png" ],
+    "move2": [ "defense_curl.png", "rollout.png", "sing.png" ],
+    "passive": [ "cute_charm.png" ],
+    "unite": [ "starlight_recital.png" ]
+  },
+  "zacian": {
+    "move1": [ "slash.png", "metal_claw.png", "sacred_sword.png" ],
+    "move2": [ "quick_attack.png", "agility.png", "play_rough.png" ],
+    "passive": [ "intrepid_sword.png" ],
+    "unite": [ "sovereign_sword.png" ]
+  },
+  "zapdos": {
+    "move1": [ "thunder_shock.png", "thunderbolt.png" ],
+    "move2": [ "discharge.png", "zap_cannon.png" ],
+    "passive": [ "static.png" ],
+    "unite": [ "high_voltage_siege.png"]
+  },
+  "zeraora": {
+    "move1": [ "agility.png", "volt_switch.png", "spark.png" ],
+    "move2": [ "slash.png", "discharge.png", "wild_charge.png" ],
+    "passive": [ "volt_absorb.png" ],
+    "unite": [ "plasma_gale.png" ]
+  },
+  "zoroark": {
+    "move1": [ "slash.png", "shadow_claw.png", "cut.png" ],
+    "move2": [ "fury_swipes.png", "night_slash.png", "feint_attack.png" ],
+    "passive": [ "illusion.png" ],
+    "unite": [ "nightfall_daze.png" ]
   }
 }

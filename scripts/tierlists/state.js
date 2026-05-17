@@ -16,12 +16,17 @@ const state = {
     pokemonData: [],
     itemData: [],
     battleItemData: [],
+    movesData: {},
     pokeDetailMap: new Map(),
     pendingAdd: null,
 
     tierlistMode: 'simple',
-
+    itemUsageMode: 'one',
     gallerySearchQuery: '',
+
+    // Monotonically increasing counter to give each placed item a unique uid
+    _uidCounter: 0,
+    nextUid() { return ++this._uidCounter; },
 };
 
 export default state;

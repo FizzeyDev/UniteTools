@@ -5,7 +5,8 @@ export function getUsageMap(category) {
 }
 
 export function getMaxUsage(category) {
-    return category === 'pokemon' ? 4 : 1;
+    if (category === 'pokemon') return 4;
+    return state.itemUsageMode === 'unlimited' ? Infinity : 1;
 }
 
 export function recalcUsage(draftId) {

@@ -32,7 +32,7 @@ export function addTier(draftId) {
 export function deleteTier(draftId, tierIndex) {
     const draft = state.drafts.find(d => d.id === draftId);
     if (!draft) return;
-    const tier  = draft.tiers[tierIndex];
+    const tier = draft.tiers[tierIndex];
     if (!tier) return;
     tier.items.forEach(item => {
         const map = getUsageMap(item.category);
@@ -55,4 +55,23 @@ export function clearDraft(draftId) {
     });
     loadTierList(draftId);
     loadGallery(state.currentCategory);
+}
+
+/**
+ * Remove a single item by its unique uid from any tier of the given draft.
+ */
+export function removeItemByUid(draftId, uid) {
+    const draft = state.drafts.find(d => d.id === draftId);
+    if (!draft) return;
+    for (const tier of draft.tiers) {
+        const idx = tier.items.findIndex(i => i.uid === uid);
+        if (idx !== -1) {
+            const [removed] = tier.items.splice(idx, 1);
+            const map = getUsageMap(removed.category);
+            map.set(removed.name, Math.max((map.get(removed.name) || 1) - 1, 0));
+            loadTierList(draftId);
+            loadGallery(state.currentCategory);
+            return;
+        }
+    }
 }
