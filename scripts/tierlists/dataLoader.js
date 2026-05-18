@@ -6,12 +6,14 @@ export function getBasePath() {
 
 export async function loadData() {
     try {
-        const [pResp, iResp, bResp, dResp] = await Promise.all([
+        const [pResp, iResp, bResp, dResp, mResp] = await Promise.all([
             fetch('data/pokemons.json'),
             fetch('data/items.json'),
             fetch('data/battle_items.json'),
             fetch('data/poke_data.json'),
+            fetch('data/moves.json').catch(() => null),   // optional – may not exist yet
         ]);
+
         if (!pResp.ok || !iResp.ok || !bResp.ok || !dResp.ok)
             throw new Error('Failed to fetch one or more data files');
 
@@ -25,6 +27,14 @@ export async function loadData() {
             if (p.pokemonId) state.pokeDetailMap.set(p.pokemonId, p);
         });
 
+        // moves.json: keyed by lowercase pokemon name
+        // Schema (WIP): { "absol": { move1: [{name, image}], move2: [{name, image}], passive: {name,image}, unite: {name,image} } }
+        if (mResp && mResp.ok) {
+            state.movesData = await mResp.json();
+        } else {
+            state.movesData = {};
+        }
+
     } catch (err) {
         console.error('Error loading JSON data:', err);
         const g = document.getElementById('gallery');
@@ -32,6 +42,120 @@ export async function loadData() {
     }
 }
 
+/**
+ * Returns move data for a Pokémon, preferring moves.json over poke_data.json.
+ * Always returns a normalized object:
+ *   { move1: [{name, image}], move2: [{name, image}], passive: [{name,image}], unite: [{name,image}] }
+ *
+ * passive and unite are now arrays to support multiple choices.
+ * Images are resolved to: assets/moves/<pokemonKey>/<filename>
+ */
+export function getMovesForPokemon(pokemonName) {
+    const key = pokemonName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
+    // ── Prefer moves.json (new source) ──
+    if (state.movesData && state.movesData[key]) {
+        const raw = state.movesData[key];
+        const norm = (arr) => (arr || []).map(m => normalizeMoveWithPath(m, key));
+        return {
+            move1:   norm(raw.move1),
+            move2:   norm(raw.move2),
+            passive: norm(raw.passive),
+            unite:   norm(raw.unite),
+        };
+    }
+
+    // ── Fallback: poke_data.json (old source) ──
+    const entry = state.pokemonData.find(d => d.name === pokemonName);
+    const id    = entry?.pokemonId || key;
+    const detail = state.pokeDetailMap.get(id);
+    if (!detail) return { move1: [], move2: [], passive: [], unite: [] };
+
+    const moves = detail.moves || [];
+    const autoAttack = moves.find(m => m.name === 'Auto-attack');
+
+    const passiveRaw = detail.passive
+        ? { name: detail.passive.name, image: detail.passive.image }
+        : moves.find(m => m.name.includes('(Passive)') || m.name.toLowerCase().includes('passive')) || null;
+
+    const uniteRaw = moves.find(m =>
+        m.name.includes('(Unite)') || m.name.toLowerCase().includes('unite')
+    ) || null;
+
+    const standards = moves.filter(m =>
+        m !== autoAttack &&
+        m.name !== passiveRaw?.name &&
+        m !== uniteRaw
+    );
+
+    const half = Math.ceil(standards.length / 2);
+    return {
+        move1:   standards.slice(0, half).map(m => normalizeMove(m)),
+        move2:   standards.slice(half).map(m => normalizeMove(m)),
+        passive: passiveRaw ? [normalizeMove(passiveRaw)] : [],
+        unite:   uniteRaw   ? [normalizeMove(uniteRaw)]   : [],
+    };
+}
+
+/**
+ * Maps a moves.json key to the actual assets/moves/ folder name.
+ * Handles mega evolutions and forme variants.
+ *
+ * JSON key      → folder name
+ * charizard-x   → mega_charizard_x
+ * charizard-y   → mega_charizard_y
+ * gyarados-mega → mega_gyarados
+ * lucario-mega  → mega_lucario
+ * mewtwo-x      → mewtwo_x
+ * mewtwo-y      → mewtwo_y
+ */
+const FOLDER_OVERRIDES = {
+    'charizard-x':   'mega_charizard_x',
+    'charizard-y':   'mega_charizard_y',
+    'gyarados-mega': 'mega_gyarados',
+    'lucario-mega':  'mega_lucario',
+    'mewtwo-x':      'mega_mewtwo_x',
+    'mewtwo-y':      'mega_mewtwo_y',
+};
+
+function keyToFolder(pokemonKey) {
+    return FOLDER_OVERRIDES[pokemonKey] ?? pokemonKey;
+}
+
+/**
+ * Normalize a move entry from moves.json.
+ * Entries are plain filenames like "feint.png" or objects {name, image}.
+ * The image path is built as: assets/moves/<folder>/<filename>
+ * The move name is derived by stripping the extension and replacing _ with spaces.
+ */
+function normalizeMoveWithPath(m, pokemonKey) {
+    const folder = keyToFolder(pokemonKey);
+    if (typeof m === 'string') {
+        const filename = m;
+        const name = filenameToMoveName(filename);
+        return { name, image: `assets/moves/${folder}/${filename}` };
+    }
+    // Object form: may already have an image path, or just a filename in image
+    const name  = m.name || filenameToMoveName(m.image || '');
+    const image = m.image
+        ? (m.image.startsWith('assets/') ? m.image : `assets/moves/${folder}/${m.image}`)
+        : null;
+    return { name, image };
+}
+
+function filenameToMoveName(filename) {
+    return filename
+        .replace(/\.png$/i, '')
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function normalizeMove(m) {
+    if (typeof m === 'string') return { name: m, image: null };
+    return { name: m.name || '', image: m.image || null };
+}
+
+// Legacy helper kept for backward compatibility
 export function getPokeDetail(pokemonName) {
     const entry = state.pokemonData.find(d => d.name === pokemonName);
     const id = entry?.pokemonId || pokemonName.toLowerCase().replace(/[^a-z0-9]/g, '');

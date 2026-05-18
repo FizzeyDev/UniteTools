@@ -10,12 +10,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     loadTabs();
     loadTierList(state.currentDraft);
+    adaptTierHeaders();
     loadGallery('pokemon');
     setupDragDrop();
     setupStaticListeners();
     setupKeyboardShortcuts();
     setupHowToPanel();
     setupToastContainer();
+
+    // Re-run after any DOM mutation that adds tier rows
+    new MutationObserver(adaptTierHeaders)
+        .observe(document.getElementById('tierlist-wrapper') || document.body,
+                 { childList: true, subtree: true });
 });
 
 function setupStaticListeners() {
@@ -228,6 +234,14 @@ function setupHowToPanel() {
 function toggleHowTo() {
     const panel = document.getElementById('howto-panel');
     if (panel) panel.classList.toggle('open');
+}
+
+function adaptTierHeaders() {
+    document.querySelectorAll('.tier-header__text').forEach(span => {
+        const len = (span.textContent || '').length;
+        span.classList.toggle('tier-header__text--long',  len >  4 && len <= 8);
+        span.classList.toggle('tier-header__text--xlong', len >  8);
+    });
 }
 
 function setupToastContainer() {

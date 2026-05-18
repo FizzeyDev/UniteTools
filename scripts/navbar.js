@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(data => {
       document.getElementById("navbar-container").innerHTML = data;
 
+      /* ── FIX : re-créer les icônes Lucide APRÈS injection du HTML ── */
       if (window.lucide) {
         lucide.createIcons();
       }
@@ -27,15 +28,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initNavbar(basePath) {
-  const sidebar    = document.getElementById("sidebar");
-  const toggle     = document.getElementById("toggle-sidebar");
-  const header     = document.querySelector(".sidebar-header");
-  const hideBtn    = document.getElementById("hide-sidebar-btn");
-  const showBtn    = document.getElementById("show-sidebar-btn");
+  const sidebar = document.getElementById("sidebar");
+  const toggle  = document.getElementById("toggle-sidebar");
+  const header  = document.querySelector(".sidebar-header");
+  const hideBtn = document.getElementById("hide-sidebar-btn");
+  const showBtn = document.getElementById("show-sidebar-btn");
 
   if (!sidebar) return;
 
-  /* ── Normalise un href en pathname sans trailing slash ── */
+  /* ── Normalise un href en pathname ── */
   function normalizePath(url) {
     try {
       const path = new URL(url, window.location.origin).pathname;
@@ -45,7 +46,7 @@ function initNavbar(basePath) {
     }
   }
 
-  /* ── Met à jour l'icône active dans la mini sidebar ── */
+  /* ── Active link dans la mini sidebar ── */
   function updateMiniActive() {
     const cur = normalizePath(window.location.href);
     sidebar.querySelectorAll(".sidebar-mini-icon").forEach(icon => {
@@ -56,12 +57,9 @@ function initNavbar(basePath) {
   /* ── Applique l'état ouvert/mini ── */
   function syncSidebarState(hidden) {
     sidebar.classList.toggle("hidden", hidden);
-
-    // Décaler le contenu uniquement sur desktop
     if (window.innerWidth > 768) {
       document.body.classList.toggle("sidebar-hidden", hidden);
     }
-
     localStorage.setItem("sidebarHidden", String(hidden));
     updateMiniActive();
   }
@@ -70,19 +68,18 @@ function initNavbar(basePath) {
   const startHidden = localStorage.getItem("sidebarHidden") === "true";
 
   if (window.innerWidth <= 768) {
-    // Mobile : toujours fermé au démarrage
     sidebar.classList.remove("hidden", "active");
     document.body.classList.remove("sidebar-hidden");
   } else {
     syncSidebarState(startHidden);
   }
 
-  /* ── Bouton ◀ → passer en mini ── */
+  /* ── Bouton ◀ → mini ── */
   if (hideBtn) {
     hideBtn.addEventListener("click", () => syncSidebarState(true));
   }
 
-  /* ── Bouton ▶ dans la mini → rouvrir ── */
+  /* ── Bouton ▶ → rouvrir ── */
   if (showBtn) {
     showBtn.addEventListener("click", () => syncSidebarState(false));
   }
@@ -99,7 +96,7 @@ function initNavbar(basePath) {
     });
   }
 
-  /* ── Clic en dehors : fermer sur mobile ── */
+  /* ── Clic en dehors → fermer sur mobile ── */
   document.addEventListener("click", e => {
     if (window.innerWidth <= 768) {
       if (sidebar.classList.contains("active") &&
@@ -110,7 +107,7 @@ function initNavbar(basePath) {
     }
   });
 
-  /* ── Resize : recalculer le margin-left ── */
+  /* ── Resize ── */
   window.addEventListener("resize", () => {
     if (window.innerWidth <= 768) {
       document.body.classList.remove("sidebar-hidden");
@@ -151,7 +148,7 @@ function initNavbar(basePath) {
   /* ── Traductions ── */
   loadAllTranslations(basePath);
 
-  /* ── Switch langue (sidebar normale + mini footer) ── */
+  /* ── Switch langue ── */
   sidebar.addEventListener("click", e => {
     const btn = e.target.closest(".lang-btn");
     if (btn && btn.dataset.lang && btn.dataset.lang !== currentLang) {
@@ -181,7 +178,10 @@ function applyTranslations() {
 
   document.querySelectorAll('[data-lang]').forEach(el => {
     const key = el.dataset.lang;
-    if (lang[key]) el.innerHTML = lang[key];
+    /* Ne pas écraser les éléments qui ont des enfants (sb-icon, sb-link-text) */
+    if (lang[key] && el.children.length === 0) {
+      el.innerHTML = lang[key];
+    }
   });
 
   document.querySelectorAll('[data-lang-placeholder]').forEach(el => {

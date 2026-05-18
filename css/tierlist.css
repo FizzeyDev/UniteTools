@@ -223,7 +223,7 @@ h1::after {
   justify-content: center;
   font-family: 'Exo 2', sans-serif;
   font-weight: 900;
-  font-size: 1.4rem;
+  /* font-size set on inner span via clamp */
   letter-spacing: 0.02em;
   color: #fff;
   cursor: pointer;
@@ -232,7 +232,26 @@ h1::after {
   flex-shrink: 0;
   user-select: none;
   position: relative;
+  overflow: hidden;       /* prevent header from widening */
+  padding: 4px 6px;
 }
+
+/* Inner text: scales down with clamp so long names never overflow */
+.tier-header__text {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(0.6rem, 1.8cqi, 1.4rem);
+  /* Fallback for browsers without cqi: scale by character count via JS-added class */
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.2;
+  white-space: normal;
+}
+/* Long names: shrink font further */
+.tier-header__text--long  { font-size: clamp(0.55rem, 1.4cqi, 1rem); }
+.tier-header__text--xlong { font-size: clamp(0.5rem,  1.1cqi, 0.8rem); }
 .tier-header::after {
   content: '✎';
   position: absolute;
@@ -247,7 +266,7 @@ h1::after {
 
 .tier-items {
   flex: 1;
-  min-height: 90px;
+  min-height: 96px;
   padding: 8px 10px;
   display: flex;
   flex-wrap: wrap;
@@ -256,13 +275,32 @@ h1::after {
   align-content: flex-start;
   border-radius: 0;
   background: transparent;
-  transition: background 0.15s;
+  transition: background 0.15s, outline-color 0.15s;
+  position: relative;   /* for empty hint positioning */
 }
 .tier-items.drag-over {
   background: rgba(79,195,247,0.06);
-  outline: 2px dashed rgba(79,195,247,0.35);
+  outline: 2px dashed rgba(79,195,247,0.4);
   outline-offset: -3px;
 }
+
+/* Empty-row hint via pseudo-element (no DOM node = no drag interference) */
+.tier-items:not(:has(.tier-item))::before {
+  content: 'Drop here';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.1);
+  pointer-events: none;
+  user-select: none;
+}
+.tier-items.drag-over::before { display: none; }
 
 /* ── Tier items ── */
 .tier-item {
@@ -288,6 +326,36 @@ h1::after {
 }
 .tier-item:active { cursor: grabbing; }
 .tier-item.dragging { opacity: 0.25; transform: scale(0.95); }
+
+/* Quick-remove × button */
+.tier-item__remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--red);
+  border: none;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.15s, transform 0.15s;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  padding: 0;
+  font-family: sans-serif;
+}
+.tier-item:hover .tier-item__remove {
+  opacity: 1;
+  transform: scale(1);
+}
 
 .tier-item img,
 .tier-item__sprite {
@@ -391,7 +459,7 @@ h1::after {
   border-color: var(--red);
 }
 
-/* ── Tier actions (settings) ── */
+/* ── Tier actions (drag handle) ── */
 .tier-actions {
   display: flex;
   align-items: center;
@@ -399,24 +467,34 @@ h1::after {
   border-left: 1px solid var(--border);
   background: rgba(0,0,0,0.1);
 }
-.tier-actions .settings-tier {
-  background: transparent;
-  border: none;
-  padding: 6px;
+.tier-drag-handle {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  width: 28px;
+  height: 100%;
+  min-height: 48px;
+  cursor: grab;
   border-radius: var(--radius-xs);
-  transition: all 0.2s;
-  opacity: 0.4;
+  opacity: 0.3;
+  transition: opacity 0.2s, background 0.2s;
+  user-select: none;
+  color: var(--text);
 }
-.tier-row:hover .tier-actions .settings-tier { opacity: 1; }
-.tier-actions .settings-tier img { width: 18px; height: 18px; display: block; }
-.tier-actions .settings-tier:hover {
-  filter: brightness(1.5);
-  background: rgba(255,255,255,0.07);
-  transform: rotate(30deg);
+.tier-drag-handle:active { cursor: grabbing; }
+.tier-row:hover .tier-drag-handle { opacity: 0.7; }
+.tier-drag-handle:hover { opacity: 1 !important; background: rgba(255,255,255,0.06); }
+.drag-handle-dots { font-size: 18px; line-height: 1; }
+
+.tier-row--dragging { opacity: 0.4; outline: 2px dashed rgba(79,195,247,0.4); }
+.tier-row--drag-over { outline: 2px solid rgba(79,195,247,0.7); background: rgba(79,195,247,0.04); }
+
+/* Item mode buttons */
+.item-mode-btn { font-size: 0.8rem !important; min-width: 32px; }
+.item-mode-btn.active {
+  background: var(--orange-dim) !important;
+  border-color: rgba(255,157,0,0.5) !important;
+  color: var(--orange) !important;
 }
 
 /* ── Selection panel ── */

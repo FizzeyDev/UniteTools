@@ -7,7 +7,12 @@ import { showMoveModal } from './modals.js';
 let dragPayload = null;
 
 export function setupDragDrop() {
+
+    // ── dragstart ──────────────────────────────────────────────────────────
     document.addEventListener('dragstart', e => {
+        // If already dragging (e.g. ghost image passes over a draggable tier-item), ignore
+        if (dragPayload !== null) { e.preventDefault(); return; }
+
         const galleryItem = e.target.closest('#gallery img, #gallery .gallery-item');
         const tierItem    = e.target.closest('.tier-item');
 
@@ -16,22 +21,24 @@ export function setupDragDrop() {
                 name:     galleryItem.dataset.name || galleryItem.alt,
                 category: galleryItem.dataset.category || state.currentCategory,
                 fromTier: null,
+                uid:      null,
             };
             e.dataTransfer.effectAllowed = 'copy';
             e.dataTransfer.setData('text/plain', JSON.stringify(dragPayload));
-            // Small timeout so the drag image captures before fading
             setTimeout(() => galleryItem.classList.add('dragging'), 0);
 
         } else if (tierItem) {
-            const row      = tierItem.closest('.tier-row');
+            const row = tierItem.closest('.tier-row');
             if (!row) return;
             const fromTier = parseInt(row.dataset.tierIndex);
             const draft    = state.drafts.find(d => d.id === state.currentDraft);
-            const stored   = draft?.tiers[fromTier]?.items.find(i => i.name === tierItem.dataset.name && i.category === tierItem.dataset.category);
+            const uid      = tierItem.dataset.uid ? parseInt(tierItem.dataset.uid) : null;
+            const stored   = draft?.tiers[fromTier]?.items.find(i => i.uid === uid);
             dragPayload = {
                 name:     tierItem.dataset.name,
                 category: tierItem.dataset.category,
                 fromTier,
+                uid,
                 snapshot: stored ? { ...stored } : null,
             };
             e.dataTransfer.effectAllowed = 'move';
@@ -44,6 +51,7 @@ export function setupDragDrop() {
         document.body.classList.add('is-dragging');
     });
 
+    // ── dragend ──────────────────────────────────────────────────────────
     document.addEventListener('dragend', () => {
         document.body.classList.remove('is-dragging');
         document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
@@ -55,12 +63,16 @@ export function setupDragDrop() {
         dragPayload = null;
     });
 
+    // ── dragover ──────────────────────────────────────────────────────────
     document.addEventListener('dragover', e => {
         e.preventDefault();
-        const tierZone   = e.target.closest('.tier-items');
+
+        const tierZone   = e.target.closest('.tier-items')
+                        ?? e.target.closest('.tier-item')?.closest('.tier-row')?.querySelector('.tier-items')
+                        ?? e.target.closest('.tier-row')?.querySelector('.tier-items');
         const removeZone = e.target.closest('#remove-zone');
 
-        // Clear old drag-over states except current
+        // Clear stale drag-over highlights
         document.querySelectorAll('.tier-items.drag-over').forEach(t => {
             if (t !== tierZone) {
                 t.classList.remove('drag-over');
@@ -71,8 +83,8 @@ export function setupDragDrop() {
         if (tierZone) {
             tierZone.classList.add('drag-over');
             if (!tierZone.querySelector('.preview-placeholder')) {
-                const ph      = document.createElement('div');
-                ph.className  = 'preview-placeholder';
+                const ph     = document.createElement('div');
+                ph.className = 'preview-placeholder';
                 tierZone.appendChild(ph);
             }
             e.dataTransfer.dropEffect = dragPayload?.fromTier !== null ? 'move' : 'copy';
@@ -86,6 +98,7 @@ export function setupDragDrop() {
         }
     });
 
+    // ── dragleave ──────────────────────────────────────────────────────────
     document.addEventListener('dragleave', e => {
         const tierZone = e.target.closest('.tier-items');
         if (tierZone) {
@@ -101,10 +114,17 @@ export function setupDragDrop() {
         }
     });
 
+    // ── drop ──────────────────────────────────────────────────────────────
     document.addEventListener('drop', e => {
         e.preventDefault();
 
-        // Cleanup UI
+        // Resolve tierZone BEFORE removing placeholders, because e.target may
+        // be the placeholder itself (a detached node after removal won't climb the DOM).
+        const tierZone   = e.target.closest('.tier-items')
+                        ?? e.target.closest('.preview-placeholder')?.closest('.tier-items')
+                        ?? e.target.closest('.tier-item')?.closest('.tier-row')?.querySelector('.tier-items')
+                        ?? e.target.closest('.tier-row')?.querySelector('.tier-items');
+
         document.querySelectorAll('.tier-items').forEach(t => {
             t.classList.remove('drag-over');
             t.querySelector('.preview-placeholder')?.remove();
@@ -112,27 +132,23 @@ export function setupDragDrop() {
         document.getElementById('remove-zone')?.classList.remove('active');
 
         if (!dragPayload) return;
-
-        const tierZone   = e.target.closest('.tier-items');
         const removeZone = e.target.closest('#remove-zone');
         const gallery    = e.target.closest('#gallery');
         const draft      = state.drafts.find(d => d.id === state.currentDraft);
         if (!draft) { dragPayload = null; return; }
 
-        // ── Drop into a tier row ──
+        // ── Drop into a tier row ──────────────────────────────────────────
         if (tierZone) {
             const tierIndex  = parseInt(tierZone.dataset.tierIndex);
             const targetTier = draft.tiers[tierIndex];
             if (!targetTier) { dragPayload = null; return; }
 
-            // Moving an existing item between tiers
+            // Moving an existing item between tiers (uid-based)
             if (dragPayload.fromTier !== null) {
                 if (dragPayload.fromTier !== tierIndex) {
                     const origin = draft.tiers[dragPayload.fromTier];
                     if (origin) {
-                        origin.items = origin.items.filter(i =>
-                            !(i.name === dragPayload.name && i.category === dragPayload.category)
-                        );
+                        origin.items = origin.items.filter(i => i.uid !== dragPayload.uid);
                     }
                     const item = dragPayload.snapshot || { name: dragPayload.name, category: dragPayload.category };
                     targetTier.items.push({ ...item });
@@ -160,12 +176,23 @@ export function setupDragDrop() {
                 }
                 usageMap.set(dragPayload.name, (usageMap.get(dragPayload.name) || 0) + 1);
                 const file = state.pokemonData.find(p => p.name === dragPayload.name)?.file;
-                targetTier.items.push({ name: dragPayload.name, category: 'pokemon', file, move1: '', move2: '', passive: '', unite: '' });
+                targetTier.items.push({
+                    uid: state.nextUid(),
+                    name: dragPayload.name,
+                    category: 'pokemon',
+                    file,
+                    move1: '', move2: '', passive: '', unite: '',
+                });
             } else {
                 usageMap.set(dragPayload.name, (usageMap.get(dragPayload.name) || 0) + 1);
                 const src  = dragPayload.category === 'items' ? state.itemData : state.battleItemData;
                 const file = src.find(i => i.name === dragPayload.name)?.file;
-                targetTier.items.push({ name: dragPayload.name, category: dragPayload.category, file });
+                targetTier.items.push({
+                    uid: state.nextUid(),
+                    name: dragPayload.name,
+                    category: dragPayload.category,
+                    file,
+                });
             }
 
             dragPayload = null;
@@ -174,13 +201,11 @@ export function setupDragDrop() {
             return;
         }
 
-        // ── Drop onto remove zone or back into gallery ──
+        // ── Drop onto remove zone or back into gallery ────────────────────
         if ((removeZone || gallery) && dragPayload?.fromTier !== null) {
             const origin = draft.tiers[dragPayload.fromTier];
             if (origin) {
-                origin.items = origin.items.filter(i =>
-                    !(i.name === dragPayload.name && i.category === dragPayload.category)
-                );
+                origin.items = origin.items.filter(i => i.uid !== dragPayload.uid);
                 const map = getUsageMap(dragPayload.category);
                 map.set(dragPayload.name, Math.max((map.get(dragPayload.name) || 1) - 1, 0));
             }
@@ -190,5 +215,51 @@ export function setupDragDrop() {
         }
 
         dragPayload = null;
+    });
+
+    // ── Click-to-add on gallery items (fallback for drag issues) ─────────
+    document.getElementById('gallery')?.addEventListener('click', e => {
+        const img = e.target.closest('.gallery-item, img[data-name]');
+        if (!img) return;
+
+        const name     = img.dataset.name || img.alt;
+        const category = img.dataset.category || state.currentCategory;
+        const draft    = state.drafts.find(d => d.id === state.currentDraft);
+        if (!draft) return;
+
+        const usageMap = getUsageMap(category);
+        if ((usageMap.get(name) || 0) >= getMaxUsage(category)) {
+            window.showToast?.(`${name} is already placed the maximum number of times`, 'error');
+            return;
+        }
+
+        // Add to first tier with space, or tier 0 if all full
+        const targetTierIndex = 0;
+        const targetTier = draft.tiers[targetTierIndex];
+        if (!targetTier) return;
+
+        if (category === 'pokemon') {
+            if (state.tierlistMode !== 'simple') {
+                state.pendingAdd = { name, category, tierIndex: targetTierIndex };
+                showMoveModal(name, targetTierIndex, false);
+                return;
+            }
+            usageMap.set(name, (usageMap.get(name) || 0) + 1);
+            const file = state.pokemonData.find(p => p.name === name)?.file;
+            targetTier.items.push({
+                uid: state.nextUid(),
+                name, category: 'pokemon', file,
+                move1: '', move2: '', passive: '', unite: '',
+            });
+        } else {
+            usageMap.set(name, (usageMap.get(name) || 0) + 1);
+            const src  = category === 'items' ? state.itemData : state.battleItemData;
+            const file = src.find(i => i.name === name)?.file;
+            targetTier.items.push({ uid: state.nextUid(), name, category, file });
+        }
+
+        loadTierList(state.currentDraft);
+        loadGallery(state.currentCategory);
+        window.showToast?.(`${name} added to ${draft.tiers[targetTierIndex].name}`, 'success');
     });
 }
