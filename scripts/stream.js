@@ -128,8 +128,96 @@ let banFirstTeam = 'purple'; // legacy compat
 let banOrderMode = 'purple_first'; // 'purple_first' | 'orange_first' | 'free'
 let activeTab    = 'fearless';
 
-// ── Drag state ──
+// ===== DRAG & DROP (pointer-based for OBS "interact" mode compatibility) =====
 let dragSrcIndex = null;
+let _dragGhost = null;
+let _dragOffX = 0;
+let _dragOffY = 0;
+
+function _createGhost(slot) {
+  const ghost = slot.cloneNode(true);
+  ghost.style.cssText = `
+    position:fixed;pointer-events:none;z-index:99999;
+    width:${slot.offsetWidth}px;height:${slot.offsetHeight}px;
+    opacity:0.75;transform:scale(1.08);
+    border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.7);
+    transition:none;
+  `;
+  document.body.appendChild(ghost);
+  return ghost;
+}
+
+function _removeGhost() {
+  if (_dragGhost) { _dragGhost.remove(); _dragGhost = null; }
+}
+
+function _getSlotUnderPoint(x, y, excludeEl) {
+  const slots = Array.from(document.querySelectorAll('.display-slot'));
+  for (const s of slots) {
+    if (s === excludeEl) continue;
+    const r = s.getBoundingClientRect();
+    if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return s;
+  }
+  return null;
+}
+
+function _bindPointerDrag(slot, index) {
+  slot.addEventListener('pointerdown', (e) => {
+    if (e.target.classList.contains('remove-btn')) return;
+    e.preventDefault();
+
+    dragSrcIndex = index;
+    const rect = slot.getBoundingClientRect();
+    _dragOffX = e.clientX - rect.left;
+    _dragOffY = e.clientY - rect.top;
+
+    _dragGhost = _createGhost(slot);
+    _dragGhost.style.left = (e.clientX - _dragOffX) + 'px';
+    _dragGhost.style.top  = (e.clientY - _dragOffY) + 'px';
+
+    slot.style.opacity = '0.3';
+    slot.setPointerCapture(e.pointerId);
+
+    function onMove(ev) {
+      if (_dragGhost) {
+        _dragGhost.style.left = (ev.clientX - _dragOffX) + 'px';
+        _dragGhost.style.top  = (ev.clientY - _dragOffY) + 'px';
+      }
+      document.querySelectorAll('.display-slot').forEach(s => s.classList.remove('drag-over'));
+      const over = _getSlotUnderPoint(ev.clientX, ev.clientY, slot);
+      if (over) over.classList.add('drag-over');
+    }
+
+    function onUp(ev) {
+      slot.removeEventListener('pointermove', onMove);
+      slot.removeEventListener('pointerup', onUp);
+      slot.removeEventListener('pointercancel', onUp);
+
+      _removeGhost();
+      slot.style.opacity = '';
+      document.querySelectorAll('.display-slot').forEach(s => s.classList.remove('drag-over'));
+
+      const over = _getSlotUnderPoint(ev.clientX, ev.clientY, slot);
+      if (over !== null) {
+        const targetIndex = parseInt(over.dataset.index);
+        if (!isNaN(targetIndex) && dragSrcIndex !== targetIndex) {
+          const moved = picks.splice(dragSrcIndex, 1)[0];
+          picks.splice(targetIndex, 0, moved);
+          saveState();
+          renderDisplay();
+          renderList();
+          dragSrcIndex = null;
+          return;
+        }
+      }
+      dragSrcIndex = null;
+    }
+
+    slot.addEventListener('pointermove', onMove);
+    slot.addEventListener('pointerup', onUp);
+    slot.addEventListener('pointercancel', onUp);
+  });
+}
 
 // ── Color picker popup state ──
 let colorPickerFile = null;
@@ -471,7 +559,6 @@ function renderDisplay() {
     if (!poke) return;
     const slot = document.createElement('div');
     slot.className = 'display-slot' + (team ? ' team-' + team : '');
-    slot.draggable = true;
     slot.dataset.index = index;
 
     slot.innerHTML = `
@@ -487,54 +574,10 @@ function renderDisplay() {
 
     slot.querySelector('.remove-btn').addEventListener('click', (e) => removePick(file, e));
 
-    slot.addEventListener('dragstart', onDragStart);
-    slot.addEventListener('dragover',  onDragOver);
-    slot.addEventListener('drop',      onDrop);
-    slot.addEventListener('dragend',   onDragEnd);
-    slot.addEventListener('dragleave', onDragLeave);
+    _bindPointerDrag(slot, index);
 
     grid.appendChild(slot);
   });
-}
-
-// ===== DRAG & DROP =====
-function onDragStart(e) {
-  dragSrcIndex = parseInt(this.dataset.index);
-  this.classList.add('dragging');
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/plain', dragSrcIndex);
-}
-
-function onDragOver(e) {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-  document.querySelectorAll('.display-slot').forEach(s => s.classList.remove('drag-over'));
-  this.classList.add('drag-over');
-}
-
-function onDragLeave(e) {
-  this.classList.remove('drag-over');
-}
-
-function onDrop(e) {
-  e.preventDefault();
-  const targetIndex = parseInt(this.dataset.index);
-  if (dragSrcIndex === null || dragSrcIndex === targetIndex) return;
-
-  const moved = picks.splice(dragSrcIndex, 1)[0];
-  picks.splice(targetIndex, 0, moved);
-
-  saveState();
-  renderDisplay();
-  renderList();
-}
-
-function onDragEnd(e) {
-  document.querySelectorAll('.display-slot').forEach(s => {
-    s.classList.remove('dragging');
-    s.classList.remove('drag-over');
-  });
-  dragSrcIndex = null;
 }
 
 // ===== RENDER BAN DISPLAY =====
@@ -702,18 +745,36 @@ function initPicksOverlay() {
   picksRow.id = 'overlay-picks-row';
   root.appendChild(picksRow);
 
+  function getCustSettings() {
+    try {
+      const raw = localStorage.getItem('unite_cust_settings');
+      if (raw) return JSON.parse(raw);
+    } catch(e) {}
+    return {};
+  }
+
   function renderOverlay(picksData) {
+    const cust = getCustSettings();
+    const fearlessGray   = cust.fearlessGray   != null ? cust.fearlessGray   : 35;
+    const fearlessBright = cust.fearlessBright != null ? cust.fearlessBright : 65;
+    const pickSize       = cust.pickSize       != null ? cust.pickSize       : 80;
+    const glowPct        = cust.glowPct        != null ? cust.glowPct        : 100;
+
+    const grayVal   = (100 - fearlessGray) / 100;
+    const brightVal = fearlessBright / 100;
+    const glowMul   = glowPct / 100;
+
     picksRow.innerHTML = '';
     (picksData || []).forEach(({ file, team }) => {
       const wrap = document.createElement('div');
-      wrap.style.cssText = 'position:relative;width:80px;height:80px;flex-shrink:0;';
+      wrap.style.cssText = `position:relative;width:${pickSize}px;height:${pickSize}px;flex-shrink:0;`;
       const img = document.createElement('img');
       img.src = IMG_BASE + file;
-      img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:8px;filter:grayscale(1) brightness(0.65);';
+      img.style.cssText = `width:100%;height:100%;object-fit:cover;border-radius:8px;filter:grayscale(${grayVal}) brightness(${brightVal});`;
       const ring = document.createElement('div');
       let rs = 'position:absolute;inset:-3px;border-radius:11px;pointer-events:none;border:2.5px solid transparent;';
-      if      (team === 'orange') rs += 'border-color:#ff9d00;box-shadow:0 0 12px rgba(255,157,0,0.7);';
-      else if (team === 'purple') rs += 'border-color:#9f53ec;box-shadow:0 0 12px rgba(159,83,236,0.7);';
+      if      (team === 'orange') rs += `border-color:#ff9d00;box-shadow:0 0 ${Math.round(12*glowMul)}px rgba(255,157,0,${0.7*glowMul});`;
+      else if (team === 'purple') rs += `border-color:#9f53ec;box-shadow:0 0 ${Math.round(12*glowMul)}px rgba(159,83,236,${0.7*glowMul});`;
       ring.style.cssText = rs;
       wrap.appendChild(img);
       wrap.appendChild(ring);
@@ -721,16 +782,19 @@ function initPicksOverlay() {
     });
   }
 
-  let lastRaw = null;
+  let lastRaw  = null;
+  let lastCust = null;
   setInterval(() => {
     try {
-      const raw = localStorage.getItem(LS_KEY);
-      if (raw !== lastRaw) {
-        lastRaw = raw;
+      const raw  = localStorage.getItem(LS_KEY);
+      const cust = localStorage.getItem('unite_cust_settings');
+      if (raw !== lastRaw || cust !== lastCust) {
+        lastRaw  = raw;
+        lastCust = cust;
         renderOverlay(raw ? JSON.parse(raw) : []);
       }
     } catch(e) {}
-  }, 500);
+  }, 300);
 
   renderOverlay([]);
 }
@@ -745,7 +809,24 @@ function initBansOverlay() {
   root.id = 'bans-overlay-root';
   document.body.appendChild(root);
 
+  function getCustSettings() {
+    try {
+      const raw = localStorage.getItem('unite_cust_settings');
+      if (raw) return JSON.parse(raw);
+    } catch(e) {}
+    return {};
+  }
+
   function renderBansOverlay(bansData) {
+    const cust = getCustSettings();
+    const bansGray   = cust.bansGray   != null ? cust.bansGray   : 40;
+    const bansBright = cust.bansBright != null ? cust.bansBright : 60;
+    const glowPct    = cust.glowPct    != null ? cust.glowPct    : 100;
+
+    const grayVal   = (100 - bansGray) / 100;
+    const brightVal = bansBright / 100;
+    const glowMul   = glowPct / 100;
+
     root.innerHTML = '';
 
     const purpleBans = (bansData || []).filter(b => b.team === 'purple');
@@ -774,6 +855,7 @@ function initBansOverlay() {
           const pokeImg = document.createElement('img');
           pokeImg.className = 'slot-poke-img';
           pokeImg.src = IMG_BASE + banEntry.file;
+          pokeImg.style.filter = `grayscale(${grayVal}) brightness(${brightVal})`;
           pokeImg.onerror = function() { this.style.display = 'none'; };
           slot.appendChild(pokeImg);
         }
@@ -786,11 +868,11 @@ function initBansOverlay() {
         if (team === 'purple') {
           slot.style.borderColor = 'var(--violet)';
           slot.style.background = 'rgba(159,83,236,0.18)';
-          slot.style.boxShadow = '0 0 12px rgba(159,83,236,0.5)';
+          slot.style.boxShadow = `0 0 ${Math.round(12*glowMul)}px rgba(159,83,236,${0.5*glowMul}), inset 0 0 0 1px rgba(239,83,80,0.3)`;
         } else {
           slot.style.borderColor = 'var(--orange)';
           slot.style.background = 'rgba(255,157,0,0.14)';
-          slot.style.boxShadow = '0 0 12px rgba(255,157,0,0.5)';
+          slot.style.boxShadow = `0 0 ${Math.round(12*glowMul)}px rgba(255,157,0,${0.5*glowMul}), inset 0 0 0 1px rgba(239,83,80,0.3)`;
         }
 
         slotsWrap.appendChild(slot);
@@ -804,15 +886,18 @@ function initBansOverlay() {
   }
 
   let lastBans = null;
+  let lastCust = null;
   setInterval(() => {
     try {
       const rawBans = localStorage.getItem(LS_BANS_KEY);
-      if (rawBans !== lastBans) {
+      const cust    = localStorage.getItem('unite_cust_settings');
+      if (rawBans !== lastBans || cust !== lastCust) {
         lastBans = rawBans;
+        lastCust = cust;
         renderBansOverlay(rawBans ? JSON.parse(rawBans) : []);
       }
     } catch(e) {}
-  }, 500);
+  }, 300);
 
   renderBansOverlay([]);
 }

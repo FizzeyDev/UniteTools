@@ -334,25 +334,47 @@ body.overlay-mode #app { display: none; }
   cursor: default;
 }
 .ban-display-slot:hover .remove-btn { opacity: 1; }
-.ban-display-slot.purple-slot { border-color: rgba(159,83,236,0.5); background: rgba(159,83,236,0.07); }
-.ban-display-slot.orange-slot { border-color: rgba(255,157,0,0.5); background: rgba(255,157,0,0.07); }
+.ban-display-slot.purple-slot {
+  border-color: rgba(159,83,236,0.8);
+  background: rgba(159,83,236,0.1);
+  box-shadow: inset 0 0 0 1px rgba(239,83,80,0.3);
+}
+.ban-display-slot.orange-slot {
+  border-color: rgba(255,157,0,0.8);
+  background: rgba(255,157,0,0.1);
+  box-shadow: inset 0 0 0 1px rgba(239,83,80,0.3);
+}
 .ban-display-slot.empty-slot { opacity: 0.4; }
 
 .ban-display-slot .ban-poke-img {
   width: 100%; height: 100%;
   object-fit: cover;
   display: block;
-  filter: grayscale(0.6) brightness(0.5);
+  filter: var(--ban-slot-filter, grayscale(0.4) brightness(0.6));
 }
 
-.ban-display-slot .ban-missing-img {
+/* Red tint overlay on banned slots */
+.ban-display-slot::before {
+  content: '';
   position: absolute;
   inset: 0;
-  width: 100%; height: 100%;
+  background: rgba(239,83,80,0.22);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Small ban icon bottom-right */
+.ban-display-slot .ban-missing-img {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  width: 38%;
+  height: 38%;
   object-fit: contain;
   display: block;
-  z-index: 2;
-  opacity: 0.75;
+  z-index: 3;
+  opacity: 0.92;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8));
 }
 
 .ban-display-slot .remove-btn {
@@ -1136,23 +1158,38 @@ body.overlay-mode #app { display: none; }
   flex-shrink: 0;
   border: 1.5px solid;
 }
-.bans-overlay-slot.purple { border-color: var(--violet); background: rgba(159,83,236,0.25); box-shadow: 0 0 14px rgba(159,83,236,0.5); }
-.bans-overlay-slot.orange { border-color: var(--orange); background: rgba(255,157,0,0.2);   box-shadow: 0 0 14px rgba(255,157,0,0.5); }
+.bans-overlay-slot.purple { border-color: var(--violet); background: rgba(159,83,236,0.22); box-shadow: 0 0 14px rgba(159,83,236,0.45), inset 0 0 0 1px rgba(239,83,80,0.3); }
+.bans-overlay-slot.orange { border-color: var(--orange); background: rgba(255,157,0,0.18);   box-shadow: 0 0 14px rgba(255,157,0,0.45), inset 0 0 0 1px rgba(239,83,80,0.3); }
 
 .bans-overlay-slot .slot-poke-img {
   width: 100%; height: 100%;
   object-fit: cover;
   display: block;
-  filter: grayscale(0.2) brightness(0.65);
+  filter: var(--ban-overlay-filter, grayscale(0.2) brightness(0.65));
 }
-.bans-overlay-slot .slot-missing-img {
+
+/* Red tint overlay */
+.bans-overlay-slot::before {
+  content: '';
   position: absolute;
   inset: 0;
-  width: 100%; height: 100%;
+  background: rgba(239,83,80,0.2);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Small ban icon bottom-right */
+.bans-overlay-slot .slot-missing-img {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 36%;
+  height: 36%;
   object-fit: contain;
   display: block;
-  z-index: 2;
-  opacity: 0.7;
+  z-index: 3;
+  opacity: 0.9;
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.85));
 }
 
 .bans-overlay-slot.purple.next {

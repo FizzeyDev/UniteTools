@@ -314,6 +314,131 @@
       color: #ef5350;
       text-align: center;
     }
+    /* ===== CUSTOMIZE PANEL ===== */
+    .customize-btn {
+      font-family: 'Rajdhani', sans-serif;
+      padding: 6px 10px;
+      background: rgba(79,195,247,0.08);
+      border: 1px solid rgba(79,195,247,0.25);
+      border-radius: 8px;
+      color: #4fc3f7;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .customize-btn:hover, .customize-btn.active {
+      background: rgba(79,195,247,0.18);
+      border-color: #4fc3f7;
+      box-shadow: 0 0 10px rgba(79,195,247,0.3);
+    }
+
+    .customize-panel {
+      background: linear-gradient(160deg, #152122 0%, #101a1b 100%);
+      border-bottom: 1px solid rgba(79,195,247,0.15);
+      padding: 10px 14px 12px;
+      flex-shrink: 0;
+      animation: slideDown 0.18s ease;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .cust-section {
+      margin-bottom: 10px;
+    }
+    .cust-section:last-of-type { margin-bottom: 6px; }
+    .cust-section-label {
+      font-family: 'Exo 2', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #5a7577;
+      margin-bottom: 5px;
+    }
+    .cust-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 4px;
+    }
+    .cust-hint {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 9px;
+      font-weight: 600;
+      color: #3a5254;
+      letter-spacing: 0.04em;
+      flex-shrink: 0;
+      width: 42px;
+      text-align: center;
+    }
+    .cust-row input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(79,195,247,0.15);
+      outline: none;
+      cursor: pointer;
+    }
+    .cust-row input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #4fc3f7;
+      box-shadow: 0 0 6px rgba(79,195,247,0.6);
+      cursor: pointer;
+    }
+    .cust-row input[type="range"]::-moz-range-thumb {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: #4fc3f7;
+      box-shadow: 0 0 6px rgba(79,195,247,0.6);
+      cursor: pointer;
+      border: none;
+    }
+    .cust-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 6px;
+    }
+    .cust-reset-btn {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #5a7577;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .cust-reset-btn:hover {
+      color: #cfe0e2;
+      border-color: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* Dynamic CSS vars for customization */
+    :root {
+      --cust-fearless-gray: 1;
+      --cust-fearless-bright: 0.45;
+      --cust-bans-gray: 0.4;
+      --cust-bans-bright: 0.6;
+      --cust-pick-size: 82px;
+      --cust-glow-mul: 1;
+    }
   </style>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
   <script>
@@ -332,9 +457,68 @@
   <div id="display-panel">
     <div class="panel-header">
       <h2>🎮 Display Overlay</h2>
+      <button class="customize-btn" onclick="toggleCustomizePanel()" id="customizeBtnToggle" title="Personnaliser l'affichage" data-lang="stream_cust_btn">⚙️ Style</button>
       <button class="help-btn-header" onclick="openModal()" data-lang="stream_how_to_btn">❓ HOW TO SETUP</button>
     </div>
     <div class="glow-line"></div>
+
+    <!-- ===== CUSTOMIZE PANEL (collapsible) ===== -->
+    <div id="customize-panel" class="customize-panel" style="display:none">
+
+      <!-- Section: Fearless Picks grayscale -->
+      <div class="cust-section">
+        <div class="cust-section-label" data-lang="stream_cust_fearless_label">🎨 Fearless Picks — grisage</div>
+        <div class="cust-row">
+          <span class="cust-hint" data-lang="stream_cust_gray_left">Grisé</span>
+          <input type="range" id="custFearlessGray" min="0" max="100" value="35" oninput="applyCustomStyles()">
+          <span class="cust-hint" data-lang="stream_cust_gray_right">Couleur</span>
+        </div>
+        <div class="cust-row">
+          <span class="cust-hint" data-lang="stream_cust_bright_left">Sombre</span>
+          <input type="range" id="custFearlessBright" min="20" max="100" value="65" oninput="applyCustomStyles()">
+          <span class="cust-hint" data-lang="stream_cust_bright_right">Lumineux</span>
+        </div>
+      </div>
+
+      <!-- Section: Bans grayscale -->
+      <div class="cust-section">
+        <div class="cust-section-label" data-lang="stream_cust_bans_label">⛔ Bans — grisage</div>
+        <div class="cust-row">
+          <span class="cust-hint" data-lang="stream_cust_gray_left">Grisé</span>
+          <input type="range" id="custBansGray" min="0" max="100" value="40" oninput="applyCustomStyles()">
+          <span class="cust-hint" data-lang="stream_cust_gray_right">Couleur</span>
+        </div>
+        <div class="cust-row">
+          <span class="cust-hint" data-lang="stream_cust_bright_left">Sombre</span>
+          <input type="range" id="custBansBright" min="20" max="100" value="60" oninput="applyCustomStyles()">
+          <span class="cust-hint" data-lang="stream_cust_bright_right">Lumineux</span>
+        </div>
+      </div>
+
+      <!-- Section: Pick size -->
+      <div class="cust-section">
+        <div class="cust-section-label" data-lang="stream_cust_size_label">🔲 Taille des picks</div>
+        <div class="cust-row">
+          <span class="cust-hint" data-lang="stream_cust_size_left">Petit</span>
+          <input type="range" id="custPickSize" min="56" max="120" value="82" oninput="applyCustomStyles()">
+          <span class="cust-hint" data-lang="stream_cust_size_right">Grand</span>
+        </div>
+      </div>
+
+      <!-- Section: Team glow -->
+      <div class="cust-section">
+        <div class="cust-section-label" data-lang="stream_cust_glow_label">💡 Glow des équipes</div>
+        <div class="cust-row">
+          <span class="cust-hint" data-lang="stream_cust_glow_left">Aucun</span>
+          <input type="range" id="custGlow" min="0" max="100" value="100" oninput="applyCustomStyles()">
+          <span class="cust-hint" data-lang="stream_cust_glow_right">Intense</span>
+        </div>
+      </div>
+
+      <div class="cust-footer">
+        <button class="cust-reset-btn" onclick="resetCustomStyles()" data-lang="stream_cust_reset">↺ Réinitialiser</button>
+      </div>
+    </div>
 
     <div class="display-area">
       <div class="display-grid" id="displayGrid"></div>
@@ -525,16 +709,16 @@
           <h4 data-lang="stream_step5_title">Configurer dans OBS — 4 sources Browser</h4>
           <p data-lang="stream_step5_intro">Tu dois créer quatre sources Navigateur (Browser Source) dans OBS :</p>
           <ul>
-            <li><strong>Controller</strong> :<br>
+            <li><strong data-lang="stream_step5_controller_label">Controller</strong> :<br>
               <div class="code-block">https://unite-tools.com/stream.html</div>
             </li>
-            <li><strong>Overlay Picks</strong> :<br>
+            <li><strong data-lang="stream_step5_picks_label">Overlay Picks</strong> :<br>
               <div class="code-block">https://unite-tools.com/stream.html?overlay=true</div>
             </li>
-            <li><strong>Overlay Bans</strong> :<br>
+            <li><strong data-lang="stream_step5_bans_label">Overlay Bans</strong> :<br>
               <div class="code-block">https://unite-tools.com/stream.html?overlay=bans</div>
             </li>
-            <li><strong>Overlay Map</strong> :<br>
+            <li><strong data-lang="stream_step5_map_label">Overlay Map</strong> :<br>
               <div class="code-block">https://unite-tools.com/stream.html?overlay=maps</div>
             </li>
           </ul>
@@ -545,8 +729,8 @@
       <div class="setup-step">
         <div class="step-num">6</div>
         <div class="step-content">
-          <h4>Dimensions recommandées</h4>
-          <p>
+          <h4 data-lang="stream_step6_title">Dimensions recommandées</h4>
+          <p data-lang="stream_step6_desc">
             • Controller : ~460 × 700 px<br>
             • Overlay Picks : ~750 × 220 px<br>
             • Overlay Bans : ~580 × 180 px<br>
@@ -559,15 +743,10 @@
       <div class="setup-step">
         <div class="step-num">7</div>
         <div class="step-content">
-          <h4>Activer le fond transparent dans OBS</h4>
-          <p>Pour chaque Browser Source, coche "Supprimer la couleur d'arrière-plan" afin que les overlays s'intègrent proprement.</p>
+          <h4 data-lang="stream_step7_title">Activer le fond transparent dans OBS</h4>
+          <p data-lang="stream_step7_desc">Pour chaque Browser Source, coche "Supprimer la couleur d'arrière-plan" afin que les overlays s'intègrent proprement.</p>
         </div>
       </div>
-
-      <div class="tip-box">
-        <strong>💡 Astuce :</strong> Le bouton ✕ VIDER affiche un menu pour choisir : Fearless uniquement, Bans uniquement, ou tout effacer. Dans l'onglet Bans, la couleur d'équipe est assignée <strong>automatiquement</strong> selon l'ordre choisi. Un clic sur un Pokémon sélectionné (en fearless) ouvre un sélecteur de couleur d'équipe.
-      </div>
-
     </div>
   </div>
 </div>
@@ -578,7 +757,96 @@
 <script>
   lucide.createIcons();
 
-  // Render the sequence hint dots based on current ban order mode
+  // ===== CUSTOMIZE PANEL =====
+  const LS_CUST_KEY = 'unite_cust_settings';
+
+  function toggleCustomizePanel() {
+    const panel = document.getElementById('customize-panel');
+    const btn = document.getElementById('customizeBtnToggle');
+    const isHidden = panel.style.display === 'none';
+    panel.style.display = isHidden ? 'block' : 'none';
+    btn.classList.toggle('active', isHidden);
+  }
+
+  function applyCustomStyles() {
+    const fearlessGray   = parseInt(document.getElementById('custFearlessGray').value);
+    const fearlessBright = parseInt(document.getElementById('custFearlessBright').value);
+    const bansGray       = parseInt(document.getElementById('custBansGray').value);
+    const bansBright     = parseInt(document.getElementById('custBansBright').value);
+    const pickSize       = parseInt(document.getElementById('custPickSize').value);
+    const glowPct        = parseInt(document.getElementById('custGlow').value);
+
+    const fGray   = (100 - fearlessGray) / 100;
+    const fBright = fearlessBright / 100;
+    const bGray   = (100 - bansGray) / 100;
+    const bBright = bansBright / 100;
+    const glowMul = glowPct / 100;
+
+    document.querySelectorAll('.display-slot img').forEach(img => {
+      img.style.filter = `grayscale(${fGray}) brightness(${fBright})`;
+    });
+    document.querySelectorAll('.ban-display-slot .ban-poke-img').forEach(img => {
+      img.style.filter = `grayscale(${bGray}) brightness(${bBright})`;
+    });
+    document.querySelectorAll('#overlay-picks-row img').forEach(img => {
+      img.style.filter = `grayscale(${fGray}) brightness(${fBright})`;
+    });
+    document.querySelectorAll('.bans-overlay-slot .slot-poke-img').forEach(img => {
+      img.style.filter = `grayscale(${bGray}) brightness(${bBright})`;
+    });
+    document.querySelectorAll('.display-slot').forEach(slot => {
+      slot.style.width  = pickSize + 'px';
+      slot.style.height = pickSize + 'px';
+    });
+    document.querySelectorAll('.display-slot.team-orange .team-ring').forEach(r => {
+      r.style.boxShadow = `0 0 ${Math.round(14 * glowMul)}px rgba(255,157,0,${0.7 * glowMul})`;
+    });
+    document.querySelectorAll('.display-slot.team-purple .team-ring').forEach(r => {
+      r.style.boxShadow = `0 0 ${Math.round(14 * glowMul)}px rgba(159,83,236,${0.7 * glowMul})`;
+    });
+
+    try {
+      localStorage.setItem(LS_CUST_KEY, JSON.stringify({ fearlessGray, fearlessBright, bansGray, bansBright, pickSize, glowPct }));
+    } catch(e) {}
+  }
+
+  function resetCustomStyles() {
+    document.getElementById('custFearlessGray').value   = 35;
+    document.getElementById('custFearlessBright').value = 65;
+    document.getElementById('custBansGray').value       = 40;
+    document.getElementById('custBansBright').value     = 60;
+    document.getElementById('custPickSize').value       = 82;
+    document.getElementById('custGlow').value           = 100;
+    applyCustomStyles();
+    try { localStorage.removeItem(LS_CUST_KEY); } catch(e) {}
+  }
+
+  function loadCustomStyles() {
+    try {
+      const raw = localStorage.getItem(LS_CUST_KEY);
+      if (!raw) return;
+      const s = JSON.parse(raw);
+      if (s.fearlessGray   != null) document.getElementById('custFearlessGray').value   = s.fearlessGray;
+      if (s.fearlessBright != null) document.getElementById('custFearlessBright').value = s.fearlessBright;
+      if (s.bansGray       != null) document.getElementById('custBansGray').value       = s.bansGray;
+      if (s.bansBright     != null) document.getElementById('custBansBright').value     = s.bansBright;
+      if (s.pickSize       != null) document.getElementById('custPickSize').value       = s.pickSize;
+      if (s.glowPct        != null) document.getElementById('custGlow').value           = s.glowPct;
+    } catch(e) {}
+  }
+
+  const _origRenderDisplay = window.renderDisplay;
+  if (typeof renderDisplay === 'function') {
+    const _origRD = renderDisplay;
+    window.renderDisplay = function() {
+      _origRD.apply(this, arguments);
+      applyCustomStyles();
+    };
+  }
+
+  loadCustomStyles();
+  setTimeout(applyCustomStyles, 50);
+
   function renderBanSeqHint() {
     const hint = document.getElementById('banSeqHint');
     if (!hint) return;
@@ -594,14 +862,12 @@
     ).join('');
   }
 
-  // Patch setBanOrderMode to also update the hint
   const _origSetBanOrderMode = setBanOrderMode;
   setBanOrderMode = function(mode) {
     _origSetBanOrderMode(mode);
     renderBanSeqHint();
   };
 
-  // Init
   setBanOrderMode(banOrderMode);
   renderBanSeqHint();
 </script>
