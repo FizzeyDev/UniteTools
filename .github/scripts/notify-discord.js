@@ -7,7 +7,7 @@ const root = parse(html);
 
 const entries = root.querySelectorAll('.update-entry');
 if (!entries.length) {
-  console.error('Aucune entrée trouvée dans update.html');
+  console.error('No entries found in update.html');
   process.exit(1);
 }
 
@@ -27,10 +27,16 @@ latest.querySelectorAll('.change-section').forEach(section => {
   if (items.length) sections.push({ title, items });
 });
 
-console.log('=== Version détectée:', version, '===');
+console.log('=== Detected version:', version, '===');
 
-// --- 2. Formatage des champs Discord ---
-const categoryEmoji = { New: '🆕', Fix: '🔧', Update: '⚡', Design: '🎨', WIP: '🚧' };
+// --- 2. Discord fields formatting ---
+const categoryEmoji = { 
+  New: '🆕', 
+  Fix: '🔧', 
+  Update: '⚡', 
+  Design: '🎨', 
+  WIP: '🚧' 
+};
 
 const allCategories = sections.flatMap(s => s.items.map(i => i.category));
 const hasNew = allCategories.includes('New');
@@ -41,11 +47,12 @@ const newCount = allCategories.filter(c => c === 'New').length;
 const fixCount = allCategories.filter(c => c === 'Fix').length;
 const updateCount = allCategories.filter(c => c === 'Update').length;
 
-// Résumé automatique sans IA
+// Automatic summary
 const summaryParts = [];
-if (newCount) summaryParts.push(`**${newCount}** nouveauté${newCount > 1 ? 's' : ''}`);
-if (fixCount) summaryParts.push(`**${fixCount}** correction${fixCount > 1 ? 's' : ''}`);
-if (updateCount) summaryParts.push(`**${updateCount}** mise${updateCount > 1 ? 's' : ''} à jour`);
+if (newCount) summaryParts.push(`**${newCount}** new feature${newCount > 1 ? 's' : ''}`);
+if (fixCount) summaryParts.push(`**${fixCount}** fix${fixCount > 1 ? 'es' : ''}`);
+if (updateCount) summaryParts.push(`**${updateCount}** update${updateCount > 1 ? 's' : ''}`);
+
 const summary = summaryParts.join(', ');
 
 const fields = sections.slice(0, 5).map(s => ({
@@ -53,23 +60,23 @@ const fields = sections.slice(0, 5).map(s => ({
   value: s.items.slice(0, 6).map(i => {
     const emoji = categoryEmoji[i.category] ?? '•';
     return `${emoji} ${i.text}`;
-  }).join('\n') + (s.items.length > 6 ? `\n*...et ${s.items.length - 6} de plus*` : ''),
+  }).join('\n') + (s.items.length > 6 ? `\n*...and ${s.items.length - 6} more*` : ''),
   inline: false
 }));
 
-// --- 3. Payload Discord ---
+// --- 3. Discord Payload ---
 const payload = {
-  content: `🎮 **Unite Tools ${version}** vient de sortir ! ${summary ? `Au programme : ${summary}.` : ''}\n🔗 https://unite-tools.com/update.html`,
+  content: `🎮 **Unite Tools ${version}** has just been released! ${summary ? `Here's what's new: ${summary}.` : ''}\n🔗 https://unite-tools.com/update.html`,
   embeds: [{
     title: `Changelog — ${version}`,
     url: 'https://unite-tools.com/update.html',
     color: embedColor,
     fields,
-    footer: { text: `Publié le ${date} • unite-tools.com` }
+    footer: { text: `Released on ${date} • unite-tools.com` }
   }]
 };
 
-// --- 4. Post sur Discord ---
+// --- 4. Post to Discord ---
 async function run() {
   const res = await fetch(process.env.DISCORD_WEBHOOK_URL, {
     method: 'POST',
@@ -78,12 +85,15 @@ async function run() {
   });
 
   if (res.ok) {
-    console.log('✅ Message Discord posté avec succès !');
+    console.log('✅ Discord message posted successfully!');
   } else {
     const err = await res.text();
-    console.error('❌ Erreur Discord:', err);
+    console.error('❌ Discord error:', err);
     process.exit(1);
   }
 }
 
-run().catch(e => { console.error(e); process.exit(1); });
+run().catch(e => { 
+  console.error(e); 
+  process.exit(1); 
+});
