@@ -1,8 +1,6 @@
 const { parse } = require('node-html-parser');
 const fs = require('fs');
 
-require('dotenv').config(); // Pour les tests locaux
-
 // --- 1. Parse update.html ---
 const html = fs.readFileSync('update.html', 'utf-8');
 const root = parse(html);
