@@ -26,4 +26,5 @@ jobs:
       - name: Parse & post to Discord
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_ROLE_ID: ${{ secrets.DISCORD_ROLE_ID }}
         run: node .github/scripts/notify-discord.js
