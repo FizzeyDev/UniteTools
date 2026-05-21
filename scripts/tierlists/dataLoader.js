@@ -43,6 +43,28 @@ export async function loadData() {
 }
 
 /**
+ * Maps a Pokémon display name to the key used in moves.json.
+ * Handles mega evolutions and forme variants whose display name
+ * differs from their moves.json key.
+ *
+ * Display name (lowercased + hyphenated) → moves.json key
+ * e.g. "Mega Charizard X" → "mega-charizard-x" → "charizard-x"
+ */
+const KEY_OVERRIDES = {
+    // Possible display-name variants → moves.json key
+    'mega-charizard-x': 'charizard-x',
+    'charizard-mega-x': 'charizard-x',
+    'mega-charizard-y': 'charizard-y',
+    'charizard-mega-y': 'charizard-y',
+    'mega-gyarados':    'gyarados-mega',
+    'mega-lucario':     'lucario-mega',
+    'mega-mewtwo-x':    'mewtwo-x',
+    'mewtwo-mega-x':    'mewtwo-x',
+    'mega-mewtwo-y':    'mewtwo-y',
+    'mewtwo-mega-y':    'mewtwo-y',
+};
+
+/**
  * Returns move data for a Pokémon, preferring moves.json over poke_data.json.
  * Always returns a normalized object:
  *   { move1: [{name, image}], move2: [{name, image}], passive: [{name,image}], unite: [{name,image}] }
@@ -51,7 +73,8 @@ export async function loadData() {
  * Images are resolved to: assets/moves/<pokemonKey>/<filename>
  */
 export function getMovesForPokemon(pokemonName) {
-    const key = pokemonName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const rawKey = pokemonName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const key    = KEY_OVERRIDES[rawKey] ?? rawKey;
 
     // ── Prefer moves.json (new source) ──
     if (state.movesData && state.movesData[key]) {
@@ -106,8 +129,8 @@ export function getMovesForPokemon(pokemonName) {
  * charizard-y   → mega_charizard_y
  * gyarados-mega → mega_gyarados
  * lucario-mega  → mega_lucario
- * mewtwo-x      → mewtwo_x
- * mewtwo-y      → mewtwo_y
+ * mewtwo-x      → mega_mewtwo_x
+ * mewtwo-y      → mega_mewtwo_y
  */
 const FOLDER_OVERRIDES = {
     'charizard-x':   'mega_charizard_x',
@@ -127,20 +150,29 @@ function keyToFolder(pokemonKey) {
  * Entries are plain filenames like "feint.png" or objects {name, image}.
  * The image path is built as: assets/moves/<folder>/<filename>
  * The move name is derived by stripping the extension and replacing _ with spaces.
+ *
+ * Handles missing .png extension gracefully.
  */
 function normalizeMoveWithPath(m, pokemonKey) {
     const folder = keyToFolder(pokemonKey);
     if (typeof m === 'string') {
-        const filename = m;
+        // Ensure the filename always ends with .png
+        const filename = m.endsWith('.png') ? m : `${m}.png`;
         const name = filenameToMoveName(filename);
         return { name, image: `assets/moves/${folder}/${filename}` };
     }
     // Object form: may already have an image path, or just a filename in image
-    const name  = m.name || filenameToMoveName(m.image || '');
-    const image = m.image
-        ? (m.image.startsWith('assets/') ? m.image : `assets/moves/${folder}/${m.image}`)
-        : null;
-    return { name, image };
+    const name = m.name || filenameToMoveName(m.image || '');
+    let imageFile = m.image || null;
+    if (imageFile) {
+        // Ensure .png extension
+        if (!imageFile.endsWith('.png')) imageFile = `${imageFile}.png`;
+        // Build full path if not already absolute
+        if (!imageFile.startsWith('assets/')) {
+            imageFile = `assets/moves/${folder}/${imageFile}`;
+        }
+    }
+    return { name, image: imageFile };
 }
 
 function filenameToMoveName(filename) {
