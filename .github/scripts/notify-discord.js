@@ -1,6 +1,8 @@
 const { parse } = require('node-html-parser');
 const fs = require('fs');
 
+require('dotenv').config(); // Pour les tests locaux
+
 // --- 1. Parse update.html ---
 const html = fs.readFileSync('update.html', 'utf-8');
 const root = parse(html);
@@ -29,14 +31,8 @@ latest.querySelectorAll('.change-section').forEach(section => {
 
 console.log('=== Detected version:', version, '===');
 
-// --- 2. Discord fields formatting ---
-const categoryEmoji = { 
-  New: '🆕', 
-  Fix: '🔧', 
-  Update: '⚡', 
-  Design: '🎨', 
-  WIP: '🚧' 
-};
+// --- 2. Formatting ---
+const categoryEmoji = { New: '🆕', Fix: '🔧', Update: '⚡', Design: '🎨', WIP: '🚧' };
 
 const allCategories = sections.flatMap(s => s.items.map(i => i.category));
 const hasNew = allCategories.includes('New');
@@ -47,13 +43,16 @@ const newCount = allCategories.filter(c => c === 'New').length;
 const fixCount = allCategories.filter(c => c === 'Fix').length;
 const updateCount = allCategories.filter(c => c === 'Update').length;
 
-// Automatic summary
 const summaryParts = [];
 if (newCount) summaryParts.push(`**${newCount}** new feature${newCount > 1 ? 's' : ''}`);
 if (fixCount) summaryParts.push(`**${fixCount}** fix${fixCount > 1 ? 'es' : ''}`);
 if (updateCount) summaryParts.push(`**${updateCount}** update${updateCount > 1 ? 's' : ''}`);
 
 const summary = summaryParts.join(', ');
+
+// Role ping
+const roleId = process.env.DISCORD_ROLE_ID;
+const ping = roleId ? `<@&${roleId}> ` : '';
 
 const fields = sections.slice(0, 5).map(s => ({
   name: s.title,
@@ -66,7 +65,8 @@ const fields = sections.slice(0, 5).map(s => ({
 
 // --- 3. Discord Payload ---
 const payload = {
-  content: `🎮 **Unite Tools ${version}** has just been released! ${summary ? `Here's what's new: ${summary}.` : ''}\n🔗 https://unite-tools.com/update.html`,
+  content: `${ping}🎮 **Unite Tools ${version}** has just been released! ${summary ? `Here's what's new: ${summary}.` : ''}\n🔗 https://unite-tools.com/update.html`,
+  
   embeds: [{
     title: `Changelog — ${version}`,
     url: 'https://unite-tools.com/update.html',
@@ -76,7 +76,7 @@ const payload = {
   }]
 };
 
-// --- 4. Post to Discord ---
+// --- 4. Send to Discord ---
 async function run() {
   const res = await fetch(process.env.DISCORD_WEBHOOK_URL, {
     method: 'POST',
