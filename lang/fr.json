@@ -418,7 +418,6 @@
   "map_timer_htu_tooltip_desc": "<strong>Survolez</strong> une icône de Pokémon ou de zone de but environ 1 seconde pour afficher ses informations détaillées : HP, règles de spawn et interactions spéciales.",
   "map_timer_htu_reset_title": "Réinitialiser",
   "map_timer_htu_reset_desc": "Changer de carte ou recliquer sur le bouton de la carte remet tout à zéro depuis le début de la partie.",
-  "_comment": "Ajoute ces clés dans ton lang/fr.json existant (fusionne avec le contenu déjà présent)",
   "patch_title": "Patch Tracker - Beta",
   "patch_subtitle": "Historique complet des mises à jour Pokémon Unite · 2023 → 2026",
   "patch_stat_patches": "Patches",
@@ -519,7 +518,6 @@
   "home_chip_patch_nerfs": "Nerfs",
   "home_chip_patch_history": "Historique",
   "home_chip_patch_trends": "Tendances",
-
   "stream_how_to_btn": "❓ COMMENT CONFIGURER",
   "stream_modal_title": "⚙️ Comment configurer",
   "stream_bans_label": "Bans",
@@ -561,6 +559,8 @@
   "stream_step1_desc": "Avant de sélectionner un Pokémon, clique sur <span class=\"highlight-purple\">🟣 Violette</span> ou <span class=\"highlight-orange\">🟠 Orange</span> pour assigner les picks à la bonne équipe. Si aucune team n'est sélectionnée, le Pokémon sera ajouté sans contour coloré.",
   "stream_step2_title": "Sélectionner les Pokémon",
   "stream_step2_desc": "Clique sur les cartes Pokémon dans la liste de droite. Ils apparaissent dans le panneau gauche avec le contour de la team active. Clique à nouveau sur un Pokémon pour le retirer.",
+  "stream_step3_title": "Onglet Bans",
+  "stream_step3_desc": "Dans l'onglet ⛔ Bans, choisis l'ordre des bans : Violet en premier (V-O-V-O-V-O), Orange en premier (O-V-O-V-O-V), ou Libre (3 Violet puis 3 Orange automatiquement). Clique ensuite sur les Pokémon à bannir — la couleur est assignée automatiquement. Utilise la carte '+ Ban vide' pour ajouter un ban sans afficher de Pokémon.",
   "stream_step4_title": "Choisir la map",
   "stream_step4_desc": "Sélectionne la map du match en bas du panneau gauche : <span class=\"highlight\" style=\"color:#4caf82\">Rayquaza</span>, <span class=\"highlight\" style=\"color:#ff7043\">Groudon</span> ou <span class=\"highlight\" style=\"color:#4fc3f7\">Kyogre</span>. La map sélectionnée s'affiche dans l'<strong>Overlay Map</strong> dédiée.",
   "stream_step5_title": "Configurer dans OBS — 4 sources Browser",
@@ -573,33 +573,38 @@
   "stream_step5_bans_desc": "affiche les 6 bans (3 par team)",
   "stream_step5_map_label": "Overlay Map",
   "stream_step5_map_desc": "affiche uniquement la map sélectionnée, idéal pour la placer séparément sur la scène OBS",
-  "stream_step6_title": "Dimensions recommandées pour chaque source",
+  "stream_step6_title": "Dimensions recommandées",
   "stream_step6_desc": "• <strong>Controller</strong> : ~460 × 700 px (pas dans le stream)<br>• <strong>Overlay Picks</strong> : ~750 × 220 px<br>• <strong>Overlay Bans</strong> : ~580 × 180 px<br>• <strong>Overlay Map</strong> : ~380 × 120 px",
   "stream_step7_title": "Activer le fond transparent dans OBS",
   "stream_step7_desc": "Pour chaque Browser Source, coche l'option <strong>\"Supprimer la couleur d'arrière-plan\"</strong> (ou <em>Custom CSS</em> : <code>body { background-color: rgba(0,0,0,0) !important; }</code>) afin que les overlays s'intègrent proprement par-dessus ta scène.",
   "stream_tip": "<strong>💡 Astuce :</strong> Les boutons <strong>📺 PICKS OBS</strong>, <strong>⛔ BANS OBS</strong> et <strong>🗺️ MAP OBS</strong> ouvrent directement la fenêtre overlay dans les bonnes dimensions. Le bouton <strong>✕ VIDER</strong> réinitialise tout (picks, bans et map).",
-  "_comment_new_keys": "Nouvelles clés à fusionner dans lang/fr.json",
-
   "stream_ban_order_label": "Ordre des bans :",
   "stream_ban_order_purple": "🟣 V-O-V-O-V-O",
   "stream_ban_order_orange": "🟠 O-V-O-V-O-V",
   "stream_ban_order_free": "🔓 Libre",
-
   "stream_ban_empty_label": "Ban vide",
   "stream_ban_empty_title": "Ajouter un ban vide (Pokémon non affiché)",
-
   "stream_team_color_label": "Couleur équipe",
-
   "stream_clear_title": "Vider",
   "stream_clear_desc": "Que souhaitez-vous effacer ?",
   "stream_clear_fearless": "Fearless uniquement",
   "stream_clear_bans": "Bans uniquement",
   "stream_clear_both": "Tout effacer",
   "stream_clear_cancel": "Annuler",
-
   "stream_empty_display_1": "Sélectionne une équipe et",
   "stream_empty_display_2": "clique sur un Pokémon",
-
-  "stream_step3_title": "Onglet Bans",
-  "stream_step3_desc": "Dans l'onglet ⛔ Bans, choisis l'ordre des bans : Violet en premier (V-O-V-O-V-O), Orange en premier (O-V-O-V-O-V), ou Libre (3 Violet puis 3 Orange automatiquement). Clique ensuite sur les Pokémon à bannir — la couleur est assignée automatiquement. Utilise la carte '+ Ban vide' pour ajouter un ban sans afficher de Pokémon."
+  "stream_cust_btn": "⚙️ Style",
+  "stream_cust_fearless_label": "🎨 Fearless Picks — grisage",
+  "stream_cust_bans_label": "⛔ Bans — grisage",
+  "stream_cust_size_label": "🔲 Taille des picks",
+  "stream_cust_glow_label": "💡 Glow des équipes",
+  "stream_cust_gray_left": "Grisé",
+  "stream_cust_gray_right": "Couleur",
+  "stream_cust_bright_left": "Sombre",
+  "stream_cust_bright_right": "Lumineux",
+  "stream_cust_size_left": "Petit",
+  "stream_cust_size_right": "Grand",
+  "stream_cust_glow_left": "Aucun",
+  "stream_cust_glow_right": "Intense",
+  "stream_cust_reset": "↺ Réinitialiser"
 }
