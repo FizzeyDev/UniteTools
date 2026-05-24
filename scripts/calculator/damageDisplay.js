@@ -33,7 +33,8 @@ import {
   applyTyranitarAttacker,
   applyZeraoraAttacker,
   applyCrustleAttacker,
-  applyMoltresAttacker
+  applyMoltresAttacker,
+  applyTyphlosionAttacker
 } from './passiveEffectsAtk.js';
 
 import {
@@ -75,17 +76,38 @@ function isMoveVisible(move, level) {
   return true;
 }
 
-
 function isMoveUpgraded(move, level) {
   return move.upgradeLevel != null && level >= move.upgradeLevel;
 }
 
+// ── filterByUpgrade — gère aussi blaze_only (Typhlosion) ─────────────────────
 function filterByUpgrade(items, upgraded) {
   if (!items?.length) return items || [];
+
+  const blazeActive = state.attackerTyphlosionBlazeActive ?? false;
+
   const hasUpgradedEntries = items.some(i => i.upgraded === true);
-  if (!hasUpgradedEntries) return items; // pas de versioning → tout afficher
-  if (upgraded) return items.filter(i => i.upgraded === true);
-  return items.filter(i => !i.upgraded);
+  const normalItems = items.filter(i => !i.blaze_only);
+  const blazeItems  = items.filter(i =>  i.blaze_only);
+
+  // Filtrer les normales selon upgrade
+  let filtered;
+  if (!hasUpgradedEntries) {
+    filtered = normalItems;
+  } else if (upgraded) {
+    filtered = normalItems.filter(i => i.upgraded === true);
+  } else {
+    filtered = normalItems.filter(i => !i.upgraded);
+  }
+
+  // Si Blaze actif : remplacer les normales par les blaze_only (même filtre upgrade)
+  if (blazeActive && blazeItems.length > 0) {
+    filtered = upgraded
+      ? blazeItems.filter(i => i.upgraded === true)
+      : blazeItems.filter(i => !i.upgraded);
+  }
+
+  return filtered;
 }
 
 export function updateDamages() {
@@ -189,6 +211,19 @@ export function updateDamages() {
 
   if (state.currentAttacker?.pokemonId === "tinkaton") {
     atkStats.atk = Math.floor(atkStats.atk * (1 + 0.005 * state.attackerPassiveStacks));
+  }
+
+  // ── TYPHLOSION — Blaze : +15% Sp. Atk ───────────────────────────────────
+  if (state.currentAttacker?.pokemonId === "typhlosion" && state.attackerTyphlosionBlazeActive) {
+    atkStats.sp_atk = Math.floor(atkStats.sp_atk * 1.15);
+  }
+
+  // ── DRAGONITE — Dragon Dance : +10/20/30% ATK ────────────────────────────
+  if (state.currentAttacker?.pokemonId === "dragonite") {
+    const ddStacks = state.attackerDragonDanceStacks ?? 0;
+    if (ddStacks > 0) {
+      atkStats.atk = Math.floor(atkStats.atk * (1 + ddStacks * 0.10));
+    }
   }
 
   const currentDefHP = state.defenderHPAbsolute != null
@@ -721,7 +756,8 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
     sylveon: applySylveonAttacker, tinkaton: applyTinkatonAttacker,
     tyranitar: applyTyranitarAttacker, zeraora: applyZeraoraAttacker,
     crustle: applyCrustleAttacker,
-    moltres: applyMoltresAttacker
+    moltres: applyMoltresAttacker,
+    typhlosion: applyTyphlosionAttacker
   };
   handlers[pokemonId]?.(atkStats, defStats, card);
 }
@@ -794,10 +830,6 @@ function getBuzzwoleMuscleMultiplier(moveName, damageName) {
   return 1;
 }
 
-/**
- * Ajoute un tooltip au survol du nom d'une damage-line affichant la formule de calcul.
- * constant + floor(stat × multiplier%) + (lvl-1) × levelCoef
- */
 function addFormulaTooltip(lineEl, dmg, relevantAtk, attacker, level) {
   const nameEl = lineEl.querySelector('.dmg-name');
   if (!nameEl) return;
@@ -843,12 +875,10 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
 
   state.currentAttacker.moves.forEach(move => {
 
-    // ── Filtrage par niveau ───────────────────────────────────────────────
     if (!isMoveVisible(move, level)) return;
 
     const upgraded = isMoveUpgraded(move, level);
 
-    // Filtrer damages/heals/shields selon version
     const visibleDamages = filterByUpgrade(move.damages, upgraded);
     const visibleHeals   = filterByUpgrade(move.heals,   upgraded);
     const visibleShields = filterByUpgrade(move.shields, upgraded);
@@ -856,7 +886,6 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
     const card = document.createElement("div");
     card.className = "move-card";
 
-    // ── Badge "Upgraded" ──────────────────────────────────────────────────
     if (upgraded) {
       const badge = document.createElement("div");
       badge.style.cssText = `
@@ -901,7 +930,6 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       if (infiltratorIgnore > 0)          effectiveDef = Math.floor(effectiveDef * (1 - infiltratorIgnore));
       if (defenderFlashFireReduction > 0) effectiveDef = Math.floor(effectiveDef / (1 - defenderFlashFireReduction));
 
-      // ── Per-damage Def / Sp. Def penetration (e.g. Inteleon Snipe Shot) ──
       if (dmg.def_ignore != null && relevantDef === defStats.def) {
         effectiveDef = Math.floor(effectiveDef * (1 - dmg.def_ignore));
       }
@@ -939,7 +967,6 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       normal = Math.floor(normal * defenderDamageMult);
       crit   = Math.floor(crit   * defenderDamageMult);
 
-      // ── Wild cap indicator ────────────────────────────────────────────────
       const isWild = state.currentDefender?.category === 'mob';
       const wildCapActive = isWild && dmg.wild_cap != null && normal >= dmg.wild_cap;
       const wildCapBadge = wildCapActive
@@ -955,13 +982,11 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       const isTick    = !!dmg.is_tick;
       const tickCount = dmg.tick_count || 1;
 
-      // ── Sérialisation tick_scaling pour le dataset ──────────────────────
       const tickScalingAttr = dmg.tick_scaling
         ? `data-tick-scaling='${JSON.stringify(dmg.tick_scaling)}'`
         : '';
 
       if (isTick) {
-        // Pour tick_scaling : le total affiché est la somme pondérée de chaque wave
         const computeScaledTotal = (base, scaling, n) => {
           let sum = 0;
           for (let i = 0; i < n; i++) {
@@ -1012,7 +1037,6 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
 
       card.appendChild(line);
 
-      // ── Tooltip formule au hover ─────────────────────────────────────────
       addFormulaTooltip(line, dmg, relevantAtk, state.currentAttacker, level);
 
       if (state.currentDefender?.pokemonId === "falinks" && state.defenderFalinksMultiHit) {
@@ -1206,7 +1230,6 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
 
 // ── Combat Log ───────────────────────────────────────────────────────────────
 
-/** Lit toutes les damage-lines d'une card et retourne un tableau d'items parsés */
 function collectLineItems(card) {
   const items = [];
 
@@ -1221,11 +1244,9 @@ function collectLineItems(card) {
     if (dmgNormal) {
       const dmgCrit = line.querySelector('.dmg-crit');
 
-      // Tick (multi-hit) ?
       const isTick    = dmgNormal.classList.contains('dmg-tick-toggle');
       const tickCount = isTick ? (parseInt(dmgNormal.dataset.ticks, 10) || 1) : 1;
 
-      // Valeur normale : si tick on lit data-base (valeur par tick), sinon textContent
       const normalBase = isTick
         ? parseInt(dmgNormal.dataset.base, 10)
         : parseInt(dmgNormal.textContent.replace(/[^\d]/g, ''), 10);
@@ -1233,7 +1254,6 @@ function collectLineItems(card) {
       const val = isTick ? normalBase * tickCount : normalBase;
       if (isNaN(val) || val <= 0) return;
 
-      // Crit disponible ?
       const canCrit = !!dmgCrit;
       let critBase = null;
       if (canCrit) {
@@ -1243,7 +1263,6 @@ function collectLineItems(card) {
       }
       const critVal = canCrit ? (isTick ? critBase * tickCount : critBase) : null;
 
-      // tick_scaling dispo ?
       const tickScalingRaw = isTick ? dmgNormal.dataset.tickScaling : null;
       const tickScaling    = tickScalingRaw ? JSON.parse(tickScalingRaw) : null;
 
@@ -1291,7 +1310,6 @@ function itemsToLogEntry(items) {
   const damages = [], heals = [], shields = [];
   items.forEach(item => {
     if (item.type === 'damage') {
-      // selectedValue est défini par le picker (normal, crit, ou mixte multi-hit)
       const finalValue = item.selectedValue !== undefined ? item.selectedValue : item.value;
       const label = item.critLabel ? `${item.name} ${item.critLabel}` : item.name;
       damages.push({ name: label, value: finalValue });
@@ -1327,7 +1345,6 @@ function openLinePicker(card, move, allItems) {
   picker.className = 'cl-line-picker';
   activePicker = picker;
 
-  // En-tête
   const header = document.createElement('div');
   header.className = 'cl-picker-header';
   header.innerHTML = `
@@ -1352,20 +1369,16 @@ function openLinePicker(card, move, allItems) {
     critCount: 0,
   }));
 
-  // ── Séparateurs par section ──────────────────────────────────────────────
   const typeOrder = ['damage', 'heal', 'shield'];
   const typeLabels = { damage: '💥 Damage', heal: '❤️ Heal', shield: '🛡️ Shield' };
   let lastType = null;
 
-  // On trie les items pour regrouper par type (damage → heal → shield)
   const sortedItems = [...allItems].sort((a, b) => typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type));
-  // On garde les indices originaux pour critStates
   const sortedIdxMap = sortedItems.map(si => allItems.indexOf(si));
 
   sortedItems.forEach((item, sortedIdx) => {
     const idx = sortedIdxMap[sortedIdx];
 
-    // Séparateur de section
     if (item.type !== lastType) {
       lastType = item.type;
       const sep = document.createElement('div');
@@ -1420,7 +1433,6 @@ function openLinePicker(card, move, allItems) {
         const nc = hc - cc;
 
         if (!item.canCrit) {
-          // Pas de crit : juste le nombre de hits × valeur par tick
           const perTick = item.normalPerTick ?? Math.round(item.value / item.tickCount);
           const total = perTick * hc;
           critStates[idx]._resolvedValue = total;
@@ -1428,7 +1440,6 @@ function openLinePicker(card, move, allItems) {
           return;
         }
 
-        // Utilise tick_scaling si présent
         if (item.tickScaling) {
           let total = 0;
           for (let i = 0; i < hc; i++) {
@@ -1455,7 +1466,6 @@ function openLinePicker(card, move, allItems) {
       }
     };
 
-    // ── Contrôles : hits (toujours si isTick) + crits (si canCrit) ──────
     if (item.isTick && item.tickCount > 1) {
       const critCtrl = document.createElement('div');
       critCtrl.className = 'cl-crit-controls';
@@ -1601,7 +1611,6 @@ function openLinePicker(card, move, allItems) {
 
           if (item.type === 'damage') {
             if (!item.canCrit) {
-              // Pas de crit : hits × valeur par tick
               const perTick = item.normalPerTick ?? Math.round(item.value / item.tickCount);
               selectedValue = perTick * hc;
               const hitLabel = hc < item.tickCount ? `${hc}/${item.tickCount}hits` : `${item.tickCount}hits`;
@@ -1626,7 +1635,6 @@ function openLinePicker(card, move, allItems) {
             }
             return { ...item, selectedValue, critLabel };
           } else {
-            // heal/shield avec isTick : on prend selfValue × hitCount
             const perTick = Math.round(item.selfValue / item.tickCount);
             const allyPerTick = Math.round((item.allyValue ?? item.selfValue) / item.tickCount);
             return { ...item, selfValue: perTick * hc, allyValue: allyPerTick * hc };
@@ -1670,8 +1678,6 @@ function openLinePicker(card, move, allItems) {
   picker.style.top  = `${top}px`;
   picker.style.left = `${left}px`;
 
-  // Fix click-through : le clic qui a ouvert le picker ne doit pas le refermer.
-  // On attache l'outsideHandler dans un rAF pour sauter la propagation du clic courant.
   requestAnimationFrame(() => {
     const outsideHandler = (e) => {
       if (!picker.contains(e.target)) {
@@ -1693,7 +1699,6 @@ function attachMoveCardClickHandler(card, move) {
     const isShield = el.classList.contains('shield-tick-toggle');
     let currentTicks = 1;
 
-    // ── tick_scaling : tableau de multiplicateurs par wave ──────────────
     const tickScalingRaw = el.dataset.tickScaling;
     const tickScaling    = tickScalingRaw ? JSON.parse(tickScalingRaw) : null;
     const hasTickScaling = !!tickScaling;
@@ -1704,10 +1709,8 @@ function attachMoveCardClickHandler(card, move) {
     const isStealthRock = (move.name === "Stealth Rock" || move.name === "Stealth Rock+") && !isCrit;
     const maxStackBonus = maxTicks === 10 ? 1.35 : 1.05;
 
-    // ── Calcul du total selon le mode actif ─────────────────────────────
     const getScaledTotal = (n) => {
       if (hasTickScaling) {
-        // Somme des dégâts de chaque wave avec son multiplicateur
         let sum = 0;
         for (let i = 0; i < n; i++) {
           sum += Math.floor(base * (tickScaling[i] ?? tickScaling[tickScaling.length - 1]));
@@ -1721,7 +1724,6 @@ function attachMoveCardClickHandler(card, move) {
         }
         return sum;
       }
-      // Ticks uniformes
       return base * n;
     };
 

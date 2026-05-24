@@ -44,7 +44,7 @@
   <h1 data-lang="calc_h1">Pokémon UNITE Damage Calculator (WIP)</h1>
 
   <!-- Bouton Warning -->
-  <button id="warningBtn" class="warning-btn" title="Important Information">
+  <button id="warningBtn" class="warning-btn unread" title="Important Information">
     ⚠️
   </button>
   <!-- Bouton How To Use -->
@@ -700,6 +700,11 @@
     </div>
   </div>
 
+  <script>
+    document.getElementById('warningBtn').addEventListener('click', function() {
+      this.classList.remove('unread');
+    });
+  </script>
   <script src="scripts/navbar.js"></script>
   <script type="module" src="scripts/calculator/main.js"></script>
   <script type="module" src="scripts/calculator/howToUse.js"></script>

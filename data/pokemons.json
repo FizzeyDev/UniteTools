@@ -918,5 +918,15 @@
     "file": "typhlosion_atk.png",
     "role": "atk",
     "dex": 157
+  },
+  {
+    "name": "Meganium",
+    "name_fr": "Méganium",
+    "name_es": "Meganium",
+    "name_de": "Meganie",
+    "name_it": "Meganium",
+    "file": "meganium_sup.png",
+    "role": "sup",
+    "dex": 154
   }
 ]
