@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-lang="wordsearch_page_title">Unite Tools - PokéSearch</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/navbar.css" />
+  <link rel="stylesheet" href="css/wordsearch.css" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-B7HW29S7HW');
+  </script>
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+  <div class="ws-header">
+    <a href="unite-dle.html" class="ws-back-btn" data-lang="wordsearch_back">← Retour</a>
+    <h1><span>Poké</span><span class="h1-accent">Search</span></h1>
+  </div>
+
+  <p class="ws-subtitle">Pokémon Unite · <span data-lang="wordsearch_daily">Édition quotidienne</span></p>
+
+  <div class="ws-progress">
+    <div class="ws-progress-label">
+      <span data-lang="wordsearch_progress">Progression</span>
+      <span><span id="ws-found">0</span> / <span id="ws-total">0</span></span>
+    </div>
+    <div class="ws-progress-bar-bg">
+      <div class="ws-progress-bar" id="ws-bar"></div>
+    </div>
+  </div>
+
+  <div class="ws-body">
+    <div>
+      <div class="ws-grid-wrap">
+        <div class="ws-grid" id="ws-grid"></div>
+        <canvas class="ws-overlay" id="ws-canvas"></canvas>
+      </div>
+    </div>
+
+    <div class="ws-panel">
+
+      <div class="ws-panel-block">
+        <div class="ws-daily-info">
+          <span class="ws-daily-badge">Daily</span>
+          <span id="ws-date-label"></span>
+        </div>
+      </div>
+
+      <div class="ws-panel-block">
+        <div class="ws-panel-title" data-lang="wordsearch_find">Pokémon à trouver</div>
+        <div class="ws-word-list" id="ws-word-list"></div>
+      </div>
+
+      <div class="ws-win" id="ws-win">
+        <div class="ws-win-icon">🏆</div>
+        <div class="ws-win-title" data-lang="wordsearch_win">Félicitations !</div>
+        <div class="ws-win-sub" data-lang="wordsearch_win_sub">Tu as trouvé tous les Pokémon du jour !</div>
+        <div class="ws-next-label" data-lang="wordsearch_next_label">Prochaine grille dans</div>
+        <div class="ws-countdown" id="ws-countdown">--:--:--</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="scripts/navbar.js"></script>
+  <script src="scripts/wordsearch/wordsearch-data.js"></script>
+  <script src="scripts/wordsearch/wordsearch-grid.js"></script>
+  <script src="scripts/wordsearch/wordsearch.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
