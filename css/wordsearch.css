@@ -375,3 +375,196 @@ canvas.ws-overlay {
   :root { --cell: 22px; --gap: 2px; }
   h1 { font-size: 1.4rem; }
 }
+
+/* ── Timer ─────────────────────────────────────────────────── */
+.ws-daily-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ws-timer-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ws-timer-label {
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.ws-timer-value {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: var(--yellow);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Win panel extras ──────────────────────────────────────── */
+.ws-win-final-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ws-win-time-label {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  font-family: 'Exo 2', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ws-win-time-value {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--yellow);
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Submit form ───────────────────────────────────────────── */
+.ws-submit-form {
+  display: none;
+  margin-top: 14px;
+  animation: ws-fadein 0.3s ease;
+}
+
+.ws-submit-form.show {
+  display: block;
+}
+
+.ws-submit-label {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.ws-submit-row {
+  display: flex;
+  gap: 6px;
+}
+
+.ws-pseudo-input {
+  flex: 1;
+  background: var(--surface-3);
+  border: 1px solid var(--border-md);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 7px 10px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ws-pseudo-input::placeholder {
+  color: var(--text-dim);
+}
+
+.ws-pseudo-input:focus {
+  border-color: rgba(79, 195, 247, 0.5);
+  box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.1);
+}
+
+.ws-pseudo-input.error {
+  border-color: var(--red);
+  animation: ws-shake 0.3s ease;
+}
+
+.ws-submit-btn {
+  background: var(--blue-dim);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+  border-radius: var(--radius-sm);
+  color: var(--blue);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.ws-submit-btn:hover {
+  background: rgba(79, 195, 247, 0.22);
+  border-color: rgba(79, 195, 247, 0.55);
+  color: #fff;
+}
+
+/* ── Leaderboard ───────────────────────────────────────────── */
+.ws-leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ws-lb-loading {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 10px 0;
+  letter-spacing: 0.04em;
+}
+
+.ws-lb-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.ws-lb-row:hover {
+  background: var(--surface-4);
+}
+
+.ws-lb-rank {
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.ws-lb-name {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ws-lb-time {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--yellow);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ── Shake animation ───────────────────────────────────────── */
+@keyframes ws-shake {
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-4px); }
+  75%       { transform: translateX(4px); }
+}

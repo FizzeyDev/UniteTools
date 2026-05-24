@@ -2,12 +2,21 @@
    Depends on: wordsearch-data.js (fires wsDataReady), wordsearch-grid.js
 */
 
+// ── Config ─────────────────────────────────────────────────────────────────
+const WS_API_BASE = 'https://unite-tools.com/api'; // adjust if needed
+
 // ── State ──────────────────────────────────────────────────────────────────
 const WS = {
   grid: [], placed: [], words: [],
   selecting: false, startCell: null, currentCells: [],
   foundWords: new Set(), foundCells: new Set(),
   lang: 'fr',
+
+  // Timer
+  timerStarted: false,
+  timerInterval: null,
+  elapsedSeconds: 0,
+  finished: false,
 };
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -17,8 +26,13 @@ function wsGetCellPx() {
 function wsGetGapPx() {
   return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gap')) || 3;
 }
+function wsFormatTime(s) {
+  const m = String(Math.floor(s / 60)).padStart(2, '0');
+  const sec = String(s % 60).padStart(2, '0');
+  return `${m}:${sec}`;
+}
 
-// ── Countdown ──────────────────────────────────────────────────────────────
+// ── Countdown (next puzzle) ────────────────────────────────────────────────
 let _wsCountdownTimer = null;
 
 function wsStartCountdown() {
@@ -42,6 +56,24 @@ function wsStartCountdown() {
   _wsCountdownTimer = setInterval(tick, 1000);
 }
 
+// ── Timer (game) ───────────────────────────────────────────────────────────
+function wsStartTimer() {
+  if (WS.timerStarted) return;
+  WS.timerStarted = true;
+
+  const el = document.getElementById('ws-timer');
+  WS.timerInterval = setInterval(() => {
+    if (WS.finished) return;
+    WS.elapsedSeconds++;
+    if (el) el.textContent = wsFormatTime(WS.elapsedSeconds);
+  }, 1000);
+}
+
+function wsStopTimer() {
+  clearInterval(WS.timerInterval);
+  WS.finished = true;
+}
+
 // ── Init ───────────────────────────────────────────────────────────────────
 function wsInit(lang) {
   WS.lang = lang || localStorage.getItem('lang') || 'fr';
@@ -62,27 +94,46 @@ function wsInit(lang) {
   WS.foundWords = new Set();
   WS.foundCells = new Set();
 
+  // Reset timer state
+  WS.timerStarted = false;
+  WS.finished = false;
+  WS.elapsedSeconds = 0;
+  clearInterval(WS.timerInterval);
+
   // Restore saved progress
+  const saveKey = `ws_${seed}_${WS.lang}`;
+  let saved = {};
   try {
-    const saved = JSON.parse(localStorage.getItem(`ws_${seed}_${WS.lang}`) || '{}');
+    saved = JSON.parse(localStorage.getItem(saveKey) || '{}');
     if (saved.foundWords) saved.foundWords.forEach(w => WS.foundWords.add(w));
     if (saved.foundCells) saved.foundCells.forEach(k => WS.foundCells.add(k));
+    if (saved.elapsedSeconds) WS.elapsedSeconds = saved.elapsedSeconds;
   } catch (e) { /* ignore */ }
+
+  // Update timer display to restored time
+  const timerEl = document.getElementById('ws-timer');
+  if (timerEl) timerEl.textContent = wsFormatTime(WS.elapsedSeconds);
 
   wsRenderGrid();
   wsRenderWords();
   wsUpdateProgress();
   wsAttachEvents();
+  wsLoadLeaderboard();
 
   const d = new Date();
   document.getElementById('ws-date-label').textContent =
     d.toLocaleDateString(WS.lang === 'fr' ? 'fr-FR' : 'en-GB',
       { day: '2-digit', month: 'long', year: 'numeric' });
 
-  // Already finished? show win immediately
+  // Already finished? restore and show win immediately
   if (WS.foundWords.size === WS.words.length) {
+    WS.finished = true;
     document.getElementById('ws-win').classList.add('show');
     wsStartCountdown();
+    // Don't restart timer if already done
+  } else if (WS.foundWords.size > 0) {
+    // Partially started — resume timer
+    wsStartTimer();
   }
 }
 
@@ -137,8 +188,16 @@ function wsUpdateProgress() {
   document.getElementById('ws-found').textContent = found;
   document.getElementById('ws-bar').style.width = `${(found / total) * 100}%`;
   if (found === total) {
-    document.getElementById('ws-win').classList.add('show');
-    wsStartCountdown();
+    wsStopTimer();
+    wsSave();
+    setTimeout(() => {
+      document.getElementById('ws-win').classList.add('show');
+      // Show final time in win panel
+      const finalEl = document.getElementById('ws-final-time');
+      if (finalEl) finalEl.textContent = wsFormatTime(WS.elapsedSeconds);
+      wsStartCountdown();
+      wsShowSubmitForm();
+    }, 300);
   }
 }
 
@@ -231,8 +290,94 @@ function wsCheckSel() {
 function wsSave() {
   localStorage.setItem(
     `ws_${wsSeedFromDate()}_${WS.lang}`,
-    JSON.stringify({ foundWords: [...WS.foundWords], foundCells: [...WS.foundCells] })
+    JSON.stringify({
+      foundWords: [...WS.foundWords],
+      foundCells: [...WS.foundCells],
+      elapsedSeconds: WS.elapsedSeconds,
+    })
   );
+}
+
+// ── Leaderboard ────────────────────────────────────────────────────────────
+async function wsLoadLeaderboard() {
+  const container = document.getElementById('ws-leaderboard-entries');
+  if (!container) return;
+  container.innerHTML = '<div class="ws-lb-loading">Chargement…</div>';
+
+  try {
+    const res = await fetch(`${WS_API_BASE}/leaderboard`);
+    const { entries } = await res.json();
+    wsRenderLeaderboard(entries);
+  } catch (e) {
+    container.innerHTML = '<div class="ws-lb-loading">Indisponible</div>';
+  }
+}
+
+function wsRenderLeaderboard(entries) {
+  const container = document.getElementById('ws-leaderboard-entries');
+  if (!container) return;
+
+  if (!entries || entries.length === 0) {
+    container.innerHTML = '<div class="ws-lb-loading">Sois le premier !</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+  entries.forEach((e, i) => {
+    const row = document.createElement('div');
+    row.className = 'ws-lb-row';
+
+    const medals = ['🥇', '🥈', '🥉'];
+    const rank = document.createElement('span');
+    rank.className = 'ws-lb-rank';
+    rank.textContent = medals[i] || `#${i + 1}`;
+
+    const name = document.createElement('span');
+    name.className = 'ws-lb-name';
+    name.textContent = e.pseudo;
+
+    const time = document.createElement('span');
+    time.className = 'ws-lb-time';
+    time.textContent = wsFormatTime(e.time);
+
+    row.appendChild(rank);
+    row.appendChild(name);
+    row.appendChild(time);
+    container.appendChild(row);
+  });
+}
+
+function wsShowSubmitForm() {
+  // Only show form if not already submitted today
+  const saveKey = `ws_submitted_${wsSeedFromDate()}`;
+  if (localStorage.getItem(saveKey)) {
+    // Already submitted — just refresh leaderboard
+    wsLoadLeaderboard();
+    return;
+  }
+
+  const form = document.getElementById('ws-submit-form');
+  if (form) form.classList.add('show');
+}
+
+async function wsSubmitScore(pseudo) {
+  const saveKey = `ws_submitted_${wsSeedFromDate()}`;
+
+  try {
+    const res = await fetch(`${WS_API_BASE}/leaderboard`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pseudo, time: WS.elapsedSeconds }),
+    });
+    if (res.ok) {
+      localStorage.setItem(saveKey, '1');
+      const form = document.getElementById('ws-submit-form');
+      if (form) form.classList.remove('show');
+      wsLoadLeaderboard();
+    }
+  } catch (e) {
+    console.error('Score submit failed', e);
+  }
 }
 
 // ── Events ─────────────────────────────────────────────────────────────────
@@ -248,6 +393,8 @@ function wsAttachEvents() {
     e.preventDefault();
     const el = wsGetCellEl(e);
     if (!el) return;
+    // Start timer on first interaction
+    if (!WS.timerStarted && !WS.finished) wsStartTimer();
     WS.selecting    = true;
     WS.startCell    = wsPos(el);
     WS.currentCells = [WS.startCell];
@@ -284,6 +431,29 @@ function wsAttachEvents() {
   window.addEventListener('touchmove', move,  { passive: false });
   window.addEventListener('touchend',  end,   { passive: false });
   window.addEventListener('resize', () => { wsResizeCanvas(); wsDrawLines(); });
+
+  // Submit form
+  const submitBtn = document.getElementById('ws-submit-btn');
+  const pseudoInput = document.getElementById('ws-pseudo-input');
+  if (submitBtn && pseudoInput) {
+    submitBtn.addEventListener('click', () => {
+      const pseudo = pseudoInput.value.trim();
+      if (pseudo.length < 2) {
+        pseudoInput.classList.add('error');
+        return;
+      }
+      pseudoInput.classList.remove('error');
+      // Save pseudo for next time
+      localStorage.setItem('ws_pseudo', pseudo);
+      wsSubmitScore(pseudo);
+    });
+    pseudoInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') submitBtn.click();
+    });
+    // Pre-fill saved pseudo
+    const saved = localStorage.getItem('ws_pseudo');
+    if (saved) pseudoInput.value = saved;
+  }
 }
 
 // ── Boot — wait for data, then for possible lang change ───────────────────

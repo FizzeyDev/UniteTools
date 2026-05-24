@@ -50,24 +50,63 @@
 
     <div class="ws-panel">
 
-      <div class="ws-panel-block">
+      <!-- Daily info + Timer -->
+      <div class="ws-panel-block ws-daily-block">
         <div class="ws-daily-info">
           <span class="ws-daily-badge">Daily</span>
           <span id="ws-date-label"></span>
         </div>
+        <div class="ws-timer-row">
+          <span class="ws-timer-label">⏱</span>
+          <span class="ws-timer-value" id="ws-timer">00:00</span>
+        </div>
       </div>
 
+      <!-- Word list -->
       <div class="ws-panel-block">
         <div class="ws-panel-title" data-lang="wordsearch_find">Pokémon à trouver</div>
         <div class="ws-word-list" id="ws-word-list"></div>
       </div>
 
+      <!-- Win panel -->
       <div class="ws-win" id="ws-win">
         <div class="ws-win-icon">🏆</div>
         <div class="ws-win-title" data-lang="wordsearch_win">Félicitations !</div>
         <div class="ws-win-sub" data-lang="wordsearch_win_sub">Tu as trouvé tous les Pokémon du jour !</div>
+
+        <!-- Final time -->
+        <div class="ws-win-final-row">
+          <span class="ws-win-time-label">Ton temps :</span>
+          <span class="ws-win-time-value" id="ws-final-time">--:--</span>
+        </div>
+
+        <!-- Submit form -->
+        <div class="ws-submit-form" id="ws-submit-form">
+          <p class="ws-submit-label">Inscris-toi au classement !</p>
+          <div class="ws-submit-row">
+            <input
+              class="ws-pseudo-input"
+              id="ws-pseudo-input"
+              type="text"
+              placeholder="Ton pseudo…"
+              maxlength="20"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button class="ws-submit-btn" id="ws-submit-btn">OK</button>
+          </div>
+        </div>
+
         <div class="ws-next-label" data-lang="wordsearch_next_label">Prochaine grille dans</div>
         <div class="ws-countdown" id="ws-countdown">--:--:--</div>
+      </div>
+
+      <!-- Leaderboard -->
+      <div class="ws-panel-block">
+        <div class="ws-panel-title">🏅 Classement du jour</div>
+        <div class="ws-leaderboard" id="ws-leaderboard-entries">
+          <div class="ws-lb-loading">Chargement…</div>
+        </div>
       </div>
 
     </div>
