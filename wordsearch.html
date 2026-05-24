@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/navbar.css" />
   <link rel="stylesheet" href="css/wordsearch.css" />
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -23,8 +22,41 @@
 
   <div id="navbar-container"></div>
 
-  <div class="ws-header">
+  <!-- ── Floating sidebar toggle button ── -->
+  <button class="ws-sidebar-toggle" id="ws-sidebar-toggle" aria-label="Classement">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+      <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+      <path d="M4 22h16"/>
+      <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+      <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+      <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+    </svg>
+    <span class="ws-sidebar-label" data-lang="wordsearch_leaderboard_title">Classement</span>
+  </button>
+
+  <!-- ── Sliding sidebar — Leaderboard only ── -->
+  <aside class="ws-sidebar" id="ws-sidebar">
+    <div class="ws-sidebar-inner">
+
+      <!-- Leaderboard -->
+      <div class="ws-sidebar-section">
+        <div class="ws-sidebar-section-title">🏅 <span data-lang="wordsearch_leaderboard_title">Classement du jour</span></div>
+        <div class="ws-leaderboard" id="ws-leaderboard-entries">
+          <div class="ws-lb-loading" data-lang="wordsearch_loading">Chargement…</div>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- ── Back button (flow, above header) ── -->
+  <div class="ws-top-bar">
     <a href="unite-dle.html" class="ws-back-btn" data-lang="wordsearch_back">← Retour</a>
+  </div>
+
+  <div class="ws-header">
     <h1><span>Poké</span><span class="h1-accent">Search</span></h1>
   </div>
 
@@ -48,21 +80,22 @@
       </div>
     </div>
 
+    <!-- Panel latéral droit -->
     <div class="ws-panel">
 
-      <!-- Daily info + Timer -->
-      <div class="ws-panel-block ws-daily-block">
-        <div class="ws-daily-info">
-          <span class="ws-daily-badge">Daily</span>
-          <span id="ws-date-label"></span>
-        </div>
-        <div class="ws-timer-row">
-          <span class="ws-timer-label">⏱</span>
-          <span class="ws-timer-value" id="ws-timer">00:00</span>
+      <!-- Timer -->
+      <div class="ws-panel-block ws-timer-block" id="ws-timer-block">
+        <div class="ws-timer-inner">
+          <div class="ws-timer-label">⏱ <span data-lang="wordsearch_timer_title">Timer</span></div>
+          <div class="ws-timer-display" id="ws-timer">00:00</div>
+          <div class="ws-daily-info">
+            <span class="ws-daily-badge">Daily</span>
+            <span id="ws-date-label"></span>
+          </div>
         </div>
       </div>
 
-      <!-- Word list -->
+      <!-- Liste de mots -->
       <div class="ws-panel-block">
         <div class="ws-panel-title" data-lang="wordsearch_find">Pokémon à trouver</div>
         <div class="ws-word-list" id="ws-word-list"></div>
@@ -74,39 +107,30 @@
         <div class="ws-win-title" data-lang="wordsearch_win">Félicitations !</div>
         <div class="ws-win-sub" data-lang="wordsearch_win_sub">Tu as trouvé tous les Pokémon du jour !</div>
 
-        <!-- Final time -->
         <div class="ws-win-final-row">
-          <span class="ws-win-time-label">Ton temps :</span>
+          <span class="ws-win-time-label" data-lang="wordsearch_your_time">Ton temps :</span>
           <span class="ws-win-time-value" id="ws-final-time">--:--</span>
         </div>
 
-        <!-- Submit form -->
         <div class="ws-submit-form" id="ws-submit-form">
-          <p class="ws-submit-label">Inscris-toi au classement !</p>
+          <p class="ws-submit-label" data-lang="wordsearch_submit_label">Inscris-toi au classement !</p>
           <div class="ws-submit-row">
             <input
               class="ws-pseudo-input"
               id="ws-pseudo-input"
               type="text"
               placeholder="Ton pseudo…"
+              data-lang-placeholder="wordsearch_pseudo_placeholder"
               maxlength="20"
               autocomplete="off"
               spellcheck="false"
             />
-            <button class="ws-submit-btn" id="ws-submit-btn">OK</button>
+            <button class="ws-submit-btn" id="ws-submit-btn" data-lang="wordsearch_submit_btn">OK</button>
           </div>
         </div>
 
         <div class="ws-next-label" data-lang="wordsearch_next_label">Prochaine grille dans</div>
         <div class="ws-countdown" id="ws-countdown">--:--:--</div>
-      </div>
-
-      <!-- Leaderboard -->
-      <div class="ws-panel-block">
-        <div class="ws-panel-title">🏅 Classement du jour</div>
-        <div class="ws-leaderboard" id="ws-leaderboard-entries">
-          <div class="ws-lb-loading">Chargement…</div>
-        </div>
       </div>
 
     </div>

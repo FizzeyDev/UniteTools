@@ -621,5 +621,14 @@
   "wordsearch_win_sub": "You found all of today's Pokémon!",
   "wordsearch_next_label": "Next grid in",
   "wordsearch_tries_label": "Found",
-  "wordsearch_back": "← Back"
+  "wordsearch_back": "← Back",
+  "wordsearch_leaderboard_title": "Leaderboard",
+  "wordsearch_your_time": "Your time:",
+  "wordsearch_submit_label": "Join the leaderboard!",
+  "wordsearch_pseudo_placeholder": "Your username…",
+  "wordsearch_submit_btn": "OK",
+  "wordsearch_loading": "Loading…",
+  "wordsearch_be_first": "Be the first!",
+  "wordsearch_unavailable": "Unavailable",
+  "wordsearch_timer_title": "Timer"
 }

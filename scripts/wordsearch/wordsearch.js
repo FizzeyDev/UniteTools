@@ -3,7 +3,7 @@
 */
 
 // ── Config ─────────────────────────────────────────────────────────────────
-const WS_API_BASE = 'https://unite-tools.com/api'; // adjust if needed
+const WS_API_BASE = 'https://unite-tools-api.vercel.app/api';
 
 // ── State ──────────────────────────────────────────────────────────────────
 const WS = {
@@ -12,10 +12,10 @@ const WS = {
   foundWords: new Set(), foundCells: new Set(),
   lang: 'fr',
 
-  // Timer
-  timerStarted: false,
+  // Timer — on stocke le timestamp de départ, pas les secondes
+  startTimestamp: null,  // Date.now() au moment du premier clic
   timerInterval: null,
-  elapsedSeconds: 0,
+  elapsedSeconds: 0,     // figé à la fin
   finished: false,
 };
 
@@ -57,21 +57,39 @@ function wsStartCountdown() {
 }
 
 // ── Timer (game) ───────────────────────────────────────────────────────────
+function wsGetElapsed() {
+  if (!WS.startTimestamp) return 0;
+  return Math.floor((Date.now() - WS.startTimestamp) / 1000);
+}
+
 function wsStartTimer() {
-  if (WS.timerStarted) return;
-  WS.timerStarted = true;
+  if (WS.startTimestamp || WS.finished) return;
+  WS.startTimestamp = Date.now();
+  wsSaveTimer(); // persist immédiatement
 
   const el = document.getElementById('ws-timer');
   WS.timerInterval = setInterval(() => {
     if (WS.finished) return;
-    WS.elapsedSeconds++;
-    if (el) el.textContent = wsFormatTime(WS.elapsedSeconds);
+    const s = wsGetElapsed();
+    if (el) el.textContent = wsFormatTime(s);
   }, 1000);
 }
 
 function wsStopTimer() {
-  clearInterval(WS.timerInterval);
+  WS.elapsedSeconds = wsGetElapsed();
   WS.finished = true;
+  clearInterval(WS.timerInterval);
+  // Met à jour l'affichage une dernière fois
+  const el = document.getElementById('ws-timer');
+  if (el) el.textContent = wsFormatTime(WS.elapsedSeconds);
+}
+
+function wsSaveTimer() {
+  // Sauvegarde le timestamp de départ (pas les secondes)
+  const seed = wsSeedFromDate();
+  const raw = JSON.parse(localStorage.getItem(`ws_${seed}_${WS.lang}`) || '{}');
+  raw.startTimestamp = WS.startTimestamp;
+  localStorage.setItem(`ws_${seed}_${WS.lang}`, JSON.stringify(raw));
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
@@ -95,7 +113,7 @@ function wsInit(lang) {
   WS.foundCells = new Set();
 
   // Reset timer state
-  WS.timerStarted = false;
+  WS.startTimestamp = null;
   WS.finished = false;
   WS.elapsedSeconds = 0;
   clearInterval(WS.timerInterval);
@@ -107,12 +125,22 @@ function wsInit(lang) {
     saved = JSON.parse(localStorage.getItem(saveKey) || '{}');
     if (saved.foundWords) saved.foundWords.forEach(w => WS.foundWords.add(w));
     if (saved.foundCells) saved.foundCells.forEach(k => WS.foundCells.add(k));
+    // Restaure le timestamp de départ — le temps s'écoule même si la page est fermée
+    if (saved.startTimestamp) WS.startTimestamp = saved.startTimestamp;
     if (saved.elapsedSeconds) WS.elapsedSeconds = saved.elapsedSeconds;
   } catch (e) { /* ignore */ }
 
-  // Update timer display to restored time
+  // Update timer display
   const timerEl = document.getElementById('ws-timer');
-  if (timerEl) timerEl.textContent = wsFormatTime(WS.elapsedSeconds);
+  if (timerEl) {
+    if (WS.finished) {
+      timerEl.textContent = wsFormatTime(WS.elapsedSeconds);
+    } else if (WS.startTimestamp) {
+      timerEl.textContent = wsFormatTime(wsGetElapsed());
+    } else {
+      timerEl.textContent = '00:00';
+    }
+  }
 
   wsRenderGrid();
   wsRenderWords();
@@ -125,15 +153,18 @@ function wsInit(lang) {
     d.toLocaleDateString(WS.lang === 'fr' ? 'fr-FR' : 'en-GB',
       { day: '2-digit', month: 'long', year: 'numeric' });
 
-  // Already finished? restore and show win immediately
+  // Already finished?
   if (WS.foundWords.size === WS.words.length) {
     WS.finished = true;
     document.getElementById('ws-win').classList.add('show');
     wsStartCountdown();
-    // Don't restart timer if already done
-  } else if (WS.foundWords.size > 0) {
-    // Partially started — resume timer
-    wsStartTimer();
+  } else if (WS.startTimestamp) {
+    // Partie en cours — reprend le timer depuis le vrai timestamp
+    WS.timerInterval = setInterval(() => {
+      if (WS.finished) return;
+      const el = document.getElementById('ws-timer');
+      if (el) el.textContent = wsFormatTime(wsGetElapsed());
+    }, 1000);
   }
 }
 
@@ -192,7 +223,6 @@ function wsUpdateProgress() {
     wsSave();
     setTimeout(() => {
       document.getElementById('ws-win').classList.add('show');
-      // Show final time in win panel
       const finalEl = document.getElementById('ws-final-time');
       if (finalEl) finalEl.textContent = wsFormatTime(WS.elapsedSeconds);
       wsStartCountdown();
@@ -293,6 +323,7 @@ function wsSave() {
     JSON.stringify({
       foundWords: [...WS.foundWords],
       foundCells: [...WS.foundCells],
+      startTimestamp: WS.startTimestamp,
       elapsedSeconds: WS.elapsedSeconds,
     })
   );
@@ -302,14 +333,16 @@ function wsSave() {
 async function wsLoadLeaderboard() {
   const container = document.getElementById('ws-leaderboard-entries');
   if (!container) return;
-  container.innerHTML = '<div class="ws-lb-loading">Chargement…</div>';
+  const loadingText = window.__translations && window.__translations['wordsearch_loading'] || 'Chargement…';
+  container.innerHTML = `<div class="ws-lb-loading">${loadingText}</div>`;
 
   try {
     const res = await fetch(`${WS_API_BASE}/leaderboard`);
     const { entries } = await res.json();
     wsRenderLeaderboard(entries);
   } catch (e) {
-    container.innerHTML = '<div class="ws-lb-loading">Indisponible</div>';
+    const unavailText = window.__translations && window.__translations['wordsearch_unavailable'] || 'Indisponible';
+    container.innerHTML = `<div class="ws-lb-loading">${unavailText}</div>`;
   }
 }
 
@@ -318,7 +351,8 @@ function wsRenderLeaderboard(entries) {
   if (!container) return;
 
   if (!entries || entries.length === 0) {
-    container.innerHTML = '<div class="ws-lb-loading">Sois le premier !</div>';
+    const firstText = window.__translations && window.__translations['wordsearch_be_first'] || 'Sois le premier !';
+    container.innerHTML = `<div class="ws-lb-loading">${firstText}</div>`;
     return;
   }
 
@@ -348,14 +382,11 @@ function wsRenderLeaderboard(entries) {
 }
 
 function wsShowSubmitForm() {
-  // Only show form if not already submitted today
   const saveKey = `ws_submitted_${wsSeedFromDate()}`;
   if (localStorage.getItem(saveKey)) {
-    // Already submitted — just refresh leaderboard
     wsLoadLeaderboard();
     return;
   }
-
   const form = document.getElementById('ws-submit-form');
   if (form) form.classList.add('show');
 }
@@ -380,6 +411,12 @@ async function wsSubmitScore(pseudo) {
   }
 }
 
+// ── Sidebar toggle ─────────────────────────────────────────────────────────
+function wsToggleSidebar() {
+  const sidebar = document.getElementById('ws-sidebar');
+  if (sidebar) sidebar.classList.toggle('open');
+}
+
 // ── Events ─────────────────────────────────────────────────────────────────
 let _wsEventsAttached = false;
 
@@ -393,8 +430,7 @@ function wsAttachEvents() {
     e.preventDefault();
     const el = wsGetCellEl(e);
     if (!el) return;
-    // Start timer on first interaction
-    if (!WS.timerStarted && !WS.finished) wsStartTimer();
+    if (!WS.startTimestamp && !WS.finished) wsStartTimer();
     WS.selecting    = true;
     WS.startCell    = wsPos(el);
     WS.currentCells = [WS.startCell];
@@ -432,8 +468,22 @@ function wsAttachEvents() {
   window.addEventListener('touchend',  end,   { passive: false });
   window.addEventListener('resize', () => { wsResizeCanvas(); wsDrawLines(); });
 
+  // Sidebar toggle button
+  const toggleBtn = document.getElementById('ws-sidebar-toggle');
+  if (toggleBtn) toggleBtn.addEventListener('click', wsToggleSidebar);
+
+  // Close sidebar when clicking outside on mobile
+  document.addEventListener('click', e => {
+    const sidebar = document.getElementById('ws-sidebar');
+    const toggle  = document.getElementById('ws-sidebar-toggle');
+    if (sidebar && sidebar.classList.contains('open') &&
+        !sidebar.contains(e.target) && !toggle.contains(e.target)) {
+      sidebar.classList.remove('open');
+    }
+  });
+
   // Submit form
-  const submitBtn = document.getElementById('ws-submit-btn');
+  const submitBtn   = document.getElementById('ws-submit-btn');
   const pseudoInput = document.getElementById('ws-pseudo-input');
   if (submitBtn && pseudoInput) {
     submitBtn.addEventListener('click', () => {
@@ -443,20 +493,18 @@ function wsAttachEvents() {
         return;
       }
       pseudoInput.classList.remove('error');
-      // Save pseudo for next time
       localStorage.setItem('ws_pseudo', pseudo);
       wsSubmitScore(pseudo);
     });
     pseudoInput.addEventListener('keydown', e => {
       if (e.key === 'Enter') submitBtn.click();
     });
-    // Pre-fill saved pseudo
     const saved = localStorage.getItem('ws_pseudo');
     if (saved) pseudoInput.value = saved;
   }
 }
 
-// ── Boot — wait for data, then for possible lang change ───────────────────
+// ── Boot ──────────────────────────────────────────────────────────────────
 document.addEventListener('wsDataReady', () => {
   wsInit(localStorage.getItem('lang') || 'fr');
 });

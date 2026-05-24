@@ -620,5 +620,14 @@
   "wordsearch_win_sub": "Tu as trouvé tous les Pokémon du jour !",
   "wordsearch_next_label": "Prochaine grille dans",
   "wordsearch_tries_label": "Trouvés",
-  "wordsearch_back": "← Retour"
+  "wordsearch_back": "← Retour",
+  "wordsearch_leaderboard_title": "Classement du jour",
+  "wordsearch_your_time": "Ton temps :",
+  "wordsearch_submit_label": "Inscris-toi au classement !",
+  "wordsearch_pseudo_placeholder": "Ton pseudo…",
+  "wordsearch_submit_btn": "OK",
+  "wordsearch_loading": "Chargement…",
+  "wordsearch_be_first": "Sois le premier !",
+  "wordsearch_unavailable": "Indisponible",
+  "wordsearch_timer_title": "Timer"
 }
