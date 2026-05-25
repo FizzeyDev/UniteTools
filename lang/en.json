@@ -630,5 +630,78 @@
   "wordsearch_loading": "Loading…",
   "wordsearch_be_first": "Be the first!",
   "wordsearch_unavailable": "Unavailable",
-  "wordsearch_timer_title": "Timer"
+  "wordsearch_timer_title": "Timer",
+  "gw_back": "← Back",
+  "gw_how_to_play": "How to play?",
+  "gw_subtitle": "Guess Who?",
+
+  "gw_create_title": "Create a room",
+  "gw_create_desc": "Generate a code and share it with your opponent.",
+  "gw_create_btn": "Create room",
+
+  "gw_join_title": "Join a room",
+  "gw_join_desc": "Enter the 6-letter code given by your friend.",
+  "gw_join_btn": "Join",
+
+  "gw_name_placeholder": "Your name…",
+  "gw_code_placeholder": "ROOM CODE",
+
+  "gw_waiting_title": "Waiting for opponent…",
+  "gw_room_label": "Room code",
+  "gw_copy": "⎘ Copy",
+  "gw_copied": "✓ Copied!",
+  "gw_waiting_dots": "Waiting…",
+  "gw_waiting_hint_default": "Share the code with your friend to start!",
+  "gw_waiting_hint_host": "Share this code with your friend: {code}",
+  "gw_waiting_hint_guest": "Connected! Waiting for the host to start…",
+  "gw_ready": "✓ Ready",
+
+  "gw_pick_title": "Choose your secret Pokémon",
+  "gw_pick_sub": "Pick one — your opponent will try to guess it",
+  "gw_ready_btn": "I'm ready!",
+  "gw_waiting_opp": "Waiting for opponent…",
+
+  "gw_opponent": "Opponent",
+  "gw_you": "You",
+
+  "gw_secret_label": "Your secret Pokémon:",
+  "gw_guess_btn": "🎯 Make a Guess",
+
+  "gw_modal_guess_title": "Who is your opponent's Pokémon?",
+  "gw_cancel": "Cancel",
+  "gw_confirm_guess": "Confirm Guess",
+
+  "gw_you_win": "You win!",
+  "gw_you_lose": "You lose!",
+  "gw_result_correct_guess": "You correctly guessed {name}!",
+  "gw_result_wrong_guess": "You guessed {guess}, but it was {name}.",
+  "gw_result_opp_correct": "{opp} correctly guessed {name}.",
+  "gw_result_opp_wrong": "{opp} guessed wrong — your Pokémon was {name}.",
+  "gw_opp_pokemon": "Opponent's Pokémon:",
+  "gw_play_again": "Play again",
+
+  "gw_asks_first": "{name} asks first",
+
+  "gw_htp_title": "How to play?",
+  "gw_htp_step1_title": "Create or join a room",
+  "gw_htp_step1_desc": "Generate a room code and share it with your opponent, or enter your friend's code to join their game.",
+  "gw_htp_step2_title": "Choose your secret Pokémon",
+  "gw_htp_step2_desc": "From the 24 displayed Pokémon, secretly pick one. Your opponent won't see your choice!",
+  "gw_htp_step3_title": "Ask questions and eliminate",
+  "gw_htp_step3_desc": "Take turns asking yes/no questions about your opponent's Pokémon (e.g. \"Is it a Fire type?\"). Click Pokémon on the grid to cross them out.",
+  "gw_htp_step4_title": "Make your guess",
+  "gw_htp_step4_desc": "When you think you know, click \"Make a Guess\" and select the Pokémon. Be careful — you only get one shot!",
+  "gw_htp_tip": "Both players see the same grid of 24 Unite Pokémon. Questions are asked verbally or via chat — PokéWho doesn't handle them automatically.",
+  "gw_htp_close": "Let's go!",
+
+  "gw_default_player1": "Player 1",
+  "gw_default_player2": "Player 2",
+  "gw_join_prompt": "Enter your name to join the room:",
+
+  "gw_error_invalid_code": "Enter a valid 6-character code.",
+  "gw_error_server": "Unable to reach server.",
+  "gw_error_not_found": "Room not found.",
+  "gw_error_in_progress": "This room is already in progress.",
+  "gw_error_full": "Room is full.",
+  "gw_error_generic": "Something went wrong."
 }

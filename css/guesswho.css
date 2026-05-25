@@ -1,0 +1,913 @@
+/* ══════════════════════════════════════════════
+   POKÉWHO (guesswho.css)
+   ══════════════════════════════════════════════ */
+
+:root {
+  --bg:         #090f10;
+  --surface:    #101a1b;
+  --surface-2:  #152122;
+  --surface-3:  #1d2e2f;
+  --surface-4:  #243839;
+  --border:     rgba(255,255,255,0.07);
+  --border-md:  rgba(255,255,255,0.12);
+  --blue:       #4fc3f7;
+  --blue-dim:   rgba(79,195,247,0.12);
+  --blue-glow:  rgba(79,195,247,0.25);
+  --green:      #4caf82;
+  --green-dim:  rgba(76,175,130,0.15);
+  --yellow:     #ffd740;
+  --yellow-dim: rgba(255,215,64,0.15);
+  --red:        #ef5350;
+  --red-dim:    rgba(239,83,80,0.15);
+  --violet:     #9f53ec;
+  --text:       #cfe0e2;
+  --text-dim:   #5a7577;
+  --text-mid:   #8aacaf;
+  --radius:     12px;
+  --radius-sm:  8px;
+  --radius-lg:  16px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Rajdhani', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 1.5rem 1.5rem 4rem;
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+}
+body.sidebar-hidden { margin-left: 0; }
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(79,195,247,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,195,247,0.018) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Screens ── */
+.gw-screen {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.hidden { display: none !important; }
+
+/* ── Top bar ── */
+.gw-top-bar {
+  margin-bottom: 0.8rem;
+}
+.gw-back-btn {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.gw-back-btn:hover {
+  color: var(--blue);
+  border-color: rgba(79,195,247,0.4);
+  background: var(--blue-dim);
+}
+
+/* ── Header ── */
+.gw-header { text-align: center; margin-bottom: 2.5rem; }
+h1 {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  display: inline-block;
+  text-shadow: 0 0 60px rgba(79,195,247,0.3), 0 0 120px rgba(159,83,236,0.15);
+}
+h1 .h1-accent { color: var(--blue); }
+h1::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 2px;
+  margin: 8px auto 0;
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  border-radius: 2px;
+}
+.gw-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 0.4rem;
+}
+
+/* ── Cards (lobby) ── */
+.gw-lobby-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.gw-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: border-color 0.2s;
+}
+.gw-card:hover { border-color: var(--border-md); }
+.gw-card-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gw-card-icon { font-size: 1.1rem; }
+.gw-card-desc {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* ── Inputs ── */
+.gw-input {
+  width: 100%;
+  background: var(--surface-3);
+  border: 1px solid var(--border-md);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.gw-input::placeholder { color: var(--text-dim); }
+.gw-input:focus {
+  border-color: rgba(79,195,247,0.5);
+  box-shadow: 0 0 0 2px rgba(79,195,247,0.1);
+}
+.gw-code-input {
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 1rem;
+  text-align: center;
+}
+.gw-name-row { display: flex; gap: 8px; }
+.gw-code-row { display: flex; gap: 8px; }
+.gw-code-row .gw-input { flex: 1; }
+.gw-error {
+  font-size: 0.78rem;
+  color: var(--red);
+  min-height: 1rem;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* ── Buttons ── */
+.gw-btn {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  padding: 10px 20px;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.1s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+.gw-btn:active { transform: scale(0.97); }
+
+.gw-btn-primary {
+  background: var(--blue);
+  color: var(--bg);
+  border-color: var(--blue);
+}
+.gw-btn-primary:hover {
+  background: #7ed6fb;
+  border-color: #7ed6fb;
+  box-shadow: 0 0 20px rgba(79,195,247,0.35);
+}
+.gw-btn-primary:disabled {
+  background: var(--surface-3);
+  border-color: var(--border);
+  color: var(--text-dim);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.gw-btn-secondary {
+  background: var(--surface-3);
+  border-color: var(--border-md);
+  color: var(--text-mid);
+}
+.gw-btn-secondary:hover { background: var(--surface-4); color: var(--text); }
+
+.gw-btn-ready {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+  font-size: 1rem;
+  padding: 14px 36px;
+  box-shadow: 0 0 24px rgba(76,175,130,0.35);
+}
+.gw-btn-ready:hover {
+  background: #5fcf9a;
+  box-shadow: 0 0 36px rgba(76,175,130,0.55);
+}
+
+.gw-btn-guess {
+  background: var(--yellow-dim);
+  border-color: rgba(255,215,64,0.4);
+  color: var(--yellow);
+  font-size: 0.95rem;
+  padding: 13px 32px;
+  box-shadow: 0 0 20px rgba(255,215,64,0.15);
+}
+.gw-btn-guess:hover {
+  background: rgba(255,215,64,0.22);
+  border-color: rgba(255,215,64,0.6);
+  box-shadow: 0 0 32px rgba(255,215,64,0.3);
+}
+
+/* ── Waiting screen ── */
+.gw-waiting-inner {
+  max-width: 520px;
+  margin: 4rem auto 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+.gw-waiting-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.gw-room-code-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-md);
+  border-radius: var(--radius);
+  padding: 16px 24px;
+}
+.gw-room-label {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.gw-room-code {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.25em;
+  color: var(--blue);
+  text-shadow: 0 0 24px rgba(79,195,247,0.4);
+}
+.gw-copy-btn {
+  background: var(--blue-dim);
+  border: 1px solid rgba(79,195,247,0.3);
+  border-radius: var(--radius-sm);
+  color: var(--blue);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.gw-copy-btn:hover { background: rgba(79,195,247,0.22); color: #fff; }
+
+.gw-players-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  justify-content: center;
+}
+.gw-player-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  min-width: 100px;
+}
+.gw-player-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  transition: background 0.3s;
+}
+.gw-player-dot.online { background: var(--green); box-shadow: 0 0 8px rgba(76,175,130,0.6); }
+.gw-vs {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+}
+.gw-ready-badge {
+  font-size: 0.68rem;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: var(--green-dim);
+  border: 1px solid rgba(76,175,130,0.3);
+  color: var(--green);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.gw-ready-badge.show { opacity: 1; }
+.gw-waiting-hint {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  font-family: 'Exo 2', sans-serif;
+}
+
+/* ── Pick screen ── */
+.gw-pick-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.gw-pick-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.gw-pick-sub {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+.gw-pick-status-row {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 1.5rem;
+}
+.gw-pick-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+.gw-pick-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--surface-4);
+  border: 1px solid var(--border-md);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.gw-pick-dot.chosen {
+  background: var(--green);
+  box-shadow: 0 0 8px rgba(76,175,130,0.6);
+  border-color: transparent;
+}
+
+/* ── Pick grid (24 pokemon, 6×4) ── */
+.gw-grid-pick {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  max-width: 780px;
+  margin: 0 auto 1.5rem;
+}
+.gw-poke-card {
+  background: var(--surface-2);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 6px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s, box-shadow 0.2s;
+  user-select: none;
+  position: relative;
+}
+.gw-poke-card:hover {
+  border-color: rgba(79,195,247,0.5);
+  background: var(--surface-3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.gw-poke-card.selected {
+  border-color: var(--blue);
+  background: var(--blue-dim);
+  box-shadow: 0 0 0 2px rgba(79,195,247,0.2), 0 4px 16px rgba(0,0,0,0.4);
+}
+.gw-poke-card img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  pointer-events: none;
+}
+.gw-poke-name {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-mid);
+  text-align: center;
+  line-height: 1.2;
+}
+.gw-poke-card.selected .gw-poke-name { color: var(--blue); }
+
+/* Pick confirm bar */
+.gw-pick-confirm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-md);
+  border-radius: var(--radius);
+  max-width: 320px;
+  margin: 0 auto;
+  animation: gw-fadein 0.3s ease;
+}
+.gw-picked-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.gw-picked-preview img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+.gw-picked-preview span {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #fff;
+}
+
+/* ── Game screen ── */
+.gw-game-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 20px;
+}
+.gw-game-player {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  letter-spacing: 0.04em;
+  min-width: 120px;
+}
+.gw-game-player-opp { justify-content: flex-end; }
+
+.gw-turn-banner {
+  flex: 1;
+  text-align: center;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--yellow-dim);
+  border: 1px solid rgba(255,215,64,0.25);
+}
+#turn-text {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--yellow);
+}
+
+/* Secret pokemon reminder */
+.gw-secret-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-2);
+  border: 1px solid rgba(159,83,236,0.25);
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  margin-bottom: 1.2rem;
+  width: fit-content;
+}
+.gw-secret-label {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+.gw-secret-img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+.gw-secret-name {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+/* Game grid (24 pokemon, 6×4) */
+.gw-grid-game {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  max-width: 900px;
+  margin: 0 auto 1.5rem;
+}
+.gw-game-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 6px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s, opacity 0.25s;
+  user-select: none;
+  position: relative;
+}
+.gw-game-card:hover:not(.eliminated) {
+  border-color: rgba(255,215,64,0.4);
+  background: var(--surface-3);
+  transform: translateY(-2px);
+}
+.gw-game-card img {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  pointer-events: none;
+  transition: opacity 0.25s, filter 0.25s;
+}
+.gw-game-card .gw-poke-name {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-mid);
+  text-align: center;
+  line-height: 1.2;
+  transition: color 0.25s;
+}
+
+/* Eliminated state — crossed out, dimmed */
+.gw-game-card.eliminated {
+  border-color: var(--border);
+  background: var(--surface);
+  cursor: pointer;
+}
+.gw-game-card.eliminated img {
+  opacity: 0.18;
+  filter: grayscale(1);
+}
+.gw-game-card.eliminated .gw-poke-name {
+  color: var(--text-dim);
+  opacity: 0.5;
+}
+.gw-game-card.eliminated::after {
+  content: '✕';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  font-size: 2rem;
+  font-weight: 900;
+  color: rgba(239,83,80,0.5);
+  pointer-events: none;
+}
+
+/* Guess zone */
+.gw-guess-zone {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0 1rem;
+}
+
+/* ── Modal ── */
+.gw-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  animation: gw-fadein 0.2s ease;
+}
+.gw-modal {
+  background: var(--surface);
+  border: 1px solid var(--border-md);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  max-width: 760px;
+  width: calc(100% - 2rem);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  animation: gw-slideup 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.gw-modal-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.gw-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.gw-modal-card {
+  background: var(--surface-2);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 6px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  position: relative;
+}
+.gw-modal-card:hover {
+  border-color: rgba(255,215,64,0.5);
+  background: var(--surface-3);
+  transform: translateY(-2px);
+}
+.gw-modal-card.selected {
+  border-color: var(--yellow);
+  background: var(--yellow-dim);
+}
+.gw-modal-card img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  pointer-events: none;
+}
+.gw-modal-card .gw-poke-name {
+  font-size: 0.58rem;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  color: var(--text-mid);
+  text-align: center;
+  line-height: 1.2;
+}
+.gw-modal-card.selected .gw-poke-name { color: var(--yellow); }
+.gw-modal-card.eliminated-hint { opacity: 0.4; }
+
+.gw-modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+/* Result modal */
+.gw-modal-result {
+  text-align: center;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.gw-result-icon { font-size: 3rem; }
+.gw-result-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.gw-result-sub {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+.gw-result-reveal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-md);
+  border-radius: var(--radius);
+  padding: 12px 20px;
+  margin-top: 4px;
+}
+.gw-result-reveal img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+.gw-result-reveal span {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+/* ── Animations ── */
+@keyframes gw-fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes gw-slideup {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes gw-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(79,195,247,0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(79,195,247,0); }
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 3px; }
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  body { margin-left: 0; padding: 1rem 0.75rem 2rem; }
+  .gw-grid-pick, .gw-grid-game, .gw-modal-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .gw-game-topbar { flex-direction: column; gap: 10px; }
+  .gw-game-player { min-width: unset; justify-content: center; }
+  .gw-turn-banner { width: 100%; }
+}
+@media (max-width: 480px) {
+  h1 { font-size: 1.6rem; }
+  .gw-grid-pick, .gw-grid-game, .gw-modal-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .gw-room-code { font-size: 1.4rem; letter-spacing: 0.15em; }
+}
+
+.gw-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+}
+.gw-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Small button variant ── */
+.gw-btn-sm {
+  font-size: 0.72rem;
+  padding: 6px 12px;
+  letter-spacing: 0.08em;
+}
+
+/* ── How to Play modal ── */
+.gw-modal-howtoplay {
+  max-width: 560px;
+}
+.gw-htp-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.gw-htp-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.gw-htp-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.gw-htp-num {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--blue-dim);
+  border: 1px solid rgba(79,195,247,0.35);
+  color: var(--blue);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+.gw-htp-step strong {
+  display: block;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.03em;
+  margin-bottom: 4px;
+}
+.gw-htp-step p {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.55;
+}
+.gw-htp-tip {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--yellow-dim);
+  border: 1px solid rgba(255,215,64,0.2);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+.gw-htp-tip span:first-child {
+  flex-shrink: 0;
+  font-size: 1rem;
+}

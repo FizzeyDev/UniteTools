@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unite Tools - PokéWho</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/navbar.css" />
+  <link rel="stylesheet" href="css/guesswho.css" />
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+  <!-- ══ SCREEN: LOBBY ══ -->
+  <div class="gw-screen" id="screen-lobby">
+    <div class="gw-top-bar">
+      <a href="unite-dle.html" class="gw-back-btn" data-lang="gw_back">← Retour</a>
+      <div class="gw-top-actions">
+        <button class="gw-btn gw-btn-secondary gw-btn-sm" id="btn-how-to-play" data-lang="gw_how_to_play">Comment jouer ?</button>
+      </div>
+    </div>
+
+    <div class="gw-header">
+      <h1><span>Poké</span><span class="h1-accent">Who</span></h1>
+      <p class="gw-subtitle">Pokémon Unite · <span data-lang="gw_subtitle">Qui est-ce ?</span></p>
+    </div>
+
+    <div class="gw-lobby-cards">
+
+      <!-- Create room -->
+      <div class="gw-card">
+        <div class="gw-card-title">
+          <span class="gw-card-icon">🎮</span>
+          <span data-lang="gw_create_title">Créer une salle</span>
+        </div>
+        <p class="gw-card-desc" data-lang="gw_create_desc">Génère un code et partage-le avec ton adversaire.</p>
+        <div class="gw-name-row">
+          <input class="gw-input" id="create-name" type="text" data-lang-placeholder="gw_name_placeholder" placeholder="Ton pseudo…" maxlength="16" autocomplete="off" spellcheck="false" />
+        </div>
+        <button class="gw-btn gw-btn-primary" id="btn-create" data-lang="gw_create_btn">Créer la salle</button>
+      </div>
+
+      <!-- Join room -->
+      <div class="gw-card">
+        <div class="gw-card-title">
+          <span class="gw-card-icon">🔗</span>
+          <span data-lang="gw_join_title">Rejoindre une salle</span>
+        </div>
+        <p class="gw-card-desc" data-lang="gw_join_desc">Entre le code à 6 lettres donné par ton ami.</p>
+        <div class="gw-name-row">
+          <input class="gw-input" id="join-name" type="text" data-lang-placeholder="gw_name_placeholder" placeholder="Ton pseudo…" maxlength="16" autocomplete="off" spellcheck="false" />
+        </div>
+        <div class="gw-code-row">
+          <input class="gw-input gw-code-input" id="join-code" type="text" data-lang-placeholder="gw_code_placeholder" placeholder="CODE SALLE" maxlength="6" autocomplete="off" spellcheck="false" />
+          <button class="gw-btn gw-btn-primary" id="btn-join" data-lang="gw_join_btn">Rejoindre</button>
+        </div>
+        <div class="gw-error" id="join-error"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ SCREEN: WAITING (post-create, pre-game) ══ -->
+  <div class="gw-screen hidden" id="screen-waiting">
+    <div class="gw-waiting-inner">
+      <div class="gw-waiting-title" data-lang="gw_waiting_title">En attente de l'adversaire…</div>
+      <div class="gw-room-code-wrap">
+        <span class="gw-room-label" data-lang="gw_room_label">Code de salle</span>
+        <span class="gw-room-code" id="display-room-code">------</span>
+        <button class="gw-copy-btn" id="btn-copy-code" title="Copy code" data-lang="gw_copy">⎘ Copier</button>
+      </div>
+      <div class="gw-players-row">
+        <div class="gw-player-slot" id="slot-p1">
+          <div class="gw-player-dot online"></div>
+          <span id="slot-p1-name">—</span>
+          <span class="gw-ready-badge" id="badge-p1"></span>
+        </div>
+        <div class="gw-vs">VS</div>
+        <div class="gw-player-slot" id="slot-p2">
+          <div class="gw-player-dot" id="dot-p2"></div>
+          <span id="slot-p2-name" data-lang="gw_waiting_dots">En attente…</span>
+          <span class="gw-ready-badge" id="badge-p2"></span>
+        </div>
+      </div>
+      <div class="gw-waiting-hint" id="waiting-hint" data-lang="gw_waiting_hint_default">Partage le code avec ton ami pour commencer !</div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN: PICK YOUR POKÉMON ══ -->
+  <div class="gw-screen hidden" id="screen-pick">
+    <div class="gw-pick-header">
+      <div class="gw-pick-title" data-lang="gw_pick_title">Choisis ton Pokémon secret</div>
+      <div class="gw-pick-sub" data-lang="gw_pick_sub">Choisis-en un — ton adversaire essaiera de le deviner</div>
+    </div>
+    <div class="gw-pick-status-row">
+      <div class="gw-pick-status" id="pick-status-me">
+        <span id="pick-me-name">Toi</span>
+        <span class="gw-pick-dot" id="pick-dot-me"></span>
+      </div>
+      <div class="gw-pick-status" id="pick-status-opp">
+        <span id="pick-opp-name" data-lang="gw_opponent">Adversaire</span>
+        <span class="gw-pick-dot" id="pick-dot-opp"></span>
+      </div>
+    </div>
+    <div class="gw-grid-pick" id="grid-pick"></div>
+    <div class="gw-pick-confirm hidden" id="pick-confirm">
+      <div class="gw-picked-preview">
+        <img id="picked-img" src="" alt="" />
+        <span id="picked-name"></span>
+      </div>
+      <button class="gw-btn gw-btn-ready" id="btn-ready" data-lang="gw_ready_btn">Je suis prêt·e !</button>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN: GAME ══ -->
+  <div class="gw-screen hidden" id="screen-game">
+
+    <!-- Top bar: players + turn indicator -->
+    <div class="gw-game-topbar">
+      <div class="gw-game-player gw-game-player-me">
+        <div class="gw-player-dot online"></div>
+        <span id="game-me-name" data-lang="gw_you">Toi</span>
+      </div>
+      <div class="gw-turn-banner" id="turn-banner">
+        <span id="turn-text">— —</span>
+      </div>
+      <div class="gw-game-player gw-game-player-opp">
+        <div class="gw-player-dot online" id="game-dot-opp"></div>
+        <span id="game-opp-name" data-lang="gw_opponent">Adversaire</span>
+      </div>
+    </div>
+
+    <!-- My secret pokemon reminder -->
+    <div class="gw-secret-bar">
+      <span class="gw-secret-label" data-lang="gw_secret_label">Ton Pokémon secret :</span>
+      <img class="gw-secret-img" id="secret-img" src="" alt="" />
+      <span class="gw-secret-name" id="secret-name"></span>
+    </div>
+
+    <!-- Main grid -->
+    <div class="gw-grid-game" id="grid-game"></div>
+
+    <!-- Guess zone -->
+    <div class="gw-guess-zone">
+      <button class="gw-btn gw-btn-guess" id="btn-open-guess" data-lang="gw_guess_btn">🎯 Faire une supposition</button>
+    </div>
+
+  </div>
+
+  <!-- ══ MODAL: Guess selector ══ -->
+  <div class="gw-modal-overlay hidden" id="modal-guess">
+    <div class="gw-modal">
+      <div class="gw-modal-title" data-lang="gw_modal_guess_title">Quel est le Pokémon de ton adversaire ?</div>
+      <div class="gw-modal-grid" id="modal-grid"></div>
+      <div class="gw-modal-actions">
+        <button class="gw-btn gw-btn-secondary" id="btn-cancel-guess" data-lang="gw_cancel">Annuler</button>
+        <button class="gw-btn gw-btn-primary" id="btn-confirm-guess" disabled data-lang="gw_confirm_guess">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: Result ══ -->
+  <div class="gw-modal-overlay hidden" id="modal-result">
+    <div class="gw-modal gw-modal-result">
+      <div class="gw-result-icon" id="result-icon">🏆</div>
+      <div class="gw-result-title" id="result-title" data-lang="gw_you_win">Tu as gagné !</div>
+      <div class="gw-result-sub" id="result-sub"></div>
+      <div class="gw-result-reveal" id="result-reveal"></div>
+      <button class="gw-btn gw-btn-primary" id="btn-play-again" data-lang="gw_play_again">Rejouer</button>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: How to play ══ -->
+  <div class="gw-modal-overlay hidden" id="modal-howtoplay">
+    <div class="gw-modal gw-modal-howtoplay">
+      <div class="gw-modal-title" data-lang="gw_htp_title">Comment jouer ?</div>
+      <div class="gw-htp-body">
+        <div class="gw-htp-section">
+          <div class="gw-htp-step">
+            <span class="gw-htp-num">1</span>
+            <div>
+              <strong data-lang="gw_htp_step1_title">Crée ou rejoins une salle</strong>
+              <p data-lang="gw_htp_step1_desc">Génère un code de salle et partage-le avec ton adversaire, ou entre le code de ton ami pour rejoindre sa partie.</p>
+            </div>
+          </div>
+          <div class="gw-htp-step">
+            <span class="gw-htp-num">2</span>
+            <div>
+              <strong data-lang="gw_htp_step2_title">Choisis ton Pokémon secret</strong>
+              <p data-lang="gw_htp_step2_desc">Parmi les 24 Pokémon affichés, choisis-en un secrètement. Ton adversaire ne verra pas ton choix !</p>
+            </div>
+          </div>
+          <div class="gw-htp-step">
+            <span class="gw-htp-num">3</span>
+            <div>
+              <strong data-lang="gw_htp_step3_title">Pose des questions et élimine</strong>
+              <p data-lang="gw_htp_step3_desc">À tour de rôle, pose des questions sur le Pokémon de ton adversaire (ex : "Est-il de type Feu ?"). Clique sur les Pokémon de la grille pour les éliminer.</p>
+            </div>
+          </div>
+          <div class="gw-htp-step">
+            <span class="gw-htp-num">4</span>
+            <div>
+              <strong data-lang="gw_htp_step4_title">Fais ta supposition</strong>
+              <p data-lang="gw_htp_step4_desc">Quand tu penses avoir trouvé, clique sur "Faire une supposition" et sélectionne le Pokémon. Attention, tu n'as qu'une seule chance !</p>
+            </div>
+          </div>
+        </div>
+        <div class="gw-htp-tip">
+          <span>💡</span>
+          <span data-lang="gw_htp_tip">Les deux joueurs voient la même grille de 24 Pokémon Unite. Les questions se posent à l'oral ou par chat — PokéWho ne les gère pas automatiquement.</span>
+        </div>
+      </div>
+      <div class="gw-modal-actions">
+        <button class="gw-btn gw-btn-primary" id="btn-close-howtoplay" data-lang="gw_htp_close">C'est parti !</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/navbar.js"></script>
+  <script src="scripts/guesswho/guesswho.js" type="module"></script>
+</body>
+</html>

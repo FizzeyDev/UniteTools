@@ -12,10 +12,9 @@ const WS = {
   foundWords: new Set(), foundCells: new Set(),
   lang: 'fr',
 
-  // Timer — on stocke le timestamp de départ, pas les secondes
-  startTimestamp: null,  // Date.now() au moment du premier clic
+  startTimestamp: null,
   timerInterval: null,
-  elapsedSeconds: 0,     // figé à la fin
+  elapsedSeconds: 0,
   finished: false,
 };
 
@@ -65,7 +64,7 @@ function wsGetElapsed() {
 function wsStartTimer() {
   if (WS.startTimestamp || WS.finished) return;
   WS.startTimestamp = Date.now();
-  wsSaveTimer(); // persist immédiatement
+  wsSaveTimer();
 
   const el = document.getElementById('ws-timer');
   WS.timerInterval = setInterval(() => {
@@ -79,17 +78,49 @@ function wsStopTimer() {
   WS.elapsedSeconds = wsGetElapsed();
   WS.finished = true;
   clearInterval(WS.timerInterval);
-  // Met à jour l'affichage une dernière fois
   const el = document.getElementById('ws-timer');
   if (el) el.textContent = wsFormatTime(WS.elapsedSeconds);
 }
 
 function wsSaveTimer() {
-  // Sauvegarde le timestamp de départ (pas les secondes)
   const seed = wsSeedFromDate();
   const raw = JSON.parse(localStorage.getItem(`ws_${seed}_${WS.lang}`) || '{}');
   raw.startTimestamp = WS.startTimestamp;
   localStorage.setItem(`ws_${seed}_${WS.lang}`, JSON.stringify(raw));
+}
+
+// ── Start overlay ──────────────────────────────────────────────────────────
+function wsShowStartOverlay() {
+  // Don't show if the game is already in progress or finished
+  if (WS.finished || WS.startTimestamp || WS.foundWords.size > 0) return;
+
+  const wrap = document.querySelector('.ws-grid-wrap');
+  if (!wrap) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'ws-start-overlay';
+  overlay.id = 'ws-start-overlay';
+
+  const label = document.createElement('div');
+  label.className = 'ws-start-label';
+  label.textContent = 'Ready to play?';
+
+  const btn = document.createElement('button');
+  btn.className = 'ws-start-btn';
+  btn.textContent = 'Start';
+
+  btn.addEventListener('click', () => {
+    // Reveal the grid with a smooth unblur
+    wrap.classList.add('revealed');
+    // Fade out and remove the overlay
+    overlay.classList.add('hiding');
+    wsStartTimer();
+    setTimeout(() => overlay.remove(), 380);
+  });
+
+  overlay.appendChild(label);
+  overlay.appendChild(btn);
+  wrap.appendChild(overlay);
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
@@ -112,7 +143,6 @@ function wsInit(lang) {
   WS.foundWords = new Set();
   WS.foundCells = new Set();
 
-  // Reset timer state
   WS.startTimestamp = null;
   WS.finished = false;
   WS.elapsedSeconds = 0;
@@ -125,7 +155,6 @@ function wsInit(lang) {
     saved = JSON.parse(localStorage.getItem(saveKey) || '{}');
     if (saved.foundWords) saved.foundWords.forEach(w => WS.foundWords.add(w));
     if (saved.foundCells) saved.foundCells.forEach(k => WS.foundCells.add(k));
-    // Restaure le timestamp de départ — le temps s'écoule même si la page est fermée
     if (saved.startTimestamp) WS.startTimestamp = saved.startTimestamp;
     if (saved.elapsedSeconds) WS.elapsedSeconds = saved.elapsedSeconds;
   } catch (e) { /* ignore */ }
@@ -156,15 +185,23 @@ function wsInit(lang) {
   // Already finished?
   if (WS.foundWords.size === WS.words.length) {
     WS.finished = true;
+    // Reveal grid immediately — no overlay needed
+    const wrap = document.querySelector('.ws-grid-wrap');
+    if (wrap) wrap.classList.add('revealed');
     document.getElementById('ws-win').classList.add('show');
     wsStartCountdown();
   } else if (WS.startTimestamp) {
-    // Partie en cours — reprend le timer depuis le vrai timestamp
+    // Game already in progress — reveal grid, resume timer
+    const wrap = document.querySelector('.ws-grid-wrap');
+    if (wrap) wrap.classList.add('revealed');
     WS.timerInterval = setInterval(() => {
       if (WS.finished) return;
       const el = document.getElementById('ws-timer');
       if (el) el.textContent = wsFormatTime(wsGetElapsed());
     }, 1000);
+  } else {
+    // Fresh game — show start overlay (grid stays blurred via CSS default)
+    wsShowStartOverlay();
   }
 }
 
@@ -333,7 +370,7 @@ function wsSave() {
 async function wsLoadLeaderboard() {
   const container = document.getElementById('ws-leaderboard-entries');
   if (!container) return;
-  const loadingText = window.__translations && window.__translations['wordsearch_loading'] || 'Chargement…';
+  const loadingText = window.__translations && window.__translations['wordsearch_loading'] || 'Loading…';
   container.innerHTML = `<div class="ws-lb-loading">${loadingText}</div>`;
 
   try {
@@ -341,7 +378,7 @@ async function wsLoadLeaderboard() {
     const { entries } = await res.json();
     wsRenderLeaderboard(entries);
   } catch (e) {
-    const unavailText = window.__translations && window.__translations['wordsearch_unavailable'] || 'Indisponible';
+    const unavailText = window.__translations && window.__translations['wordsearch_unavailable'] || 'Unavailable';
     container.innerHTML = `<div class="ws-lb-loading">${unavailText}</div>`;
   }
 }
@@ -351,7 +388,7 @@ function wsRenderLeaderboard(entries) {
   if (!container) return;
 
   if (!entries || entries.length === 0) {
-    const firstText = window.__translations && window.__translations['wordsearch_be_first'] || 'Sois le premier !';
+    const firstText = window.__translations && window.__translations['wordsearch_be_first'] || 'Be the first!';
     container.innerHTML = `<div class="ws-lb-loading">${firstText}</div>`;
     return;
   }
@@ -427,10 +464,11 @@ function wsAttachEvents() {
   const grid = document.getElementById('ws-grid');
 
   const start = e => {
+    // Block interaction until the game has been started via the overlay
+    if (!WS.startTimestamp || WS.finished) return;
     e.preventDefault();
     const el = wsGetCellEl(e);
     if (!el) return;
-    if (!WS.startTimestamp && !WS.finished) wsStartTimer();
     WS.selecting    = true;
     WS.startCell    = wsPos(el);
     WS.currentCells = [WS.startCell];

@@ -629,5 +629,78 @@
   "wordsearch_loading": "Chargement…",
   "wordsearch_be_first": "Sois le premier !",
   "wordsearch_unavailable": "Indisponible",
-  "wordsearch_timer_title": "Timer"
+  "wordsearch_timer_title": "Timer",
+  "gw_back": "← Retour",
+  "gw_how_to_play": "Comment jouer ?",
+  "gw_subtitle": "Qui est-ce ?",
+
+  "gw_create_title": "Créer une salle",
+  "gw_create_desc": "Génère un code et partage-le avec ton adversaire.",
+  "gw_create_btn": "Créer la salle",
+
+  "gw_join_title": "Rejoindre une salle",
+  "gw_join_desc": "Entre le code à 6 lettres donné par ton ami.",
+  "gw_join_btn": "Rejoindre",
+
+  "gw_name_placeholder": "Ton pseudo…",
+  "gw_code_placeholder": "CODE SALLE",
+
+  "gw_waiting_title": "En attente de l'adversaire…",
+  "gw_room_label": "Code de salle",
+  "gw_copy": "⎘ Copier",
+  "gw_copied": "✓ Copié !",
+  "gw_waiting_dots": "En attente…",
+  "gw_waiting_hint_default": "Partage le code avec ton ami pour commencer !",
+  "gw_waiting_hint_host": "Partage ce code avec ton ami : {code}",
+  "gw_waiting_hint_guest": "Connecté ! En attente du lancement par l'hôte…",
+  "gw_ready": "✓ Prêt",
+
+  "gw_pick_title": "Choisis ton Pokémon secret",
+  "gw_pick_sub": "Choisis-en un — ton adversaire essaiera de le deviner",
+  "gw_ready_btn": "Je suis prêt·e !",
+  "gw_waiting_opp": "En attente de l'adversaire…",
+
+  "gw_opponent": "Adversaire",
+  "gw_you": "Toi",
+
+  "gw_secret_label": "Ton Pokémon secret :",
+  "gw_guess_btn": "🎯 Faire une supposition",
+
+  "gw_modal_guess_title": "Quel est le Pokémon de ton adversaire ?",
+  "gw_cancel": "Annuler",
+  "gw_confirm_guess": "Confirmer",
+
+  "gw_you_win": "Tu as gagné !",
+  "gw_you_lose": "Tu as perdu !",
+  "gw_result_correct_guess": "Tu as correctement deviné {name} !",
+  "gw_result_wrong_guess": "Tu as dit {guess}, mais c'était {name}.",
+  "gw_result_opp_correct": "{opp} a correctement deviné {name}.",
+  "gw_result_opp_wrong": "{opp} s'est trompé — ton Pokémon était {name}.",
+  "gw_opp_pokemon": "Pokémon de l'adversaire :",
+  "gw_play_again": "Rejouer",
+
+  "gw_asks_first": "{name} pose la première question",
+
+  "gw_htp_title": "Comment jouer ?",
+  "gw_htp_step1_title": "Crée ou rejoins une salle",
+  "gw_htp_step1_desc": "Génère un code de salle et partage-le avec ton adversaire, ou entre le code de ton ami pour rejoindre sa partie.",
+  "gw_htp_step2_title": "Choisis ton Pokémon secret",
+  "gw_htp_step2_desc": "Parmi les 24 Pokémon affichés, choisis-en un secrètement. Ton adversaire ne verra pas ton choix !",
+  "gw_htp_step3_title": "Pose des questions et élimine",
+  "gw_htp_step3_desc": "À tour de rôle, pose des questions sur le Pokémon de ton adversaire (ex : \"Est-il de type Feu ?\"). Clique sur les Pokémon de la grille pour les éliminer.",
+  "gw_htp_step4_title": "Fais ta supposition",
+  "gw_htp_step4_desc": "Quand tu penses avoir trouvé, clique sur \"Faire une supposition\" et sélectionne le Pokémon. Attention, tu n'as qu'une seule chance !",
+  "gw_htp_tip": "Les deux joueurs voient la même grille de 24 Pokémon Unite. Les questions se posent à l'oral ou par chat — PokéWho ne les gère pas automatiquement.",
+  "gw_htp_close": "C'est parti !",
+
+  "gw_default_player1": "Joueur 1",
+  "gw_default_player2": "Joueur 2",
+  "gw_join_prompt": "Entre ton pseudo pour rejoindre la salle :",
+
+  "gw_error_invalid_code": "Entre un code valide de 6 caractères.",
+  "gw_error_server": "Impossible de joindre le serveur.",
+  "gw_error_not_found": "Salle introuvable.",
+  "gw_error_in_progress": "Cette salle est déjà en cours.",
+  "gw_error_full": "La salle est pleine.",
+  "gw_error_generic": "Une erreur est survenue."
 }
