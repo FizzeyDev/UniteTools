@@ -11,6 +11,13 @@
   <link rel="stylesheet" href="css/navbar.css" />
   <link rel="stylesheet" href="css/guesswho.css" />
   <link rel="stylesheet" href="css/theme.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-B7HW29S7HW');
+  </script>
 </head>
 <body>
 
@@ -21,7 +28,7 @@
     <div class="gw-top-bar">
       <a href="unite-dle.html" class="gw-back-btn" data-lang="gw_back">← Retour</a>
       <div class="gw-top-actions">
-        <button class="gw-btn gw-btn-secondary gw-btn-sm" id="btn-how-to-play" data-lang="gw_how_to_play">Comment jouer ?</button>
+        <button class="gw-btn gw-btn-ghost gw-btn-sm" id="btn-how-to-play" data-lang="gw_how_to_play">Comment jouer ?</button>
       </div>
     </div>
 
@@ -69,35 +76,6 @@
               <button class="gw-rule-toggle" data-value="48">48</button>
             </div>
           </div>
-
-          <!-- Game mode -->
-          <div class="gw-rule-row">
-            <label class="gw-rule-label" data-lang="gw_rule_mode">Mode de jeu</label>
-            <div class="gw-rule-toggle-group" id="rule-game-mode">
-              <button class="gw-rule-toggle active" data-value="classic" title="Chacun pose des questions à l'oral et fait une supposition finale">Classique</button>
-              <button class="gw-rule-toggle" data-value="blitz" title="Grille réduite, rythme rapide — 8 pokémons max">Blitz</button>
-              <button class="gw-rule-toggle" data-value="hardcore" title="Pas d'indices de couleur sur les éliminés">Hardcore</button>
-            </div>
-          </div>
-
-          <!-- Allow multiple guesses -->
-          <div class="gw-rule-row">
-            <label class="gw-rule-label" data-lang="gw_rule_guesses">Tentatives</label>
-            <div class="gw-rule-toggle-group" id="rule-guesses">
-              <button class="gw-rule-toggle active" data-value="1">1 seule</button>
-              <button class="gw-rule-toggle" data-value="3">3 max</button>
-              <button class="gw-rule-toggle" data-value="unlimited">∞</button>
-            </div>
-          </div>
-
-          <!-- Visibility of opponent's eliminations -->
-          <div class="gw-rule-row">
-            <label class="gw-rule-label" data-lang="gw_rule_visibility">Éliminations visibles</label>
-            <div class="gw-rule-toggle-group" id="rule-visibility">
-              <button class="gw-rule-toggle active" data-value="private">Privées</button>
-              <button class="gw-rule-toggle" data-value="shared">Partagées</button>
-            </div>
-          </div>
         </div>
         <!-- END RULES PANEL -->
 
@@ -124,14 +102,14 @@
     </div>
   </div>
 
-  <!-- ══ SCREEN: WAITING (post-create, pre-game) ══ -->
+  <!-- ══ SCREEN: WAITING ══ -->
   <div class="gw-screen hidden" id="screen-waiting">
     <div class="gw-waiting-inner">
       <div class="gw-waiting-title" data-lang="gw_waiting_title">En attente de l'adversaire…</div>
       <div class="gw-room-code-wrap">
         <span class="gw-room-label" data-lang="gw_room_label">Code de salle</span>
         <span class="gw-room-code" id="display-room-code">------</span>
-        <button class="gw-copy-btn" id="btn-copy-code" title="Copy code" data-lang="gw_copy">⎘ Copier</button>
+        <button class="gw-btn gw-btn-ghost gw-btn-sm" id="btn-copy-code" data-lang="gw_copy">⎘ Copier</button>
       </div>
       <div class="gw-players-row">
         <div class="gw-player-slot" id="slot-p1">
@@ -147,16 +125,13 @@
         </div>
       </div>
 
-      <!-- Rules summary (read-only for both players in waiting) -->
+      <!-- Rules summary -->
       <div class="gw-rules-summary" id="rules-summary">
         <div class="gw-rules-summary-title">
           <span>⚙️</span>
           <span data-lang="gw_rules_summary">Règles de la partie</span>
         </div>
-        <div class="gw-rules-tags" id="rules-tags">
-          <!-- filled by JS -->
-        </div>
-        <!-- P1 can change rules until p2 joins -->
+        <div class="gw-rules-tags" id="rules-tags"></div>
         <div id="rules-edit-hint" class="gw-rules-edit-hint hidden">
           <span data-lang="gw_rules_edit_hint">Tu peux modifier les règles tant que l'adversaire n'a pas rejoint.</span>
         </div>
@@ -164,12 +139,11 @@
 
       <div class="gw-waiting-hint" id="waiting-hint" data-lang="gw_waiting_hint_default">Partage le code avec ton ami pour commencer !</div>
 
-      <!-- P1 ready button (shown once P2 has joined) -->
       <button class="gw-btn gw-btn-ready hidden" id="btn-host-ready" data-lang="gw_host_ready">Lancer la partie !</button>
     </div>
   </div>
 
-  <!-- ══ SCREEN: PICK YOUR POKÉMON ══ -->
+  <!-- ══ SCREEN: PICK ══ -->
   <div class="gw-screen hidden" id="screen-pick">
     <div class="gw-pick-header">
       <div class="gw-pick-title" data-lang="gw_pick_title">Choisis ton Pokémon secret</div>
@@ -198,7 +172,6 @@
   <!-- ══ SCREEN: GAME ══ -->
   <div class="gw-screen hidden" id="screen-game">
 
-    <!-- Top bar: players + turn indicator -->
     <div class="gw-game-topbar">
       <div class="gw-game-player gw-game-player-me">
         <div class="gw-player-dot online"></div>
@@ -213,19 +186,14 @@
       </div>
     </div>
 
-    <!-- My secret pokemon reminder -->
     <div class="gw-secret-bar">
       <span class="gw-secret-label" data-lang="gw_secret_label">Ton Pokémon secret :</span>
       <img class="gw-secret-img" id="secret-img" src="" alt="" />
       <span class="gw-secret-name" id="secret-name"></span>
-      <!-- Guess counter (shown when guesses > 1) -->
-      <span class="gw-guess-counter hidden" id="guess-counter"></span>
     </div>
 
-    <!-- Main grid -->
     <div class="gw-grid-game" id="grid-game"></div>
 
-    <!-- Guess zone -->
     <div class="gw-guess-zone">
       <button class="gw-btn gw-btn-guess" id="btn-open-guess" data-lang="gw_guess_btn">🎯 Faire une supposition</button>
     </div>
@@ -238,7 +206,7 @@
       <div class="gw-modal-title" data-lang="gw_modal_guess_title">Quel est le Pokémon de ton adversaire ?</div>
       <div class="gw-modal-grid" id="modal-grid"></div>
       <div class="gw-modal-actions">
-        <button class="gw-btn gw-btn-secondary" id="btn-cancel-guess" data-lang="gw_cancel">Annuler</button>
+        <button class="gw-btn gw-btn-ghost" id="btn-cancel-guess" data-lang="gw_cancel">Annuler</button>
         <button class="gw-btn gw-btn-primary" id="btn-confirm-guess" disabled data-lang="gw_confirm_guess">Confirmer</button>
       </div>
     </div>
@@ -272,7 +240,7 @@
             <span class="gw-htp-num">2</span>
             <div>
               <strong data-lang="gw_htp_step2_title">Configure les règles (hôte uniquement)</strong>
-              <p data-lang="gw_htp_step2_desc">L'hôte choisit la taille de la grille, le pool de Pokémon, le mode de jeu et le nombre de tentatives avant de lancer la partie.</p>
+              <p data-lang="gw_htp_step2_desc">L'hôte choisit le pool de Pokémon (Unite ou Global) et la taille de la grille avant de lancer la partie.</p>
             </div>
           </div>
           <div class="gw-htp-step">
@@ -293,7 +261,7 @@
             <span class="gw-htp-num">5</span>
             <div>
               <strong data-lang="gw_htp_step5_title">Fais ta supposition</strong>
-              <p data-lang="gw_htp_step5_desc">Quand tu penses avoir trouvé, clique sur "Faire une supposition". Selon les règles, tu peux avoir 1, 3 ou un nombre illimité de tentatives.</p>
+              <p data-lang="gw_htp_step5_desc">Quand tu penses avoir trouvé, clique sur "Faire une supposition". Le premier à trouver le Pokémon de l'adversaire gagne !</p>
             </div>
           </div>
         </div>
@@ -309,6 +277,8 @@
   </div>
 
   <script src="scripts/navbar.js"></script>
-  <script src="scripts/guesswho/guesswho.js" type="module"></script>
+  <script src="scripts/guesswho/guesswho.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>lucide.createIcons();</script>
 </body>
 </html>

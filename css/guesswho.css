@@ -233,16 +233,6 @@ h1::after {
   border-color: rgba(159,83,236,0.45);
   color: var(--violet);
 }
-.gw-rule-toggle[data-value="blitz"].active {
-  background: var(--yellow-dim);
-  border-color: rgba(255,215,64,0.4);
-  color: var(--yellow);
-}
-.gw-rule-toggle[data-value="hardcore"].active {
-  background: var(--red-dim);
-  border-color: rgba(239,83,80,0.4);
-  color: var(--red);
-}
 
 /* ── Inputs ── */
 .gw-input {
@@ -281,31 +271,39 @@ h1::after {
   letter-spacing: 0.04em;
 }
 
-/* ── Buttons ── */
+/* ══════════════════════════════════════════════
+   BUTTONS — aligned with home.css .tool-btn
+   ══════════════════════════════════════════════ */
 .gw-btn {
   font-family: 'Exo 2', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  padding: 10px 28px;
   border-radius: var(--radius-sm);
   border: 1px solid transparent;
   cursor: pointer;
-  padding: 10px 20px;
-  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.1s, box-shadow 0.2s;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
 }
 .gw-btn:active { transform: scale(0.97); }
 
+/* Primary — blue, matches home.css .tool-btn */
 .gw-btn-primary {
-  background: var(--blue);
-  color: var(--bg);
-  border-color: var(--blue);
+  background: var(--blue-dim);
+  color: var(--blue);
+  border-color: rgba(79,195,247,0.4);
 }
 .gw-btn-primary:hover {
-  background: #7ed6fb;
-  border-color: #7ed6fb;
-  box-shadow: 0 0 20px rgba(79,195,247,0.35);
+  background: rgba(79,195,247,0.22);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(79,195,247,0.2);
 }
 .gw-btn-primary:disabled {
   background: var(--surface-3);
@@ -313,51 +311,59 @@ h1::after {
   color: var(--text-dim);
   cursor: not-allowed;
   box-shadow: none;
+  transform: none;
 }
 
-.gw-btn-secondary {
-  background: var(--surface-3);
+/* Ghost — neutral, matches home.css .tool-btn--ghost */
+.gw-btn-ghost {
+  background: transparent;
+  color: var(--text-dim);
   border-color: var(--border-md);
-  color: var(--text-mid);
 }
-.gw-btn-secondary:hover { background: var(--surface-4); color: var(--text); }
+.gw-btn-ghost:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  border-color: rgba(255,255,255,0.3);
+}
 
+/* Ready — green accent */
 .gw-btn-ready {
-  background: var(--green);
-  color: #fff;
-  border-color: var(--green);
+  background: var(--green-dim);
+  color: var(--green);
+  border-color: rgba(76,175,130,0.4);
   font-size: 1rem;
   padding: 14px 36px;
-  box-shadow: 0 0 24px rgba(76,175,130,0.35);
 }
 .gw-btn-ready:hover {
-  background: #5fcf9a;
-  box-shadow: 0 0 36px rgba(76,175,130,0.55);
+  background: rgba(76,175,130,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(76,175,130,0.2);
 }
 
+/* Guess — yellow accent */
 .gw-btn-guess {
   background: var(--yellow-dim);
-  border-color: rgba(255,215,64,0.4);
   color: var(--yellow);
+  border-color: rgba(255,215,64,0.4);
   font-size: 0.95rem;
   padding: 13px 32px;
-  box-shadow: 0 0 20px rgba(255,215,64,0.15);
 }
 .gw-btn-guess:hover {
   background: rgba(255,215,64,0.22);
-  border-color: rgba(255,215,64,0.6);
-  box-shadow: 0 0 32px rgba(255,215,64,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255,215,64,0.2);
 }
 .gw-btn-guess:disabled {
   opacity: 0.4;
   cursor: not-allowed;
   box-shadow: none;
+  transform: none;
 }
 
-/* ── Small button variant ── */
+/* Small variant */
 .gw-btn-sm {
   font-size: 0.72rem;
-  padding: 6px 12px;
+  padding: 6px 14px;
   letter-spacing: 0.08em;
 }
 
@@ -404,21 +410,6 @@ h1::after {
   color: var(--blue);
   text-shadow: 0 0 24px rgba(79,195,247,0.4);
 }
-.gw-copy-btn {
-  background: var(--blue-dim);
-  border: 1px solid rgba(79,195,247,0.3);
-  border-radius: var(--radius-sm);
-  color: var(--blue);
-  font-family: 'Exo 2', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-.gw-copy-btn:hover { background: rgba(79,195,247,0.22); color: #fff; }
 
 .gw-players-row {
   display: flex;
@@ -515,11 +506,8 @@ h1::after {
   background: var(--surface-3);
   color: var(--text-mid);
 }
-.gw-rule-tag.tag-blue   { background: var(--blue-dim); border-color: rgba(79,195,247,0.35); color: var(--blue); }
-.gw-rule-tag.tag-violet { background: rgba(159,83,236,0.15); border-color: rgba(159,83,236,0.35); color: var(--violet); }
-.gw-rule-tag.tag-yellow { background: var(--yellow-dim); border-color: rgba(255,215,64,0.35); color: var(--yellow); }
-.gw-rule-tag.tag-red    { background: var(--red-dim); border-color: rgba(239,83,80,0.35); color: var(--red); }
-.gw-rule-tag.tag-green  { background: var(--green-dim); border-color: rgba(76,175,130,0.35); color: var(--green); }
+.gw-rule-tag.tag-blue   { background: var(--blue-dim);             border-color: rgba(79,195,247,0.35);  color: var(--blue); }
+.gw-rule-tag.tag-violet { background: rgba(159,83,236,0.15);       border-color: rgba(159,83,236,0.35);  color: var(--violet); }
 
 .gw-rules-edit-hint {
   font-family: 'Exo 2', sans-serif;
@@ -627,7 +615,7 @@ h1::after {
 }
 .gw-poke-card.selected .gw-poke-name { color: var(--blue); }
 
-/* Loading state for global mode */
+/* Loading state */
 .gw-grid-pick.loading,
 .gw-grid-game.loading {
   display: flex;
@@ -746,17 +734,6 @@ h1::after {
   color: #fff;
   letter-spacing: 0.04em;
 }
-.gw-guess-counter {
-  font-family: 'Exo 2', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--yellow);
-  background: var(--yellow-dim);
-  border: 1px solid rgba(255,215,64,0.3);
-  border-radius: 20px;
-  padding: 3px 10px;
-}
 
 /* Game grid */
 .gw-grid-game {
@@ -766,7 +743,6 @@ h1::after {
   max-width: 900px;
   margin: 0 auto 1.5rem;
 }
-/* Bigger grids auto-adjust columns */
 .gw-grid-game.cols-8 { grid-template-columns: repeat(8, 1fr); }
 .gw-grid-game.cols-4 { grid-template-columns: repeat(4, 1fr); }
 
@@ -796,7 +772,6 @@ h1::after {
   pointer-events: none;
   transition: opacity 0.25s, filter 0.25s;
 }
-/* Smaller image for large grids */
 .gw-grid-game.cols-8 .gw-game-card img { width: 52px; height: 52px; }
 
 .gw-game-card .gw-poke-name {
@@ -820,11 +795,6 @@ h1::after {
   opacity: 0.18;
   filter: grayscale(1);
 }
-/* Hardcore mode: no dim, just X mark */
-.gw-game-card.eliminated.hardcore-hide img {
-  opacity: 0.5;
-  filter: none;
-}
 .gw-game-card.eliminated .gw-poke-name {
   color: var(--text-dim);
   opacity: 0.5;
@@ -839,12 +809,6 @@ h1::after {
   font-weight: 900;
   color: rgba(239,83,80,0.5);
   pointer-events: none;
-}
-/* Shared eliminations: opponent's eliminations shown in blue */
-.gw-game-card.elim-shared::after {
-  color: rgba(79,195,247,0.4);
-  content: '~';
-  font-size: 1.6rem;
 }
 
 /* Guess zone */
@@ -989,9 +953,7 @@ h1::after {
 }
 
 /* ── How to play modal ── */
-.gw-modal-howtoplay {
-  max-width: 560px;
-}
+.gw-modal-howtoplay { max-width: 560px; }
 .gw-htp-body {
   display: flex;
   flex-direction: column;
@@ -1062,10 +1024,6 @@ h1::after {
 @keyframes gw-slideup {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes gw-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(79,195,247,0.4); }
-  50%       { box-shadow: 0 0 0 6px rgba(79,195,247,0); }
 }
 
 /* ── Scrollbar ── */

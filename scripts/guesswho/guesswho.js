@@ -82,7 +82,7 @@ async function loadStrings() {
   const saved = localStorage.getItem('gw-lang') || (navigator.language?.startsWith('en') ? 'en' : 'fr');
   GW.lang = saved || 'fr';
   try {
-    const res = await fetch(`data/lang/${GW.lang}.json`);
+    const res = await fetch(`lang/${GW.lang}.json`);
     GW.strings = await res.json();
   } catch {
     GW.strings = {};
