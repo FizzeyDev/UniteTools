@@ -742,3 +742,48 @@ body.sidebar-hidden {
     justify-content: center;
   }
 }
+/* ═══════════════════════════════════════
+   THEME TOGGLE BUTTON
+═══════════════════════════════════════ */
+
+.theme-toggle-btn {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 6px 8px;
+  color: #3a5558;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(255,215,64,0.1);
+  border-color: rgba(255,215,64,0.25);
+  color: #ffd740;
+}
+
+.theme-toggle-btn svg,
+.theme-toggle-btn i,
+.theme-toggle-btn [data-lucide] {
+  width: 14px !important;
+  height: 14px !important;
+  stroke: currentColor !important;
+  fill: none !important;
+  stroke-width: 1.75 !important;
+}
+
+/* Light mode overrides */
+body.light-mode .theme-toggle-btn {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.08);
+  color: #7a9ea1;
+}
+
+body.light-mode .theme-toggle-btn:hover {
+  background: rgba(196,127,0,0.1);
+  border-color: rgba(196,127,0,0.3);
+  color: #c47f00;
+}

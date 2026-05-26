@@ -1,0 +1,211 @@
+/* ═══════════════════════════════════════
+   css/theme.css — Light Mode Overrides
+   Ajouter APRÈS tous les autres <link> CSS
+═══════════════════════════════════════ */
+
+body.light-mode {
+  /* ── Palette ── */
+  --bg:           #f0f4f5;
+  --surface:      #ffffff;
+  --surface-2:    #e8f0f1;
+  --surface-3:    #d8e6e8;
+  --surface-4:    #c8dade;
+  --border:       rgba(0,0,0,0.09);
+  --border-md:    rgba(0,0,0,0.15);
+
+  /* Accents inchangés (on garde la charte graphique) */
+  --violet:       #8040d4;
+  --violet-dim:   rgba(128,64,212,0.12);
+  --orange:       #e08800;
+  --orange-dim:   rgba(224,136,0,0.12);
+  --blue:         #0a95c8;
+  --blue-dim:     rgba(10,149,200,0.10);
+  --blue-glow:    rgba(10,149,200,0.20);
+  --green:        #2e8f64;
+  --green-dim:    rgba(46,143,100,0.12);
+  --red:          #d32f2f;
+  --red-dim:      rgba(211,47,47,0.10);
+  --yellow:       #c47f00;
+  --yellow-dim:   rgba(196,127,0,0.12);
+
+  /* Texte */
+  --text:         #1a2e30;
+  --text-dim:     #5a7577;
+  --text-mid:     #3d6366;
+
+  /* Ombres */
+  --shadow-lg:    0 8px 32px rgba(0,0,0,0.12);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.08);
+  --shadow-sm:    0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* ── Sidebar ── */
+body.light-mode .sidebar {
+  background: #ffffff;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.10), 1px 0 0 rgba(0,0,0,0.06);
+}
+
+body.light-mode .sidebar-content {
+  scrollbar-color: #c8dade transparent;
+}
+
+body.light-mode .sidebar ul li.nav-title {
+  color: #9ab8bb;
+}
+
+body.light-mode .sidebar ul li.nav-title::after {
+  background: linear-gradient(90deg, rgba(0,0,0,0.08), transparent);
+}
+
+body.light-mode .sidebar ul li a {
+  color: #4a7275;
+  background: rgba(0,0,0,0.025);
+  border-color: rgba(0,0,0,0.05);
+}
+
+body.light-mode .sidebar ul li a:hover {
+  color: #0a95c8;
+  background: rgba(10,149,200,0.07);
+  border-color: rgba(10,149,200,0.18);
+}
+
+body.light-mode .sidebar ul li a.active {
+  color: #c47f00;
+  background: linear-gradient(90deg, rgba(224,136,0,0.08), rgba(255,120,48,0.04));
+  border-color: rgba(224,136,0,0.2);
+}
+
+body.light-mode .sb-icon {
+  background: rgba(0,0,0,0.05);
+  border-right-color: rgba(0,0,0,0.06);
+}
+
+body.light-mode .useful-links {
+  border-top-color: rgba(0,0,0,0.07);
+}
+
+body.light-mode .useful-links-title {
+  color: #9ab8bb;
+}
+
+body.light-mode .useful-link {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.07);
+}
+
+body.light-mode .useful-link:hover {
+  background: rgba(0,0,0,0.06);
+  border-color: rgba(10,149,200,0.18);
+}
+
+body.light-mode .useful-link-name { color: #2a4547; }
+body.light-mode .useful-link-desc { color: #7a9ea1; }
+body.light-mode .useful-link-arrow { color: #9ab8bb; }
+
+body.light-mode .lang-switch {
+  border-top-color: rgba(0,0,0,0.07);
+  background: rgba(0,0,0,0.04);
+}
+
+body.light-mode .hide-sidebar-btn {
+  color: #9ab8bb;
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.08);
+}
+
+body.light-mode .hide-sidebar-btn:hover {
+  background: rgba(10,149,200,0.1);
+  border-color: rgba(10,149,200,0.25);
+  color: #0a95c8;
+}
+
+body.light-mode .sidebar-mini {
+  background: #ffffff;
+}
+
+body.light-mode .sidebar-mini-icon {
+  color: #9ab8bb;
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.07);
+}
+
+body.light-mode .sidebar-mini-icon:hover {
+  background: rgba(10,149,200,0.1);
+  border-color: rgba(10,149,200,0.25);
+  color: #0a95c8;
+}
+
+body.light-mode .sidebar-mini-icon.active {
+  background: rgba(224,136,0,0.1);
+  border-color: rgba(224,136,0,0.25);
+  color: #c47f00;
+}
+
+body.light-mode .sidebar-mini-sep {
+  background: rgba(0,0,0,0.08);
+}
+
+body.light-mode .sidebar-mini-footer {
+  background: rgba(0,0,0,0.04);
+  border-top-color: rgba(0,0,0,0.07);
+}
+
+body.light-mode .sidebar-mini-icon[title]:hover::after {
+  background: #ffffff;
+  border-color: rgba(10,149,200,0.25);
+  color: #1a2e30;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+/* ── Toggle button mobile ── */
+body.light-mode .toggle-sidebar-btn {
+  background: rgba(240,244,245,0.95);
+  border-color: rgba(10,149,200,0.25);
+  color: #0a95c8;
+}
+
+/* ── Grille de fond ── */
+body.light-mode::before {
+  background-image:
+    linear-gradient(rgba(10,149,200,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10,149,200,0.04) 1px, transparent 1px);
+}
+
+/* ── Theme toggle button ── */
+.theme-toggle-btn {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 6px 8px;
+  color: #3a5558;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(255,215,64,0.1);
+  border-color: rgba(255,215,64,0.25);
+  color: #ffd740;
+}
+
+body.light-mode .theme-toggle-btn {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.10);
+  color: #7a9ea1;
+}
+
+body.light-mode .theme-toggle-btn:hover {
+  background: rgba(196,127,0,0.1);
+  border-color: rgba(196,127,0,0.3);
+  color: #c47f00;
+}
+
+/* ── Scrollbar ── */
+body.light-mode ::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+}

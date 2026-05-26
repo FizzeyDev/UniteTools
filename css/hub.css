@@ -153,3 +153,19 @@
   color: #7dd9f9;
 }
  
+.hub-card--guesswho {
+  border-color: rgba(76,175,130,0.2);
+}
+.hub-card--guesswho:hover {
+  border-color: rgba(76,175,130,0.55);
+  box-shadow: 0 12px 48px rgba(76,175,130,0.15);
+}
+.hub-card--guesswho .hub-card-glow {
+  background: radial-gradient(circle, rgba(76,175,130,0.6) 0%, transparent 70%);
+}
+
+.hub-badge--who {
+  background: var(--green-dim);
+  color: #6ee7b2;
+  border: 1px solid rgba(76,175,130,0.35);
+}

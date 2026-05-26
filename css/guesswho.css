@@ -65,6 +65,9 @@ body::before {
 
 /* ── Top bar ── */
 .gw-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 0.8rem;
 }
 .gw-back-btn {
@@ -87,6 +90,11 @@ body::before {
   color: var(--blue);
   border-color: rgba(79,195,247,0.4);
   background: var(--blue-dim);
+}
+.gw-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* ── Header ── */
@@ -122,9 +130,9 @@ h1::after {
 /* ── Cards (lobby) ── */
 .gw-lobby-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
-  max-width: 720px;
+  max-width: 820px;
   margin: 0 auto;
 }
 .gw-card {
@@ -154,6 +162,86 @@ h1::after {
   font-size: 0.82rem;
   color: var(--text-dim);
   line-height: 1.5;
+}
+
+/* ── Rules Panel ── */
+.gw-rules-panel {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.gw-rules-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.gw-rule-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.gw-rule-label {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+.gw-rule-toggle-group {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.gw-rule-toggle {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-md);
+  background: var(--surface-4);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.gw-rule-toggle:hover {
+  background: var(--surface-2);
+  color: var(--text-mid);
+}
+.gw-rule-toggle.active {
+  background: var(--blue-dim);
+  border-color: rgba(79,195,247,0.45);
+  color: var(--blue);
+}
+.gw-rule-toggle[data-value="global"].active {
+  background: rgba(159,83,236,0.15);
+  border-color: rgba(159,83,236,0.45);
+  color: var(--violet);
+}
+.gw-rule-toggle[data-value="blitz"].active {
+  background: var(--yellow-dim);
+  border-color: rgba(255,215,64,0.4);
+  color: var(--yellow);
+}
+.gw-rule-toggle[data-value="hardcore"].active {
+  background: var(--red-dim);
+  border-color: rgba(239,83,80,0.4);
+  color: var(--red);
 }
 
 /* ── Inputs ── */
@@ -260,6 +348,18 @@ h1::after {
   border-color: rgba(255,215,64,0.6);
   box-shadow: 0 0 32px rgba(255,215,64,0.3);
 }
+.gw-btn-guess:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ── Small button variant ── */
+.gw-btn-sm {
+  font-size: 0.72rem;
+  padding: 6px 12px;
+  letter-spacing: 0.08em;
+}
 
 /* ── Waiting screen ── */
 .gw-waiting-inner {
@@ -269,7 +369,7 @@ h1::after {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 28px;
+  gap: 24px;
 }
 .gw-waiting-title {
   font-family: 'Exo 2', sans-serif;
@@ -375,6 +475,59 @@ h1::after {
   font-family: 'Exo 2', sans-serif;
 }
 
+/* ── Rules summary (waiting screen) ── */
+.gw-rules-summary {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+.gw-rules-summary-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.gw-rules-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.gw-rule-tag {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border-md);
+  background: var(--surface-3);
+  color: var(--text-mid);
+}
+.gw-rule-tag.tag-blue   { background: var(--blue-dim); border-color: rgba(79,195,247,0.35); color: var(--blue); }
+.gw-rule-tag.tag-violet { background: rgba(159,83,236,0.15); border-color: rgba(159,83,236,0.35); color: var(--violet); }
+.gw-rule-tag.tag-yellow { background: var(--yellow-dim); border-color: rgba(255,215,64,0.35); color: var(--yellow); }
+.gw-rule-tag.tag-red    { background: var(--red-dim); border-color: rgba(239,83,80,0.35); color: var(--red); }
+.gw-rule-tag.tag-green  { background: var(--green-dim); border-color: rgba(76,175,130,0.35); color: var(--green); }
+
+.gw-rules-edit-hint {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  letter-spacing: 0.03em;
+}
+
 /* ── Pick screen ── */
 .gw-pick-header {
   text-align: center;
@@ -424,12 +577,12 @@ h1::after {
   border-color: transparent;
 }
 
-/* ── Pick grid (24 pokemon, 6×4) ── */
+/* ── Pick grid ── */
 .gw-grid-pick {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
-  max-width: 780px;
+  max-width: 900px;
   margin: 0 auto 1.5rem;
 }
 .gw-poke-card {
@@ -473,6 +626,19 @@ h1::after {
   line-height: 1.2;
 }
 .gw-poke-card.selected .gw-poke-name { color: var(--blue); }
+
+/* Loading state for global mode */
+.gw-grid-pick.loading,
+.gw-grid-game.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: var(--text-dim);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+}
 
 /* Pick confirm bar */
 .gw-pick-confirm {
@@ -558,6 +724,7 @@ h1::after {
   padding: 8px 16px;
   margin-bottom: 1.2rem;
   width: fit-content;
+  flex-wrap: wrap;
 }
 .gw-secret-label {
   font-family: 'Exo 2', sans-serif;
@@ -579,8 +746,19 @@ h1::after {
   color: #fff;
   letter-spacing: 0.04em;
 }
+.gw-guess-counter {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--yellow);
+  background: var(--yellow-dim);
+  border: 1px solid rgba(255,215,64,0.3);
+  border-radius: 20px;
+  padding: 3px 10px;
+}
 
-/* Game grid (24 pokemon, 6×4) */
+/* Game grid */
 .gw-grid-game {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -588,6 +766,10 @@ h1::after {
   max-width: 900px;
   margin: 0 auto 1.5rem;
 }
+/* Bigger grids auto-adjust columns */
+.gw-grid-game.cols-8 { grid-template-columns: repeat(8, 1fr); }
+.gw-grid-game.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
 .gw-game-card {
   background: var(--surface-2);
   border: 1px solid var(--border);
@@ -614,6 +796,9 @@ h1::after {
   pointer-events: none;
   transition: opacity 0.25s, filter 0.25s;
 }
+/* Smaller image for large grids */
+.gw-grid-game.cols-8 .gw-game-card img { width: 52px; height: 52px; }
+
 .gw-game-card .gw-poke-name {
   font-family: 'Exo 2', sans-serif;
   font-size: 0.62rem;
@@ -625,7 +810,7 @@ h1::after {
   transition: color 0.25s;
 }
 
-/* Eliminated state — crossed out, dimmed */
+/* Eliminated state */
 .gw-game-card.eliminated {
   border-color: var(--border);
   background: var(--surface);
@@ -634,6 +819,11 @@ h1::after {
 .gw-game-card.eliminated img {
   opacity: 0.18;
   filter: grayscale(1);
+}
+/* Hardcore mode: no dim, just X mark */
+.gw-game-card.eliminated.hardcore-hide img {
+  opacity: 0.5;
+  filter: none;
 }
 .gw-game-card.eliminated .gw-poke-name {
   color: var(--text-dim);
@@ -650,12 +840,20 @@ h1::after {
   color: rgba(239,83,80,0.5);
   pointer-events: none;
 }
+/* Shared eliminations: opponent's eliminations shown in blue */
+.gw-game-card.elim-shared::after {
+  color: rgba(79,195,247,0.4);
+  content: '~';
+  font-size: 1.6rem;
+}
 
 /* Guess zone */
 .gw-guess-zone {
   display: flex;
   justify-content: center;
   padding: 0.5rem 0 1rem;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 /* ── Modal ── */
@@ -790,63 +988,7 @@ h1::after {
   letter-spacing: 0.04em;
 }
 
-/* ── Animations ── */
-@keyframes gw-fadein {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-@keyframes gw-slideup {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes gw-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(79,195,247,0.4); }
-  50%       { box-shadow: 0 0 0 6px rgba(79,195,247,0); }
-}
-
-/* ── Scrollbar ── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 3px; }
-
-/* ── Responsive ── */
-@media (max-width: 860px) {
-  body { margin-left: 0; padding: 1rem 0.75rem 2rem; }
-  .gw-grid-pick, .gw-grid-game, .gw-modal-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  .gw-game-topbar { flex-direction: column; gap: 10px; }
-  .gw-game-player { min-width: unset; justify-content: center; }
-  .gw-turn-banner { width: 100%; }
-}
-@media (max-width: 480px) {
-  h1 { font-size: 1.6rem; }
-  .gw-grid-pick, .gw-grid-game, .gw-modal-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .gw-room-code { font-size: 1.4rem; letter-spacing: 0.15em; }
-}
-
-.gw-top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.8rem;
-}
-.gw-top-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* ── Small button variant ── */
-.gw-btn-sm {
-  font-size: 0.72rem;
-  padding: 6px 12px;
-  letter-spacing: 0.08em;
-}
-
-/* ── How to Play modal ── */
+/* ── How to play modal ── */
 .gw-modal-howtoplay {
   max-width: 560px;
 }
@@ -910,4 +1052,42 @@ h1::after {
 .gw-htp-tip span:first-child {
   flex-shrink: 0;
   font-size: 1rem;
+}
+
+/* ── Animations ── */
+@keyframes gw-fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes gw-slideup {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes gw-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(79,195,247,0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(79,195,247,0); }
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 3px; }
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  body { margin-left: 0; padding: 1rem 0.75rem 2rem; }
+  .gw-grid-pick, .gw-grid-game, .gw-modal-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .gw-game-topbar { flex-direction: column; gap: 10px; }
+  .gw-game-player { min-width: unset; justify-content: center; }
+  .gw-turn-banner { width: 100%; }
+  .gw-rule-row { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 480px) {
+  h1 { font-size: 1.6rem; }
+  .gw-grid-pick, .gw-grid-game, .gw-modal-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .gw-room-code { font-size: 1.4rem; letter-spacing: 0.15em; }
 }
