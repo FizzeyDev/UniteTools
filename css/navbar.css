@@ -1,7 +1,3 @@
-/* ═══════════════════════════════════════
-   BODY — décalage selon l'état sidebar
-═══════════════════════════════════════ */
-
 body {
   margin-left: 250px;
   transition: margin-left 0.3s ease;
@@ -11,10 +7,6 @@ body.sidebar-hidden {
   margin-left: 54px;
 }
 
-/* ═══════════════════════════════════════
-   SIDEBAR — conteneur principal
-═══════════════════════════════════════ */
-
 .sidebar {
   position: fixed;
   top: 0;
@@ -22,7 +14,7 @@ body.sidebar-hidden {
   width: 250px;
   height: 100vh;
   background: #0b1618;
-  color: #fff;
+  color: var(--text-bright);
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
@@ -163,10 +155,6 @@ body.sidebar-hidden {
   border-radius: 1px;
 }
 
-/* ═══════════════════════════════════════
-   NAV LINKS — style bouton fort
-═══════════════════════════════════════ */
-
 .sidebar ul li a {
   display: flex;
   align-items: center;
@@ -274,10 +262,6 @@ body.sidebar-hidden {
   transition: opacity 0.2s ease, max-width 0.3s ease;
   max-width: 160px;
 }
-
-/* ═══════════════════════════════════════
-   USEFUL LINKS
-═══════════════════════════════════════ */
 
 .useful-links {
   flex-shrink: 0;
@@ -425,12 +409,8 @@ body.sidebar-hidden {
   transform: translate(2px, -2px);
 }
 
-.useful-link:hover .useful-link-name { color: #fff; }
+.useful-link:hover .useful-link-name { color: var(--text-bright); }
 .useful-link:hover .useful-link-desc { color: #4fc3f7; }
-
-/* ═══════════════════════════════════════
-   LANG SWITCH + FOOTER
-═══════════════════════════════════════ */
 
 .lang-switch {
   flex-shrink: 0;
@@ -542,10 +522,6 @@ body.sidebar-hidden {
   fill: none !important;
   display: block;
 }
-
-/* ═══════════════════════════════════════
-   ÉTAT MINI (.sidebar.hidden)
-═══════════════════════════════════════ */
 
 .sidebar.hidden {
   width: 54px;
@@ -698,10 +674,6 @@ body.sidebar-hidden {
 
 @keyframes tooltipFade { to { opacity: 1; } }
 
-/* ═══════════════════════════════════════
-   RESPONSIVE — Mobile
-═══════════════════════════════════════ */
-
 @media (max-width: 768px) {
   body { margin-left: 0 !important; }
 
@@ -742,9 +714,6 @@ body.sidebar-hidden {
     justify-content: center;
   }
 }
-/* ═══════════════════════════════════════
-   THEME TOGGLE BUTTON
-═══════════════════════════════════════ */
 
 .theme-toggle-btn {
   background: rgba(255,255,255,0.04);

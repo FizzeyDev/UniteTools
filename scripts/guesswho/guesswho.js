@@ -42,11 +42,8 @@ const POKEAPI_SPRITE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master
 
 // ── Default rules ────────────────────────────────────────────────────────────
 const DEFAULT_RULES = {
-  pool:       'unite',   // 'unite' | 'global'
-  gridSize:   24,        // 12 | 24 | 32 | 48
-  gameMode:   'classic', // 'classic' | 'blitz' | 'hardcore'
-  guesses:    '1',       // '1' | '3' | 'unlimited'
-  visibility: 'private', // 'private' | 'shared'
+  pool:     'unite', // 'unite' | 'global'
+  gridSize: 24,      // 12 | 24 | 32 | 48
 };
 
 // ── State ───────────────────────────────────────────────────────────────────
@@ -58,54 +55,18 @@ const GW = {
   isHost: false,
   sseConn: null,
 
-  // Game data
   board: [],
   mySecret: null,
   eliminated: new Set(),
-  sharedEliminated: new Set(), // opponent's eliminations if visibility=shared
   guessSelected: null,
-  guessesUsed: 0,
 
   phase: 'lobby',
   firstPlayer: null,
-  allPokemon: [],    // full list from local JSON (Unite)
-  globalPokemon: [], // loaded from PokeAPI when needed
+  allPokemon: [],
+  globalPokemon: [],
 
   rules: { ...DEFAULT_RULES },
-
-  lang: 'fr',
-  strings: {},
 };
-
-// ── i18n ─────────────────────────────────────────────────────────────────────
-async function loadStrings() {
-  const saved = localStorage.getItem('gw-lang') || (navigator.language?.startsWith('en') ? 'en' : 'fr');
-  GW.lang = saved || 'fr';
-  try {
-    const res = await fetch(`lang/${GW.lang}.json`);
-    GW.strings = await res.json();
-  } catch {
-    GW.strings = {};
-  }
-  applyStrings();
-}
-
-function t(key, fallback = '') {
-  return GW.strings[key] || fallback;
-}
-
-function applyStrings() {
-  document.querySelectorAll('[data-lang]').forEach(el => {
-    const key = el.getAttribute('data-lang');
-    const val = t(key);
-    if (val) el.textContent = val;
-  });
-  document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
-    const key = el.getAttribute('data-lang-placeholder');
-    const val = t(key);
-    if (val) el.placeholder = val;
-  });
-}
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 function generateCode() {
@@ -141,16 +102,14 @@ function showScreen(name) {
 }
 
 function spriteSrc(pokemon) {
-  if (pokemon.source === 'global') {
-    return `${POKEAPI_SPRITE}${pokemon.id}.png`;
-  }
+  if (pokemon.source === 'global') return `${POKEAPI_SPRITE}${pokemon.id}.png`;
   return `${SPRITES_PATH}${pokemon.file}`;
 }
 
 // ── Rules UI ─────────────────────────────────────────────────────────────────
 function initRulesPanel() {
-  const groups = ['rule-pool', 'rule-grid-size', 'rule-game-mode', 'rule-guesses', 'rule-visibility'];
-  const ruleKeys = ['pool', 'gridSize', 'gameMode', 'guesses', 'visibility'];
+  const groups   = ['rule-pool', 'rule-grid-size'];
+  const ruleKeys = ['pool', 'gridSize'];
 
   groups.forEach((groupId, i) => {
     const group = el(groupId);
@@ -163,18 +122,6 @@ function initRulesPanel() {
         let val = btn.dataset.value;
         if (key === 'gridSize') val = parseInt(val);
         GW.rules[key] = val;
-
-        // Blitz forces gridSize ≤ 8
-        if (key === 'gameMode' && val === 'blitz') {
-          GW.rules.gridSize = 8;
-          setActiveToggle('rule-grid-size', '8');
-          // Make sure 8 option exists; if not, use 12
-          const btn8 = el('rule-grid-size')?.querySelector('[data-value="8"]');
-          if (!btn8) {
-            GW.rules.gridSize = 12;
-            setActiveToggle('rule-grid-size', '12');
-          }
-        }
       });
     });
   });
@@ -197,39 +144,23 @@ function applyRulesToUI(rules) {
   GW.rules = { ...DEFAULT_RULES, ...rules };
   setActiveToggle('rule-pool', GW.rules.pool);
   setActiveToggle('rule-grid-size', String(GW.rules.gridSize));
-  setActiveToggle('rule-game-mode', GW.rules.gameMode);
-  setActiveToggle('rule-guesses', GW.rules.guesses);
-  setActiveToggle('rule-visibility', GW.rules.visibility);
 }
 
 function renderRulesTags(rules) {
   const tagsEl = el('rules-tags');
   if (!tagsEl) return;
   const r = { ...DEFAULT_RULES, ...rules };
-
   const poolLabel = r.pool === 'global' ? '🌍 Global' : '⚡ Unite';
   const poolClass = r.pool === 'global' ? 'tag-violet' : 'tag-blue';
-
-  const modeLabel = { classic: 'Classique', blitz: '⚡ Blitz', hardcore: '💀 Hardcore' }[r.gameMode] || r.gameMode;
-  const modeClass = { classic: '', blitz: 'tag-yellow', hardcore: 'tag-red' }[r.gameMode] || '';
-
-  const guessLabel = r.guesses === 'unlimited' ? '∞ tentatives' : `${r.guesses} tentative${r.guesses > 1 ? 's' : ''}`;
-
-  const visLabel = r.visibility === 'shared' ? '👁 Elim. partagées' : '🔒 Privé';
-  const visClass = r.visibility === 'shared' ? 'tag-green' : '';
-
   tagsEl.innerHTML = `
     <span class="gw-rule-tag ${poolClass}">${poolLabel}</span>
     <span class="gw-rule-tag tag-blue">${r.gridSize} pokémons</span>
-    <span class="gw-rule-tag ${modeClass}">${modeLabel}</span>
-    <span class="gw-rule-tag tag-yellow">${guessLabel}</span>
-    <span class="gw-rule-tag ${visClass}">${visLabel}</span>
   `;
 }
 
 // ── Load pokemon data ────────────────────────────────────────────────────────
 async function loadPokemon() {
-  if (GW.allPokemon.length > 0) return; // already loaded
+  if (GW.allPokemon.length > 0) return;
   const res  = await fetch('data/pokemons.json');
   const data = await res.json();
   const seen = new Set();
@@ -240,16 +171,11 @@ async function loadPokemon() {
   });
 }
 
-// ── Load global Pokémon from PokéAPI ─────────────────────────────────────────
 async function loadGlobalPokemon() {
   if (GW.globalPokemon.length > 0) return;
-
-  // Fetch first 898 Pokémon (Gen 1–8, broad enough, no forms)
-  // We use the species list to avoid duplicates from forms
   const count = 898;
   const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${count}&offset=0`);
   const data = await res.json();
-
   GW.globalPokemon = data.results.map((p, i) => ({
     name: capitalise(p.name.replace(/-/g, ' ')),
     id: i + 1,
@@ -277,7 +203,7 @@ function getRoomFromURL() {
 
 // ── Create room ───────────────────────────────────────────────────────────────
 async function createRoom() {
-  const name = el('create-name').value.trim() || t('gw_default_player1', 'Player 1');
+  const name = el('create-name').value.trim() || 'Player 1';
   GW.myName  = name;
   GW.myRole  = 'p1';
   GW.isHost  = true;
@@ -288,12 +214,10 @@ async function createRoom() {
   const rules = getRulesFromUI();
   GW.rules = rules;
 
-  const pool   = await getPokemonPool();
-  const count  = rules.gameMode === 'blitz' ? Math.min(rules.gridSize, 8) : rules.gridSize;
-  const seed   = roomId.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-  GW.board     = seededShuffle(pool, seed).slice(0, count);
+  const pool = await getPokemonPool();
+  const seed = roomId.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  GW.board   = seededShuffle(pool, seed).slice(0, rules.gridSize);
 
-  // Serialize board: for global mode store id, for unite store name
   const boardData = GW.board.map(p => p.source === 'global'
     ? { name: p.name, id: p.id, source: 'global' }
     : { name: p.name }
@@ -304,8 +228,8 @@ async function createRoom() {
     status:    'waiting',
     board:     boardData,
     rules:     rules,
-    p1:        { name, ready: false, secretName: null, guessesUsed: 0, eliminations: [] },
-    p2:        { name: null, ready: false, secretName: null, guessesUsed: 0, eliminations: [] },
+    p1:        { name, ready: false, secretName: null },
+    p2:        { name: null, ready: false, secretName: null },
     firstPlayer: null,
     guesses:   [],
     result:    null,
@@ -328,7 +252,7 @@ async function createRoom() {
 async function joinRoom(code, name) {
   const roomId = code.trim().toUpperCase();
   if (!roomId || roomId.length !== 6) {
-    el('join-error').textContent = t('gw_error_invalid_code', 'Enter a valid 6-character code.');
+    el('join-error').textContent = 'Entre un code à 6 caractères valide.';
     return;
   }
 
@@ -336,33 +260,32 @@ async function joinRoom(code, name) {
   try {
     data = await dbGet(`guesswho/rooms/${roomId}`);
   } catch {
-    el('join-error').textContent = t('gw_error_server', 'Unable to reach server.');
+    el('join-error').textContent = 'Impossible de contacter le serveur.';
     return;
   }
 
   if (!data) {
-    el('join-error').textContent = t('gw_error_not_found', 'Room not found.');
+    el('join-error').textContent = 'Salle introuvable.';
     return;
   }
   if (data.status !== 'waiting') {
-    el('join-error').textContent = t('gw_error_in_progress', 'This room is already in progress.');
+    el('join-error').textContent = 'Cette salle est déjà en cours.';
     return;
   }
   if (data.p2?.name) {
-    el('join-error').textContent = t('gw_error_full', 'Room is full.');
+    el('join-error').textContent = 'La salle est pleine.';
     return;
   }
 
-  GW.myName  = name || t('gw_default_player2', 'Player 2');
+  GW.myName  = name || 'Player 2';
   GW.myRole  = 'p2';
   GW.isHost  = false;
   GW.roomId  = roomId;
   GW.rules   = { ...DEFAULT_RULES, ...(data.rules || {}) };
 
-  // Rebuild board
   GW.board = _rebuildBoard(data.board);
 
-  await dbUpdate(`guesswho/rooms/${roomId}/p2`, { name: GW.myName, ready: false, secretName: null, guessesUsed: 0, eliminations: [] });
+  await dbUpdate(`guesswho/rooms/${roomId}/p2`, { name: GW.myName, ready: false, secretName: null });
 
   _subscribe(roomId);
   history.replaceState({}, '', `?room=${roomId}`);
@@ -397,7 +320,7 @@ async function tryAutoJoin() {
   if (!data || data.status === 'expired') return false;
 
   if (data.status === 'waiting' && !data.p2?.name) {
-    const name = prompt(t('gw_join_prompt', 'Enter your name to join the room:')) || t('gw_default_player2', 'Player 2');
+    const name = prompt('Entre ton pseudo pour rejoindre la salle :') || 'Player 2';
     el('join-name').value = name;
     el('join-code').value = code;
     await joinRoom(code, name);
@@ -418,22 +341,18 @@ function _onRoomUpdate(data) {
   if (!data || typeof data !== 'object') return;
 
   if (data.p1 && data.p2) {
-    const opp  = GW.myRole === 'p1' ? data.p2 : data.p1;
-    const mine = GW.myRole === 'p1' ? data.p1 : data.p2;
-    GW.oppName = opp.name || '';
+    GW.oppName = (GW.myRole === 'p1' ? data.p2 : data.p1).name || '';
 
     if (GW.phase === 'waiting') {
       el('slot-p1-name').textContent = data.p1.name || '—';
-      el('slot-p2-name').textContent = data.p2.name || t('gw_waiting_dots', 'En attente…');
+      el('slot-p2-name').textContent = data.p2.name || 'En attente…';
       if (data.p2.name) el('dot-p2').classList.add('online');
 
-      // Update rules display when host updates them (p2 sees changes live)
       if (data.rules) {
         renderRulesTags(data.rules);
         if (!GW.isHost) GW.rules = { ...DEFAULT_RULES, ...data.rules };
       }
 
-      // Show host-ready button once p2 joined (host only, waiting phase)
       if (GW.isHost && data.p2.name && data.status === 'waiting') {
         show('btn-host-ready');
       }
@@ -442,9 +361,9 @@ function _onRoomUpdate(data) {
     // Ready badges
     const b1 = el('badge-p1'), b2 = el('badge-p2');
     if (b1 && b2) {
-      b1.textContent = data.p1.ready ? t('gw_ready', '✓ Ready') : '';
+      b1.textContent = data.p1.ready ? '✓ Prêt' : '';
       b1.classList.toggle('show', !!data.p1.ready);
-      b2.textContent = data.p2.ready ? t('gw_ready', '✓ Ready') : '';
+      b2.textContent = data.p2.ready ? '✓ Prêt' : '';
       b2.classList.toggle('show', !!data.p2.ready);
     }
 
@@ -452,6 +371,8 @@ function _onRoomUpdate(data) {
     const dotMe  = el('pick-dot-me');
     const dotOpp = el('pick-dot-opp');
     if (dotMe && dotOpp) {
+      const mine = GW.myRole === 'p1' ? data.p1 : data.p2;
+      const opp  = GW.myRole === 'p1' ? data.p2 : data.p1;
       dotMe.classList.toggle('chosen', !!mine.ready);
       dotOpp.classList.toggle('chosen', !!opp.ready);
     }
@@ -463,53 +384,25 @@ function _onRoomUpdate(data) {
         dbUpdate(`guesswho/rooms/${GW.roomId}`, { status: 'game', firstPlayer: first }).catch(() => {});
       }
     }
-
-    // Shared eliminations: sync opponent's grid
-    if (GW.phase === 'game' && GW.rules.visibility === 'shared') {
-      const oppElims = opp.eliminations || [];
-      GW.sharedEliminated = new Set(oppElims);
-      _applySharedEliminations();
-    }
   }
 
-  // Status transitions
-  if (data.status === 'pick' && GW.phase === 'waiting') {
-    _enterPick(data);
-  }
-
-  if (data.status === 'game' && GW.phase === 'pick') {
-    _enterGame(data);
-  }
-
-  // Guess event
-  if (data.guesses && GW.phase === 'game') {
-    const guesses = Array.isArray(data.guesses) ? data.guesses : Object.values(data.guesses);
-    const myGuesses = guesses.filter(g => g.by === GW.myRole);
-    GW.guessesUsed = myGuesses.length;
-    _updateGuessCounter();
-  }
-
-  // Result
-  if (data.result && GW.phase !== 'end') {
-    _showResult(data.result);
-  }
+  if (data.status === 'pick' && GW.phase === 'waiting') _enterPick(data);
+  if (data.status === 'game' && GW.phase === 'pick')    _enterGame(data);
+  if (data.result && GW.phase !== 'end')                _showResult(data.result);
 }
 
-// ── Host ready button (in waiting screen) ─────────────────────────────────────
+// ── Host ready button ──────────────────────────────────────────────────────────
 el('btn-host-ready').addEventListener('click', async () => {
   if (!GW.isHost) return;
   el('btn-host-ready').disabled = true;
-  el('btn-host-ready').textContent = t('gw_launching', 'Lancement…');
+  el('btn-host-ready').textContent = 'Lancement…';
 
-  // Push latest rules before launching
   const rules = getRulesFromUI();
   GW.rules = rules;
 
-  // Rebuild board with latest rules (in case host changed them after waiting)
-  const pool  = await getPokemonPool();
-  const count = rules.gameMode === 'blitz' ? Math.min(rules.gridSize, 8) : rules.gridSize;
-  const seed  = GW.roomId.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-  GW.board    = seededShuffle(pool, seed).slice(0, count);
+  const pool = await getPokemonPool();
+  const seed = GW.roomId.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  GW.board   = seededShuffle(pool, seed).slice(0, rules.gridSize);
 
   const boardData = GW.board.map(p => p.source === 'global'
     ? { name: p.name, id: p.id, source: 'global' }
@@ -525,27 +418,21 @@ el('btn-host-ready').addEventListener('click', async () => {
 
 // ── Pick phase ─────────────────────────────────────────────────────────────────
 function _enterPick(data) {
-  if (data.board && GW.board.length === 0) {
-    GW.board = _rebuildBoard(data.board);
-  }
+  if (data.board && GW.board.length === 0) GW.board = _rebuildBoard(data.board);
   if (data.rules) GW.rules = { ...DEFAULT_RULES, ...data.rules };
 
   showScreen('pick');
   el('pick-me-name').textContent  = GW.myName;
-  el('pick-opp-name').textContent = GW.oppName || t('gw_opponent', 'Opponent');
+  el('pick-opp-name').textContent = GW.oppName || 'Adversaire';
   _renderPickGrid();
 }
 
 function _renderPickGrid() {
   const grid = el('grid-pick');
   grid.innerHTML = '';
-
-  // Dynamic columns for large grids
   const count = GW.board.length;
   grid.style.gridTemplateColumns = count > 32
     ? 'repeat(8, 1fr)'
-    : count > 24
-    ? 'repeat(6, 1fr)'
     : count === 12
     ? 'repeat(4, 1fr)'
     : 'repeat(6, 1fr)';
@@ -553,8 +440,7 @@ function _renderPickGrid() {
   GW.board.forEach((poke, i) => {
     const card = document.createElement('div');
     card.className = 'gw-poke-card';
-    const img = _makeImg(poke);
-    card.appendChild(img);
+    card.appendChild(_makeImg(poke));
     const nameEl = document.createElement('div');
     nameEl.className = 'gw-poke-name';
     nameEl.textContent = poke.name;
@@ -568,11 +454,7 @@ function _makeImg(poke) {
   const img = document.createElement('img');
   img.alt = poke.name;
   img.loading = 'lazy';
-  if (poke.source === 'global') {
-    img.src = `${POKEAPI_SPRITE}${poke.id}.png`;
-  } else {
-    img.src = spriteSrc(poke);
-  }
+  img.src = poke.source === 'global' ? `${POKEAPI_SPRITE}${poke.id}.png` : spriteSrc(poke);
   return img;
 }
 
@@ -589,10 +471,11 @@ function _selectSecret(idx, card, poke) {
 el('btn-ready').addEventListener('click', async () => {
   if (!GW.mySecret) return;
   el('btn-ready').disabled = true;
-  el('btn-ready').textContent = t('gw_waiting_opp', 'En attente…');
+  el('btn-ready').textContent = 'En attente…';
 
-  const roleData = { ready: true, secretName: GW.mySecret.name, guessesUsed: 0, eliminations: [] };
-  await dbUpdate(`guesswho/rooms/${GW.roomId}/${GW.myRole}`, roleData).catch(() => {});
+  await dbUpdate(`guesswho/rooms/${GW.roomId}/${GW.myRole}`, {
+    ready: true, secretName: GW.mySecret.name,
+  }).catch(() => {});
 
   if (GW.isHost) {
     try {
@@ -611,10 +494,9 @@ el('btn-ready').addEventListener('click', async () => {
 
 // ── Game phase ─────────────────────────────────────────────────────────────────
 function _enterGame(data) {
-  GW.firstPlayer  = data.firstPlayer;
-  GW.eliminated   = new Set();
-  GW.sharedEliminated = new Set();
-  GW.guessesUsed  = 0;
+  GW.firstPlayer = data.firstPlayer;
+  GW.eliminated  = new Set();
+  GW.guessSelected = null;
 
   if (data.rules) GW.rules = { ...DEFAULT_RULES, ...data.rules };
   if (data.board && GW.board.length === 0) GW.board = _rebuildBoard(data.board);
@@ -624,26 +506,17 @@ function _enterGame(data) {
   el('game-me-name').textContent  = GW.myName;
   el('game-opp-name').textContent = GW.oppName;
 
-  // Secret
   const secretImg = el('secret-img');
   secretImg.src = GW.mySecret.source === 'global'
     ? `${POKEAPI_SPRITE}${GW.mySecret.id}.png`
     : spriteSrc(GW.mySecret);
   el('secret-name').textContent = GW.mySecret.name;
 
-  // Guess counter
-  _updateGuessCounter();
   _updateTurnBanner();
-
-  // Grid columns based on size
   _setGridCols(el('grid-game'), GW.board.length);
   _setGridCols(el('modal-grid'), GW.board.length);
-
   _renderGameGrid();
   _renderModalGrid();
-
-  // Disable guess btn if out of guesses
-  _checkGuessButtonState();
 }
 
 function _setGridCols(gridEl, count) {
@@ -657,33 +530,7 @@ function _setGridCols(gridEl, count) {
 
 function _updateTurnBanner() {
   const firstName = GW.firstPlayer === GW.myRole ? GW.myName : GW.oppName;
-  el('turn-text').textContent = t('gw_asks_first', '{name} asks first').replace('{name}', firstName);
-}
-
-function _updateGuessCounter() {
-  const counterEl = el('guess-counter');
-  if (!counterEl) return;
-  const maxGuesses = GW.rules.guesses;
-  if (maxGuesses === 'unlimited') {
-    counterEl.classList.add('hidden');
-    return;
-  }
-  const max = parseInt(maxGuesses);
-  const remaining = max - GW.guessesUsed;
-  counterEl.textContent = `${remaining} tentative${remaining > 1 ? 's' : ''} restante${remaining > 1 ? 's' : ''}`;
-  counterEl.classList.remove('hidden');
-  if (remaining <= 0) counterEl.style.color = 'var(--red)';
-}
-
-function _checkGuessButtonState() {
-  const btn = el('btn-open-guess');
-  if (!btn) return;
-  if (GW.rules.guesses !== 'unlimited') {
-    const max = parseInt(GW.rules.guesses);
-    btn.disabled = GW.guessesUsed >= max;
-  } else {
-    btn.disabled = false;
-  }
+  el('turn-text').textContent = `${firstName} commence`;
 }
 
 function _renderGameGrid() {
@@ -693,8 +540,7 @@ function _renderGameGrid() {
     const card = document.createElement('div');
     card.className = 'gw-game-card';
     card.id = `game-card-${i}`;
-    const img = _makeImg(poke);
-    card.appendChild(img);
+    card.appendChild(_makeImg(poke));
     const nameEl = document.createElement('div');
     nameEl.className = 'gw-poke-name';
     nameEl.textContent = poke.name;
@@ -710,30 +556,10 @@ function _toggleEliminate(idx) {
   if (GW.eliminated.has(idx)) {
     GW.eliminated.delete(idx);
     card.classList.remove('eliminated');
-    if (GW.rules.gameMode === 'hardcore') card.classList.remove('hardcore-hide');
   } else {
     GW.eliminated.add(idx);
     card.classList.add('eliminated');
-    if (GW.rules.gameMode === 'hardcore') card.classList.add('hardcore-hide');
   }
-
-  // Push eliminations to Firebase if visibility is shared
-  if (GW.rules.visibility === 'shared') {
-    const elimArr = [...GW.eliminated];
-    dbUpdate(`guesswho/rooms/${GW.roomId}/${GW.myRole}`, { eliminations: elimArr }).catch(() => {});
-  }
-}
-
-function _applySharedEliminations() {
-  GW.board.forEach((_, i) => {
-    const card = el(`game-card-${i}`);
-    if (!card) return;
-    if (GW.sharedEliminated.has(i) && !GW.eliminated.has(i)) {
-      card.classList.add('elim-shared');
-    } else {
-      card.classList.remove('elim-shared');
-    }
-  });
 }
 
 // ── Guess modal ────────────────────────────────────────────────────────────────
@@ -745,8 +571,7 @@ function _renderModalGrid() {
     const card = document.createElement('div');
     card.className = 'gw-modal-card' + (GW.eliminated.has(i) ? ' eliminated-hint' : '');
     card.id = `modal-card-${i}`;
-    const img = _makeImg(poke);
-    card.appendChild(img);
+    card.appendChild(_makeImg(poke));
     const nameEl = document.createElement('div');
     nameEl.className = 'gw-poke-name';
     nameEl.textContent = poke.name;
@@ -764,7 +589,6 @@ function _selectGuess(idx) {
 }
 
 el('btn-open-guess').addEventListener('click', () => {
-  if (el('btn-open-guess').disabled) return;
   GW.guessSelected = null;
   el('btn-confirm-guess').disabled = true;
   _renderModalGrid();
@@ -777,71 +601,35 @@ el('btn-confirm-guess').addEventListener('click', async () => {
   if (GW.guessSelected === null) return;
   hide('modal-guess');
 
-  const guessedPoke = GW.board[GW.guessSelected];
-  const oppRole = GW.myRole === 'p1' ? 'p2' : 'p1';
+  const guessedPoke  = GW.board[GW.guessSelected];
+  const oppRole      = GW.myRole === 'p1' ? 'p2' : 'p1';
   const oppSecretName = await dbGet(`guesswho/rooms/${GW.roomId}/${oppRole}/secretName`);
-  const correct = guessedPoke.name === oppSecretName;
+  const correct      = guessedPoke.name === oppSecretName;
 
-  GW.guessesUsed++;
-  _updateGuessCounter();
-  _checkGuessButtonState();
+  const guessEntry = { by: GW.myRole, pokemon: guessedPoke.name, correct, ts: Date.now() };
 
-  // Update my guess count
-  await dbUpdate(`guesswho/rooms/${GW.roomId}/${GW.myRole}`, { guessesUsed: GW.guessesUsed }).catch(() => {});
-
-  // Push guess to list
-  const guessEntry = {
-    by: GW.myRole,
-    pokemon: guessedPoke.name,
-    correct,
-    ts: Date.now(),
-  };
-
-  // Check if this ends the game
-  const maxGuesses = GW.rules.guesses;
-  const isLastGuess = maxGuesses !== 'unlimited' && GW.guessesUsed >= parseInt(maxGuesses);
-
-  if (correct || isLastGuess) {
-    // Determine result
-    const winner = correct ? GW.myRole : oppRole;
+  if (correct) {
     await dbUpdate(`guesswho/rooms/${GW.roomId}`, {
       [`guesses/${Date.now()}`]: guessEntry,
       result: {
-        winner,
+        winner: GW.myRole,
         guesser: GW.myRole,
         guessedPokemon: guessedPoke.name,
-        correct,
-        guessesUsed: GW.guessesUsed,
+        correct: true,
       },
     });
   } else {
-    // Wrong guess but still has attempts left
     await dbUpdate(`guesswho/rooms/${GW.roomId}`, {
       [`guesses/${Date.now()}`]: guessEntry,
+      result: {
+        winner: oppRole,
+        guesser: GW.myRole,
+        guessedPokemon: guessedPoke.name,
+        correct: false,
+      },
     });
-    // Show wrong guess toast
-    _showWrongGuessToast(guessedPoke.name, GW.rules.guesses === 'unlimited' ? null : parseInt(GW.rules.guesses) - GW.guessesUsed);
   }
 });
-
-function _showWrongGuessToast(name, remaining) {
-  const existing = document.querySelector('.gw-toast');
-  if (existing) existing.remove();
-  const toast = document.createElement('div');
-  toast.className = 'gw-toast';
-  const remStr = remaining !== null ? ` — ${remaining} tentative${remaining > 1 ? 's' : ''} restante${remaining > 1 ? 's' : ''}` : '';
-  toast.textContent = `❌ ${name} n'est pas le bon Pokémon${remStr}`;
-  toast.style.cssText = `
-    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
-    background: var(--surface-3); border: 1px solid var(--red);
-    color: var(--red); font-family: 'Exo 2', sans-serif;
-    font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em;
-    padding: 10px 20px; border-radius: 8px; z-index: 999;
-    animation: gw-fadein 0.2s ease;
-  `;
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
-}
 
 // ── Result ─────────────────────────────────────────────────────────────────────
 function _showResult(result) {
@@ -851,7 +639,7 @@ function _showResult(result) {
   const iGuessed = result.guesser === GW.myRole;
 
   el('result-icon').textContent  = iWon ? '🏆' : '😢';
-  el('result-title').textContent = iWon ? t('gw_you_win', 'Tu as gagné !') : t('gw_you_lose', 'Tu as perdu !');
+  el('result-title').textContent = iWon ? 'Tu as gagné !' : 'Tu as perdu !';
 
   const oppRole = GW.myRole === 'p1' ? 'p2' : 'p1';
 
@@ -861,12 +649,12 @@ function _showResult(result) {
     let subText = '';
     if (iGuessed) {
       subText = result.correct
-        ? t('gw_result_correct_guess', 'Tu as trouvé {name} !').replace('{name}', name)
-        : t('gw_result_wrong_guess', 'Tu as deviné {guess}, mais c\'était {name}.').replace('{guess}', result.guessedPokemon).replace('{name}', name);
+        ? `Tu as trouvé ${name} !`
+        : `Tu as deviné ${result.guessedPokemon}, mais c'était ${name}.`;
     } else {
       subText = result.correct
-        ? t('gw_result_opp_correct', '{opp} a trouvé ton Pokémon : {name}.').replace('{opp}', GW.oppName).replace('{name}', GW.mySecret?.name)
-        : t('gw_result_opp_wrong', '{opp} s\'est trompé — ton Pokémon était {name}.').replace('{opp}', GW.oppName).replace('{name}', GW.mySecret?.name);
+        ? `${GW.oppName} a trouvé ton Pokémon : ${GW.mySecret?.name}.`
+        : `${GW.oppName} s'est trompé — ton Pokémon était ${GW.mySecret?.name}.`;
     }
     el('result-sub').textContent = subText;
 
@@ -875,7 +663,7 @@ function _showResult(result) {
       const img = _makeImg(oppPoke);
       img.style.cssText = 'width:56px;height:56px;object-fit:contain;';
       const span = document.createElement('span');
-      span.innerHTML = `${t('gw_opp_pokemon', "Pokémon de l'adversaire :")} <strong>${oppPoke.name}</strong>`;
+      span.innerHTML = `Pokémon de l'adversaire : <strong>${oppPoke.name}</strong>`;
       revealEl.innerHTML = '';
       revealEl.appendChild(img);
       revealEl.appendChild(span);
@@ -885,7 +673,7 @@ function _showResult(result) {
   show('modal-result');
 }
 
-// Play again
+// ── Play again ─────────────────────────────────────────────────────────────────
 el('btn-play-again').addEventListener('click', () => {
   if (GW.sseConn) GW.sseConn.close();
   GW.roomId = null;
@@ -893,9 +681,7 @@ el('btn-play-again').addEventListener('click', () => {
   GW.mySecret = null;
   GW.board = [];
   GW.eliminated = new Set();
-  GW.sharedEliminated = new Set();
   GW.firstPlayer = null;
-  GW.guessesUsed = 0;
   hide('modal-result');
   hide('btn-host-ready');
   history.replaceState({}, '', location.pathname);
@@ -906,8 +692,8 @@ el('btn-play-again').addEventListener('click', () => {
 el('btn-copy-code').addEventListener('click', () => {
   const code = el('display-room-code').textContent;
   navigator.clipboard.writeText(code).then(() => {
-    el('btn-copy-code').textContent = t('gw_copied', '✓ Copié !');
-    setTimeout(() => { el('btn-copy-code').textContent = t('gw_copy', '⎘ Copier'); }, 2000);
+    el('btn-copy-code').textContent = '✓ Copié !';
+    setTimeout(() => { el('btn-copy-code').textContent = '⎘ Copier'; }, 2000);
   });
 });
 
@@ -922,31 +708,14 @@ el('modal-howtoplay')?.addEventListener('click', e => {
 function _updateWaitingHint() {
   const code = GW.roomId;
   if (GW.isHost) {
-    el('waiting-hint').textContent = t('gw_waiting_hint_host', `Partage ce code avec ton ami : ${code}`).replace('{code}', code);
+    el('waiting-hint').textContent = `Partage ce code avec ton ami : ${code}`;
     show('rules-edit-hint');
   } else {
-    el('waiting-hint').textContent = t('gw_waiting_hint_guest', 'Connecté ! En attente du lancement par l\'hôte…');
+    el('waiting-hint').textContent = "Connecté ! En attente du lancement par l'hôte…";
   }
 }
 
-// ── Navbar fix: load via fetch if script injection fails ──────────────────────
-function _initNavbar() {
-  const container = document.getElementById('navbar-container');
-  if (!container) return;
-
-  // If navbar.js already populated the container, do nothing
-  if (container.innerHTML.trim()) return;
-
-  // Try fetching the navbar HTML snippet if it exists
-  fetch('components/navbar.html')
-    .then(r => r.ok ? r.text() : null)
-    .then(html => {
-      if (html) container.innerHTML = html;
-    })
-    .catch(() => {});
-}
-
-// ── Lobby button events ────────────────────────────────────────────────────────
+// ── Lobby buttons ──────────────────────────────────────────────────────────────
 el('btn-create').addEventListener('click', async () => {
   el('btn-create').disabled = true;
   try {
@@ -964,12 +733,12 @@ el('btn-join').addEventListener('click', async () => {
   el('join-error').textContent = '';
   try {
     await loadPokemon();
-    const name = el('join-name').value.trim() || t('gw_default_player2', 'Player 2');
+    const name = el('join-name').value.trim() || 'Player 2';
     const code = el('join-code').value.trim().toUpperCase();
     await joinRoom(code, name);
   } catch (e) {
     console.error(e);
-    el('join-error').textContent = t('gw_error_generic', 'Something went wrong.');
+    el('join-error').textContent = 'Une erreur est survenue.';
   } finally {
     el('btn-join').disabled = false;
   }
@@ -981,12 +750,8 @@ el('join-code').addEventListener('input', e => {
 
 // ── Boot ───────────────────────────────────────────────────────────────────────
 (async () => {
-  await loadStrings();
   await loadPokemon();
   initRulesPanel();
-  _initNavbar();
   const autoJoined = await tryAutoJoin();
-  if (!autoJoined) {
-    showScreen('lobby');
-  }
+  if (!autoJoined) showScreen('lobby');
 })();

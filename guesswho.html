@@ -28,7 +28,7 @@
     <div class="gw-top-bar">
       <a href="unite-dle.html" class="gw-back-btn" data-lang="gw_back">← Retour</a>
       <div class="gw-top-actions">
-        <button class="gw-btn gw-btn-ghost gw-btn-sm" id="btn-how-to-play" data-lang="gw_how_to_play">Comment jouer ?</button>
+        <button class="gw-btn gw-btn-sm" id="btn-how-to-play" data-lang="gw_how_to_play">Comment jouer ?</button>
       </div>
     </div>
 
@@ -109,7 +109,7 @@
       <div class="gw-room-code-wrap">
         <span class="gw-room-label" data-lang="gw_room_label">Code de salle</span>
         <span class="gw-room-code" id="display-room-code">------</span>
-        <button class="gw-btn gw-btn-ghost gw-btn-sm" id="btn-copy-code" data-lang="gw_copy">⎘ Copier</button>
+        <button class="gw-copy-btn" id="btn-copy-code" title="Copy code" data-lang="gw_copy">⎘ Copier</button>
       </div>
       <div class="gw-players-row">
         <div class="gw-player-slot" id="slot-p1">
@@ -138,7 +138,6 @@
       </div>
 
       <div class="gw-waiting-hint" id="waiting-hint" data-lang="gw_waiting_hint_default">Partage le code avec ton ami pour commencer !</div>
-
       <button class="gw-btn gw-btn-ready hidden" id="btn-host-ready" data-lang="gw_host_ready">Lancer la partie !</button>
     </div>
   </div>
@@ -171,7 +170,6 @@
 
   <!-- ══ SCREEN: GAME ══ -->
   <div class="gw-screen hidden" id="screen-game">
-
     <div class="gw-game-topbar">
       <div class="gw-game-player gw-game-player-me">
         <div class="gw-player-dot online"></div>
@@ -197,7 +195,6 @@
     <div class="gw-guess-zone">
       <button class="gw-btn gw-btn-guess" id="btn-open-guess" data-lang="gw_guess_btn">🎯 Faire une supposition</button>
     </div>
-
   </div>
 
   <!-- ══ MODAL: Guess selector ══ -->
@@ -206,7 +203,7 @@
       <div class="gw-modal-title" data-lang="gw_modal_guess_title">Quel est le Pokémon de ton adversaire ?</div>
       <div class="gw-modal-grid" id="modal-grid"></div>
       <div class="gw-modal-actions">
-        <button class="gw-btn gw-btn-ghost" id="btn-cancel-guess" data-lang="gw_cancel">Annuler</button>
+        <button class="gw-btn" id="btn-cancel-guess" data-lang="gw_cancel">Annuler</button>
         <button class="gw-btn gw-btn-primary" id="btn-confirm-guess" disabled data-lang="gw_confirm_guess">Confirmer</button>
       </div>
     </div>
@@ -240,7 +237,7 @@
             <span class="gw-htp-num">2</span>
             <div>
               <strong data-lang="gw_htp_step2_title">Configure les règles (hôte uniquement)</strong>
-              <p data-lang="gw_htp_step2_desc">L'hôte choisit le pool de Pokémon (Unite ou Global) et la taille de la grille avant de lancer la partie.</p>
+              <p data-lang="gw_htp_step2_desc">L'hôte choisit le pool de Pokémon et la taille de la grille avant de lancer la partie.</p>
             </div>
           </div>
           <div class="gw-htp-step">
@@ -261,7 +258,7 @@
             <span class="gw-htp-num">5</span>
             <div>
               <strong data-lang="gw_htp_step5_title">Fais ta supposition</strong>
-              <p data-lang="gw_htp_step5_desc">Quand tu penses avoir trouvé, clique sur "Faire une supposition". Le premier à trouver le Pokémon de l'adversaire gagne !</p>
+              <p data-lang="gw_htp_step5_desc">Quand tu penses avoir trouvé, clique sur "Faire une supposition". Premier à trouver le bon Pokémon gagne !</p>
             </div>
           </div>
         </div>

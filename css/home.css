@@ -1,8 +1,3 @@
-/* ═══════════════════════════════════════
-   home.css — Unite Tools Homepage
-   Aligned with main.css / tierlist.css
-═══════════════════════════════════════ */
-
 @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
 
 :root {
@@ -345,7 +340,7 @@ body::before {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #fff;
+  color: var(--text-bright);
   margin-bottom: 0.6rem;
   text-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
@@ -420,7 +415,7 @@ body::before {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #fff;
+  color: var(--text-bright);
   margin-bottom: 0.4rem;
 }
 

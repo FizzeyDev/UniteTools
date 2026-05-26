@@ -1,8 +1,3 @@
-/* ══════════════════════════════════════════════
-   SKINDLE - skindle.css
-   ══════════════════════════════════════════════ */
-
-/* ── Back button ── */
 .skindle-back-btn {
   position: absolute;
   left: 0; top: 6px;
@@ -171,7 +166,7 @@
   font-family: 'Exo 2', sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-bright);
 }
 
 /* ── Guess rows for Pokémon phase ── */

@@ -1,11 +1,6 @@
-/* ═══════════════════════════════════════
-   css/theme.css — Light Mode Overrides
-   Ajouter APRÈS tous les autres <link> CSS
-═══════════════════════════════════════ */
-
 body.light-mode {
   /* ── Palette ── */
-  --bg:           #f0f4f5;
+  --bg:           #dde6e8;
   --surface:      #ffffff;
   --surface-2:    #e8f0f1;
   --surface-3:    #d8e6e8;
@@ -208,4 +203,12 @@ body.light-mode .theme-toggle-btn:hover {
 /* ── Scrollbar ── */
 body.light-mode ::-webkit-scrollbar-thumb {
   background: var(--surface-3);
+}
+/* ── text-bright : blanc en dark, sombre en light ── */
+:root {
+  --text-bright: #ffffff;
+}
+
+body.light-mode {
+  --text-bright: #1a2e30;
 }

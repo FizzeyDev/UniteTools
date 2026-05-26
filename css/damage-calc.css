@@ -65,7 +65,7 @@ h1 {
   font-weight: 900;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text-bright);
   margin-bottom: 1.5rem;
   position: relative;
   z-index: 1;
@@ -147,7 +147,7 @@ h1::after {
   font-family: 'Exo 2', sans-serif;
   font-size: 1.3rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-bright);
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -850,7 +850,7 @@ h1::after {
   font-family: 'Exo 2', sans-serif;
   font-size: 0.78rem;
   font-weight: 900;
-  color: #fff;
+  color: var(--text-bright);
   letter-spacing: 0.04em;
   text-shadow: 0 1px 3px rgba(0,0,0,0.6);
   box-shadow: 0 2px 8px rgba(159,83,236,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
@@ -925,7 +925,7 @@ h1::after {
 .stats-card h3 {
   font-family: 'Exo 2', sans-serif;
   text-align: center;
-  color: #fff;
+  color: var(--text-bright);
   margin-bottom: 1rem;
   font-size: 1.3rem;
   font-weight: 900;
@@ -1013,7 +1013,7 @@ h1::after {
 .moves-section h3 {
   font-family: 'Exo 2', sans-serif;
   text-align: center;
-  color: #fff;
+  color: var(--text-bright);
   margin-bottom: 1.5rem;
   font-size: 1.6rem;
   font-weight: 900;
@@ -1478,7 +1478,7 @@ h1::after {
   width: 18px; height: 18px;
   border-radius: 50%;
   background: var(--red);
-  color: #fff;
+  color: var(--text-bright);
   border: none;
   font-size: 0.75rem;
   line-height: 18px;
@@ -1798,7 +1798,7 @@ h1::after {
   transition: background 0.15s, color 0.15s, transform 0.2s;
   z-index: 1;
 }
-.htu-close:hover { background: rgba(255,255,255,0.1); color: #fff; transform: scale(1.1); }
+.htu-close:hover { background: rgba(255,255,255,0.1); color: var(--text-bright); transform: scale(1.1); }
 
 .htu-header {
   padding: 1.6rem 1.6rem 1rem;
@@ -1811,7 +1811,7 @@ h1::after {
   font-family: 'Exo 2', sans-serif;
   font-size: 1.4rem;
   font-weight: 900;
-  color: #fff;
+  color: var(--text-bright);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 0.2rem;
@@ -1878,7 +1878,7 @@ h1::after {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #fff;
+  color: var(--text-bright);
 }
 
 .htu-list {
@@ -1905,10 +1905,10 @@ h1::after {
   border-radius: var(--radius-xs);
   font-family: 'Exo 2', monospace;
   font-size: 0.78rem;
-  color: #fff;
+  color: var(--text-bright);
   line-height: 1.6;
 }
-.htu-list strong { color: #fff; font-weight: 700; }
+.htu-list strong { color: var(--text-bright); font-weight: 700; }
 
 .htu-shortcuts-note { font-family: 'Rajdhani', sans-serif; font-size: 0.82rem; color: var(--text-dim); margin-bottom: 1rem; font-style: italic; }
 
@@ -1940,7 +1940,7 @@ h1::after {
   font-family: 'Exo 2', monospace;
   font-size: 0.78rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-bright);
   letter-spacing: 0.02em;
   box-shadow: 0 2px 4px rgba(0,0,0,0.4);
 }
@@ -1989,7 +1989,7 @@ h1::after {
   display: block;
   font-family: 'Courier New', monospace;
   font-size: 0.85rem;
-  color: #fff;
+  color: var(--text-bright);
   background: rgba(0,0,0,0.4);
   padding: 4px 8px;
   border-radius: var(--radius-xs);

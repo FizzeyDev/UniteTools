@@ -81,7 +81,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #fff;
+  color: var(--text-bright);
   margin-bottom: 8px;
   line-height: 1;
   text-shadow: 0 0 40px rgba(255,255,255,0.08);

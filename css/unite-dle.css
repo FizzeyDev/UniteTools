@@ -105,7 +105,7 @@ body::before {
   text-transform: uppercase;
   text-shadow: 0 0 60px rgba(79,195,247,0.2), 0 0 120px rgba(159,83,236,0.1);
 }
-.logo-unite { color: #fff; }
+.logo-unite { color: var(--text-bright); }
 .logo-dle   { color: var(--orange); }
 .udle-subtitle {
   margin-top: 8px; font-size: 0.84rem; font-weight: 600;
@@ -186,7 +186,7 @@ body::before {
 .udle-btn-restart:hover {
   background: rgba(159,83,236,0.24);
   border-color: var(--violet);
-  color: #fff;
+  color: var(--text-bright);
   transform: translateY(-2px);
   box-shadow: 0 4px 20px rgba(159,83,236,0.25);
 }
@@ -301,7 +301,7 @@ body::before {
 }
 .udle-poke-id-name {
   font-family: 'Exo 2', sans-serif;
-  font-size: 0.82rem; font-weight: 700; color: #fff;
+  font-size: 0.82rem; font-weight: 700; color: var(--text-bright);
   line-height: 1.2; overflow: hidden;
   text-overflow: ellipsis;
 }

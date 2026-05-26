@@ -312,7 +312,7 @@ strong {
   font-family: 'Exo 2', sans-serif;
   font-size: 1rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-bright);
   letter-spacing: 0.04em;
 }
 .team-role-badge {
@@ -456,7 +456,7 @@ strong {
   font-family: 'Exo 2', sans-serif;
   font-size: 0.82rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-bright);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   margin-bottom: 3px;
@@ -541,10 +541,10 @@ strong {
   letter-spacing: 0.04em;
   transition: all 0.2s;
 }
-.social-link:hover { border-color: rgba(255,255,255,0.18); color: #fff; background: var(--surface-3); transform: translateY(-2px); }
+.social-link:hover { border-color: rgba(255,255,255,0.18); color: var(--text-bright); background: var(--surface-3); transform: translateY(-2px); }
 .social-link.twitter:hover  { border-color: rgba(29,161,242,0.5); color: #1da1f2; }
 .social-link.discord:hover  { border-color: rgba(88,101,242,0.5); color: #7289da; }
-.social-link.github:hover   { border-color: rgba(255,255,255,0.4); color: #fff; }
+.social-link.github:hover   { border-color: rgba(255,255,255,0.4); color: var(--text-bright); }
 .social-link.youtube:hover  { border-color: rgba(255,0,0,0.4); color: #ff4444; }
 
 /* ── STATS BAR ── */
