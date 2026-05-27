@@ -61,8 +61,12 @@
       <div class="full-width">
         <div class="stats-bar">
           <div class="stat-item">
-            <div class="stat-number">6</div>
+            <div class="stat-number">9</div>
             <div class="stat-label" data-lang="about_stat_tools">Tools</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">4</div>
+            <div class="stat-label" data-lang="about_stat_games">Games</div>
           </div>
           <div class="stat-item">
             <div class="stat-number">1</div>
@@ -100,7 +104,7 @@
         <p class="card-body" data-lang="about_why_body">
           The competitive Pokémon Unite scene was sorely lacking dedicated tools.
           No updated online draft simulator, no damage calculator,
-          nothing to practice map control>.<br><br>
+          nothing to practice map control.<br><br>
           Unite Tools was born from that frustration. A solo project, built with passion,
           to raise the level of the entire community and beyond.
         </p>
@@ -197,7 +201,6 @@
             </div>
             <div class="team-member-desc" data-lang="about_member_tibi_desc">Carry Top</div>
           </div>
-          <!-- Pas de réseaux pour Tibi -->
         </div>
 
         <div class="team-card member">
@@ -218,6 +221,7 @@
             </a>
           </div>
         </div>
+
         <div class="team-card sub">
           <div class="team-avatar">
             <img src="assets/about/jellyman.png" alt="Jellyman"
@@ -278,59 +282,121 @@
 
       </div>
 
-      <!-- TOOLS -->
-      <div class="about-card card-yellow">
-        <span class="card-icon">🔧</span>
-        <div class="section-title" data-lang="about_tools_section">The tools</div>
-        <p class="card-title" data-lang="about_tools_title">What we offer</p>
-        <div class="tools-showcase" style="margin-top: 16px;">
-          <a href="/draft.html" class="tool-item">
-            <span class="tool-emoji">📋</span>
-            <div>
-              <div class="tool-item-name" data-lang="draft_title">Draft Simulator</div>
-              <div class="tool-item-desc" data-lang="about_tool_draft_short">Bans, picks, timer, Fearless mode &amp; multiplayer</div>
-            </div>
-          </a>
-          <a href="/map_timer.html" class="tool-item">
-            <span class="tool-emoji">⏱️</span>
-            <div>
-              <div class="tool-item-name" data-lang="map_title">Map Timer</div>
-              <div class="tool-item-desc" data-lang="about_tool_map_short">Real-time objective timers</div>
-            </div>
-          </a>
-          <a href="/damage-calc.html" class="tool-item">
-            <span class="tool-emoji">💥</span>
-            <div>
-              <div class="tool-item-name" data-lang="calc_title">Damage Calculator</div>
-              <div class="tool-item-desc" data-lang="about_tool_calc_short">Precise calculations with items, levels &amp; buffs</div>
-            </div>
-          </a>
-          <a href="/tierlist.html" class="tool-item">
-            <span class="tool-emoji">📊</span>
-            <div>
-              <div class="tool-item-name" data-lang="tierlist_title">Tier List</div>
-              <div class="tool-item-desc" data-lang="about_tool_tierlist_short">Create and share your custom tier lists</div>
-            </div>
-          </a>
-          <a href="/map.html" class="tool-item">
-            <span class="tool-emoji">🗺️</span>
-            <div>
-              <div class="tool-item-name" data-lang="map_interactive_title">Interactive Map</div>
-              <div class="tool-item-desc" data-lang="about_tool_map_interactive_short">Explore objectives, zones &amp; draft integration</div>
-            </div>
-          </a>
-          <a href="/patch-tracker.html" class="tool-item">
-            <span class="tool-emoji">📝</span>
-            <div>
-              <div class="tool-item-name" data-lang="patch_tracker_title">Patch Tracker</div>
-              <div class="tool-item-desc" data-lang="about_tool_patch_tracker_short">All patch notes with stats &amp; impact analysis</div>
-            </div>
-          </a>
+      <!-- TOOLS + GAMES (side by side) -->
+      <div class="about-card card-yellow full-width tools-games-card">
+
+        <!-- LEFT: TOOLS -->
+        <div class="tg-col">
+          <span class="card-icon">🔧</span>
+          <div class="section-title" data-lang="about_tools_section">The tools</div>
+          <p class="card-title" data-lang="about_tools_title">What we offer</p>
+          <div class="tools-showcase" style="margin-top: 16px;">
+            <a href="/draft.html" class="tool-item">
+              <span class="tool-emoji">📋</span>
+              <div>
+                <div class="tool-item-name" data-lang="draft_title">Draft Simulator</div>
+                <div class="tool-item-desc" data-lang="about_tool_draft_short">Bans, picks, timer, Fearless mode &amp; multiplayer</div>
+              </div>
+            </a>
+            <a href="/map_timer.html" class="tool-item">
+              <span class="tool-emoji">⏱️</span>
+              <div>
+                <div class="tool-item-name" data-lang="map_title">Map Timer</div>
+                <div class="tool-item-desc" data-lang="about_tool_map_short">Real-time objective timers</div>
+              </div>
+            </a>
+            <a href="/damage-calc.html" class="tool-item">
+              <span class="tool-emoji">💥</span>
+              <div>
+                <div class="tool-item-name" data-lang="calc_title">Damage Calculator</div>
+                <div class="tool-item-desc" data-lang="about_tool_calc_short">Precise calculations with items, levels &amp; buffs</div>
+              </div>
+            </a>
+            <a href="/xp-calc.html" class="tool-item">
+              <span class="tool-emoji">⚡</span>
+              <div>
+                <div class="tool-item-name" data-lang="xpcalc_title">XP Calculator</div>
+                <div class="tool-item-desc" data-lang="about_tool_xpcalc_short">Simulate XP gain &amp; find optimal farming paths</div>
+              </div>
+            </a>
+            <a href="/tierlist.html" class="tool-item">
+              <span class="tool-emoji">📊</span>
+              <div>
+                <div class="tool-item-name" data-lang="tierlist_title">Tier List</div>
+                <div class="tool-item-desc" data-lang="about_tool_tierlist_short">Create and share your custom tier lists</div>
+              </div>
+            </a>
+            <a href="/map.html" class="tool-item">
+              <span class="tool-emoji">🗺️</span>
+              <div>
+                <div class="tool-item-name" data-lang="map_interactive_title">Interactive Map</div>
+                <div class="tool-item-desc" data-lang="about_tool_map_interactive_short">Explore objectives, zones &amp; draft integration</div>
+              </div>
+            </a>
+            <a href="/patch.html" class="tool-item">
+              <span class="tool-emoji">📝</span>
+              <div>
+                <div class="tool-item-name" data-lang="patch_tracker_title">Patch Tracker</div>
+                <div class="tool-item-desc" data-lang="about_tool_patch_tracker_short">All patch notes with stats &amp; impact analysis</div>
+              </div>
+            </a>
+            <a href="/stream.html" class="tool-item">
+              <span class="tool-emoji">🖥️</span>
+              <div>
+                <div class="tool-item-name" data-lang="stream_title">Stream Overlay Tool</div>
+                <div class="tool-item-desc" data-lang="about_tool_stream_short">Custom overlays &amp; widgets for your stream</div>
+              </div>
+            </a>
+          </div>
         </div>
+
+        <!-- DIVIDER -->
+        <div class="tg-divider"></div>
+
+        <!-- RIGHT: GAMES -->
+        <div class="tg-col">
+          <span class="card-icon">🎮</span>
+          <div class="section-title" data-lang="about_games_section">The games</div>
+          <p class="card-title tg-games-title" data-lang="about_games_title">Unite Games — Daily challenges</p>
+          <p class="card-body" style="margin-bottom: 16px;" data-lang="about_games_desc">
+            A hub of daily mini-games built around the Pokémon Unite universe. New puzzles every day, solo or multiplayer.
+          </p>
+          <div class="tools-showcase tg-games-grid">
+            <a href="/pokedle.html" class="tool-item">
+              <span class="tool-emoji">🎮</span>
+              <div>
+                <div class="tool-item-name" data-lang="hub_pokedle_title">Pokédle UNITE</div>
+                <div class="tool-item-desc" data-lang="about_game_pokedle_short">Guess the daily Pokémon using role, range &amp; difficulty clues</div>
+              </div>
+            </a>
+            <a href="/skindle.html" class="tool-item">
+              <span class="tool-emoji">🔍</span>
+              <div>
+                <div class="tool-item-name" data-lang="hub_skindle_title">Skindle</div>
+                <div class="tool-item-desc" data-lang="about_game_skindle_short">Identify a zoomed-in skin — zoom out with every wrong guess</div>
+              </div>
+            </a>
+            <a href="/wordsearch.html" class="tool-item">
+              <span class="tool-emoji">🔤</span>
+              <div>
+                <div class="tool-item-name" data-lang="hub_pokesearch_title">PokéSearch</div>
+                <div class="tool-item-desc" data-lang="about_game_pokesearch_short">Find 10 hidden Pokémon in the daily word grid</div>
+              </div>
+            </a>
+            <a href="/guesswho.html" class="tool-item">
+              <span class="tool-emoji">👥</span>
+              <div>
+                <div class="tool-item-name" data-lang="hub_guesswho_title">PokéWho</div>
+                <div class="tool-item-desc" data-lang="about_game_guesswho_short">Real-time Guess Who? against a friend — pick a secret Pokémon</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
       </div>
 
       <!-- ROADMAP -->
-      <div class="about-card card-green">
+      <div class="about-card card-green full-width">
         <span class="card-icon">🗺️</span>
         <div class="section-title" data-lang="about_roadmap_section">Roadmap</div>
         <p class="card-title" data-lang="about_roadmap_title">What's coming</p>
@@ -346,7 +412,7 @@
           <div class="roadmap-item">
             <div class="roadmap-status status-wip"></div>
             <div class="roadmap-text">
-              <div class="roadmap-label" data-lang="about_road_map_draft_label">Interactive Map × (Draft & Damage Calculator)</div>
+              <div class="roadmap-label" data-lang="about_road_map_draft_label">Interactive Map x (Draft & Damage Calculator)</div>
               <div class="roadmap-sublabel" data-lang="about_road_map_draft_sub">Live integration between the map and draft simulator. Also be able to simulate 1v1 with Damage Calculator.</div>
             </div>
             <span class="roadmap-tag tag-wip" data-lang="about_tag_wip">In progress</span>
@@ -359,13 +425,43 @@
             </div>
             <span class="roadmap-tag tag-wip" data-lang="about_tag_wip">In progress</span>
           </div>
-          <div class="roadmap-item">
-            <div class="roadmap-status status-planned"></div>
-            <div class="roadmap-text">
-              <div class="roadmap-label" data-lang="about_road_patch_label">Pokemon Unite Guess Who?</div>
-              <div class="roadmap-sublabel" data-lang="about_road_patch_sub">Guess Who? game based on Pokemon Unite</div>
+        </div>
+      </div>
+
+      <!-- COMMUNITY DISCORD -->
+      <div class="about-card card-violet full-width">
+        <span class="card-icon">💬</span>
+        <div class="section-title" data-lang="about_community_section">Community</div>
+        <p class="card-title" data-lang="about_community_title">Join the Discord server</p>
+        <p class="card-body" data-lang="about_community_body">
+          The community Discord is the best place to follow the project's progress, share feedback, report bugs,
+          suggest new features, and connect with other Pokémon Unite players.<br><br>
+          It's also where I announce updates, new tools, and upcoming features before anyone else.
+        </p>
+        <div class="discord-cta-wrap">
+          <a href="#" target="_blank" class="discord-cta-btn" data-lang="about_discord_cta">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.032.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+            </svg>
+            <span data-lang="about_discord_join">Join the Discord</span>
+          </a>
+          <div class="discord-features">
+            <div class="discord-feature">
+              <span class="discord-feat-icon">📣</span>
+              <span data-lang="about_discord_feat1">Announcements &amp; updates</span>
             </div>
-            <span class="roadmap-tag tag-future" data-lang="about_tag_future">Future</span>
+            <div class="discord-feature">
+              <span class="discord-feat-icon">🐛</span>
+              <span data-lang="about_discord_feat2">Bug reports &amp; suggestions</span>
+            </div>
+            <div class="discord-feature">
+              <span class="discord-feat-icon">🏆</span>
+              <span data-lang="about_discord_feat3">Competitive discussions</span>
+            </div>
+            <div class="discord-feature">
+              <span class="discord-feat-icon">🎮</span>
+              <span data-lang="about_discord_feat4">My other projects</span>
+            </div>
           </div>
         </div>
       </div>
@@ -373,7 +469,7 @@
       <!-- CONTACT -->
       <div class="about-card card-violet full-width">
         <span class="card-icon">📬</span>
-        <div class="section-title" data-lang="about_contact_section">Contact &amp; Community</div>
+        <div class="section-title" data-lang="about_contact_section">Contact &amp; Socials</div>
         <p class="card-title" data-lang="about_contact_title">Get in touch</p>
         <p class="card-body" data-lang="about_contact_body">
           Want to collaborate? I'm available on social media.
