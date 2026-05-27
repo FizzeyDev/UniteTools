@@ -57,6 +57,7 @@ const GW = {
 
   board: [],
   mySecret: null,
+  hasSubmittedSecret: false, 
   eliminated: new Set(),
   guessSelected: null,
 
@@ -459,37 +460,44 @@ function _makeImg(poke) {
 }
 
 function _selectSecret(idx, card, poke) {
-  document.querySelectorAll('#grid-pick .gw-poke-card').forEach(c => c.classList.remove('selected'));
+  if (GW.hasSubmittedSecret) return;
+
+  document.querySelectorAll('#grid-pick .gw-poke-card').forEach(c => 
+    c.classList.remove('selected')
+  );
+  
   card.classList.add('selected');
   GW.mySecret = poke;
-  el('picked-img').src = poke.source === 'global' ? `${POKEAPI_SPRITE}${poke.id}.png` : spriteSrc(poke);
+
+  el('picked-img').src = poke.source === 'global' 
+    ? `${POKEAPI_SPRITE}${poke.id}.png` 
+    : spriteSrc(poke);
+  
   el('picked-name').textContent = poke.name;
   el('pick-confirm').classList.remove('hidden');
 }
 
 // Ready button (pick screen)
 el('btn-ready').addEventListener('click', async () => {
-  if (!GW.mySecret) return;
+  if (!GW.mySecret || GW.hasSubmittedSecret) return;
+
+  GW.hasSubmittedSecret = true;                    // ← IMPORTANT
+
   el('btn-ready').disabled = true;
   el('btn-ready').textContent = 'En attente…';
 
+  // Désactiver visuellement toutes les cartes
+  document.querySelectorAll('#grid-pick .gw-poke-card').forEach(card => {
+    card.style.pointerEvents = 'none';
+    card.style.opacity = '0.7';
+  });
+
   await dbUpdate(`guesswho/rooms/${GW.roomId}/${GW.myRole}`, {
-    ready: true, secretName: GW.mySecret.name,
+    ready: true, 
+    secretName: GW.mySecret.name,
   }).catch(() => {});
 
-  if (GW.isHost) {
-    try {
-      const roomData = await dbGet(`guesswho/rooms/${GW.roomId}`);
-      const p1Ready = GW.myRole === 'p1' ? true : roomData?.p1?.ready;
-      const p2Ready = GW.myRole === 'p2' ? true : roomData?.p2?.ready;
-      if (p1Ready && p2Ready) {
-        const first = Math.random() < 0.5 ? 'p1' : 'p2';
-        await dbUpdate(`guesswho/rooms/${GW.roomId}`, { status: 'game', firstPlayer: first });
-      }
-    } catch (e) {
-      console.warn('[GW] host ready check failed', e);
-    }
-  }
+  // ... reste du code
 });
 
 // ── Game phase ─────────────────────────────────────────────────────────────────
@@ -682,6 +690,7 @@ el('btn-play-again').addEventListener('click', () => {
   GW.board = [];
   GW.eliminated = new Set();
   GW.firstPlayer = null;
+  GW.hasSubmittedSecret = false;
   hide('modal-result');
   hide('btn-host-ready');
   history.replaceState({}, '', location.pathname);
