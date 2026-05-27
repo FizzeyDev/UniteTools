@@ -451,6 +451,24 @@ function _renderPickGrid() {
   });
 }
 
+function _pickRandom() {
+  if (GW.hasSubmittedSecret) return;
+  const idx = Math.floor(Math.random() * GW.board.length);
+  const card = document.querySelector(`#grid-pick .gw-poke-card:nth-child(${idx + 1})`);
+  if (card) {
+    // Scroll vers la carte
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Petite animation "highlight" avant sélection
+    card.classList.add('random-flash');
+    setTimeout(() => {
+      card.classList.remove('random-flash');
+      _selectSecret(idx, card, GW.board[idx]);
+    }, 600);
+  }
+}
+
+el('btn-random-pick').addEventListener('click', _pickRandom);
+
 function _makeImg(poke) {
   const img = document.createElement('img');
   img.alt = poke.name;

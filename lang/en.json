@@ -698,5 +698,6 @@
   "gw_error_not_found": "Room not found.",
   "gw_error_in_progress": "This room is already in progress.",
   "gw_error_full": "Room is full.",
-  "gw_error_generic": "Something went wrong."
+  "gw_error_generic": "Something went wrong.",
+  "gw_random_pick": "🎲 Pick randomly"
 }
