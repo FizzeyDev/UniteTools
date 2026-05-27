@@ -257,7 +257,7 @@ body.overlay-mode #app { display: none; }
   font-size: 12px;
   opacity: 0;
   transition: opacity 0.15s;
-  color: white;
+  color: var(--text-bright);
   font-weight: bold;
   cursor: pointer;
   z-index: 10;
@@ -387,7 +387,7 @@ body.overlay-mode #app { display: none; }
   font-size: 10px;
   opacity: 0;
   transition: opacity 0.15s;
-  color: white;
+  color: var(--text-bright);
   font-weight: bold;
   cursor: pointer;
   z-index: 10;
@@ -1318,7 +1318,7 @@ body.overlay-mode #app { display: none; }
   font-weight: 900;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text-bright);
   z-index: 4;
 }
 .overlay-map-item.active.rayquaza .overlay-map-badge { background: rgba(76,175,130,0.3); border-color: rgba(76,175,130,0.5); color: #b7ffd8; }

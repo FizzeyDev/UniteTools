@@ -85,7 +85,7 @@ body::before {
   font-weight: 900;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text-bright);
   text-shadow: 0 0 30px rgba(79,195,247,0.35), 0 0 60px rgba(159,83,236,0.1);
   white-space: nowrap;
 }
@@ -190,7 +190,7 @@ body::before {
   flex-shrink: 0;
 }
 .color-swatch:hover { transform: scale(1.2); }
-.color-swatch.active { border-color: #fff; transform: scale(1.15); }
+.color-swatch.active { border-color: var(--text-bright); transform: scale(1.15); }
 
 /* Stroke size */
 .stroke-select {
@@ -572,7 +572,7 @@ body::before {
   border-radius: 50%;
   background: var(--red);
   border: 1.5px solid var(--bg);
-  color: #fff;
+  color: var(--text-bright);
   font-size: 9px;
   display: none;
   align-items: center; justify-content: center;

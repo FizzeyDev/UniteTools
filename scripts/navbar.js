@@ -1,6 +1,11 @@
 let translations = {};
 let currentLang = localStorage.getItem('lang') || 'fr';
 
+// ── Appliquer le thème avant le rendu (anti-flash) ──
+if (localStorage.getItem('theme') === 'light') {
+  document.body.classList.add('light-mode');
+}
+
 if (localStorage.getItem("sidebarHidden") === null) {
   localStorage.setItem("sidebarHidden", "false");
 }
@@ -157,7 +162,38 @@ function initNavbar(basePath) {
       applyTranslations();
     }
   });
+
+  /* ── Theme toggle ── */
+  initThemeToggle();
 }
+
+/* ═══════════════════════════════════════
+   THEME TOGGLE
+═══════════════════════════════════════ */
+
+function initThemeToggle() {
+  document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+    syncThemeIcon(btn);
+    btn.addEventListener('click', () => {
+      const isLight = document.body.classList.toggle('light-mode');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      document.querySelectorAll('.theme-toggle-btn').forEach(syncThemeIcon);
+    });
+  });
+}
+
+function syncThemeIcon(btn) {
+  const isLight = document.body.classList.contains('light-mode');
+  btn.title     = isLight ? 'Dark mode' : 'Light mode';
+  btn.innerHTML = isLight
+    ? '<i data-lucide="moon"></i>'
+    : '<i data-lucide="sun"></i>';
+  if (window.lucide) lucide.createIcons({ nodes: [btn] });
+}
+
+/* ═══════════════════════════════════════
+   TRADUCTIONS
+═══════════════════════════════════════ */
 
 function loadAllTranslations(basePath) {
   Promise.all([

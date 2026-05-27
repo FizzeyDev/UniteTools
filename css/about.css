@@ -312,7 +312,7 @@ strong {
   font-family: 'Exo 2', sans-serif;
   font-size: 1rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-bright);
   letter-spacing: 0.04em;
 }
 .team-role-badge {
@@ -451,12 +451,54 @@ strong {
   background: rgba(255,215,64,0.04);
   transform: translateY(-2px);
 }
+
+/* Game cards get a blue hover tint */
+.card-blue .tool-item:hover {
+  border-color: rgba(79,195,247,0.3);
+  background: rgba(79,195,247,0.04);
+}
+
+/* ── TOOLS + GAMES SIDE BY SIDE ── */
+.tools-games-card {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.tg-col {
+  flex: 1;
+  padding: 28px;
+  min-width: 0;
+}
+
+.tg-divider {
+  width: 1px;
+  background: var(--border);
+  flex-shrink: 0;
+  margin: 20px 0;
+}
+
+/* Games column title uses blue */
+.tg-games-title { color: var(--blue) !important; }
+
+/* Games items get blue hover instead of yellow */
+.tg-games-grid .tool-item:hover {
+  border-color: rgba(79,195,247,0.3) !important;
+  background: rgba(79,195,247,0.04) !important;
+}
+
+/* Gradient top bar spans yellow→blue */
+.tools-games-card::before {
+  background: linear-gradient(90deg, var(--yellow) 0%, var(--blue) 55%, transparent 100%) !important;
+}
+
 .tool-emoji { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
 .tool-item-name {
   font-family: 'Exo 2', sans-serif;
   font-size: 0.82rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-bright);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   margin-bottom: 3px;
@@ -519,6 +561,65 @@ strong {
 .tag-soon    { background: var(--blue-dim); color: var(--blue); }
 .tag-future  { background: var(--surface-3); color: var(--text-dim); }
 
+/* ── DISCORD CTA ── */
+.discord-cta-wrap {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.discord-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(88,101,242,0.45);
+  background: rgba(88,101,242,0.12);
+  color: #7289da;
+  text-decoration: none;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  align-self: flex-start;
+}
+.discord-cta-btn:hover {
+  background: rgba(88,101,242,0.22);
+  border-color: rgba(88,101,242,0.7);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(88,101,242,0.25);
+  color: #9ba8ff;
+}
+
+.discord-features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.discord-feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.83rem;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.discord-feat-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
 /* ── CONTACT / LINKS ── */
 .links-row {
   display: flex;
@@ -541,16 +642,16 @@ strong {
   letter-spacing: 0.04em;
   transition: all 0.2s;
 }
-.social-link:hover { border-color: rgba(255,255,255,0.18); color: #fff; background: var(--surface-3); transform: translateY(-2px); }
+.social-link:hover { border-color: rgba(255,255,255,0.18); color: var(--text-bright); background: var(--surface-3); transform: translateY(-2px); }
 .social-link.twitter:hover  { border-color: rgba(29,161,242,0.5); color: #1da1f2; }
 .social-link.discord:hover  { border-color: rgba(88,101,242,0.5); color: #7289da; }
-.social-link.github:hover   { border-color: rgba(255,255,255,0.4); color: #fff; }
+.social-link.github:hover   { border-color: rgba(255,255,255,0.4); color: var(--text-bright); }
 .social-link.youtube:hover  { border-color: rgba(255,0,0,0.4); color: #ff4444; }
 
 /* ── STATS BAR ── */
 .stats-bar {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1px;
   background: var(--border);
   border: 1px solid var(--border);
@@ -609,7 +710,16 @@ strong {
   .about-content { padding: 32px 24px 60px; grid-template-columns: 1fr; gap: 20px; }
   .stats-bar { grid-template-columns: repeat(2, 1fr); }
   .tools-showcase { grid-template-columns: 1fr; }
+  .discord-features { grid-template-columns: 1fr; }
   .about-hero h1 { font-size: 2rem; }
+  .tools-games-card {
+    flex-direction: column;
+  }
+  .tg-divider {
+    width: auto;
+    height: 1px;
+    margin: 0 20px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -618,4 +728,5 @@ strong {
   .stats-bar { grid-template-columns: repeat(2, 1fr); }
   .stat-number { font-size: 1.4rem; }
   .team-card { flex-direction: column; align-items: flex-start; }
+  .discord-cta-btn { width: 100%; }
 }

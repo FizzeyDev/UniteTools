@@ -65,7 +65,7 @@ h1 {
   font-weight: 900;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text-bright);
   margin-bottom: 1.5rem;
   position: relative;
   z-index: 1;
@@ -225,7 +225,7 @@ h1::after {
   font-weight: 900;
   /* font-size set on inner span via clamp */
   letter-spacing: 0.02em;
-  color: #fff;
+  color: var(--text-bright);
   cursor: pointer;
   text-shadow: 0 2px 8px rgba(0,0,0,0.5);
   transition: filter 0.2s;
@@ -337,7 +337,7 @@ h1::after {
   border-radius: 50%;
   background: var(--red);
   border: none;
-  color: #fff;
+  color: var(--text-bright);
   font-size: 12px;
   line-height: 1;
   cursor: pointer;
@@ -683,7 +683,7 @@ h1::after {
   border: 1px solid var(--border-md);
   border-radius: var(--radius);
   padding: 24px 28px;
-  color: #fff;
+  color: var(--text-bright);
   width: 400px;
   max-width: 92vw;
   box-shadow: var(--shadow-lg), 0 0 60px rgba(0,0,0,0.5);
@@ -733,7 +733,7 @@ h1::after {
   border: 1.5px solid var(--border-md);
   border-radius: var(--radius-sm);
   background: var(--surface);
-  color: #fff;
+  color: var(--text-bright);
   font-family: 'Rajdhani', sans-serif;
   font-size: 0.95rem;
   font-weight: 600;
@@ -779,8 +779,8 @@ h1::after {
 
 #move-save   { background: linear-gradient(135deg, #3baed4, #4fc3f7); color: #000; }
 #move-cancel { background: var(--surface-3); color: var(--text-dim); border: 1px solid var(--border-md); }
-#tier-save   { background: linear-gradient(135deg, #3a9a6b, #4caf82); color: #fff; }
-#tier-delete { background: linear-gradient(135deg, #c0392b, #ef5350); color: #fff; }
+#tier-save   { background: linear-gradient(135deg, #3a9a6b, #4caf82); color: var(--text-bright); }
+#tier-delete { background: linear-gradient(135deg, #c0392b, #ef5350); color: var(--text-bright); }
 #tier-cancel { background: var(--surface-3); color: var(--text-dim); border: 1px solid var(--border-md); }
 
 /* ── Move sections ── */
@@ -891,7 +891,7 @@ h1::after {
 .move-badge__fallback {
   font-size: 7px;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-bright);
   text-align: center;
   line-height: 1;
   letter-spacing: -0.5px;
@@ -914,7 +914,7 @@ h1::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--text-bright);
 }
 .howto-toggle:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(159,83,236,0.7); }
 

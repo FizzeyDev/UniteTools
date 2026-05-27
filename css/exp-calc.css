@@ -1,8 +1,3 @@
-/* ─────────────────────────────────────────────
-   exp-calc.css  — XP Calculator page styles
-   Unite Tools design system
-───────────────────────────────────────────── */
-
 :root {
   --bg:           #090f10;
   --surface:      #101a1b;
@@ -87,7 +82,7 @@ body::before {
   font-weight: 900;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text-bright);
   text-shadow: 0 0 30px rgba(79,195,247,0.35), 0 0 60px rgba(159,83,236,0.1);
 }
 
@@ -455,7 +450,7 @@ body::before {
   font-weight: 700;
   text-align: center;
   padding: 1px 0;
-  color: #fff;
+  color: var(--text-bright);
   text-transform: uppercase;
   display: none;
 }
@@ -1979,7 +1974,7 @@ body::before {
 .credits-link:hover {
   background: var(--blue-dim);
   border-color: var(--blue);
-  color: #fff;
+  color: var(--text-bright);
   box-shadow: var(--shadow-sm);
 }
 

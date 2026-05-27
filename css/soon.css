@@ -41,7 +41,7 @@ h1 {
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text-bright);
   margin-bottom: 1.5rem;
   text-shadow: 0 0 40px rgba(159,83,236,0.4);
 }

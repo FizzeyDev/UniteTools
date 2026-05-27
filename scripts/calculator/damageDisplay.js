@@ -1006,15 +1006,15 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           line.innerHTML = `
             <span class="dmg-name">${dmg.name}${dmg.notes ? `<br><i>${dmg.notes}</i>` : ""}${wildCapBadge}</span>
             <div class="dmg-values">
-              <span class="dmg-normal dmg-tick-toggle" data-base="${displayedNormal}" data-total="${normalTotal}" data-ticks="${tickCount}" ${tickScalingAttr} title="Cliquez pour afficher le total (${tickCount} ticks)">${displayedNormal.toLocaleString()}<sup class="tick-badge">×${tickCount}</sup></span>
-              <span class="dmg-crit dmg-tick-toggle"   data-base="${displayedCrit}"   data-total="${critTotal}"   data-ticks="${tickCount}" ${tickScalingAttr} title="Cliquez pour afficher le total crit (${tickCount} ticks)">(${displayedCrit.toLocaleString()}<sup class="tick-badge">×${tickCount}</sup>)</span>
+              <span class="dmg-normal dmg-tick-toggle" data-base="${displayedNormal}" data-total="${normalTotal}" data-ticks="${tickCount}" ${tickScalingAttr} title="Cliquez pour afficher le total (${tickCount} ticks)">${normalTotal.toLocaleString()}<sup class="tick-badge">×${tickCount}</sup></span>
+              <span class="dmg-crit dmg-tick-toggle"   data-base="${displayedCrit}"   data-total="${critTotal}"   data-ticks="${tickCount}" ${tickScalingAttr} title="Cliquez pour afficher le total crit (${tickCount} ticks)">(${critTotal.toLocaleString()}<sup class="tick-badge">×${tickCount}</sup>)</span>
             </div>
           `;
         } else {
           line.innerHTML = `
             <span class="dmg-name">${dmg.name}${dmg.notes ? `<br><i>${dmg.notes}</i>` : ""}${wildCapBadge}</span>
             <div class="dmg-values">
-              <span class="dmg-normal dmg-tick-toggle" data-base="${displayedNormal}" data-total="${normalTotal}" data-ticks="${tickCount}" ${tickScalingAttr} title="Cliquez pour afficher le total (${tickCount} ticks)">${displayedNormal.toLocaleString()}<sup class="tick-badge">×${tickCount}</sup></span>
+              <span class="dmg-normal dmg-tick-toggle" data-base="${displayedNormal}" data-total="${normalTotal}" data-ticks="${tickCount}" ${tickScalingAttr} title="Cliquez pour afficher le total (${tickCount} ticks)">${normalTotal.toLocaleString()}<sup class="tick-badge">×${tickCount}</sup></span>
             </div>
           `;
         }
@@ -1228,7 +1228,7 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
   });
 }
 
-// ── Combat Log ───────────────────────────────────────────────────────────────
+// ── Combat Log helpers (définis ici car utilisés par attachMoveCardClickHandler) ──
 
 function collectLineItems(card) {
   const items = [];
@@ -1247,31 +1247,53 @@ function collectLineItems(card) {
       const isTick    = dmgNormal.classList.contains('dmg-tick-toggle');
       const tickCount = isTick ? (parseInt(dmgNormal.dataset.ticks, 10) || 1) : 1;
 
+      // FIX: normalPerTick = data-base (valeur d'un seul hit, avant scaling)
+      const normalPerTick = isTick ? parseInt(dmgNormal.dataset.base, 10) : null;
+
       const normalBase = isTick
-        ? parseInt(dmgNormal.dataset.base, 10)
+        ? normalPerTick
         : parseInt(dmgNormal.textContent.replace(/[^\d]/g, ''), 10);
 
-      const val = isTick ? normalBase * tickCount : normalBase;
-      if (isNaN(val) || val <= 0) return;
-
-      const canCrit = !!dmgCrit;
-      let critBase = null;
-      if (canCrit) {
-        critBase = isTick
-          ? parseInt(dmgCrit.dataset.base, 10)
-          : parseInt(dmgCrit.textContent.replace(/[^\d()]/g, ''), 10);
-      }
-      const critVal = canCrit ? (isTick ? critBase * tickCount : critBase) : null;
+      if (isNaN(normalBase) || normalBase <= 0) return;
 
       const tickScalingRaw = isTick ? dmgNormal.dataset.tickScaling : null;
       const tickScaling    = tickScalingRaw ? JSON.parse(tickScalingRaw) : null;
 
+      // FIX: calcul correct du total avec tick_scaling
+      const computeTotal = (base, scaling, n) => {
+        if (!scaling) return base * n;
+        let sum = 0;
+        for (let i = 0; i < n; i++) {
+          sum += Math.floor(base * (scaling[i] ?? scaling[scaling.length - 1]));
+        }
+        return sum;
+      };
+
+      const val = computeTotal(normalBase, tickScaling, tickCount);
+      if (isNaN(val) || val <= 0) return;
+
+      const canCrit = !!dmgCrit;
+      let critPerTick = null;
+      let critVal = null;
+      if (canCrit) {
+        critPerTick = isTick
+          ? parseInt(dmgCrit.dataset.base, 10)
+          : null;
+        const critBase = isTick
+          ? critPerTick
+          : parseInt(dmgCrit.textContent.replace(/[^\d()]/g, ''), 10);
+        critVal = isTick
+          ? computeTotal(critBase, tickScaling, tickCount)
+          : critBase;
+      }
+
       items.push({
-        type: 'damage', name, value: val,
+        type: 'damage', name,
+        value: val,
         canCrit,
         critValue: critVal,
-        normalPerTick: isTick ? normalBase : null,
-        critPerTick:   (isTick && canCrit) ? critBase : null,
+        normalPerTick,
+        critPerTick,
         isTick,
         tickCount,
         tickScaling,
@@ -1338,6 +1360,8 @@ function flashCard(card) {
   setTimeout(() => card.classList.remove('cl-added-flash'), 500);
 }
 
+// ── openLinePicker ────────────────────────────────────────────────────────────
+
 function openLinePicker(card, move, allItems) {
   closeActivePicker();
 
@@ -1367,7 +1391,58 @@ function openLinePicker(card, move, allItems) {
     isCrit: false,
     hitCount:  item.isTick ? item.tickCount : 1,
     critCount: 0,
+    _resolvedValue: null,
   }));
+
+  // ── Helper : calcule le total d'un item tick avec les critStates actuels ──
+  const computeTickTotal = (item, idx) => {
+    const hc = critStates[idx].hitCount;
+    const cc = Math.min(critStates[idx].critCount, hc);
+
+    if (!item.canCrit) {
+      const perTick = item.normalPerTick ?? Math.round(item.value / item.tickCount);
+      if (item.tickScaling) {
+        let total = 0;
+        for (let i = 0; i < hc; i++) {
+          const scale = item.tickScaling[i] ?? item.tickScaling[item.tickScaling.length - 1];
+          total += Math.floor(perTick * scale);
+        }
+        return total;
+      }
+      return perTick * hc;
+    }
+
+    if (item.tickScaling) {
+      let total = 0;
+      for (let i = 0; i < hc; i++) {
+        const scale = item.tickScaling[i] ?? item.tickScaling[item.tickScaling.length - 1];
+        const base = i < cc ? item.critPerTick : item.normalPerTick;
+        total += Math.floor(base * scale);
+      }
+      return total;
+    }
+
+    const nc = hc - cc;
+    return nc * item.normalPerTick + cc * item.critPerTick;
+  };
+
+  // ── Helper : tooltip détaillé hit par hit ─────────────────────────────────
+  const buildTickDetailTooltip = (item, idx) => {
+    if (!item.tickScaling) return null;
+    const hc = critStates[idx].hitCount;
+    const cc = Math.min(critStates[idx].critCount, hc);
+    const lines = [];
+    for (let i = 0; i < hc; i++) {
+      const scale = item.tickScaling[i] ?? item.tickScaling[item.tickScaling.length - 1];
+      const isCritTick = i < cc;
+      const base = isCritTick ? item.critPerTick : item.normalPerTick;
+      const val = Math.floor(base * scale);
+      const scalePct = scale !== 1 ? ` (×${scale})` : '';
+      const critMark = isCritTick ? ' ⚡' : '';
+      lines.push(`Hit ${i + 1}: ${val.toLocaleString()}${scalePct}${critMark}`);
+    }
+    return lines.join('\n');
+  };
 
   const typeOrder = ['damage', 'heal', 'shield'];
   const typeLabels = { damage: '💥 Damage', heal: '❤️ Heal', shield: '🛡️ Shield' };
@@ -1428,35 +1503,20 @@ function openLinePicker(card, move, allItems) {
       }
 
       if (item.isTick && item.tickCount > 1) {
+        const total = computeTickTotal(item, idx);
+        critStates[idx]._resolvedValue = total;
+
+        const tooltip = buildTickDetailTooltip(item, idx);
+        if (tooltip) {
+          valSpan.title = tooltip;
+          valSpan.style.cursor = 'help';
+        }
+
         const hc = critStates[idx].hitCount;
-        const cc = Math.min(critStates[idx].critCount, hc);
-        const nc = hc - cc;
-
-        if (!item.canCrit) {
-          const perTick = item.normalPerTick ?? Math.round(item.value / item.tickCount);
-          const total = perTick * hc;
-          critStates[idx]._resolvedValue = total;
-          valSpan.textContent = total.toLocaleString();
-          return;
-        }
-
-        if (item.tickScaling) {
-          let total = 0;
-          for (let i = 0; i < hc; i++) {
-            const scale = item.tickScaling[i] ?? item.tickScaling[item.tickScaling.length - 1];
-            const isTickCrit = i < cc;
-            const base = isTickCrit ? item.critPerTick : item.normalPerTick;
-            total += Math.floor(base * scale);
-          }
-          critStates[idx]._resolvedValue = total;
-          valSpan.textContent = total.toLocaleString();
-        } else {
-          const total = nc * item.normalPerTick + cc * item.critPerTick;
-          critStates[idx]._resolvedValue = total;
-          valSpan.textContent = total.toLocaleString();
-        }
+        valSpan.textContent = `${total.toLocaleString()} (${hc}×)`;
       } else {
         if (!item.canCrit) {
+          critStates[idx]._resolvedValue = item.value;
           valSpan.textContent = item.value.toLocaleString();
           return;
         }
@@ -1476,7 +1536,17 @@ function openLinePicker(card, move, allItems) {
 
       const showCritRow = item.type === 'damage' && item.canCrit;
 
+      // Ligne de scaling info
+      let scalingInfoHtml = '';
+      if (item.tickScaling) {
+        const scalingDesc = item.tickScaling
+          .map((s, i) => `<span style="opacity:${s === 1 ? '1' : '0.75'};color:${s < 1 ? '#ff9d00' : '#aaa'}">H${i+1}:×${s}</span>`)
+          .join(' ');
+        scalingInfoHtml = `<div class="cl-tick-scaling-info">${scalingDesc}</div>`;
+      }
+
       critCtrl.innerHTML = `
+        ${scalingInfoHtml}
         <div class="cl-counter-row">
           <span class="cl-crit-label">Hits :</span>
           <button class="cl-crit-btn cl-hit-minus">−</button>
@@ -1507,7 +1577,7 @@ function openLinePicker(card, move, allItems) {
           critStates[idx].hitCount--;
           if (showCritRow && critStates[idx].critCount > critStates[idx].hitCount) {
             critStates[idx].critCount = critStates[idx].hitCount;
-            critCountEl.textContent = critStates[idx].critCount;
+            if (critCountEl) critCountEl.textContent = critStates[idx].critCount;
           }
           hitCountEl.textContent = critStates[idx].hitCount;
           if (critMaxRef) critMaxRef.textContent = critStates[idx].hitCount;
@@ -1532,7 +1602,7 @@ function openLinePicker(card, move, allItems) {
           e.stopPropagation();
           if (critStates[idx].critCount > 0) {
             critStates[idx].critCount--;
-            critCountEl.textContent = critStates[idx].critCount;
+            if (critCountEl) critCountEl.textContent = critStates[idx].critCount;
             refreshColors();
             updateVal();
           }
@@ -1542,7 +1612,7 @@ function openLinePicker(card, move, allItems) {
           e.stopPropagation();
           if (critStates[idx].critCount < critStates[idx].hitCount) {
             critStates[idx].critCount++;
-            critCountEl.textContent = critStates[idx].critCount;
+            if (critCountEl) critCountEl.textContent = critStates[idx].critCount;
             refreshColors();
             updateVal();
           }
@@ -1554,7 +1624,6 @@ function openLinePicker(card, move, allItems) {
     } else if (item.type === 'damage' && item.canCrit) {
       const critCtrl = document.createElement('div');
       critCtrl.className = 'cl-crit-controls';
-
       critCtrl.innerHTML = `
         <button class="cl-crit-toggle" data-mode="normal">Normal</button>
         <button class="cl-crit-toggle cl-crit-toggle-crit" data-mode="crit">Crit</button>
@@ -1567,10 +1636,9 @@ function openLinePicker(card, move, allItems) {
           const mode = btn.dataset.mode;
           critStates[idx].isCrit = mode === 'crit';
           btns.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
-            updateVal();
-          });
+          updateVal();
         });
-
+      });
       row.appendChild(critCtrl);
     }
 
@@ -1598,6 +1666,7 @@ function openLinePicker(card, move, allItems) {
   confirmBtn.textContent = '＋ Ajouter';
   confirmBtn.addEventListener('click', (e) => {
     e.stopPropagation();
+
     const selected = sortedItems
       .map((item, sortedIdx) => {
         const idx = sortedIdxMap[sortedIdx];
@@ -1606,38 +1675,20 @@ function openLinePicker(card, move, allItems) {
         if (item.isTick && item.tickCount > 1) {
           const hc = critStates[idx].hitCount;
           const cc = Math.min(critStates[idx].critCount, hc);
-          const nc = hc - cc;
-          let selectedValue, critLabel;
 
           if (item.type === 'damage') {
-            if (!item.canCrit) {
-              const perTick = item.normalPerTick ?? Math.round(item.value / item.tickCount);
-              selectedValue = perTick * hc;
-              const hitLabel = hc < item.tickCount ? `${hc}/${item.tickCount}hits` : `${item.tickCount}hits`;
-              critLabel = hc < item.tickCount ? `(${hitLabel})` : '';
-            } else if (item.tickScaling) {
-              let total = 0;
-              for (let i = 0; i < hc; i++) {
-                const scale = item.tickScaling[i] ?? item.tickScaling[item.tickScaling.length - 1];
-                const isTickCrit = i < cc;
-                const base = isTickCrit ? item.critPerTick : item.normalPerTick;
-                total += Math.floor(base * scale);
-              }
-              selectedValue = total;
-              const hitLabel = hc < item.tickCount ? `${hc}/${item.tickCount}hits` : `${item.tickCount}hits`;
-              const critPart = cc > 0 ? ` ${cc}💥` : '';
-              critLabel = `(${hitLabel}${critPart})`;
-            } else {
-              selectedValue = nc * item.normalPerTick + cc * item.critPerTick;
-              const hitLabel = hc < item.tickCount ? `${hc}/${item.tickCount}hits` : `${item.tickCount}hits`;
-              const critPart = cc > 0 ? ` ${cc}💥` : '';
-              critLabel = `(${hitLabel}${critPart})`;
-            }
+            const selectedValue = computeTickTotal(item, idx);
+            const hitLabel = hc < item.tickCount ? `${hc}/${item.tickCount} hits` : `${item.tickCount} hits`;
+            const critPart = cc > 0 ? ` · ${cc}💥` : '';
+            const critLabel = `(${hitLabel}${critPart})`;
             return { ...item, selectedValue, critLabel };
           } else {
-            const perTick = Math.round(item.selfValue / item.tickCount);
-            const allyPerTick = Math.round((item.allyValue ?? item.selfValue) / item.tickCount);
-            return { ...item, selfValue: perTick * hc, allyValue: allyPerTick * hc };
+            const ratio = hc / item.tickCount;
+            return {
+              ...item,
+              selfValue:  Math.round(item.selfValue  * ratio),
+              allyValue:  Math.round((item.allyValue ?? item.selfValue) * ratio),
+            };
           }
         }
 
@@ -1689,6 +1740,8 @@ function openLinePicker(card, move, allItems) {
   });
 }
 
+// ── attachMoveCardClickHandler ────────────────────────────────────────────────
+
 function attachMoveCardClickHandler(card, move) {
 
   card.querySelectorAll('.heal-tick-toggle, .shield-tick-toggle, .dmg-tick-toggle').forEach(el => {
@@ -1697,7 +1750,7 @@ function attachMoveCardClickHandler(card, move) {
     const isCrit   = el.classList.contains('dmg-crit');
     const isHeal   = el.classList.contains('heal-tick-toggle');
     const isShield = el.classList.contains('shield-tick-toggle');
-    let currentTicks = 1;
+    let currentTicks = maxTicks; // FIX: démarre au max (tout affiché par défaut)
 
     const tickScalingRaw = el.dataset.tickScaling;
     const tickScaling    = tickScalingRaw ? JSON.parse(tickScalingRaw) : null;
@@ -1773,7 +1826,10 @@ function attachMoveCardClickHandler(card, move) {
     const allItems = collectLineItems(card);
     if (allItems.length === 0) return;
 
-    if (allItems.length === 1 && !allItems[0].canCrit) {
+    // Ouvre TOUJOURS le picker si multi-hits présents
+    const hasMultiHit = allItems.some(i => i.isTick && i.tickCount > 1);
+
+    if (!hasMultiHit && allItems.length === 1 && !allItems[0].canCrit) {
       const { damages, heals, shields } = itemsToLogEntry(allItems);
       addMoveToLog({ moveName: move.name, moveImage: move.image, damages, heals, shields });
       flashCard(card);

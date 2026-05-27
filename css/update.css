@@ -83,7 +83,7 @@ body::before {
   font-weight: 900;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text-bright);
   text-shadow: 0 0 60px rgba(79,195,247,0.3), 0 0 120px rgba(159,83,236,0.15);
 }
 

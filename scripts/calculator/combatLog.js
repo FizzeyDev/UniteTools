@@ -358,6 +358,614 @@ export function resetCombatLog() {
   renderLog();
 }
 
+// ── collectLineItems ──────────────────────────────────────────────────────────
+
+function collectLineItems(card) {
+  const items = [];
+
+  card.querySelectorAll('.damage-line').forEach(line => {
+    const nameEl = line.querySelector('.dmg-name');
+    if (!nameEl) return;
+    const name = Array.from(nameEl.childNodes)
+      .filter(n => n.nodeType === Node.TEXT_NODE || n.nodeName === 'BR')
+      .map(n => n.textContent).join('').trim() || nameEl.textContent.split('\n')[0].trim();
+
+    const dmgNormal = line.querySelector('.dmg-normal');
+    if (dmgNormal) {
+      const dmgCrit = line.querySelector('.dmg-crit');
+
+      const isTick    = dmgNormal.classList.contains('dmg-tick-toggle');
+      const tickCount = isTick ? (parseInt(dmgNormal.dataset.ticks, 10) || 1) : 1;
+
+      const normalBase = isTick
+        ? parseInt(dmgNormal.dataset.base, 10)
+        : parseInt(dmgNormal.textContent.replace(/[^\d]/g, ''), 10);
+
+      const val = isTick ? normalBase * tickCount : normalBase;
+      if (isNaN(val) || val <= 0) return;
+
+      const canCrit = !!dmgCrit;
+      let critBase = null;
+      if (canCrit) {
+        critBase = isTick
+          ? parseInt(dmgCrit.dataset.base, 10)
+          : parseInt(dmgCrit.textContent.replace(/[^\d()]/g, ''), 10);
+      }
+      const critVal = canCrit ? (isTick ? critBase * tickCount : critBase) : null;
+
+      const tickScalingRaw = isTick ? dmgNormal.dataset.tickScaling : null;
+      const tickScaling    = tickScalingRaw ? JSON.parse(tickScalingRaw) : null;
+
+      items.push({
+        type: 'damage', name, value: val,
+        canCrit,
+        critValue: critVal,
+        normalPerTick: isTick ? normalBase : null,
+        critPerTick:   (isTick && canCrit) ? critBase : null,
+        isTick,
+        tickCount,
+        tickScaling,
+      });
+    }
+
+    const healEls = line.querySelectorAll('.dmg-heal');
+    if (healEls.length > 0) {
+      const selfEl = healEls[0], allyEl = healEls[1];
+      const isTick    = selfEl.classList.contains('heal-tick-toggle');
+      const tickCount = isTick ? parseInt(selfEl.dataset.ticks, 10) : 1;
+      const selfRaw   = isTick
+        ? parseInt(selfEl.dataset.base, 10) * parseInt(selfEl.querySelector('span')?.textContent?.replace('×','') || selfEl.dataset.ticks, 10)
+        : parseInt(selfEl.textContent.replace(/[^\d]/g, ''), 10);
+      const allyRaw = allyEl ? parseInt(allyEl.textContent.replace(/[^\d]/g, ''), 10) : selfRaw;
+      if (selfRaw > 0) items.push({ type: 'heal', name, selfValue: selfRaw, allyValue: allyRaw || selfRaw, isTick, tickCount });
+    }
+
+    const shieldEls = line.querySelectorAll('.dmg-shield');
+    if (shieldEls.length > 0) {
+      const selfEl = shieldEls[0], allyEl = shieldEls[1];
+      const isTick    = selfEl.classList.contains('shield-tick-toggle');
+      const tickCount = isTick ? parseInt(selfEl.dataset.ticks, 10) : 1;
+      const selfRaw   = isTick
+        ? parseInt(selfEl.dataset.base, 10) * parseInt(selfEl.querySelector('span')?.textContent?.replace('×','') || selfEl.dataset.ticks, 10)
+        : parseInt(selfEl.textContent.replace(/[^\d]/g, ''), 10);
+      const allyRaw = allyEl ? parseInt(allyEl.textContent.replace(/[^\d]/g, ''), 10) : selfRaw;
+      if (selfRaw > 0) items.push({ type: 'shield', name, selfValue: selfRaw, allyValue: allyRaw || selfRaw, isTick, tickCount });
+    }
+  });
+
+  return items;
+}
+
+function itemsToLogEntry(items) {
+  const damages = [], heals = [], shields = [];
+  items.forEach(item => {
+    if (item.type === 'damage') {
+      const finalValue = item.selectedValue !== undefined ? item.selectedValue : item.value;
+      const label = item.critLabel ? `${item.name} ${item.critLabel}` : item.name;
+      damages.push({ name: label, value: finalValue });
+    } else if (item.type === 'heal') {
+      heals.push({ name: item.name, selfValue: item.selfValue, allyValue: item.allyValue, isTick: item.isTick, tickCount: item.tickCount });
+    } else if (item.type === 'shield') {
+      shields.push({ name: item.name, selfValue: item.selfValue, allyValue: item.allyValue, isTick: item.isTick, tickCount: item.tickCount });
+    }
+  });
+  return { damages, heals, shields };
+}
+
+let activePicker = null;
+
+function closeActivePicker() {
+  if (activePicker) {
+    activePicker.remove();
+    activePicker = null;
+  }
+}
+
+function flashCard(card) {
+  card.classList.remove('cl-added-flash');
+  void card.offsetWidth;
+  card.classList.add('cl-added-flash');
+  setTimeout(() => card.classList.remove('cl-added-flash'), 500);
+}
+
+// ── openLinePicker ────────────────────────────────────────────────────────────
+
+function openLinePicker(card, move, allItems) {
+  closeActivePicker();
+
+  const picker = document.createElement('div');
+  picker.className = 'cl-line-picker';
+  activePicker = picker;
+
+  const header = document.createElement('div');
+  header.className = 'cl-picker-header';
+  header.innerHTML = `
+    <img src="${move.image}" alt="${move.name}" onerror="this.src='assets/moves/missing.png'">
+    <span>${move.name}</span>
+    <button class="cl-picker-close" title="Fermer">×</button>
+  `;
+  picker.appendChild(header);
+
+  header.querySelector('.cl-picker-close').addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeActivePicker();
+  });
+
+  const list = document.createElement('div');
+  list.className = 'cl-picker-list';
+  const checkboxes = [];
+
+  const critStates = allItems.map(item => ({
+    isCrit: false,
+    hitCount:  item.isTick ? item.tickCount : 1,
+    critCount: 0,
+    _resolvedValue: null,  // initialisé explicitement, rempli par updateVal()
+  }));
+
+  // ── Helper : calcule le total d'un item tick avec les critStates actuels ──
+  const computeTickTotal = (item, idx) => {
+    const hc = critStates[idx].hitCount;
+    const cc = Math.min(critStates[idx].critCount, hc);
+
+    if (!item.canCrit) {
+      const perTick = item.normalPerTick ?? Math.round(item.value / item.tickCount);
+      if (item.tickScaling) {
+        let total = 0;
+        for (let i = 0; i < hc; i++) {
+          const scale = item.tickScaling[i] ?? item.tickScaling[item.tickScaling.length - 1];
+          total += Math.floor(perTick * scale);
+        }
+        return total;
+      }
+      return perTick * hc;
+    }
+
+    // Avec crits possibles
+    if (item.tickScaling) {
+      let total = 0;
+      for (let i = 0; i < hc; i++) {
+        const scale = item.tickScaling[i] ?? item.tickScaling[item.tickScaling.length - 1];
+        // Les cc premiers ticks sont critiques
+        const base = i < cc ? item.critPerTick : item.normalPerTick;
+        total += Math.floor(base * scale);
+      }
+      return total;
+    }
+
+    const nc = hc - cc;
+    return nc * item.normalPerTick + cc * item.critPerTick;
+  };
+
+  // ── Helper : tooltip détaillé hit par hit (si tick_scaling présent) ───────
+  const buildTickDetailTooltip = (item, idx) => {
+    if (!item.tickScaling) return null;
+    const hc = critStates[idx].hitCount;
+    const cc = Math.min(critStates[idx].critCount, hc);
+    const lines = [];
+    for (let i = 0; i < hc; i++) {
+      const scale = item.tickScaling[i] ?? item.tickScaling[item.tickScaling.length - 1];
+      const isCritTick = i < cc;
+      const base = isCritTick ? item.critPerTick : item.normalPerTick;
+      const val = Math.floor(base * scale);
+      const scalePct = scale !== 1 ? ` (×${scale})` : '';
+      const critMark = isCritTick ? ' ⚡' : '';
+      lines.push(`Hit ${i + 1}: ${val.toLocaleString()}${scalePct}${critMark}`);
+    }
+    return lines.join('\n');
+  };
+
+  const typeOrder = ['damage', 'heal', 'shield'];
+  const typeLabels = { damage: '💥 Damage', heal: '❤️ Heal', shield: '🛡️ Shield' };
+  let lastType = null;
+
+  const sortedItems = [...allItems].sort((a, b) => typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type));
+  const sortedIdxMap = sortedItems.map(si => allItems.indexOf(si));
+
+  sortedItems.forEach((item, sortedIdx) => {
+    const idx = sortedIdxMap[sortedIdx];
+
+    if (item.type !== lastType) {
+      lastType = item.type;
+      const sep = document.createElement('div');
+      sep.className = 'cl-picker-section-sep';
+      sep.textContent = typeLabels[item.type];
+      list.appendChild(sep);
+    }
+
+    const row = document.createElement('div');
+    row.className = 'cl-picker-row';
+
+    const typeClass = item.type === 'damage' ? 'cl-picker-dmg' : item.type === 'heal' ? 'cl-picker-heal' : 'cl-picker-shield';
+    const typeIcon  = item.type === 'damage' ? '💥' : item.type === 'heal' ? '❤️' : '🛡️';
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = true;
+    checkboxes[idx] = cb;
+    cb.addEventListener('click', (e) => e.stopPropagation());
+
+    const valSpan = document.createElement('span');
+    valSpan.className = `cl-picker-val ${typeClass}`;
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = `cl-picker-name ${typeClass}`;
+    nameSpan.textContent = item.name;
+
+    const iconSpan = document.createElement('span');
+    iconSpan.className = 'cl-picker-icon';
+    iconSpan.textContent = typeIcon;
+
+    row.appendChild(cb);
+    row.appendChild(iconSpan);
+    row.appendChild(nameSpan);
+    row.appendChild(valSpan);
+
+    row.addEventListener('click', (e) => {
+      if (e.target === cb || e.target.closest('.cl-crit-controls')) return;
+      e.stopPropagation();
+      cb.checked = !cb.checked;
+    });
+
+    // ── updateVal : recalcule et affiche la valeur dans le picker ─────────
+    const updateVal = () => {
+      if (item.type !== 'damage') {
+        valSpan.textContent = item.selfValue.toLocaleString();
+        return;
+      }
+
+      if (item.isTick && item.tickCount > 1) {
+        const total = computeTickTotal(item, idx);
+        critStates[idx]._resolvedValue = total;
+
+        // Tooltip hit-par-hit si tick_scaling présent
+        const tooltip = buildTickDetailTooltip(item, idx);
+        if (tooltip) {
+          valSpan.title = tooltip;
+          valSpan.style.cursor = 'help';
+        }
+
+        const hc = critStates[idx].hitCount;
+        valSpan.textContent = `${total.toLocaleString()} (${hc}×)`;
+      } else {
+        if (!item.canCrit) {
+          critStates[idx]._resolvedValue = item.value;
+          valSpan.textContent = item.value.toLocaleString();
+          return;
+        }
+        const v = critStates[idx].isCrit ? item.critValue : item.value;
+        critStates[idx]._resolvedValue = v;
+        valSpan.textContent = v.toLocaleString();
+      }
+    };
+
+    // ── Contrôles pour les multi-hits (is_tick) ───────────────────────────
+    if (item.isTick && item.tickCount > 1) {
+      const critCtrl = document.createElement('div');
+      critCtrl.className = 'cl-crit-controls';
+
+      const maxHits = item.tickCount;
+      critStates[idx].hitCount  = maxHits;
+      critStates[idx].critCount = 0;
+
+      const showCritRow = item.type === 'damage' && item.canCrit;
+
+      // Ligne de scaling info (ex: H1:×1 H2:×0.8 H3:×0.6)
+      let scalingInfoHtml = '';
+      if (item.tickScaling) {
+        const scalingDesc = item.tickScaling
+          .map((s, i) => `<span style="opacity:${s === 1 ? '1' : '0.75'};color:${s < 1 ? '#ff9d00' : '#aaa'}">H${i+1}:×${s}</span>`)
+          .join(' ');
+        scalingInfoHtml = `<div class="cl-tick-scaling-info">${scalingDesc}</div>`;
+      }
+
+      critCtrl.innerHTML = `
+        ${scalingInfoHtml}
+        <div class="cl-counter-row">
+          <span class="cl-crit-label">Hits :</span>
+          <button class="cl-crit-btn cl-hit-minus">−</button>
+          <span class="cl-hit-count">${maxHits}</span>/<span class="cl-crit-max">${maxHits}</span>
+          <button class="cl-crit-btn cl-hit-plus">+</button>
+        </div>
+        ${showCritRow ? `
+        <div class="cl-counter-row">
+          <span class="cl-crit-label">💥Crits :</span>
+          <button class="cl-crit-btn cl-crit-minus">−</button>
+          <span class="cl-crit-count">0</span>/<span class="cl-hit-max-ref">${maxHits}</span>
+          <button class="cl-crit-btn cl-crit-plus">+</button>
+        </div>` : ''}
+      `;
+
+      const hitCountEl  = critCtrl.querySelector('.cl-hit-count');
+      const critCountEl = showCritRow ? critCtrl.querySelector('.cl-crit-count') : null;
+      const critMaxRef  = showCritRow ? critCtrl.querySelector('.cl-hit-max-ref') : null;
+
+      const refreshColors = () => {
+        hitCountEl.style.color  = critStates[idx].hitCount  < maxHits ? '#ff9d00' : '#aaa';
+        if (critCountEl) critCountEl.style.color = critStates[idx].critCount > 0 ? '#ef5350' : '#aaa';
+      };
+
+      critCtrl.querySelector('.cl-hit-minus').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (critStates[idx].hitCount > 0) {
+          critStates[idx].hitCount--;
+          if (showCritRow && critStates[idx].critCount > critStates[idx].hitCount) {
+            critStates[idx].critCount = critStates[idx].hitCount;
+            if (critCountEl) critCountEl.textContent = critStates[idx].critCount;
+          }
+          hitCountEl.textContent = critStates[idx].hitCount;
+          if (critMaxRef) critMaxRef.textContent = critStates[idx].hitCount;
+          refreshColors();
+          updateVal();
+        }
+      });
+
+      critCtrl.querySelector('.cl-hit-plus').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (critStates[idx].hitCount < maxHits) {
+          critStates[idx].hitCount++;
+          hitCountEl.textContent = critStates[idx].hitCount;
+          if (critMaxRef) critMaxRef.textContent = critStates[idx].hitCount;
+          refreshColors();
+          updateVal();
+        }
+      });
+
+      if (showCritRow) {
+        critCtrl.querySelector('.cl-crit-minus').addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (critStates[idx].critCount > 0) {
+            critStates[idx].critCount--;
+            if (critCountEl) critCountEl.textContent = critStates[idx].critCount;
+            refreshColors();
+            updateVal();
+          }
+        });
+
+        critCtrl.querySelector('.cl-crit-plus').addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (critStates[idx].critCount < critStates[idx].hitCount) {
+            critStates[idx].critCount++;
+            if (critCountEl) critCountEl.textContent = critStates[idx].critCount;
+            refreshColors();
+            updateVal();
+          }
+        });
+      }
+
+      row.appendChild(critCtrl);
+
+    } else if (item.type === 'damage' && item.canCrit) {
+      // ── Single hit avec toggle Normal / Crit ──────────────────────────────
+      const critCtrl = document.createElement('div');
+      critCtrl.className = 'cl-crit-controls';
+
+      critCtrl.innerHTML = `
+        <button class="cl-crit-toggle" data-mode="normal">Normal</button>
+        <button class="cl-crit-toggle cl-crit-toggle-crit" data-mode="crit">Crit</button>
+      `;
+      const btns = critCtrl.querySelectorAll('.cl-crit-toggle');
+      btns[0].classList.add('active');
+      btns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const mode = btn.dataset.mode;
+          critStates[idx].isCrit = mode === 'crit';
+          btns.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+          updateVal();
+        });
+      });
+
+      row.appendChild(critCtrl);
+    }
+
+    // ── Appel initial de updateVal après ajout de critCtrl au row ──────────
+    updateVal();
+    list.appendChild(row);
+  });
+
+  picker.appendChild(list);
+
+  const footer = document.createElement('div');
+  footer.className = 'cl-picker-footer';
+
+  const selectAllBtn = document.createElement('button');
+  selectAllBtn.className = 'cl-picker-btn cl-picker-all';
+  selectAllBtn.textContent = 'Tout';
+  selectAllBtn.addEventListener('click', (e) => { e.stopPropagation(); Object.values(checkboxes).forEach(cb => cb.checked = true); });
+
+  const selectNoneBtn = document.createElement('button');
+  selectNoneBtn.className = 'cl-picker-btn cl-picker-none';
+  selectNoneBtn.textContent = 'Aucun';
+  selectNoneBtn.addEventListener('click', (e) => { e.stopPropagation(); Object.values(checkboxes).forEach(cb => cb.checked = false); });
+
+  const confirmBtn = document.createElement('button');
+  confirmBtn.className = 'cl-picker-btn cl-picker-confirm';
+  confirmBtn.textContent = '＋ Ajouter';
+  confirmBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+
+    const selected = sortedItems
+      .map((item, sortedIdx) => {
+        const idx = sortedIdxMap[sortedIdx];
+        if (!checkboxes[idx] || !checkboxes[idx].checked) return null;
+
+        if (item.isTick && item.tickCount > 1) {
+          const hc = critStates[idx].hitCount;
+          const cc = Math.min(critStates[idx].critCount, hc);
+
+          if (item.type === 'damage') {
+            // Toujours recalculer via computeTickTotal pour garantir la cohérence,
+            // même si l'utilisateur n'a pas touché aux compteurs
+            const selectedValue = computeTickTotal(item, idx);
+
+            const hitLabel = hc < item.tickCount ? `${hc}/${item.tickCount} hits` : `${item.tickCount} hits`;
+            const critPart = cc > 0 ? ` · ${cc}💥` : '';
+            const critLabel = `(${hitLabel}${critPart})`;
+
+            return { ...item, selectedValue, critLabel };
+          } else {
+            // Heal / Shield — proratise par nb de hits sélectionné
+            const ratio = hc / item.tickCount;
+            return {
+              ...item,
+              selfValue:  Math.round(item.selfValue  * ratio),
+              allyValue:  Math.round((item.allyValue ?? item.selfValue) * ratio),
+            };
+          }
+        }
+
+        if (item.type === 'damage' && item.canCrit) {
+          const selectedValue = critStates[idx].isCrit ? item.critValue : item.value;
+          const critLabel = critStates[idx].isCrit ? '⚡Crit' : '';
+          return { ...item, selectedValue, critLabel };
+        }
+
+        return item;
+      })
+      .filter(Boolean);
+
+    if (selected.length === 0) { closeActivePicker(); return; }
+    const { damages, heals, shields } = itemsToLogEntry(selected);
+    addMoveToLog({ moveName: move.name, moveImage: move.image, damages, heals, shields });
+    closeActivePicker();
+    flashCard(card);
+  });
+
+  footer.appendChild(selectAllBtn);
+  footer.appendChild(selectNoneBtn);
+  footer.appendChild(confirmBtn);
+  picker.appendChild(footer);
+
+  picker.addEventListener('click', (e) => e.stopPropagation());
+
+  document.body.appendChild(picker);
+
+  // ── Positionnement ────────────────────────────────────────────────────────
+  const cardRect = card.getBoundingClientRect();
+  const pickerH  = picker.offsetHeight;
+  const pickerW  = picker.offsetWidth;
+  let top  = cardRect.top - pickerH - 8;
+  let left = cardRect.left;
+  if (top < 8) top = cardRect.bottom + 8;
+  if (left + pickerW > window.innerWidth - 8) left = window.innerWidth - pickerW - 8;
+  if (left < 8) left = 8;
+  picker.style.top  = `${top}px`;
+  picker.style.left = `${left}px`;
+
+  requestAnimationFrame(() => {
+    const outsideHandler = (e) => {
+      if (!picker.contains(e.target)) {
+        closeActivePicker();
+        document.removeEventListener('click', outsideHandler);
+      }
+    };
+    document.addEventListener('click', outsideHandler);
+  });
+}
+
+// ── attachMoveCardClickHandler ────────────────────────────────────────────────
+
+function attachMoveCardClickHandler(card, move) {
+
+  card.querySelectorAll('.heal-tick-toggle, .shield-tick-toggle, .dmg-tick-toggle').forEach(el => {
+    const base     = parseInt(el.dataset.base,  10);
+    const maxTicks = parseInt(el.dataset.ticks, 10);
+    const isCrit   = el.classList.contains('dmg-crit');
+    const isHeal   = el.classList.contains('heal-tick-toggle');
+    const isShield = el.classList.contains('shield-tick-toggle');
+    let currentTicks = 1;
+
+    const tickScalingRaw = el.dataset.tickScaling;
+    const tickScaling    = tickScalingRaw ? JSON.parse(tickScalingRaw) : null;
+    const hasTickScaling = !!tickScaling;
+
+    const wrap = (val) => isCrit ? `(${val})` : val;
+    const activeColor = isHeal ? '#4caf82' : isShield ? '#ffd740' : isCrit ? '#ef5350' : '#4fc3f7';
+
+    const isStealthRock = (move.name === "Stealth Rock" || move.name === "Stealth Rock+") && !isCrit;
+    const maxStackBonus = maxTicks === 10 ? 1.35 : 1.05;
+
+    const getScaledTotal = (n) => {
+      if (hasTickScaling) {
+        let sum = 0;
+        for (let i = 0; i < n; i++) {
+          sum += Math.floor(base * (tickScaling[i] ?? tickScaling[tickScaling.length - 1]));
+        }
+        return sum;
+      }
+      if (isStealthRock) {
+        let sum = 0;
+        for (let i = 1; i <= n; i++) {
+          sum += Math.floor(base * (1 + Math.min((i - 1) * 0.15, maxStackBonus)));
+        }
+        return sum;
+      }
+      return base * n;
+    };
+
+    const renderExpanded = () => {
+      const atMax = currentTicks === maxTicks;
+      let displayTotal, titleHint;
+
+      if (hasTickScaling) {
+        displayTotal = getScaledTotal(currentTicks);
+        const scalePct = tickScaling[currentTicks - 1] ?? tickScaling[tickScaling.length - 1];
+        const waveVal  = Math.floor(base * scalePct);
+        titleHint = `Wave ${currentTicks}: ${waveVal.toLocaleString()} (×${scalePct}) - Total: ${displayTotal.toLocaleString()}`;
+      } else if (isStealthRock) {
+        displayTotal = getScaledTotal(currentTicks);
+        const pct = Math.min((currentTicks - 1) * 0.15, maxStackBonus);
+        titleHint = `Hit ${currentTicks}: ${Math.ceil(base * (1 + pct)).toLocaleString()} (+${Math.round(pct * 100)}%) - Total: ${displayTotal.toLocaleString()}`;
+      } else {
+        displayTotal = base * currentTicks;
+        titleHint = `Par tick : ${base.toLocaleString()} - Max : ${maxTicks} ticks`;
+      }
+
+      el.innerHTML = `
+        ${wrap(displayTotal.toLocaleString())}
+        <sup class="tick-badge" style="display:inline-flex;align-items:center;gap:2px;vertical-align:super;font-size:0.6em;line-height:1;">
+          <button class="tick-ctrl tick-minus" style="width:15px;height:15px;border-radius:3px;border:none;background:#333;color:#ccc;cursor:pointer;font-size:11px;line-height:1;padding:0;flex-shrink:0;font-weight:bold;">−</button>
+          <span style="min-width:18px;text-align:center;font-weight:900;color:${atMax ? activeColor : '#aaa'};">×${currentTicks}</span>
+          <button class="tick-ctrl tick-plus" style="width:15px;height:15px;border-radius:3px;border:none;background:#333;color:#ccc;cursor:pointer;font-size:11px;line-height:1;padding:0;flex-shrink:0;font-weight:bold;">+</button>
+        </sup>
+      `;
+      el.style.color = atMax ? activeColor : '';
+      el.title = titleHint;
+      el.querySelector('.tick-minus').addEventListener('click', (e) => { e.stopPropagation(); if (currentTicks > 1)        { currentTicks--; renderExpanded(); } });
+      el.querySelector('.tick-plus' ).addEventListener('click', (e) => { e.stopPropagation(); if (currentTicks < maxTicks) { currentTicks++; renderExpanded(); } });
+    };
+
+    renderExpanded();
+  });
+
+  card.addEventListener('click', (e) => {
+    if (e.target.closest('.heal-tick-toggle, .shield-tick-toggle, .dmg-tick-toggle, .tick-ctrl')) return;
+
+    if (activePicker && activePicker._sourceCard === card) {
+      closeActivePicker();
+      return;
+    }
+
+    const allItems = collectLineItems(card);
+    if (allItems.length === 0) return;
+
+    // Ouvre toujours le picker s'il y a des multi-hits, même pour un seul item sans crit
+    const hasMultiHit = allItems.some(i => i.isTick && i.tickCount > 1);
+
+    if (!hasMultiHit && allItems.length === 1 && !allItems[0].canCrit) {
+      const { damages, heals, shields } = itemsToLogEntry(allItems);
+      addMoveToLog({ moveName: move.name, moveImage: move.image, damages, heals, shields });
+      flashCard(card);
+      return;
+    }
+
+    openLinePicker(card, move, allItems);
+    if (activePicker) activePicker._sourceCard = card;
+  });
+}
+
+// ── injectCombatLogStyles ─────────────────────────────────────────────────────
+
 function injectCombatLogStyles() {
   if (document.getElementById('combatLogStyles')) return;
 
@@ -750,7 +1358,18 @@ function injectCombatLogStyles() {
       margin-top: 0;
     }
 
-    /* cl-picker-row defined below with crit controls */
+    .cl-picker-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background 0.12s;
+      user-select: none;
+      flex-wrap: wrap;
+    }
+    .cl-picker-row:hover { background: #252545; }
 
     .cl-picker-row input[type="checkbox"] {
       width: 14px;
@@ -842,19 +1461,6 @@ function injectCombatLogStyles() {
     }
 
     /* ── Crit controls in line picker ── */
-    .cl-picker-row {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 5px 10px;
-      border-radius: 7px;
-      cursor: pointer;
-      transition: background 0.12s;
-      user-select: none;
-      flex-wrap: wrap;
-    }
-    .cl-picker-row:hover { background: #252545; }
-
     .cl-crit-controls {
       display: flex;
       flex-direction: column;
@@ -902,7 +1508,7 @@ function injectCombatLogStyles() {
       color: #ef5350;
     }
 
-    /* Multi-hit crit counter */
+    /* Multi-hit counter */
     .cl-crit-btn {
       width: 18px;
       height: 18px;
@@ -923,16 +1529,37 @@ function injectCombatLogStyles() {
     }
     .cl-crit-btn:hover { background: #2a2a4a; color: #fff; }
 
-    .cl-crit-count {
+    .cl-hit-count, .cl-crit-count {
       font-size: 0.85rem;
       font-weight: 700;
       color: #aaa;
       min-width: 14px;
       text-align: center;
     }
-    .cl-crit-max {
+    .cl-crit-max, .cl-hit-max-ref {
       font-size: 0.72rem;
       color: #555;
+    }
+
+    /* Ligne de scaling info (H1:×1 H2:×0.8 H3:×0.6) */
+    .cl-tick-scaling-info {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 3px 0 4px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      border-bottom: 1px solid #252545;
+      margin-bottom: 4px;
+      width: 100%;
+    }
+
+    /* Valeur avec tooltip dispo */
+    .cl-picker-val[title] {
+      text-decoration: underline dashed;
+      text-underline-offset: 3px;
+      cursor: help;
     }
 
     .dmg-tick-toggle, .heal-tick-toggle, .shield-tick-toggle {
@@ -956,3 +1583,6 @@ function injectCombatLogStyles() {
 
   document.head.appendChild(style);
 }
+
+// ── Export attachMoveCardClickHandler (utilisé dans calculator.js) ────────────
+export { attachMoveCardClickHandler };

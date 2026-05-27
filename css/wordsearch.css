@@ -1,7 +1,3 @@
-/* ══════════════════════════════════════════════
-   POKESEARCH (wordsearch.css)
-   ══════════════════════════════════════════════ */
-
 :root {
   --bg:         #090f10;
   --surface:    #101a1b;
@@ -98,7 +94,7 @@ h1 {
   font-weight: 900;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text-bright);
   margin-bottom: 0;
   position: relative;
   z-index: 1;
@@ -182,12 +178,20 @@ h1::after {
   -webkit-user-select: none;
   display: inline-block;
 }
+
+/* Grid is blurred by default — JS adds .revealed to lift the blur */
 .ws-grid {
   display: grid;
   gap: var(--gap);
   cursor: crosshair;
   touch-action: none;
+  filter: blur(7px);
+  transition: filter 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
+.ws-grid-wrap.revealed .ws-grid {
+  filter: none;
+}
+
 .ws-cell {
   width: var(--cell);
   height: var(--cell);
@@ -474,7 +478,7 @@ canvas.ws-overlay {
 .ws-submit-btn:hover {
   background: rgba(79,195,247,0.22);
   border-color: rgba(79,195,247,0.55);
-  color: #fff;
+  color: var(--text-bright);
 }
 
 /* ── Leaderboard ── */
@@ -518,10 +522,60 @@ canvas.ws-overlay {
   white-space: nowrap;
 }
 
+/* ── Start overlay ── */
+.ws-start-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border-radius: var(--radius);
+}
+.ws-start-overlay.hiding {
+  animation: ws-fadeout 0.35s ease forwards;
+  pointer-events: none;
+}
+.ws-start-label {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.ws-start-btn {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--blue);
+  border: none;
+  border-radius: var(--radius);
+  padding: 14px 36px;
+  cursor: pointer;
+  box-shadow: 0 0 32px rgba(79,195,247,0.4), 0 0 0 1px rgba(79,195,247,0.2);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+.ws-start-btn:hover {
+  background: #7ed6fb;
+  box-shadow: 0 0 48px rgba(79,195,247,0.6), 0 0 0 1px rgba(79,195,247,0.35);
+  transform: scale(1.03);
+}
+.ws-start-btn:active { transform: scale(0.98); }
+
 /* ── Animations ── */
 @keyframes ws-fadein {
   from { opacity: 0; transform: translateY(-6px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes ws-fadeout {
+  from { opacity: 1; }
+  to   { opacity: 0; }
 }
 @keyframes ws-shake {
   0%, 100% { transform: translateX(0); }
@@ -538,7 +592,6 @@ canvas.ws-overlay {
    SIDEBAR SLIDER — Leaderboard
    ══════════════════════════════════════════════ */
 
-/* Bouton flottant — plus visible, avec label */
 .ws-sidebar-toggle {
   position: fixed;
   right: 0;
@@ -577,7 +630,6 @@ canvas.ws-overlay {
   color: inherit;
 }
 
-/* Panel sliding */
 .ws-sidebar {
   position: fixed;
   right: -320px;
