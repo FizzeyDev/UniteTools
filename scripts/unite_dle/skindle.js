@@ -27,6 +27,18 @@
     return localStorage.getItem('lang') || 'fr';
   }
 
+  /* Retourne le nom localisé d'un Pokémon selon la langue courante */
+  function getDisplayName(p) {
+    const lang = currentLang();
+    return p['name_' + lang] || p.name_fr || p.name;
+  }
+
+  /* Vérifie si q matche le nom EN ou le nom localisé (insensible aux accents) */
+  function pokeMatchesQuery(p, q) {
+    const n = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return n(p.name).includes(n(q)) || n(getDisplayName(p)).includes(n(q));
+  }
+
   function t(key) {
     const lang = currentLang();
     const dict = (window.translations || {})[lang]
@@ -386,7 +398,7 @@
 
     row.innerHTML = `
       <img src="${imgSrc}" alt="${poke.name}" onerror="this.style.display='none'">
-      <span class="skindle-guess-poke-name">${poke.name}</span>
+      <span class="skindle-guess-poke-name">${getDisplayName(poke)}</span>
       <span class="skindle-guess-poke-result ${isCorrect ? 'correct' : 'wrong'}">
         ${isCorrect ? t('skindle_guess_correct') : t('skindle_guess_wrong_poke')}
       </span>
@@ -405,7 +417,7 @@
       ${pokeData ? `<img src="${pokeData.img}" alt="${secret.pokemon}" onerror="this.style.display='none'">` : ''}
       <div class="skindle-found-poke-info">
         <div class="skindle-found-poke-label">${t('skindle_found_poke_label')}</div>
-        <div class="skindle-found-poke-name">${secret.pokemon}</div>
+        <div class="skindle-found-poke-name">${pokeData ? getDisplayName(pokeData) : secret.pokemon}</div>
       </div>
     `;
 
@@ -482,7 +494,7 @@
         <img class="skindle-end-skin-img" src="${secret.img}" alt="${secret.skinName}"
              onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png'">
         <div class="skindle-end-skin-info">
-          <div class="skindle-end-skin-poke">${secret.pokemon}</div>
+          <div class="skindle-end-skin-poke">${(() => { const pd = window.UNITE_POKEMON.find(p => p.name === secret.pokemon); return pd ? getDisplayName(pd) : secret.pokemon; })()}</div>
           <div class="skindle-end-skin-name">${secret.skinName} Style</div>
         </div>
       </div>
@@ -537,7 +549,7 @@
 
     const done = new Set(pokeGuesses.map(g => g.name));
     const res  = window.UNITE_POKEMON
-      .filter(p => p.name.toLowerCase().includes(q) && !done.has(p.name))
+      .filter(p => pokeMatchesQuery(p, q) && !done.has(p.name))
       .slice(0, 8);
 
     if (!res.length) { closeSugg(suggPokeEl); return; }
@@ -553,7 +565,7 @@
     suggPokeEl.innerHTML = res.map(p => `
       <li class="udle-sugg-item" data-name="${p.name}">
         <img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">
-        <span>${p.name}</span>
+        <span>${getDisplayName(p)}</span>
         <span class="udle-sugg-role ${ROLE_CLASSES[p.role] || ''}">${p.role}</span>
       </li>`).join('');
 

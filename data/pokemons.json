@@ -7,7 +7,14 @@
     "name_it": "Absol",
     "file": "absol_spe.png",
     "role": "spe",
-    "dex": 359
+    "dex": 359,
+    "portee": "Mêlée",
+    "difficulte": "Expert",
+    "annee": 2021,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Blastoise",
@@ -17,7 +24,14 @@
     "name_it": "Blastoise",
     "file": "blastoise_def.png",
     "role": "def",
-    "dex": 9
+    "dex": 9,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2021,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Chandelure",
@@ -27,7 +41,14 @@
     "name_it": "Chandelure",
     "file": "chandelure_atk.png",
     "role": "atk",
-    "dex": 609
+    "dex": 609,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2023,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Cramorant",
@@ -37,7 +58,14 @@
     "name_it": "Cramorant",
     "file": "cramorant_atk.png",
     "role": "atk",
-    "dex": 845
+    "dex": 845,
+    "portee": "Distance",
+    "difficulte": "Expert",
+    "annee": 2021,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 123
   },
   {
     "name": "Dhelmise",
@@ -47,7 +75,14 @@
     "name_it": "Dhelmise",
     "file": "dhelmise_all.png",
     "role": "all",
-    "dex": 781
+    "dex": 781,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2025,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Eldegoss",
@@ -57,7 +92,14 @@
     "name_it": "Eldegoss",
     "file": "eldegoss_sup.png",
     "role": "sup",
-    "dex": 830
+    "dex": 830,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2021,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Gardevoir",
@@ -67,7 +109,14 @@
     "name_it": "Gardevoir",
     "file": "gardevoir_atk.png",
     "role": "atk",
-    "dex": 282
+    "dex": 282,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2021,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 89
   },
   {
     "name": "Greninja",
@@ -77,7 +126,14 @@
     "name_it": "Greninja",
     "file": "greninja_atk.png",
     "role": "atk",
-    "dex": 658
+    "dex": 658,
+    "portee": "Mêlée",
+    "difficulte": "Expert",
+    "annee": 2021,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Lapras",
@@ -87,7 +143,14 @@
     "name_it": "Lapras",
     "file": "lapras_def.png",
     "role": "def",
-    "dex": 131
+    "dex": 131,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2023,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Machamp",
@@ -97,7 +160,14 @@
     "name_it": "Machamp",
     "file": "machamp_all.png",
     "role": "all",
-    "dex": 68
+    "dex": 68,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2021,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/9",
+    "mega": false,
+    "unite_move_cost": 134
   },
   {
     "name": "Mewtwo X",
@@ -107,7 +177,14 @@
     "name_it": "MegaMewtwo X",
     "file": "mewtwoX_all.png",
     "role": "all",
-    "dex": 150
+    "dex": 150,
+    "portee": "Mêlée",
+    "difficulte": "Novice",
+    "annee": 2023,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": true,
+    "unite_move_cost": 134
   },
   {
     "name": "Ninetales",
@@ -117,7 +194,14 @@
     "name_it": "Ninetales",
     "file": "ninetales_atk.png",
     "role": "atk",
-    "dex": 38
+    "dex": 38,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2021,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Rapidash",
@@ -127,7 +211,14 @@
     "name_it": "Rapidash",
     "file": "rapidash_spe.png",
     "role": "spe",
-    "dex": 78
+    "dex": 78,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2023,
+    "stade": "1ère évo",
+    "evo_niveaux": "5",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Suicune",
@@ -137,7 +228,14 @@
     "name_it": "Suicune",
     "file": "suicune_all.png",
     "role": "all",
-    "dex": 245
+    "dex": 245,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2025,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Tsareena",
@@ -147,7 +245,14 @@
     "name_it": "Tsareena",
     "file": "tsaarena_all.png",
     "role": "all",
-    "dex": 763
+    "dex": 763,
+    "portee": "Mêlée",
+    "difficulte": "Expert",
+    "annee": 2021,
+    "stade": "2ème évo",
+    "evo_niveaux": "4/6",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Venusaur",
@@ -157,7 +262,14 @@
     "name_it": "Venusaur",
     "file": "venusaur_atk.png",
     "role": "atk",
-    "dex": 3
+    "dex": 3,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2021,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Aegislash",
@@ -167,7 +279,14 @@
     "name_it": "Aegislash",
     "file": "aegislash_all.png",
     "role": "all",
-    "dex": 681
+    "dex": 681,
+    "portee": "Mêlée",
+    "difficulte": "Expert",
+    "annee": 2022,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Blaziken",
@@ -177,7 +296,14 @@
     "name_it": "Blaziken",
     "file": "blaziken_all.png",
     "role": "all",
-    "dex": 257
+    "dex": 257,
+    "portee": "Mêlée",
+    "difficulte": "Expert",
+    "annee": 2023,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 4.7
   },
   {
     "name": "Charizard",
@@ -187,7 +313,14 @@
     "name_it": "Charizard",
     "file": "charizard_all.png",
     "role": "all",
-    "dex": 6
+    "dex": 6,
+    "portee": "Mêlée",
+    "difficulte": "Novice",
+    "annee": 2021,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": true,
+    "unite_move_cost": 134
   },
   {
     "name": "Mega-Charizard X",
@@ -217,7 +350,14 @@
     "name_it": "Crustle",
     "file": "crustle_def.png",
     "role": "def",
-    "dex": 558
+    "dex": 558,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2021,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 134
   },
   {
     "name": "Dodrio",
@@ -227,7 +367,14 @@
     "name_it": "Dodrio",
     "file": "dodrio_spe.png",
     "role": "spe",
-    "dex": 85
+    "dex": 85,
+    "portee": "Mêlée",
+    "difficulte": "Expert",
+    "annee": 2022,
+    "stade": "1ère évo",
+    "evo_niveaux": "5",
+    "mega": false,
+    "unite_move_cost": 134
   },
   {
     "name": "Empoleon",
@@ -237,7 +384,14 @@
     "name_it": "Empoleon",
     "file": "empoleon_all.png",
     "role": "all",
-    "dex": 395
+    "dex": 395,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2025,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Gengar",
@@ -247,7 +401,14 @@
     "name_it": "Gengar",
     "file": "gengar_spe.png",
     "role": "spe",
-    "dex": 94
+    "dex": 94,
+    "portee": "Mêlée",
+    "difficulte": "Expert",
+    "annee": 2021,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/9",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Gyarados",
@@ -257,7 +418,14 @@
     "name_it": "Gyarados",
     "file": "gyarados_all.png",
     "role": "all",
-    "dex": 130
+    "dex": 130,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2024,
+    "stade": "1ère évo",
+    "evo_niveaux": "7",
+    "mega": true,
+    "unite_move_cost": 112
   },
   {
     "name": "Mega-Gyarados",
@@ -277,7 +445,14 @@
     "name_it": "Latias",
     "file": "latias_sup.png",
     "role": "sup",
-    "dex": 380
+    "dex": 380,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2025,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Mamoswine",
@@ -287,7 +462,14 @@
     "name_it": "Mamoswine",
     "file": "mamoswine_def.png",
     "role": "def",
-    "dex": 473
+    "dex": 473,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2021,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/9",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Mewtwo Y",
@@ -297,7 +479,14 @@
     "name_it": "MegaMewtwo Y",
     "file": "mewtwoY_atk.png",
     "role": "atk",
-    "dex": 150
+    "dex": 150,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2023,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": true,
+    "unite_move_cost": 134
   },
   {
     "name": "Pawmot",
@@ -307,7 +496,14 @@
     "name_it": "Pawmot",
     "file": "pawmot_all.png",
     "role": "all",
-    "dex": 923
+    "dex": 923,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2025,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 0
   },
   {
     "name": "Sableye",
@@ -317,7 +513,14 @@
     "name_it": "Sableye",
     "file": "sableye_sup.png",
     "role": "sup",
-    "dex": 302
+    "dex": 302,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2022,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Sylveon",
@@ -327,7 +530,14 @@
     "name_it": "Sylveon",
     "file": "sylveon_atk.png",
     "role": "atk",
-    "dex": 700
+    "dex": 700,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2021,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Tyranitar",
@@ -337,7 +547,14 @@
     "name_it": "Tyranitar",
     "file": "tyranitar_all.png",
     "role": "all",
-    "dex": 248
+    "dex": 248,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2022,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/9",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Wigglytuff",
@@ -347,7 +564,14 @@
     "name_it": "Wigglytuff",
     "file": "wigglytuff_sup.png",
     "role": "sup",
-    "dex": 40
+    "dex": 40,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2021,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 89
   },
   {
     "name": "Alcremie",
@@ -357,7 +581,14 @@
     "name_it": "Alcremie",
     "file": "alcreamie_sup.png",
     "role": "sup",
-    "dex": 869
+    "dex": 869,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2023,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Blissey",
@@ -367,7 +598,14 @@
     "name_it": "Blissey",
     "file": "blissey_sup.png",
     "role": "sup",
-    "dex": 242
+    "dex": 242,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2021,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Cinderace",
@@ -377,7 +615,14 @@
     "name_it": "Cinderace",
     "file": "cinderace_atk.png",
     "role": "atk",
-    "dex": 815
+    "dex": 815,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2021,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Darkrai",
@@ -387,7 +632,14 @@
     "name_it": "Darkrai",
     "file": "darkrai_spe.png",
     "role": "spe",
-    "dex": 491
+    "dex": 491,
+    "portee": "Mêlée",
+    "difficulte": "Expert",
+    "annee": 2024,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Dragapult",
@@ -397,7 +649,14 @@
     "name_it": "Dragapult",
     "file": "dragapult_atk.png",
     "role": "atk",
-    "dex": 887
+    "dex": 887,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2022,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/9",
+    "mega": false,
+    "unite_move_cost": 10
   },
   {
     "name": "Espeon",
@@ -407,7 +666,14 @@
     "name_it": "Espeon",
     "file": "espeon_atk.png",
     "role": "atk",
-    "dex": 196
+    "dex": 196,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2022,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Glaceon",
@@ -417,7 +683,14 @@
     "name_it": "Glaceon",
     "file": "glaceon_atk.png",
     "role": "atk",
-    "dex": 471
+    "dex": 471,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2022,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Ho-Oh",
@@ -427,7 +700,14 @@
     "name_it": "Ho-Oh",
     "file": "ho-oh_def.png",
     "role": "def",
-    "dex": 250
+    "dex": 250,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2023,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Latios",
@@ -437,7 +717,14 @@
     "name_it": "Latios",
     "file": "latios_atk.png",
     "role": "atk",
-    "dex": 381
+    "dex": 381,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2025,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Meowscarada",
@@ -447,7 +734,14 @@
     "name_it": "Meowscarada",
     "file": "meowscarada_spe.png",
     "role": "spe",
-    "dex": 908
+    "dex": 908,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2023,
+    "stade": "2ème évo",
+    "evo_niveaux": "4/6",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Meowth",
@@ -457,7 +751,14 @@
     "name_it": "Meowth",
     "file": "meowth_spe.png",
     "role": "spe",
-    "dex": 52
+    "dex": 52,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2026,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Mimikyu",
@@ -467,7 +768,14 @@
     "name_it": "Mimikyu",
     "file": "mimikyu_all.png",
     "role": "all",
-    "dex": 778
+    "dex": 778,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2023,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Pikachu",
@@ -477,7 +785,14 @@
     "name_it": "Pikachu",
     "file": "pikachu_atk.png",
     "role": "atk",
-    "dex": 25
+    "dex": 25,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2021,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 89
   },
   {
     "name": "Scyther",
@@ -487,7 +802,14 @@
     "name_it": "Scizor",
     "file": "scyther_spe.png",
     "role": "all",
-    "dex": 212
+    "dex": 212,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2022,
+    "stade": "Base",
+    "evo_niveaux": "5",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Scizor",
@@ -497,7 +819,14 @@
     "name_it": "Scizor",
     "file": "scizor_all.png",
     "role": "all",
-    "dex": 212
+    "dex": 212,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2022,
+    "stade": "1ère évo",
+    "evo_niveaux": "5",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Talonflame",
@@ -507,7 +836,14 @@
     "name_it": "Talonflame",
     "file": "talonflame_spe.png",
     "role": "spe",
-    "dex": 663
+    "dex": 663,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2021,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Umbreon",
@@ -517,7 +853,14 @@
     "name_it": "Umbreon",
     "file": "umbreon_def.png",
     "role": "def",
-    "dex": 197
+    "dex": 197,
+    "portee": "Mêlée",
+    "difficulte": "Novice",
+    "annee": 2023,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Zacian",
@@ -527,7 +870,14 @@
     "name_it": "Zacian",
     "file": "zacian_all.png",
     "role": "all",
-    "dex": 888
+    "dex": 888,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2023,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Armarouge",
@@ -537,7 +887,14 @@
     "name_it": "Armarouge",
     "file": "armarouge_atk.png",
     "role": "atk",
-    "dex": 936
+    "dex": 936,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2024,
+    "stade": "1ère évo",
+    "evo_niveaux": "5",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Buzzwole",
@@ -547,7 +904,14 @@
     "name_it": "Buzzwole",
     "file": "buzzwole_all.png",
     "role": "all",
-    "dex": 794
+    "dex": 794,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2022,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Clefable",
@@ -557,7 +921,14 @@
     "name_it": "Clefable",
     "file": "clefable_sup.png",
     "role": "sup",
-    "dex": 36
+    "dex": 36,
+    "portee": "Mêlée",
+    "difficulte": "Novice",
+    "annee": 2022,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Decidueye",
@@ -567,7 +938,14 @@
     "name_it": "Decidueye",
     "file": "decidueye_atk.png",
     "role": "atk",
-    "dex": 724
+    "dex": 724,
+    "portee": "Distance",
+    "difficulte": "Expert",
+    "annee": 2021,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Dragonite",
@@ -577,7 +955,14 @@
     "name_it": "Dragonite",
     "file": "dragonite_all.png",
     "role": "all",
-    "dex": 149
+    "dex": 149,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2021,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/8",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Falinks",
@@ -587,7 +972,14 @@
     "name_it": "Falinks",
     "file": "falinks_all.png",
     "role": "all",
-    "dex": 870
+    "dex": 870,
+    "portee": "Mêlée",
+    "difficulte": "Expert",
+    "annee": 2024,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Goodra",
@@ -597,7 +989,14 @@
     "name_it": "Goodra",
     "file": "goodra_def.png",
     "role": "def",
-    "dex": 706
+    "dex": 706,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2023,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/8",
+    "mega": false,
+    "unite_move_cost": 89
   },
   {
     "name": "Hoopa",
@@ -607,7 +1006,14 @@
     "name_it": "Hoopa",
     "file": "hoopa_sup.png",
     "role": "sup",
-    "dex": 720
+    "dex": 720,
+    "portee": "Distance",
+    "difficulte": "Expert",
+    "annee": 2022,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Leafeon",
@@ -617,7 +1023,14 @@
     "name_it": "Leafeon",
     "file": "leafeon_spe.png",
     "role": "spe",
-    "dex": 470
+    "dex": 470,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2023,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Metagross",
@@ -627,7 +1040,14 @@
     "name_it": "Metagross",
     "file": "metagross_all.png",
     "role": "all",
-    "dex": 376
+    "dex": 376,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2023,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/9",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Miraidon",
@@ -637,7 +1057,14 @@
     "name_it": "Miraidon",
     "file": "miraidon_atk.png",
     "role": "atk",
-    "dex": 1008
+    "dex": 1008,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2024,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Psyduck",
@@ -647,7 +1074,14 @@
     "name_it": "Psyduck",
     "file": "psyduck_sup.png",
     "role": "sup",
-    "dex": 54
+    "dex": 54,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2024,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Feraligatr",
@@ -667,7 +1101,14 @@
     "name_it": "Slowbro",
     "file": "slowbro_def.png",
     "role": "def",
-    "dex": 80
+    "dex": 80,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2021,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Tinkaton",
@@ -677,7 +1118,14 @@
     "name_it": "Tinkaton",
     "file": "tinkaton_all.png",
     "role": "all",
-    "dex": 959
+    "dex": 959,
+    "portee": "Mêlée",
+    "difficulte": "Novice",
+    "annee": 2024,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 89
   },
   {
     "name": "Urshifu",
@@ -687,7 +1135,14 @@
     "name_it": "Urshifu",
     "file": "urshifu_all.png",
     "role": "all",
-    "dex": 892
+    "dex": 892,
+    "portee": "Mêlée",
+    "difficulte": "Expert",
+    "annee": 2022,
+    "stade": "1ère évo",
+    "evo_niveaux": "5",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Zeraora",
@@ -697,7 +1152,14 @@
     "name_it": "Zeraora",
     "file": "zeraora_spe.png",
     "role": "spe",
-    "dex": 807
+    "dex": 807,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2021,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Azumarill",
@@ -707,7 +1169,14 @@
     "name_it": "Azumarill",
     "file": "azumarill_all.png",
     "role": "all",
-    "dex": 184
+    "dex": 184,
+    "portee": "Mêlée",
+    "difficulte": "Novice",
+    "annee": 2022,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 89
   },
   {
     "name": "Ceruledge",
@@ -717,7 +1186,14 @@
     "name_it": "Ceruledge",
     "file": "ceruledge_all.png",
     "role": "all",
-    "dex": 937
+    "dex": 937,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2024,
+    "stade": "1ère évo",
+    "evo_niveaux": "5",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Comfey",
@@ -727,7 +1203,14 @@
     "name_it": "Comfey",
     "file": "comfey_sup.png",
     "role": "sup",
-    "dex": 764
+    "dex": 764,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2023,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 89
   },
   {
     "name": "Delphox",
@@ -737,7 +1220,14 @@
     "name_it": "Delphox",
     "file": "delphox_atk.png",
     "role": "atk",
-    "dex": 655
+    "dex": 655,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2022,
+    "stade": "2ème évo",
+    "evo_niveaux": "4/6",
+    "mega": false,
+    "unite_move_cost": 84
   },
   {
     "name": "Duraludon",
@@ -747,7 +1237,14 @@
     "name_it": "Duraludon",
     "file": "duraludon_atk.png",
     "role": "atk",
-    "dex": 884
+    "dex": 884,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2022,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 134
   },
   {
     "name": "Garchomp",
@@ -757,7 +1254,14 @@
     "name_it": "Garchomp",
     "file": "garchomp_all.png",
     "role": "all",
-    "dex": 445
+    "dex": 445,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2022,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/9",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Greedent",
@@ -767,7 +1271,14 @@
     "name_it": "Greedent",
     "file": "greedent_def.png",
     "role": "def",
-    "dex": 820
+    "dex": 820,
+    "portee": "Mêlée",
+    "difficulte": "Expert",
+    "annee": 2021,
+    "stade": "1ère évo",
+    "evo_niveaux": "5",
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Inteleon",
@@ -777,7 +1288,14 @@
     "name_it": "Inteleon",
     "file": "inteleon_atk.png",
     "role": "atk",
-    "dex": 818
+    "dex": 818,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2023,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Lucario",
@@ -787,7 +1305,14 @@
     "name_it": "Lucario",
     "file": "lucario_all.png",
     "role": "all",
-    "dex": 448
+    "dex": 448,
+    "portee": "Mêlée",
+    "difficulte": "Expert",
+    "annee": 2021,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": true,
+    "unite_move_cost": 100
   },
   {
     "name": "Mega-Lucario",
@@ -807,7 +1332,14 @@
     "name_it": "Mew",
     "file": "mew_atk.png",
     "role": "atk",
-    "dex": 151
+    "dex": 151,
+    "portee": "Distance",
+    "difficulte": "Expert",
+    "annee": 2022,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 123
   },
   {
     "name": "Mr. Mime",
@@ -817,7 +1349,14 @@
     "name_it": "Mr. Mime",
     "file": "mr.mime_sup.png",
     "role": "sup",
-    "dex": 122
+    "dex": 122,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2021,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Raichu",
@@ -827,7 +1366,14 @@
     "name_it": "Raichu",
     "file": "raichu_atk.png",
     "role": "atk",
-    "dex": 26
+    "dex": 26,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2023,
+    "stade": "1ère évo",
+    "evo_niveaux": "5",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Snorlax",
@@ -837,7 +1383,14 @@
     "name_it": "Snorlax",
     "file": "snorlax_def.png",
     "role": "def",
-    "dex": 143
+    "dex": 143,
+    "portee": "Mêlée",
+    "difficulte": "Novice",
+    "annee": 2021,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 89
   },
   {
     "name": "Trevenant",
@@ -847,7 +1400,14 @@
     "name_it": "Trevenant",
     "file": "trevenant_def.png",
     "role": "def",
-    "dex": 709
+    "dex": 709,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2022,
+    "stade": "1ère évo",
+    "evo_niveaux": "5",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Vaporeon",
@@ -857,7 +1417,14 @@
     "name_it": "Vaporeon",
     "file": "vaporeon_def.png",
     "role": "def",
-    "dex": 134
+    "dex": 134,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2025,
+    "stade": "1ère évo",
+    "evo_niveaux": "4",
+    "mega": false,
+    "unite_move_cost": 89
   },
   {
     "name": "Zoroark",
@@ -867,7 +1434,14 @@
     "name_it": "Zoroark",
     "file": "zoroark_spe.png",
     "role": "spe",
-    "dex": 571
+    "dex": 571,
+    "portee": "Mêlée",
+    "difficulte": "Expert",
+    "annee": 2022,
+    "stade": "1ère évo",
+    "evo_niveaux": "5",
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Sirfetchd",
@@ -877,7 +1451,14 @@
     "name_it": "Sirfetch'd",
     "file": "sirfetchd_all.png",
     "role": "all",
-    "dex": 865
+    "dex": 865,
+    "portee": "Mêlée",
+    "difficulte": "Expert",
+    "annee": 2026,
+    "stade": "1ère évo",
+    "evo_niveaux": "5",
+    "mega": false,
+    "unite_move_cost": 89
   },
   {
     "name": "Articuno",
@@ -887,7 +1468,14 @@
     "name_it": "Articuno",
     "file": "articuno_def.png",
     "role": "def",
-    "dex": 144
+    "dex": 144,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2026,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Zapdos",
@@ -897,7 +1485,14 @@
     "name_it": "Zapdos",
     "file": "zapdos_atk.png",
     "role": "atk",
-    "dex": 145
+    "dex": 145,
+    "portee": "Distance",
+    "difficulte": "Novice",
+    "annee": 2026,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 89
   },
   {
     "name": "Moltres",
@@ -907,7 +1502,14 @@
     "name_it": "Moltres",
     "file": "moltres_all.png",
     "role": "all",
-    "dex": 146
+    "dex": 146,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2026,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Typhlosion",
@@ -917,7 +1519,14 @@
     "name_it": "Typhlosion",
     "file": "typhlosion_atk.png",
     "role": "atk",
-    "dex": 157
+    "dex": 157,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2026,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 112
   },
   {
     "name": "Meganium",
