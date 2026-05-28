@@ -109,7 +109,8 @@
       <div class="gw-room-code-wrap">
         <span class="gw-room-label" data-lang="gw_room_label">Code de salle</span>
         <span class="gw-room-code" id="display-room-code">------</span>
-        <button class="gw-copy-btn" id="btn-copy-code" title="Copy code" data-lang="gw_copy">⎘ Copier</button>
+        <button class="gw-copy-btn" id="btn-copy-code" title="Copier le code" data-lang="gw_copy">⎘ Copier</button>
+        <button class="gw-copy-btn gw-copy-btn-link" id="btn-copy-link" title="Copier le lien d'invitation">🔗 Lien</button>
       </div>
       <div class="gw-players-row">
         <div class="gw-player-slot" id="slot-p1">
@@ -134,6 +135,29 @@
         <div class="gw-rules-tags" id="rules-tags"></div>
         <div id="rules-edit-hint" class="gw-rules-edit-hint hidden">
           <span data-lang="gw_rules_edit_hint">Tu peux modifier les règles tant que l'adversaire n'a pas rejoint.</span>
+        </div>
+      </div>
+
+      <div class="gw-rules-panel hidden" id="rules-edit-panel">
+        <div class="gw-rules-title">
+          <span>⚙️</span>
+          <span data-lang="gw_rules_title">Modifier les règles</span>
+        </div>
+        <div class="gw-rule-row">
+          <label class="gw-rule-label" data-lang="gw_rule_pool">Pokémon pool</label>
+          <div class="gw-rule-toggle-group" id="rule-pool-w">
+            <button class="gw-rule-toggle active" data-value="unite">Unite</button>
+            <button class="gw-rule-toggle" data-value="global">Global</button>
+          </div>
+        </div>
+        <div class="gw-rule-row">
+          <label class="gw-rule-label" data-lang="gw_rule_grid">Taille de la grille</label>
+          <div class="gw-rule-toggle-group" id="rule-grid-size-w">
+            <button class="gw-rule-toggle" data-value="12">12</button>
+            <button class="gw-rule-toggle active" data-value="24">24</button>
+            <button class="gw-rule-toggle" data-value="32">32</button>
+            <button class="gw-rule-toggle" data-value="48">48</button>
+          </div>
         </div>
       </div>
 

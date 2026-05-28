@@ -1003,3 +1003,14 @@ h1::after {
   animation: gw-random-flash 0.6s ease forwards;
   pointer-events: none;
 }
+
+/* Bouton lien d'invitation — tint violet pour le distinguer du copy-code */
+.gw-copy-btn-link {
+  background: rgba(159,83,236,0.1);
+  border-color: rgba(159,83,236,0.3);
+  color: var(--violet);
+}
+.gw-copy-btn-link:hover {
+  background: rgba(159,83,236,0.2);
+  color: var(--text-bright);
+}
