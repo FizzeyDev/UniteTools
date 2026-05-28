@@ -9,11 +9,11 @@
   const STADE_LEVELS = ['Base', '1ère évo', '2ème évo'];
 
   const ROLE_CLASSES = {
-    'Attaquant':   'role-attaquant',
-    'Défenseur':   'role-défenseur',
-    'All-Rounder': 'role-all-rounder',
-    'Rapide':      'role-rapide',
-    'Soutien':     'role-soutien',
+      'atk': 'role-attaquant',
+      'def': 'role-défenseur',
+      'all': 'role-all-rounder',
+      'spe': 'role-rapide',
+      'sup': 'role-soutien',
   };
 
   function t(key) {
@@ -33,6 +33,29 @@
 
   function currentLang() {
     return localStorage.getItem('lang') || 'fr';
+  }
+
+  /* Retourne le nom localisé d'un Pokémon selon la langue courante */
+  function getDisplayName(p) {
+    const lang = currentLang();
+    return p['name_' + lang] || p.name_fr || p.name;
+  }
+
+  /* Retourne le rôle affiché dans la langue actuelle */
+  function getRoleDisplay(poke) {
+      const lang = currentLang();
+    
+      if (poke.roleDisplay) {
+          return poke.roleDisplay[lang] || poke.roleDisplay.fr || poke.role;
+      }
+      
+      return tv('role', poke.role);
+  }
+
+  /* Vérifie si q (query normalisée) matche le nom EN ou le nom localisé */
+  function pokeMatchesQuery(p, q) {
+    const n = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return n(p.name).includes(n(q)) || n(getDisplayName(p)).includes(n(q));
   }
 
   function scoreEmoji(n) {
@@ -294,7 +317,7 @@
     pokeId.innerHTML = `
       <img src="${g.img}" alt="${g.name}" loading="lazy"
            onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png'">
-      <span class="udle-poke-id-name">${g.name}</span>
+      <span class="udle-poke-id-name">${getDisplayName(g)}</span>
     `;
     row.appendChild(pokeId);
 
@@ -305,7 +328,7 @@
     const megaLabel = g.mega ? t('udle_mega_yes') : t('udle_mega_no');
 
     const defs    = [
-      { labelKey: 'udle_card_role',        value: tv('role',       g.role)       },
+      { labelKey: 'udle_card_role', value: getRoleDisplay(g) },
       { labelKey: 'udle_card_portee',      value: tv('portee',     g.portee)     },
       { labelKey: 'udle_card_diff',        value: tv('difficulte', g.difficulte) },
       { labelKey: 'udle_card_annee',       value: String(g.annee)                },
@@ -380,15 +403,15 @@
     if (!q) { closeSugg(); return; }
     const done = new Set(guesses.map(g => g.name));
     const res  = UNITE_POKEMON
-      .filter(p => p.name.toLowerCase().includes(q) && !done.has(p.name))
+      .filter(p => pokeMatchesQuery(p, q) && !done.has(p.name))
       .slice(0, 8);
     if (!res.length) { closeSugg(); return; }
 
     suggestEl.innerHTML = res.map(p => `
       <li class="udle-sugg-item" data-name="${p.name}">
         <img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">
-        <span>${p.name}</span>
-        <span class="udle-sugg-role ${ROLE_CLASSES[p.role] || ''}">${tv('role', p.role)}</span>
+        <span>${getDisplayName(p)}</span>
+        <span class="udle-sugg-role ${ROLE_CLASSES[p.role] || ''}">${getRoleDisplay(p)}</span>
       </li>`).join('');
 
     suggestEl.querySelectorAll('.udle-sugg-item').forEach(li => {

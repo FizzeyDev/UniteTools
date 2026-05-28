@@ -75,9 +75,12 @@ function wsStartTimer() {
 }
 
 function wsStopTimer() {
+  // FIX : guard anti-double-call — évite que elapsedSeconds soit écrasé
+  if (WS.finished) return;
   WS.elapsedSeconds = wsGetElapsed();
   WS.finished = true;
   clearInterval(WS.timerInterval);
+  WS.timerInterval = null;
   const el = document.getElementById('ws-timer');
   if (el) el.textContent = wsFormatTime(WS.elapsedSeconds);
 }
@@ -91,7 +94,6 @@ function wsSaveTimer() {
 
 // ── Start overlay ──────────────────────────────────────────────────────────
 function wsShowStartOverlay() {
-  // Don't show if the game is already in progress or finished
   if (WS.finished || WS.startTimestamp || WS.foundWords.size > 0) return;
 
   const wrap = document.querySelector('.ws-grid-wrap');
@@ -110,9 +112,7 @@ function wsShowStartOverlay() {
   btn.textContent = 'Start';
 
   btn.addEventListener('click', () => {
-    // Reveal the grid with a smooth unblur
     wrap.classList.add('revealed');
-    // Fade out and remove the overlay
     overlay.classList.add('hiding');
     wsStartTimer();
     setTimeout(() => overlay.remove(), 380);
@@ -147,6 +147,7 @@ function wsInit(lang) {
   WS.finished = false;
   WS.elapsedSeconds = 0;
   clearInterval(WS.timerInterval);
+  WS.timerInterval = null;
 
   // Restore saved progress
   const saveKey = `ws_${seed}_${WS.lang}`;
@@ -156,13 +157,27 @@ function wsInit(lang) {
     if (saved.foundWords) saved.foundWords.forEach(w => WS.foundWords.add(w));
     if (saved.foundCells) saved.foundCells.forEach(k => WS.foundCells.add(k));
     if (saved.startTimestamp) WS.startTimestamp = saved.startTimestamp;
-    if (saved.elapsedSeconds) WS.elapsedSeconds = saved.elapsedSeconds;
+    // FIX : != null au lieu de if (saved.elapsedSeconds) qui rate la valeur 0
+    if (saved.elapsedSeconds != null) WS.elapsedSeconds = saved.elapsedSeconds;
   } catch (e) { /* ignore */ }
+
+  // FIX : détecter la partie finie AVANT d'afficher le timer, pour ne jamais
+  //       afficher wsGetElapsed() (= temps depuis startTimestamp jusqu'à maintenant)
+  //       sur une partie déjà terminée.
+  const alreadyFinished = WS.foundWords.size === WS.words.length;
+
+  if (alreadyFinished) {
+    // Poser finished=true et tuer tout interval résiduel avant le display
+    WS.finished = true;
+    clearInterval(WS.timerInterval);
+    WS.timerInterval = null;
+  }
 
   // Update timer display
   const timerEl = document.getElementById('ws-timer');
   if (timerEl) {
-    if (WS.finished) {
+    if (alreadyFinished) {
+      // Toujours le temps figé, jamais wsGetElapsed()
       timerEl.textContent = wsFormatTime(WS.elapsedSeconds);
     } else if (WS.startTimestamp) {
       timerEl.textContent = wsFormatTime(wsGetElapsed());
@@ -182,16 +197,17 @@ function wsInit(lang) {
     d.toLocaleDateString(WS.lang === 'fr' ? 'fr-FR' : 'en-GB',
       { day: '2-digit', month: 'long', year: 'numeric' });
 
-  // Already finished?
-  if (WS.foundWords.size === WS.words.length) {
-    WS.finished = true;
-    // Reveal grid immediately — no overlay needed
+  if (alreadyFinished) {
+    // Révéler la grille immédiatement, pas d'overlay, pas de setInterval
     const wrap = document.querySelector('.ws-grid-wrap');
     if (wrap) wrap.classList.add('revealed');
     document.getElementById('ws-win').classList.add('show');
+    // FIX : forcer le display une deuxième fois après wsUpdateProgress()
+    //       qui pourrait l'avoir touché
+    if (timerEl) timerEl.textContent = wsFormatTime(WS.elapsedSeconds);
     wsStartCountdown();
   } else if (WS.startTimestamp) {
-    // Game already in progress — reveal grid, resume timer
+    // Partie en cours — révéler la grille et reprendre le timer
     const wrap = document.querySelector('.ws-grid-wrap');
     if (wrap) wrap.classList.add('revealed');
     WS.timerInterval = setInterval(() => {
@@ -200,7 +216,7 @@ function wsInit(lang) {
       if (el) el.textContent = wsFormatTime(wsGetElapsed());
     }, 1000);
   } else {
-    // Fresh game — show start overlay (grid stays blurred via CSS default)
+    // Nouvelle partie — overlay (grille floutée par CSS)
     wsShowStartOverlay();
   }
 }
@@ -255,8 +271,8 @@ function wsUpdateProgress() {
   const total = WS.words.length;
   document.getElementById('ws-found').textContent = found;
   document.getElementById('ws-bar').style.width = `${(found / total) * 100}%`;
-  if (found === total) {
-    wsStopTimer();
+  if (found === total && !WS.finished) {
+    wsStopTimer(); // pose WS.finished = true et fige elapsedSeconds
     wsSave();
     setTimeout(() => {
       document.getElementById('ws-win').classList.add('show');
@@ -464,7 +480,6 @@ function wsAttachEvents() {
   const grid = document.getElementById('ws-grid');
 
   const start = e => {
-    // Block interaction until the game has been started via the overlay
     if (!WS.startTimestamp || WS.finished) return;
     e.preventDefault();
     const el = wsGetCellEl(e);
@@ -506,11 +521,9 @@ function wsAttachEvents() {
   window.addEventListener('touchend',  end,   { passive: false });
   window.addEventListener('resize', () => { wsResizeCanvas(); wsDrawLines(); });
 
-  // Sidebar toggle button
   const toggleBtn = document.getElementById('ws-sidebar-toggle');
   if (toggleBtn) toggleBtn.addEventListener('click', wsToggleSidebar);
 
-  // Close sidebar when clicking outside on mobile
   document.addEventListener('click', e => {
     const sidebar = document.getElementById('ws-sidebar');
     const toggle  = document.getElementById('ws-sidebar-toggle');
@@ -520,7 +533,6 @@ function wsAttachEvents() {
     }
   });
 
-  // Submit form
   const submitBtn   = document.getElementById('ws-submit-btn');
   const pseudoInput = document.getElementById('ws-pseudo-input');
   if (submitBtn && pseudoInput) {

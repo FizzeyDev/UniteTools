@@ -970,3 +970,47 @@ h1::after {
   }
   .gw-room-code { font-size: 1.4rem; letter-spacing: 0.15em; }
 }
+
+/* ── Random pick button ── */
+.gw-random-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.gw-btn-random {
+  background: rgba(159,83,236,0.12);
+  border-color: rgba(159,83,236,0.5);
+  color: var(--violet);
+  font-size: 0.9rem;
+  padding: 9px 22px;
+  box-shadow: 0 0 14px rgba(159,83,236,0.15);
+  transition: all 0.18s ease;
+}
+.gw-btn-random:hover {
+  background: rgba(159,83,236,0.22);
+  box-shadow: 0 0 24px rgba(159,83,236,0.3);
+  transform: translateY(-2px);
+}
+
+/* Flash animation lors du choix aléatoire */
+@keyframes gw-random-flash {
+  0%   { border-color: var(--violet); box-shadow: 0 0 0 2px rgba(159,83,236,0.3); background: rgba(159,83,236,0.18); }
+  50%  { border-color: var(--blue);   box-shadow: 0 0 0 4px rgba(79,195,247,0.35); background: var(--blue-dim); }
+  100% { border-color: var(--blue);   box-shadow: 0 0 0 2px rgba(79,195,247,0.2); background: var(--blue-dim); }
+}
+.gw-poke-card.random-flash {
+  animation: gw-random-flash 0.6s ease forwards;
+  pointer-events: none;
+}
+
+/* Bouton lien d'invitation — tint violet pour le distinguer du copy-code */
+.gw-copy-btn-link {
+  background: rgba(159,83,236,0.1);
+  border-color: rgba(159,83,236,0.3);
+  color: var(--violet);
+}
+.gw-copy-btn-link:hover {
+  background: rgba(159,83,236,0.2);
+  color: var(--text-bright);
+}
