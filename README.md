@@ -15,18 +15,31 @@
 
 ---
 
-## ✨ Features
+## 🔧 Tools
 
-| Tool | Status | Description |
-|------|--------|-------------|
-| 🗂️ **Draft Simulator** | ✅ Live | Full ban/pick simulator with multiple competitive modes |
-| 📊 **Tier List Creator** | ✅ Live | Build and share your own Pokémon tier lists |
-| ⏱️ **Map Timer** | ✅ Live | Track key in-game spawn timings |
-| 🗺️ **Dynamic Map** | 🔜 Soon | Interactive map with live event tracking |
-| ⚔️ **Damage Calculator** | 🚧 WIP | Estimate damage output for any matchup |
-| 🎯 **Pokédle / Unite-dle** | ✅ Live | Daily guessing games for Unite fans |
-| 🎨 **Skindle** | ✅ Live | Guess the Pokémon skin in daily challenges |
-| 📋 **Patch Tracker** | ✅ Live | Follow and browse all Pokémon Unite patch notes |
+| Tool | Description |
+|------|-------------|
+| 📋 **Draft Simulator** | Bans, picks, timer, Fearless mode & multiplayer |
+| ⏱️ **Map Timer** | Real-time objective timers |
+| 💥 **Damage Calculator** | Precise calculations with items, levels & buffs |
+| ⚡ **XP Calculator** | Simulate XP gain & find optimal farming paths |
+| 📊 **Tier List** | Create and share your custom tier lists |
+| 🗺️ **Interactive Map** | Explore objectives, zones & draft integration |
+| 📝 **Patch Tracker** | All patch notes with stats & impact analysis |
+| 🖥️ **Stream Overlay Tool** | Custom overlays & widgets for your stream |
+
+---
+
+## 🎮 Unite Games - Daily Challenges
+
+A hub of daily mini-games built around the Pokémon Unite universe. New puzzles every day, solo or multiplayer.
+
+| Game | Description |
+|------|-------------|
+| 🎮 **Pokédle UNITE** | Guess the daily Pokémon using role, range & difficulty clues |
+| 🔍 **Skindle** | Identify a zoomed-in skin - zoom out with every wrong guess |
+| 🔤 **PokéSearch** | Find 10 hidden Pokémon in the daily word grid |
+| 👥 **PokéWho** | Real-time Guess Who? against a friend - pick a secret Pokémon |
 
 ---
 
@@ -34,7 +47,7 @@
 
 The draft simulator is the centerpiece of Unite Tools. It supports:
 
-- **4 game modes** - Swap Ban, Tournament (2 or 3 bans), Reban
+- **Multiple game modes** - Swap Ban, Tournament (2 or 3 bans), Reban
 - **🌐 Online Multiplayer** - create or join a room with a 6-character code
 - **👁️ Spectator mode** - watch a draft live without participating
 - **⏱️ Configurable timer** - set per-pick countdowns
@@ -43,6 +56,14 @@ The draft simulator is the centerpiece of Unite Tools. It supports:
 - **🗺️ Map selection** - Groudon, Kyogre, Rayquaza or random
 - **↩️ Undo** - revert the last pick/ban at any time
 - **🔍 Gallery filters** - sort and search by role, name, or Pokédex number
+
+---
+
+## 🗺️ Roadmap
+
+- 🚧 **Damage Calculator** - All moves & passives effects support
+- 🚧 **Interactive Map × Draft & Damage Calculator** - Live integration between the map and draft simulator; simulate 1v1 directly from the map
+- 🚧 **Patch Tracker** - Complete patch history with real data & stat changes
 
 ---
 
@@ -70,9 +91,15 @@ UniteTools/
 ├── draft.html       # Draft Simulator
 ├── tierlist.html    # Tier List Creator
 ├── map_timer.html   # Map Timer
-├── damage-calc.html # Damage Calculator (WIP)
+├── damage-calc.html # Damage Calculator
+├── xp-calc.html     # XP Calculator
+├── map.html         # Interactive Map
+├── patch.html       # Patch Tracker
+├── stream.html      # Stream Overlay Tool
 ├── pokedle.html     # Pokédle daily game
 ├── skindle.html     # Skindle daily game
+├── wordsearch.html  # PokéSearch daily game
+├── guesswho.html    # PokéWho multiplayer game
 └── index.html       # Homepage
 ```
 
@@ -97,16 +124,21 @@ npx serve .
 
 ---
 
-## 🗺️ Roadmap
+## 👤 About the Creator
 
-- [ ] Dynamic interactive map
-- [ ] Damage Calculator (complete)
+Made with ❤️ by **Fizzey** - competitive Pokémon Unite player, web developer, and active member of the French esport scene.
+
+> *"My goal is to create a tool for the competitive community that I and my team will also use."*
+
+Beyond building this site, Fizzey plays for **[Volticons Unite](https://x.com/VoltIconsUnite)**, a European team qualified in the official Pokémon Unite league.
+
+The competitive Pokémon Unite scene was sorely lacking dedicated tools - no updated draft simulator, no damage calculator, nothing to practice map control. Unite Tools was born from that frustration: a solo project built with passion to raise the level of the entire community.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions, bug reports and feature suggestions are welcome!
+Contributions, bug reports, and feature suggestions are welcome!
 
 1. Fork the repo
 2. Create your branch: `git checkout -b feat/my-feature`
@@ -117,9 +149,15 @@ For bugs or ideas, open an [Issue](https://github.com/FizzeyDev/UniteTools/issue
 
 ---
 
-## 📬 Contact
+## 💬 Community
 
-Made with ❤️ by **Fizzey**, Pokémon Unite player & developer.
+Join the Discord to follow the project's progress, share feedback, report bugs, suggest features, and connect with other players. Updates and new tools are announced there first.
+
+👉 **[Join the Discord](https://discord.gg/PerJa3Su)**
+
+---
+
+## 📬 Contact
 
 - 💬 Discord: `fizzeys.`
 - 🐦 Twitter/X: [@FizzeyS](https://twitter.com/FizzeyS)
