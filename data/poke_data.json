@@ -7503,6 +7503,104 @@
     ]
   },
   {
+    "pokemonId": "meganium",
+    "dex": 154,
+    "role": "supporter",
+    "style": "special",
+    "stats": [
+      {"level": 1, "hp": 3640, "atk": 20, "def": 98, "sp_atk": 106, "sp_def": 98, "crit": 0},
+      {"level": 2, "hp": 3726, "atk": 21, "def": 104, "sp_atk": 113, "sp_def": 104, "crit": 0},
+      {"level": 3, "hp": 3828, "atk": 23, "def": 111, "sp_atk": 121, "sp_def": 111, "crit": 0},
+      {"level": 4, "hp": 3952, "atk": 25, "def": 120, "sp_atk": 131, "sp_def": 120, "crit": 0},
+      {"level": 5, "hp": 4397, "atk": 32, "def": 152, "sp_atk": 166, "sp_def": 152, "crit": 0},
+      {"level": 6, "hp": 4575, "atk": 35, "def": 164, "sp_atk": 180, "sp_def": 164, "crit": 0},
+      {"level": 7, "hp": 5384, "atk": 48, "def": 221, "sp_atk": 245, "sp_def": 221, "crit": 0},
+      {"level": 8, "hp": 5639, "atk": 52, "def": 240, "sp_atk": 265, "sp_def": 240, "crit": 0},
+      {"level": 9, "hp": 5946, "atk": 57, "def": 261, "sp_atk": 289, "sp_def": 261, "crit": 0},
+      {"level": 10, "hp": 6314, "atk": 63, "def": 287, "sp_atk": 319, "sp_def": 287, "crit": 0},
+      {"level": 11, "hp": 6755, "atk": 70, "def": 319, "sp_atk": 354, "sp_def": 319, "crit": 0},
+      {"level": 12, "hp": 7285, "atk": 79, "def": 356, "sp_atk": 396, "sp_def": 356, "crit": 0},
+      {"level": 13, "hp": 7921, "atk": 89, "def": 401, "sp_atk": 446, "sp_def": 401, "crit": 0},
+      {"level": 14, "hp": 8684, "atk": 101, "def": 455, "sp_atk": 507, "sp_def": 455, "crit": 0},
+      {"level": 15, "hp": 9600, "atk": 116, "def": 520, "sp_atk": 580, "sp_def": 520, "crit": 0}
+    ],
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "false",
+        "image": "assets/moves/basic_attack.png",
+        "damages": [
+          {"name": "Basic", "multiplier": 45, "levelCoef": 0, "constant": 180, "dealDamage": true, "scaling": "special"}
+        ]
+      },
+      {
+        "name": "Magical Leaf",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 5,
+        "can_crit": "false",
+        "image": "assets/moves/meganium/magical_leaf.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 140, "levelCoef": 0, "constant": 560, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Grass Knot",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/meganium/grass_knot.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 192, "levelCoef": 0, "constant": 576, "dealDamage": true},
+          {"name": "Damage +", "multiplier": 192, "levelCoef": 0, "constant": 576, "dealDamage": true, "upgraded": true}
+        ]
+      },
+      {
+        "name": "Synthesis",
+        "learnLevel": 1,
+        "unlearn": null,
+        "upgradeLevel": 7,
+        "can_crit": "false",
+        "image": "assets/moves/meganium/synthesis.png",
+        "damages": [],
+        "heals": [
+          {"name": "Heal", "scaling": "sp_atk", "multiplier": 180, "levelCoef": 0, "constant": 50}
+        ]
+      },
+      {
+        "name": "Petal Blizzard",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/meganium/petal_blizzard.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 124, "levelCoef": 0, "constant": 620, "dealDamage": true},
+          {"name": "Damage + (Full Bloom ticks)", "multiplier": 18, "levelCoef": 0, "constant": 93, "dealDamage": true, "upgraded": true, "is_tick": true, "tick_count": 4}
+        ],
+        "heals": [
+          {"name": "Heal", "scaling": "sp_atk", "multiplier": 178, "levelCoef": 0, "constant": 180},
+          {"name": "Heal + (Full Bloom ticks)", "scaling": "sp_atk", "multiplier": 8, "levelCoef": 0, "constant": 9, "upgraded": true, "is_tick": true, "tick_count": 4}
+        ]
+      },
+      {
+        "name": "Full Bloom Aroma (Unite)",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/meganium/full_bloom_aroma.png",
+        "damages": [
+          {"name": "Damage (per tick x10)", "multiplier": 20, "levelCoef": 0, "constant": 106, "dealDamage": true, "is_tick": true, "tick_count": 10}
+        ],
+        "shields": [
+          {"name": "Shield", "scaling": "hp", "multiplier": 10, "levelCoef": 0, "constant": 0, "target": "self"}
+        ]
+      }
+    ]
+  },
+  {
     "pokemonId": "meowscarada",
     "dex": 907,
     "role": "speedster",
