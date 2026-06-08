@@ -699,5 +699,11 @@
   "gw_error_in_progress": "Cette salle est déjà en cours.",
   "gw_error_full": "La salle est pleine.",
   "gw_error_generic": "Une erreur est survenue.",
-  "gw_random_pick": "🎲 Choisir au hasard"
+  "gw_random_pick": "🎲 Choisir au hasard",
+
+  "discord_toast_title": "Discord officiel Unite Tools 🎉",
+  "discord_toast_sub": "Rejoins la communauté — bugs, suggestions & annonces",
+  "discord_toast_btn": "Rejoindre",
+  "about_discord_cta": "Rejoindre le Discord",
+  "about_discord_join": "Rejoindre le Discord"
 }

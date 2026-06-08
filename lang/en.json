@@ -699,5 +699,11 @@
   "gw_error_in_progress": "This room is already in progress.",
   "gw_error_full": "Room is full.",
   "gw_error_generic": "Something went wrong.",
-  "gw_random_pick": "🎲 Pick randomly"
+  "gw_random_pick": "🎲 Pick randomly",
+
+  "discord_toast_title": "Official Unite Tools Discord 🎉",
+  "discord_toast_sub": "Join the community — bugs, suggestions & announcements",
+  "discord_toast_btn": "Join",
+  "about_discord_cta": "Join the Discord",
+  "about_discord_join": "Join the Discord"
 }
