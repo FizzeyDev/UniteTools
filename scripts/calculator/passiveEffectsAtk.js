@@ -649,6 +649,29 @@ function applyTyphlosionAttacker(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── SKELEDIRGE ────────────────────────────────────────────────────────────────
+function applySkeledirgAttacker(atkStats, defStats, card) {
+  const blazeActive = state.attackerSkeledirgeBlazeActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/skeledirge/blaze.png')}
+    <div style="flex:1;">
+      ${passiveBadge('Blaze', null, PASSIVE_ATK)}
+      Status: <strong style="color:${blazeActive ? C : '#e74c3c'};">${blazeActive ? 'Active' : 'Inactive'}</strong><br>
+      <span style="font-size:0.85rem;color:#ccc;">Next move: <strong style="color:${blazeActive ? C : '#aaa'};">35% Sp. Def Pierce</strong> (20s CD)</span><br>
+      <button class="blaze-toggle" style="margin-top:8px;padding:6px 16px;background:${blazeActive ? '#ff6f00' : '#2a1a00'};color:${blazeActive ? '#fff' : '#ff9944'};border:1px solid #ff6f00;border-radius:6px;cursor:pointer;font-weight:700;font-size:0.85rem;">
+        ${blazeActive ? '🔥 Blaze on' : 'Activate Blaze'}
+      </button>
+    </div>
+  `);
+  line.querySelector('.blaze-toggle').onclick = () => {
+    state.attackerSkeledirgeBlazeActive = !state.attackerSkeledirgeBlazeActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 export {
   applyBuzzwoleAttacker, applyCeruledgeAttacker, applyChandelureAttacker,
   applyDarkraiAttacker, applyDecidueyeAttacker, applyZardyAttacker,
@@ -658,5 +681,5 @@ export {
   applyMimikyuAttacker, applyRapidashAttacker, applySirfetchdAttacker,
   applySylveonAttacker, applyTinkatonAttacker, applyTyranitarAttacker,
   applyZeraoraAttacker, applyCrustleAttacker, applyMoltresAttacker,
-  applyTyphlosionAttacker,
+  applyTyphlosionAttacker, applySkeledirgAttacker
 };

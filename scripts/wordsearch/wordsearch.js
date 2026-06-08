@@ -230,6 +230,7 @@ function wsRenderGrid() {
     for (let c = 0; c < WS_SIZE; c++) {
       const cell = document.createElement('div');
       cell.className = 'ws-cell' + (WS.foundCells.has(`${r},${c}`) ? ' found' : '');
+      cell.setAttribute('translate', 'no');   // FIX : empêche le système i18n de remplacer les lettres (ex: "A" -> "HAS")
       cell.textContent = WS.grid[r][c];
       cell.dataset.r = r;
       cell.dataset.c = c;

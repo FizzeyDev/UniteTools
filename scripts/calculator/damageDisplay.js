@@ -34,7 +34,8 @@ import {
   applyZeraoraAttacker,
   applyCrustleAttacker,
   applyMoltresAttacker,
-  applyTyphlosionAttacker
+  applyTyphlosionAttacker,
+  applySkeledirgAttacker,   // ← SKELEDIRGE
 } from './passiveEffectsAtk.js';
 
 import {
@@ -323,6 +324,12 @@ export function updateDamages() {
     if (snowCloakState === "high") defenderDamageMult *= (1 - 0.20);
   }
 
+  // ── SKELEDIRGE — Blaze : 35% Sp. Def Pierce sur le prochain move ─────────
+  const skeledirgeBlazeIgnore = (
+    state.currentAttacker?.pokemonId === "skeledirge" &&
+    (state.attackerSkeledirgeBlazeActive ?? false)
+  ) ? 0.35 : 0;
+
   const finalEffects = {
     ...itemEffects,
     infiltratorIgnore: state.currentAttacker?.pokemonId === "chandelure"
@@ -331,6 +338,7 @@ export function updateDamages() {
       ? 0.20 : 0,
     moldBreakerDefPen: state.currentAttacker?.pokemonId === "mega-gyarados" && state.attackerMoldBreakerActive
       ? state.currentAttacker.passive.bonusDefPen / 100 : 0,
+    skeledirgeBlazeIgnore,   // ← SKELEDIRGE
     defenderDamageMult
   };
 
@@ -757,7 +765,8 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
     tyranitar: applyTyranitarAttacker, zeraora: applyZeraoraAttacker,
     crustle: applyCrustleAttacker,
     moltres: applyMoltresAttacker,
-    typhlosion: applyTyphlosionAttacker
+    typhlosion: applyTyphlosionAttacker,
+    skeledirge: applySkeledirgAttacker,   // ← SKELEDIRGE
   };
   handlers[pokemonId]?.(atkStats, defStats, card);
 }
@@ -867,7 +876,12 @@ function addFormulaTooltip(lineEl, dmg, relevantAtk, attacker, level) {
 }
 
 function displayMoves(atkStats, defStats, effects, currentDefHP) {
-  const { slickIgnore, scopeCritBonus, globalDamageMult, infiltratorIgnore, defenderFlashFireReduction, defenderDamageMult } = effects;
+  const {
+    slickIgnore, scopeCritBonus, globalDamageMult,
+    infiltratorIgnore, defenderFlashFireReduction,
+    skeledirgeBlazeIgnore,   // ← SKELEDIRGE
+    defenderDamageMult
+  } = effects;
   const aaResults = getAutoAttackResults(atkStats, defStats, currentDefHP, globalDamageMult);
   const level = state.attackerLevel;
 
@@ -935,6 +949,12 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       }
       if (dmg.sp_def_ignore != null && relevantDef === defStats.sp_def) {
         effectiveDef = Math.floor(effectiveDef * (1 - dmg.sp_def_ignore));
+      }
+
+      // ── SKELEDIRGE — Blaze : 35% Sp. Def Pierce sur le move suivant ──────
+      // S'applique uniquement sur la Sp. Def (moves special ou style special)
+      if (skeledirgeBlazeIgnore > 0 && relevantDef === defStats.sp_def) {
+        effectiveDef = Math.floor(effectiveDef * (1 - skeledirgeBlazeIgnore));
       }
 
       // ── Moltres : bonus Flame Body sur Incinerate / Heat Wave ────────────
@@ -1228,7 +1248,7 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
   });
 }
 
-// ── Combat Log helpers (définis ici car utilisés par attachMoveCardClickHandler) ──
+// ── Combat Log helpers ────────────────────────────────────────────────────────
 
 function collectLineItems(card) {
   const items = [];
@@ -1247,7 +1267,6 @@ function collectLineItems(card) {
       const isTick    = dmgNormal.classList.contains('dmg-tick-toggle');
       const tickCount = isTick ? (parseInt(dmgNormal.dataset.ticks, 10) || 1) : 1;
 
-      // FIX: normalPerTick = data-base (valeur d'un seul hit, avant scaling)
       const normalPerTick = isTick ? parseInt(dmgNormal.dataset.base, 10) : null;
 
       const normalBase = isTick
@@ -1259,7 +1278,6 @@ function collectLineItems(card) {
       const tickScalingRaw = isTick ? dmgNormal.dataset.tickScaling : null;
       const tickScaling    = tickScalingRaw ? JSON.parse(tickScalingRaw) : null;
 
-      // FIX: calcul correct du total avec tick_scaling
       const computeTotal = (base, scaling, n) => {
         if (!scaling) return base * n;
         let sum = 0;
@@ -1360,8 +1378,6 @@ function flashCard(card) {
   setTimeout(() => card.classList.remove('cl-added-flash'), 500);
 }
 
-// ── openLinePicker ────────────────────────────────────────────────────────────
-
 function openLinePicker(card, move, allItems) {
   closeActivePicker();
 
@@ -1394,7 +1410,6 @@ function openLinePicker(card, move, allItems) {
     _resolvedValue: null,
   }));
 
-  // ── Helper : calcule le total d'un item tick avec les critStates actuels ──
   const computeTickTotal = (item, idx) => {
     const hc = critStates[idx].hitCount;
     const cc = Math.min(critStates[idx].critCount, hc);
@@ -1426,7 +1441,6 @@ function openLinePicker(card, move, allItems) {
     return nc * item.normalPerTick + cc * item.critPerTick;
   };
 
-  // ── Helper : tooltip détaillé hit par hit ─────────────────────────────────
   const buildTickDetailTooltip = (item, idx) => {
     if (!item.tickScaling) return null;
     const hc = critStates[idx].hitCount;
@@ -1536,7 +1550,6 @@ function openLinePicker(card, move, allItems) {
 
       const showCritRow = item.type === 'damage' && item.canCrit;
 
-      // Ligne de scaling info
       let scalingInfoHtml = '';
       if (item.tickScaling) {
         const scalingDesc = item.tickScaling
@@ -1740,8 +1753,6 @@ function openLinePicker(card, move, allItems) {
   });
 }
 
-// ── attachMoveCardClickHandler ────────────────────────────────────────────────
-
 function attachMoveCardClickHandler(card, move) {
 
   card.querySelectorAll('.heal-tick-toggle, .shield-tick-toggle, .dmg-tick-toggle').forEach(el => {
@@ -1750,7 +1761,7 @@ function attachMoveCardClickHandler(card, move) {
     const isCrit   = el.classList.contains('dmg-crit');
     const isHeal   = el.classList.contains('heal-tick-toggle');
     const isShield = el.classList.contains('shield-tick-toggle');
-    let currentTicks = maxTicks; // FIX: démarre au max (tout affiché par défaut)
+    let currentTicks = maxTicks;
 
     const tickScalingRaw = el.dataset.tickScaling;
     const tickScaling    = tickScalingRaw ? JSON.parse(tickScalingRaw) : null;
@@ -1826,7 +1837,6 @@ function attachMoveCardClickHandler(card, move) {
     const allItems = collectLineItems(card);
     if (allItems.length === 0) return;
 
-    // Ouvre TOUJOURS le picker si multi-hits présents
     const hasMultiHit = allItems.some(i => i.isTick && i.tickCount > 1);
 
     if (!hasMultiHit && allItems.length === 1 && !allItems[0].canCrit) {

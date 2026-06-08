@@ -75,7 +75,7 @@ function wsBuildGrid(words, rng) {
     if (!ok) return null;
   }
 
-  const AL = 'ABCDEFGHIJKLMNOPRSTUVWXYZ';
+  const AL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   for (let r = 0; r < WS_SIZE; r++)
     for (let c = 0; c < WS_SIZE; c++)
       if (!grid[r][c]) grid[r][c] = AL[Math.floor(rng() * AL.length)];

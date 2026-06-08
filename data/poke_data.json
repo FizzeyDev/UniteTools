@@ -10231,6 +10231,104 @@
     ]
   },
   {
+    "pokemonId": "skeledirge",
+    "dex": 978,
+    "role": "attacker",
+    "style": "special",
+    "passive": {
+      "name": "Blaze",
+      "image": "assets/moves/skeledirge/blaze.png",
+      "description": "The user's next move is granted 35% Sp. Def Pierce (20s CD)."
+    },
+    "stats": [
+      {"level": 1,  "hp": 3340, "atk": 20,  "sp_atk": 118, "def": 76,  "sp_def": 72,  "crit": 0},
+      {"level": 2,  "hp": 3395, "atk": 21,  "sp_atk": 126, "def": 80,  "sp_def": 75,  "crit": 0},
+      {"level": 3,  "hp": 3462, "atk": 23,  "sp_atk": 136, "def": 84,  "sp_def": 79,  "crit": 0},
+      {"level": 4,  "hp": 3542, "atk": 25,  "sp_atk": 148, "def": 89,  "sp_def": 84,  "crit": 0},
+      {"level": 5,  "hp": 3830, "atk": 32,  "sp_atk": 192, "def": 108, "sp_def": 101, "crit": 0},
+      {"level": 6,  "hp": 3945, "atk": 35,  "sp_atk": 209, "def": 116, "sp_def": 108, "crit": 0},
+      {"level": 7,  "hp": 4470, "atk": 48,  "sp_atk": 288, "def": 150, "sp_def": 139, "crit": 0},
+      {"level": 8,  "hp": 4635, "atk": 52,  "sp_atk": 313, "def": 161, "sp_def": 148, "crit": 0},
+      {"level": 9,  "hp": 4833, "atk": 57,  "sp_atk": 343, "def": 174, "sp_def": 160, "crit": 0},
+      {"level": 10, "hp": 5072, "atk": 63,  "sp_atk": 379, "def": 190, "sp_def": 174, "crit": 0},
+      {"level": 11, "hp": 5358, "atk": 70,  "sp_atk": 422, "def": 209, "sp_def": 191, "crit": 0},
+      {"level": 12, "hp": 5701, "atk": 79,  "sp_atk": 474, "def": 231, "sp_def": 211, "crit": 0},
+      {"level": 13, "hp": 6113, "atk": 89,  "sp_atk": 536, "def": 258, "sp_def": 236, "crit": 0},
+      {"level": 14, "hp": 6607, "atk": 101, "sp_atk": 611, "def": 291, "sp_def": 265, "crit": 0},
+      {"level": 15, "hp": 7200, "atk": 116, "sp_atk": 700, "def": 330, "sp_def": 300, "crit": 0}
+    ],
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "false",
+        "image": "assets/moves/basic_attack.png",
+        "damages": [
+          {"name": "Basic",   "multiplier": 30, "levelCoef": 0, "constant": 160, "dealDamage": true, "scaling": "special"},
+          {"name": "Boosted", "multiplier": 45, "levelCoef": 0, "constant": 240, "dealDamage": true, "scaling": "special"}
+        ]
+      },
+      {
+        "name": "Disarming Voice",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/skeledirge/disarming_voice.png",
+        "damages": [
+          {"name": "Damage",               "multiplier": 170, "levelCoef": 0, "constant": 425, "dealDamage": true, "scaling": "special"},
+          {"name": "Damage - Reverberation","multiplier": 178, "levelCoef": 0, "constant": 446, "dealDamage": true, "scaling": "special"}
+        ]
+      },
+      {
+        "name": "Hyper Voice",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/skeledirge/hyper_voice.png",
+        "damages": [
+          {"name": "Damage",                "multiplier": 238, "levelCoef": 0, "constant": 596, "dealDamage": true, "scaling": "special"},
+          {"name": "Damage - Reverberation","multiplier": 250, "levelCoef": 0, "constant": 626, "dealDamage": true, "scaling": "special"},
+          {"name": "Damage (Enhanced)",                "multiplier": 274, "levelCoef": 0, "constant": 686, "dealDamage": true, "scaling": "special", "upgraded": true},
+          {"name": "Damage - Reverberation (Enhanced)","multiplier": 288, "levelCoef": 0, "constant": 720, "dealDamage": true, "scaling": "special", "upgraded": true}
+        ]
+      },
+      {
+        "name": "Roar",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/skeledirge/roar.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 112, "levelCoef": 0, "constant": 280, "dealDamage": true, "scaling": "special"}
+        ]
+      },
+      {
+        "name": "Snarl",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/skeledirge/snarl.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 130, "levelCoef": 0, "constant": 325, "dealDamage": true, "scaling": "special"}
+        ]
+      },
+      {
+        "name": "Rousing Symphony (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/skeledirge/rousing_symphony.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 360, "levelCoef": 0, "constant": 900, "dealDamage": true, "scaling": "special"}
+        ]
+      }
+    ]
+  },
+  {
     "pokemonId": "slowbro",
     "dex": 80,
     "role": "defender",

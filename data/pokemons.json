@@ -796,7 +796,7 @@
   },
   {
     "name": "Scyther",
-    "name_fr": "Cizayox",
+    "name_fr": "Insécateur",
     "name_es": "Scizor",
     "name_de": "Scherox",
     "name_it": "Scizor",
@@ -827,6 +827,23 @@
     "evo_niveaux": "5",
     "mega": false,
     "unite_move_cost": 112
+  },
+  {
+    "name": "Skeledirge",
+    "name_fr": "Flamigator",
+    "name_es": "Skeledirge",
+    "name_de": "Skeledirge",
+    "name_it": "Skeledirge",
+    "file": "skeledirge_atk.png",
+    "role": "atk",
+    "dex": 978,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2025,
+    "stade": "Base",
+    "evo_niveaux": "5,7",
+    "mega": false,
+    "unite_move_cost": 100
   },
   {
     "name": "Talonflame",
@@ -1091,7 +1108,14 @@
     "name_it": "Feraligatr",
     "file": "feraligatr_all.png",
     "role": "all",
-    "dex": 160
+    "dex": 160,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2026,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 89
   },
   {
     "name": "Slowbro",
@@ -1536,6 +1560,13 @@
     "name_it": "Meganium",
     "file": "meganium_sup.png",
     "role": "sup",
-    "dex": 154
+    "dex": 154,
+    "portee": "Mêlée",
+    "difficulte": "Novice",
+    "annee": 2026,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 34
   }
 ]
