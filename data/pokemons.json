@@ -14,7 +14,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": null
   },
   {
     "name": "Blastoise",
@@ -31,7 +32,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Chandelure",
@@ -48,7 +53,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Cramorant",
@@ -65,7 +74,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 123
+    "unite_move_cost": 123,
+    "evolution_levels": null
   },
   {
     "name": "Dhelmise",
@@ -82,7 +92,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": null
   },
   {
     "name": "Eldegoss",
@@ -99,7 +110,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Gardevoir",
@@ -116,7 +130,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 89
+    "unite_move_cost": 89,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Greninja",
@@ -133,7 +151,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Lapras",
@@ -150,7 +172,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": null
   },
   {
     "name": "Machamp",
@@ -167,7 +190,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/9",
     "mega": false,
-    "unite_move_cost": 134
+    "unite_move_cost": 134,
+    "evolution_levels": [
+      5,
+      9
+    ]
   },
   {
     "name": "Mewtwo X",
@@ -184,7 +211,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": true,
-    "unite_move_cost": 134
+    "unite_move_cost": 134,
+    "evolution_levels": null
   },
   {
     "name": "Ninetales",
@@ -201,7 +229,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Rapidash",
@@ -218,7 +249,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "5",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5
+    ]
   },
   {
     "name": "Suicune",
@@ -235,7 +269,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": null
   },
   {
     "name": "Tsareena",
@@ -252,7 +287,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "4/6",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      4,
+      6
+    ]
   },
   {
     "name": "Venusaur",
@@ -269,7 +308,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Aegislash",
@@ -286,7 +329,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Blaziken",
@@ -303,7 +350,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 4.7
+    "unite_move_cost": 4.7,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Charizard",
@@ -320,7 +371,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": true,
-    "unite_move_cost": 134
+    "unite_move_cost": 134,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Mega-Charizard X",
@@ -330,7 +385,8 @@
     "name_it": "MegaCharizard X",
     "file": "mXcharizard_all.png",
     "role": "all",
-    "dex": 6
+    "dex": 6,
+    "evolution_levels": null
   },
   {
     "name": "Mega-Charizard Y",
@@ -340,7 +396,8 @@
     "name_it": "MegaCharizard Y",
     "file": "mYcharizard_all.png",
     "role": "all",
-    "dex": 6
+    "dex": 6,
+    "evolution_levels": null
   },
   {
     "name": "Crustle",
@@ -357,7 +414,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 134
+    "unite_move_cost": 134,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Dodrio",
@@ -374,7 +434,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "5",
     "mega": false,
-    "unite_move_cost": 134
+    "unite_move_cost": 134,
+    "evolution_levels": [
+      5
+    ]
   },
   {
     "name": "Empoleon",
@@ -391,7 +454,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Gengar",
@@ -408,7 +475,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/9",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5,
+      9
+    ]
   },
   {
     "name": "Gyarados",
@@ -425,7 +496,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "7",
     "mega": true,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      7
+    ]
   },
   {
     "name": "Mega-Gyarados",
@@ -435,7 +509,8 @@
     "name_it": "MegaGyarados",
     "file": "mgyarados_all.png",
     "role": "all",
-    "dex": 130
+    "dex": 130,
+    "evolution_levels": null
   },
   {
     "name": "Latias",
@@ -452,7 +527,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": null
   },
   {
     "name": "Mamoswine",
@@ -469,7 +545,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/9",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5,
+      9
+    ]
   },
   {
     "name": "Mewtwo Y",
@@ -486,7 +566,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": true,
-    "unite_move_cost": 134
+    "unite_move_cost": 134,
+    "evolution_levels": null
   },
   {
     "name": "Pawmot",
@@ -503,7 +584,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 0
+    "unite_move_cost": 0,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Sableye",
@@ -520,7 +605,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": null
   },
   {
     "name": "Sylveon",
@@ -537,7 +623,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Tyranitar",
@@ -554,7 +643,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/9",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5,
+      9
+    ]
   },
   {
     "name": "Wigglytuff",
@@ -571,7 +664,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 89
+    "unite_move_cost": 89,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Alcremie",
@@ -588,7 +684,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Blissey",
@@ -605,7 +704,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Cinderace",
@@ -622,7 +724,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Darkrai",
@@ -639,7 +745,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": null
   },
   {
     "name": "Dragapult",
@@ -656,7 +763,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/9",
     "mega": false,
-    "unite_move_cost": 10
+    "unite_move_cost": 10,
+    "evolution_levels": [
+      5,
+      9
+    ]
   },
   {
     "name": "Espeon",
@@ -673,7 +784,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Glaceon",
@@ -690,7 +804,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Ho-Oh",
@@ -707,7 +824,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": null
   },
   {
     "name": "Latios",
@@ -724,7 +842,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": null
   },
   {
     "name": "Meowscarada",
@@ -741,7 +860,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "4/6",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      4,
+      6
+    ]
   },
   {
     "name": "Meowth",
@@ -758,7 +881,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": null
   },
   {
     "name": "Mimikyu",
@@ -775,7 +899,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": null
   },
   {
     "name": "Pikachu",
@@ -792,7 +917,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 89
+    "unite_move_cost": 89,
+    "evolution_levels": null
   },
   {
     "name": "Scyther",
@@ -809,7 +935,10 @@
     "stade": "Base",
     "evo_niveaux": "5",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5
+    ]
   },
   {
     "name": "Scizor",
@@ -826,7 +955,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "5",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5
+    ]
   },
   {
     "name": "Skeledirge",
@@ -843,7 +975,11 @@
     "stade": "Base",
     "evo_niveaux": "5,7",
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Talonflame",
@@ -860,7 +996,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Umbreon",
@@ -877,7 +1017,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Zacian",
@@ -894,7 +1037,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": null
   },
   {
     "name": "Armarouge",
@@ -911,7 +1055,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "5",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5
+    ]
   },
   {
     "name": "Buzzwole",
@@ -928,7 +1075,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": null
   },
   {
     "name": "Clefable",
@@ -945,7 +1093,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Decidueye",
@@ -962,7 +1113,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Dragonite",
@@ -979,7 +1134,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/8",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5,
+      8
+    ]
   },
   {
     "name": "Falinks",
@@ -996,7 +1155,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": null
   },
   {
     "name": "Goodra",
@@ -1013,7 +1173,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/8",
     "mega": false,
-    "unite_move_cost": 89
+    "unite_move_cost": 89,
+    "evolution_levels": [
+      5,
+      8
+    ]
   },
   {
     "name": "Hoopa",
@@ -1030,7 +1194,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": null
   },
   {
     "name": "Leafeon",
@@ -1047,7 +1212,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Metagross",
@@ -1064,7 +1232,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/9",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5,
+      9
+    ]
   },
   {
     "name": "Miraidon",
@@ -1081,7 +1253,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": null
   },
   {
     "name": "Psyduck",
@@ -1098,7 +1271,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": null
   },
   {
     "name": "Feraligatr",
@@ -1115,7 +1289,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 89
+    "unite_move_cost": 89,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Slowbro",
@@ -1132,7 +1310,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Tinkaton",
@@ -1149,7 +1330,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 89
+    "unite_move_cost": 89,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Urshifu",
@@ -1166,7 +1351,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "5",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5
+    ]
   },
   {
     "name": "Zeraora",
@@ -1183,7 +1371,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": null
   },
   {
     "name": "Azumarill",
@@ -1200,7 +1389,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 89
+    "unite_move_cost": 89,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Ceruledge",
@@ -1217,7 +1409,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "5",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5
+    ]
   },
   {
     "name": "Comfey",
@@ -1234,7 +1429,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 89
+    "unite_move_cost": 89,
+    "evolution_levels": null
   },
   {
     "name": "Delphox",
@@ -1251,7 +1447,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "4/6",
     "mega": false,
-    "unite_move_cost": 84
+    "unite_move_cost": 84,
+    "evolution_levels": [
+      4,
+      6
+    ]
   },
   {
     "name": "Duraludon",
@@ -1268,7 +1468,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 134
+    "unite_move_cost": 134,
+    "evolution_levels": null
   },
   {
     "name": "Garchomp",
@@ -1285,7 +1486,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/9",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5,
+      9
+    ]
   },
   {
     "name": "Greedent",
@@ -1302,7 +1507,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "5",
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": [
+      5
+    ]
   },
   {
     "name": "Inteleon",
@@ -1319,7 +1527,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Lucario",
@@ -1336,7 +1548,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": true,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": null
   },
   {
     "name": "Mega-Lucario",
@@ -1346,7 +1559,8 @@
     "name_it": "MegaLucario",
     "file": "mlucario_all.png",
     "role": "all",
-    "dex": 448
+    "dex": 448,
+    "evolution_levels": null
   },
   {
     "name": "Mew",
@@ -1363,7 +1577,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 123
+    "unite_move_cost": 123,
+    "evolution_levels": null
   },
   {
     "name": "Mr. Mime",
@@ -1380,7 +1595,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": null
   },
   {
     "name": "Raichu",
@@ -1397,7 +1613,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "5",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5
+    ]
   },
   {
     "name": "Snorlax",
@@ -1414,7 +1633,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 89
+    "unite_move_cost": 89,
+    "evolution_levels": null
   },
   {
     "name": "Trevenant",
@@ -1431,7 +1651,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "5",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5
+    ]
   },
   {
     "name": "Vaporeon",
@@ -1448,7 +1671,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 89
+    "unite_move_cost": 89,
+    "evolution_levels": [
+      4
+    ]
   },
   {
     "name": "Zoroark",
@@ -1465,7 +1691,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "5",
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": [
+      5
+    ]
   },
   {
     "name": "Sirfetchd",
@@ -1482,7 +1711,10 @@
     "stade": "1ère évo",
     "evo_niveaux": "5",
     "mega": false,
-    "unite_move_cost": 89
+    "unite_move_cost": 89,
+    "evolution_levels": [
+      5
+    ]
   },
   {
     "name": "Articuno",
@@ -1499,7 +1731,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 100
+    "unite_move_cost": 100,
+    "evolution_levels": null
   },
   {
     "name": "Zapdos",
@@ -1516,7 +1749,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 89
+    "unite_move_cost": 89,
+    "evolution_levels": null
   },
   {
     "name": "Moltres",
@@ -1533,7 +1767,8 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": null
   },
   {
     "name": "Typhlosion",
@@ -1550,7 +1785,11 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 112
+    "unite_move_cost": 112,
+    "evolution_levels": [
+      5,
+      7
+    ]
   },
   {
     "name": "Meganium",
@@ -1567,6 +1806,10 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 34
+    "unite_move_cost": 34,
+    "evolution_levels": [
+      5,
+      7
+    ]
   }
 ]

@@ -1666,17 +1666,17 @@ function openLinePicker(card, move, allItems) {
 
   const selectAllBtn = document.createElement('button');
   selectAllBtn.className = 'cl-picker-btn cl-picker-all';
-  selectAllBtn.textContent = 'Tout';
+  selectAllBtn.textContent = 'All';
   selectAllBtn.addEventListener('click', (e) => { e.stopPropagation(); Object.values(checkboxes).forEach(cb => cb.checked = true); });
 
   const selectNoneBtn = document.createElement('button');
   selectNoneBtn.className = 'cl-picker-btn cl-picker-none';
-  selectNoneBtn.textContent = 'Aucun';
+  selectNoneBtn.textContent = 'None';
   selectNoneBtn.addEventListener('click', (e) => { e.stopPropagation(); Object.values(checkboxes).forEach(cb => cb.checked = false); });
 
   const confirmBtn = document.createElement('button');
   confirmBtn.className = 'cl-picker-btn cl-picker-confirm';
-  confirmBtn.textContent = '＋ Ajouter';
+  confirmBtn.textContent = '＋ Add';
   confirmBtn.addEventListener('click', (e) => {
     e.stopPropagation();
 

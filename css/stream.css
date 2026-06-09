@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
 
+/* ─── Variables ─────────────────────────────────────────────────────────────── */
+
 :root {
   --bg:           #090f10;
   --surface:      #101a1b;
@@ -16,7 +18,6 @@
   --orange:       #ff9d00;
   --orange-dim:   rgba(255, 157, 0, 0.18);
   --green:        #4caf82;
-  --green-dim:    rgba(76, 175, 130, 0.15);
   --red:          #ef5350;
   --red-dim:      rgba(239, 83, 80, 0.12);
   --yellow:       #ffd740;
@@ -31,8 +32,9 @@
   --radius-xs:    5px;
   --shadow-lg:    0 8px 32px rgba(0,0,0,0.6);
   --shadow-md:    0 4px 16px rgba(0,0,0,0.4);
-  --shadow-sm:    0 2px 8px rgba(0,0,0,0.3);
 }
+
+/* ─── Reset & base ───────────────────────────────────────────────────────────── */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -42,22 +44,15 @@ body {
   color: var(--text);
   min-height: 100vh;
   overflow: hidden;
-
-  /* Navbar — décalage sidebar */
   margin-left: 250px;
   transition: margin-left 0.3s ease;
 }
 
-/* Sidebar réduite (mini mode) */
-body.sidebar-hidden {
-  margin-left: 54px;
-}
+body.sidebar-hidden { margin-left: 54px; }
 
-/* Mode overlay OBS — pas de navbar, pas de décalage */
 body.overlay-mode {
   margin-left: 0 !important;
   background: transparent !important;
-  background-color: transparent !important;
 }
 
 /* Subtle grid texture */
@@ -75,57 +70,30 @@ body::before {
 
 body.overlay-mode #app { display: none; }
 
-/* ===== LAYOUT ===== */
+@media (max-width: 768px) {
+  body { margin-left: 0 !important; }
+}
+
+/* ─── Layout ─────────────────────────────────────────────────────────────────── */
+
 #app {
   display: flex;
   height: 100vh;
-  width: 100%;          /* était 100vw — s'adapte au margin-left de la navbar */
+  width: 100%;
   position: relative;
   z-index: 1;
 }
 
-/* ===== DISPLAY PANEL (left) ===== */
+/* ─── Left panel ─────────────────────────────────────────────────────────────── */
+
 #display-panel {
   flex: 0 0 480px;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(160deg, var(--surface-2) 0%, var(--surface) 100%);
+  background: linear-gradient(160deg, var(--surface-2), var(--surface));
   border-right: 1px solid var(--border-md);
   min-width: 160px;
-}
-
-/* ===== RESIZABLE DIVIDER ===== */
-#panel-divider {
-  width: 6px;
-  height: 100vh;
-  background: var(--border);
-  cursor: col-resize;
-  flex-shrink: 0;
-  position: relative;
-  transition: background 0.15s;
-  z-index: 10;
-}
-#panel-divider:hover,
-#panel-divider:active {
-  background: rgba(79,195,247,0.35);
-}
-#panel-divider::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 2px;
-  height: 40px;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(79,195,247,0.5) 0px,
-    rgba(79,195,247,0.5) 3px,
-    transparent 3px,
-    transparent 7px
-  );
-  border-radius: 1px;
 }
 
 .panel-header {
@@ -147,7 +115,6 @@ body.overlay-mode #app { display: none; }
   flex: 1;
 }
 
-/* ===== HELP BUTTON IN HEADER ===== */
 .help-btn-header {
   font-family: 'Rajdhani', sans-serif;
   padding: 6px 12px;
@@ -178,7 +145,9 @@ body.overlay-mode #app { display: none; }
   flex-shrink: 0;
   animation: glowPulse 3s ease-in-out infinite;
 }
-@keyframes glowPulse { 0%,100%{opacity:.2} 50%{opacity:.6} }
+@keyframes glowPulse { 0%,100% { opacity:.2 } 50% { opacity:.6 } }
+
+/* ─── Display area (picks grid) ─────────────────────────────────────────────── */
 
 .display-area {
   flex: 1;
@@ -209,7 +178,6 @@ body.overlay-mode #app { display: none; }
   font-weight: 600;
 }
 
-/* Display slots */
 .display-slot {
   position: relative;
   border-radius: var(--radius-sm);
@@ -222,6 +190,17 @@ body.overlay-mode #app { display: none; }
 }
 .display-slot:hover { transform: scale(1.05); }
 .display-slot:hover .remove-btn { opacity: 1; }
+
+/* Edit hint on hover */
+.display-slot:hover::after {
+  content: '✎';
+  position: absolute;
+  bottom: -6px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  color: rgba(79,195,247,0.7);
+  pointer-events: none;
+}
 
 .display-slot img {
   width: 100%; height: 100%;
@@ -247,7 +226,9 @@ body.overlay-mode #app { display: none; }
   box-shadow: 0 0 14px rgba(159,83,236,0.7);
 }
 
-.display-slot .remove-btn {
+/* ─── Remove button (shared by picks & bans) ────────────────────────────────── */
+
+.remove-btn {
   position: absolute;
   top: -6px; right: -6px;
   width: 20px; height: 20px;
@@ -257,14 +238,21 @@ body.overlay-mode #app { display: none; }
   font-size: 12px;
   opacity: 0;
   transition: opacity 0.15s;
-  color: var(--text-bright);
+  color: var(--text);
   font-weight: bold;
   cursor: pointer;
   z-index: 10;
   box-shadow: 0 2px 6px rgba(0,0,0,0.5);
 }
 
-/* ===== BAN DISPLAY PANEL ===== */
+.ban-display-slot .remove-btn {
+  top: -5px; right: -5px;
+  width: 16px; height: 16px;
+  font-size: 10px;
+}
+
+/* ─── Bans display section ───────────────────────────────────────────────────── */
+
 .ban-display-section {
   padding: 10px 14px 6px;
   border-top: 1px solid var(--border);
@@ -285,7 +273,6 @@ body.overlay-mode #app { display: none; }
   align-items: center;
   gap: 6px;
 }
-
 .ban-display-label::after {
   content: '';
   flex: 1;
@@ -324,8 +311,7 @@ body.overlay-mode #app { display: none; }
 
 .ban-display-slot {
   position: relative;
-  width: 56px;
-  height: 56px;
+  width: 56px; height: 56px;
   border-radius: var(--radius-xs);
   overflow: hidden;
   flex-shrink: 0;
@@ -334,6 +320,7 @@ body.overlay-mode #app { display: none; }
   cursor: default;
 }
 .ban-display-slot:hover .remove-btn { opacity: 1; }
+
 .ban-display-slot.purple-slot {
   border-color: rgba(159,83,236,0.8);
   background: rgba(159,83,236,0.1);
@@ -350,7 +337,7 @@ body.overlay-mode #app { display: none; }
   width: 100%; height: 100%;
   object-fit: cover;
   display: block;
-  filter: var(--ban-slot-filter, grayscale(0.4) brightness(0.6));
+  filter: grayscale(0.4) brightness(0.6);
 }
 
 /* Red tint overlay on banned slots */
@@ -363,45 +350,23 @@ body.overlay-mode #app { display: none; }
   pointer-events: none;
 }
 
-/* Small ban icon bottom-right */
 .ban-display-slot .ban-missing-img {
   position: absolute;
-  bottom: 3px;
-  right: 3px;
-  width: 38%;
-  height: 38%;
+  bottom: 3px; right: 3px;
+  width: 38%; height: 38%;
   object-fit: contain;
-  display: block;
   z-index: 3;
   opacity: 0.92;
   filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8));
 }
 
-.ban-display-slot .remove-btn {
-  position: absolute;
-  top: -5px; right: -5px;
-  width: 16px; height: 16px;
-  background: rgba(239,83,80,0.9);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px;
-  opacity: 0;
-  transition: opacity 0.15s;
-  color: var(--text-bright);
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 10;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-}
-
+/* Pulsing highlight on the next ban slot */
 .ban-display-slot.next-ban.purple-slot {
   border-color: var(--violet);
-  box-shadow: 0 0 10px rgba(159,83,236,0.6);
   animation: pulsePurple 1.5s ease-in-out infinite;
 }
 .ban-display-slot.next-ban.orange-slot {
   border-color: var(--orange);
-  box-shadow: 0 0 10px rgba(255,157,0,0.6);
   animation: pulseOrange 1.5s ease-in-out infinite;
 }
 @keyframes pulsePurple {
@@ -413,7 +378,8 @@ body.overlay-mode #app { display: none; }
   50%      { box-shadow: 0 0 18px rgba(255,157,0,0.9); }
 }
 
-/* ===== MAP SELECTOR ===== */
+/* ─── Map selector ───────────────────────────────────────────────────────────── */
+
 .map-section {
   padding: 12px 14px;
   border-top: 1px solid var(--border);
@@ -422,7 +388,6 @@ body.overlay-mode #app { display: none; }
 }
 
 .map-section-label {
-  font-family: 'Rajdhani', sans-serif;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -451,30 +416,17 @@ body.overlay-mode #app { display: none; }
   gap: 6px;
   opacity: 0.45;
 }
-.map-btn:hover { opacity: 0.75; transform: translateY(-2px); }
-.map-btn.active { opacity: 1; transform: translateY(-2px); }
+.map-btn:hover  { opacity: 0.75; transform: translateY(-2px); }
+.map-btn.active { opacity: 1;    transform: translateY(-2px); }
 
-.map-btn.active.rayquaza {
-  border-color: var(--map-rayquaza);
-  background: rgba(76,175,130,0.12);
-  box-shadow: 0 0 16px rgba(76,175,130,0.3);
-}
-.map-btn.active.groudon {
-  border-color: var(--map-groudon);
-  background: rgba(255,112,67,0.12);
-  box-shadow: 0 0 16px rgba(255,112,67,0.3);
-}
-.map-btn.active.kyogre {
-  border-color: var(--map-kyogre);
-  background: rgba(79,195,247,0.12);
-  box-shadow: 0 0 16px rgba(79,195,247,0.3);
-}
+.map-btn.active.rayquaza { border-color: var(--map-rayquaza); background: rgba(76,175,130,0.12);  box-shadow: 0 0 16px rgba(76,175,130,0.3); }
+.map-btn.active.groudon  { border-color: var(--map-groudon);  background: rgba(255,112,67,0.12);   box-shadow: 0 0 16px rgba(255,112,67,0.3); }
+.map-btn.active.kyogre   { border-color: var(--map-kyogre);   background: rgba(79,195,247,0.12);   box-shadow: 0 0 16px rgba(79,195,247,0.3); }
 
 .map-icon {
   width: 46px; height: 46px;
   border-radius: 50%;
   object-fit: cover;
-  display: block;
 }
 .map-icon-placeholder {
   width: 46px; height: 46px;
@@ -482,12 +434,11 @@ body.overlay-mode #app { display: none; }
   display: flex; align-items: center; justify-content: center;
   font-size: 20px;
 }
-.rayquaza .map-icon-placeholder { background: radial-gradient(circle, rgba(76,175,130,0.25), transparent); border: 1px solid rgba(76,175,130,0.3); }
+.rayquaza .map-icon-placeholder { background: radial-gradient(circle, rgba(76,175,130,0.25), transparent);  border: 1px solid rgba(76,175,130,0.3); }
 .groudon  .map-icon-placeholder { background: radial-gradient(circle, rgba(255,112,67,0.25), transparent);  border: 1px solid rgba(255,112,67,0.3); }
 .kyogre   .map-icon-placeholder { background: radial-gradient(circle, rgba(79,195,247,0.25), transparent);  border: 1px solid rgba(79,195,247,0.3); }
 
 .map-name {
-  font-family: 'Rajdhani', sans-serif;
   font-size: 10px; font-weight: 700;
   letter-spacing: 0.1em; text-transform: uppercase;
 }
@@ -505,7 +456,8 @@ body.overlay-mode #app { display: none; }
 .groudon  .map-active-dot { background: var(--map-groudon);  box-shadow: 0 0 6px var(--map-groudon); }
 .kyogre   .map-active-dot { background: var(--map-kyogre);   box-shadow: 0 0 6px var(--map-kyogre); }
 
-/* ===== OBS BAR ===== */
+/* ─── OBS buttons bar ────────────────────────────────────────────────────────── */
+
 .obs-bar {
   padding: 10px 14px;
   background: rgba(0,0,0,0.2);
@@ -525,8 +477,10 @@ body.overlay-mode #app { display: none; }
   border-radius: var(--radius-sm);
   color: var(--blue);
   font-size: 12px; font-weight: 700;
-  letter-spacing: 0.1em; cursor: pointer;
-  text-transform: uppercase; transition: all 0.2s;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
 }
 .obs-btn:hover {
   border-color: var(--blue);
@@ -543,13 +497,45 @@ body.overlay-mode #app { display: none; }
   border-radius: var(--radius-sm);
   color: var(--red);
   font-size: 12px; font-weight: 700;
-  letter-spacing: 0.06em; cursor: pointer;
-  text-transform: uppercase; transition: all 0.2s;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
   margin-left: auto;
 }
 .clear-btn:hover { background: rgba(239,83,80,0.22); border-color: var(--red); }
 
-/* ===== LIST PANEL (right) ===== */
+/* ─── Resizable divider ──────────────────────────────────────────────────────── */
+
+#panel-divider {
+  width: 6px;
+  height: 100vh;
+  background: var(--border);
+  cursor: col-resize;
+  flex-shrink: 0;
+  position: relative;
+  transition: background 0.15s;
+  z-index: 10;
+}
+#panel-divider:hover,
+#panel-divider:active { background: rgba(79,195,247,0.35); }
+
+#panel-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px; height: 40px;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(79,195,247,0.5) 0px, rgba(79,195,247,0.5) 3px,
+    transparent 3px, transparent 7px
+  );
+  border-radius: 1px;
+}
+
+/* ─── Right panel ────────────────────────────────────────────────────────────── */
+
 #list-panel {
   flex: 1;
   display: flex;
@@ -583,7 +569,6 @@ body.overlay-mode #app { display: none; }
   padding: 1px 8px;
   font-size: 10px;
   color: var(--blue);
-  font-family: 'Rajdhani', sans-serif;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
@@ -613,7 +598,8 @@ body.overlay-mode #app { display: none; }
   pointer-events: none;
 }
 
-/* ===== MODE TABS (Fearless / Bans) ===== */
+/* ─── Mode tabs (Fearless / Bans) ────────────────────────────────────────────── */
+
 .mode-tabs {
   display: flex;
   border-bottom: 1px solid var(--border);
@@ -624,176 +610,21 @@ body.overlay-mode #app { display: none; }
   flex: 1;
   padding: 10px 14px;
   font-family: 'Exo 2', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  text-align: center;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  cursor: pointer; text-align: center;
   color: var(--text-dim);
   border-bottom: 2.5px solid transparent;
   transition: all 0.2s;
   background: transparent;
-  border-top: none;
-  border-left: none;
-  border-right: none;
+  border-top: none; border-left: none; border-right: none;
 }
 .mode-tab:hover { color: var(--text); background: rgba(255,255,255,0.02); }
-.mode-tab.active.fearless-tab {
-  color: var(--blue);
-  border-bottom-color: var(--blue);
-  background: rgba(79,195,247,0.04);
-}
-.mode-tab.active.bans-tab {
-  color: var(--red);
-  border-bottom-color: var(--red);
-  background: rgba(239,83,80,0.04);
-}
+.mode-tab.active.fearless-tab { color: var(--blue);  border-bottom-color: var(--blue);  background: rgba(79,195,247,0.04); }
+.mode-tab.active.bans-tab     { color: var(--red);   border-bottom-color: var(--red);   background: rgba(239,83,80,0.04); }
 
-/* ===== BAN MODE HEADER ===== */
-.ban-mode-header {
-  padding: 10px 18px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
+/* ─── Team selector ──────────────────────────────────────────────────────────── */
 
-.ban-mode-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  flex-shrink: 0;
-}
-
-.ban-mode-btn {
-  flex: 1;
-  padding: 7px 10px;
-  border-radius: var(--radius-sm);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  border: 1.5px solid;
-  transition: all 0.15s;
-  text-transform: uppercase;
-  text-align: center;
-  opacity: 0.4;
-  background: transparent;
-}
-.ban-mode-btn.active { opacity: 1; }
-.ban-mode-btn.purple-first {
-  border-color: var(--violet);
-  color: var(--violet);
-}
-.ban-mode-btn.purple-first.active {
-  background: var(--violet-dim);
-  box-shadow: 0 0 12px rgba(159,83,236,0.3);
-}
-.ban-mode-btn.orange-first {
-  border-color: var(--orange);
-  color: var(--orange);
-}
-.ban-mode-btn.orange-first.active {
-  background: var(--orange-dim);
-  box-shadow: 0 0 12px rgba(255,157,0,0.3);
-}
-
-/* Next ban indicator */
-.next-ban-indicator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 18px 0;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  flex-shrink: 0;
-}
-
-.next-ban-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  animation: blinkDot 1s ease-in-out infinite;
-}
-.next-ban-dot.purple { background: var(--violet); box-shadow: 0 0 8px var(--violet); }
-.next-ban-dot.orange { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
-.next-ban-dot.done   { background: var(--green);  box-shadow: 0 0 8px var(--green); animation: none; }
-
-@keyframes blinkDot { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-.next-ban-text.purple { color: var(--violet); }
-.next-ban-text.orange { color: var(--orange); }
-.next-ban-text.done   { color: var(--green); }
-
-/* Banned badge on card */
-.pokemon-card .banned-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 3;
-}
-.pokemon-card .banned-overlay img {
-  width: 60%;
-  height: 60%;
-  object-fit: contain;
-  opacity: 0.85;
-}
-
-/* Bans tab — colored banned cards */
-.pokemon-card.banned-purple-colored {
-  filter: none !important;
-  border-color: var(--violet) !important;
-  box-shadow: 0 0 12px rgba(159,83,236,0.45), inset 0 0 18px rgba(159,83,236,0.12) !important;
-  background: rgba(159,83,236,0.1) !important;
-}
-.pokemon-card.banned-orange-colored {
-  filter: none !important;
-  border-color: var(--orange) !important;
-  box-shadow: 0 0 12px rgba(255,157,0,0.45), inset 0 0 18px rgba(255,157,0,0.12) !important;
-  background: rgba(255,157,0,0.08) !important;
-}
-.pokemon-card.banned-purple-colored:hover {
-  filter: brightness(1.1) !important;
-  transform: none !important;
-  cursor: default;
-}
-.pokemon-card.banned-orange-colored:hover {
-  filter: brightness(1.1) !important;
-  transform: none !important;
-  cursor: default;
-}
-
-/* Backwards-compat grey classes */
-.pokemon-card.banned-purple {
-  filter: brightness(0.2) saturate(0.1) !important;
-  border-color: rgba(159,83,236,0.3) !important;
-}
-.pokemon-card.banned-orange {
-  filter: brightness(0.2) saturate(0.1) !important;
-  border-color: rgba(255,157,0,0.3) !important;
-}
-
-/* Already-picked cards in ban mode */
-.pokemon-card.in-picks-ban-mode {
-  filter: brightness(0.35) saturate(0.2) !important;
-}
-.pokemon-card.in-picks-ban-mode:hover {
-  filter: brightness(0.35) saturate(0.2) !important;
-  transform: none !important;
-  cursor: not-allowed;
-}
-
-/* Team selector */
 .team-selector {
   padding: 10px 18px;
   display: flex;
@@ -806,8 +637,7 @@ body.overlay-mode #app { display: none; }
 .team-selector-label {
   font-size: 10px; font-weight: 700;
   color: var(--text-dim);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.1em; text-transform: uppercase;
   flex-shrink: 0;
 }
 
@@ -817,23 +647,83 @@ body.overlay-mode #app { display: none; }
   border-radius: var(--radius-sm);
   font-family: 'Rajdhani', sans-serif;
   font-size: 12px; font-weight: 700;
-  letter-spacing: 0.08em;
-  cursor: pointer;
+  letter-spacing: 0.08em; cursor: pointer;
   border: 1.5px solid;
   transition: all 0.15s;
-  text-transform: uppercase;
-  text-align: center;
-  opacity: 0.45;
+  text-transform: uppercase; text-align: center;
+  opacity: 0.45; background: transparent;
 }
-.team-btn.orange { border-color: var(--orange); color: var(--orange); background: transparent; }
+.team-btn.orange       { border-color: var(--orange); color: var(--orange); }
 .team-btn.orange.active { background: var(--orange-dim); box-shadow: 0 0 14px rgba(255,157,0,0.35); opacity: 1; }
-.team-btn.purple { border-color: var(--violet); color: var(--violet); background: transparent; }
+.team-btn.purple       { border-color: var(--violet); color: var(--violet); }
 .team-btn.purple.active { background: var(--violet-dim); box-shadow: 0 0 14px rgba(159,83,236,0.35); opacity: 1; }
-.team-btn.none-btn { flex: 0 0 auto; border-color: var(--border-md); color: var(--text-dim); background: transparent; }
+.team-btn.none-btn      { flex: 0 0 auto; border-color: var(--border-md); color: var(--text-dim); }
 .team-btn.none-btn.active { background: var(--surface-3); opacity: 1; }
 .team-btn:hover { opacity: 0.85; }
 
-/* Role tabs */
+/* ─── Ban order selector ─────────────────────────────────────────────────────── */
+
+.ban-order-header {
+  padding: 8px 18px 0;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.ban-order-label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-dim);
+  width: 100%; margin-bottom: 2px;
+}
+
+.ban-order-btn {
+  flex: 1; min-width: 0;
+  padding: 7px 8px;
+  border-radius: var(--radius-sm);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.05em; cursor: pointer;
+  border: 1.5px solid;
+  transition: all 0.15s;
+  text-transform: uppercase; text-align: center;
+  opacity: 0.4; background: transparent;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ban-order-btn.active { opacity: 1; }
+
+.ban-order-btn.purple-order { border-color: #9f53ec; color: #c085ff; }
+.ban-order-btn.purple-order.active { background: rgba(159,83,236,0.15); box-shadow: 0 0 10px rgba(159,83,236,0.3); }
+
+.ban-order-btn.orange-order { border-color: #ff9d00; color: #ffc06e; }
+.ban-order-btn.orange-order.active { background: rgba(255,157,0,0.12); box-shadow: 0 0 10px rgba(255,157,0,0.3); }
+
+.ban-order-btn.free-order { border-color: rgba(255,255,255,0.25); color: #8aacaf; }
+.ban-order-btn.free-order.active { background: rgba(255,255,255,0.07); }
+
+/* Ban sequence dots hint */
+.ban-seq-hint {
+  padding: 4px 18px 8px;
+  font-size: 9px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-dim);
+  display: flex; gap: 3px; align-items: center; flex-wrap: wrap;
+}
+
+.ban-seq-dot {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  font-size: 8px; font-weight: 900;
+  font-family: 'Exo 2', sans-serif;
+}
+.ban-seq-dot.p { background: rgba(159,83,236,0.35); color: #c085ff; border: 1px solid rgba(159,83,236,0.6); }
+.ban-seq-dot.o { background: rgba(255,157,0,0.25);  color: #ffc06e; border: 1px solid rgba(255,157,0,0.5); }
+.ban-seq-arrow { color: #3a5254; font-size: 8px; }
+
+/* ─── Role filter tabs ───────────────────────────────────────────────────────── */
+
 .role-tabs {
   padding: 8px 18px 0;
   display: flex; gap: 4px;
@@ -855,13 +745,10 @@ body.overlay-mode #app { display: none; }
 }
 .role-tab:hover { color: var(--text); }
 .role-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+.ban-mode-active .role-tab.active { color: var(--red); border-bottom-color: var(--red); }
 
-.ban-mode-active .role-tab.active {
-  color: var(--red);
-  border-bottom-color: var(--red);
-}
+/* ─── Pokémon grid ───────────────────────────────────────────────────────────── */
 
-/* Pokemon grid */
 .pokemon-grid-wrapper {
   flex: 1; overflow-y: auto;
   padding: 12px 14px 18px;
@@ -892,20 +779,13 @@ body.overlay-mode #app { display: none; }
   box-shadow: 0 6px 18px rgba(0,0,0,0.5);
   z-index: 5;
 }
-
-.pokemon-card.in-display {
-  filter: brightness(0.25) saturate(0.1);
-}
-
 .pokemon-card img {
   width: 100%; aspect-ratio: 1;
   object-fit: cover; display: block;
   background: rgba(0,0,0,0.3);
 }
-
 .pokemon-card .card-name {
   text-align: center;
-  font-family: 'Rajdhani', sans-serif;
   font-size: 9px; font-weight: 600;
   color: var(--text-dim);
   padding: 3px 2px 4px;
@@ -914,6 +794,19 @@ body.overlay-mode #app { display: none; }
 }
 .pokemon-card:hover .card-name { color: var(--text); }
 
+/* Picked / banned states */
+.pokemon-card.in-display        { filter: brightness(0.45) saturate(0.25); }
+.pokemon-card.in-picks-ban-mode { filter: brightness(0.35) saturate(0.2) !important; cursor: not-allowed; }
+.pokemon-card.in-picks-ban-mode:hover { filter: brightness(0.35) saturate(0.2) !important; transform: none !important; }
+
+.pokemon-card.banned-purple-colored { filter: none !important; border-color: var(--violet) !important; box-shadow: 0 0 12px rgba(159,83,236,0.45), inset 0 0 18px rgba(159,83,236,0.12) !important; background: rgba(159,83,236,0.1) !important; }
+.pokemon-card.banned-orange-colored { filter: none !important; border-color: var(--orange) !important; box-shadow: 0 0 12px rgba(255,157,0,0.45),  inset 0 0 18px rgba(255,157,0,0.12) !important;  background: rgba(255,157,0,0.08) !important; }
+.pokemon-card.banned-neutral-colored { filter: none !important; border-color: rgba(255,255,255,0.3) !important; box-shadow: 0 0 10px rgba(255,255,255,0.2), inset 0 0 14px rgba(255,255,255,0.06) !important; background: rgba(255,255,255,0.06) !important; }
+
+.pokemon-card.banned-purple-colored:hover,
+.pokemon-card.banned-orange-colored:hover { filter: brightness(1.1) !important; transform: none !important; cursor: default; }
+
+/* Role indicator dot */
 .role-dot {
   position: absolute; top: 3px; left: 3px;
   width: 7px; height: 7px;
@@ -927,45 +820,255 @@ body.overlay-mode #app { display: none; }
 .role-dot.spe { background: var(--blue); }
 .role-dot.all { background: var(--violet); }
 
-/* ===== TOAST ===== */
+/* Banned overlay icon on card */
+.pokemon-card .banned-overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 3;
+}
+.pokemon-card .banned-overlay img {
+  width: 60%; height: 60%;
+  object-fit: contain; opacity: 0.85;
+}
+
+/* Empty ban card */
+.pokemon-card.ban-empty-card {
+  border: 1.5px dashed rgba(239,83,80,0.45);
+  background: rgba(239,83,80,0.06);
+  filter: none !important;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 90px; cursor: pointer;
+}
+.pokemon-card.ban-empty-card:hover {
+  border-color: rgba(239,83,80,0.75);
+  background: rgba(239,83,80,0.14);
+  transform: translateY(-2px) scale(1.03);
+}
+.ban-empty-card-inner {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4px; padding: 8px 4px;
+  pointer-events: none;
+}
+.ban-empty-card-label {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--red); text-align: center;
+}
+
+/* ─── Drag & drop ────────────────────────────────────────────────────────────── */
+
+.display-slot.drag-over {
+  outline: 2px dashed rgba(79,195,247,0.7);
+  outline-offset: 2px;
+}
+
+/* ─── Color picker popup ─────────────────────────────────────────────────────── */
+
+.color-picker-popup {
+  position: fixed;
+  z-index: 99999;
+  background: #1d2e2f;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  padding: 10px 12px 12px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+  min-width: 170px;
+  animation: popIn 0.15s cubic-bezier(0.34,1.3,0.64,1);
+}
+@keyframes popIn {
+  from { transform: scale(0.88) translateY(-4px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+.color-picker-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: #5a7577; margin-bottom: 8px;
+}
+.color-picker-options { display: flex; flex-direction: column; gap: 5px; }
+
+.cpick-btn {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 6px 12px;
+  border-radius: 7px; cursor: pointer;
+  border: 1.5px solid;
+  transition: all 0.15s;
+  text-align: left; opacity: 0.6; background: transparent;
+}
+.cpick-btn:hover, .cpick-btn.active { opacity: 1; }
+.cpick-btn.cpick-purple { border-color: #9f53ec; color: #c085ff; }
+.cpick-btn.cpick-purple.active, .cpick-btn.cpick-purple:hover { background: rgba(159,83,236,0.18); box-shadow: 0 0 10px rgba(159,83,236,0.3); }
+.cpick-btn.cpick-orange { border-color: #ff9d00; color: #ffc06e; }
+.cpick-btn.cpick-orange.active, .cpick-btn.cpick-orange:hover { background: rgba(255,157,0,0.15); box-shadow: 0 0 10px rgba(255,157,0,0.3); }
+.cpick-btn.cpick-none { border-color: rgba(255,255,255,0.15); color: #8aacaf; }
+.cpick-btn.cpick-none.active, .cpick-btn.cpick-none:hover { background: rgba(255,255,255,0.06); }
+
+/* ─── Clear modal ────────────────────────────────────────────────────────────── */
+
+.clear-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(4px);
+  z-index: 90000;
+  display: flex; align-items: center; justify-content: center;
+}
+.clear-modal-box {
+  background: linear-gradient(160deg, #1d2e2f, #152122);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 24px 28px 20px;
+  min-width: 280px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+  animation: modalIn 0.2s cubic-bezier(0.34,1.2,0.64,1);
+  display: flex; flex-direction: column; gap: 12px; align-items: stretch;
+}
+.clear-modal-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 15px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--red); text-align: center;
+}
+.clear-modal-desc {
+  font-size: 12px; color: #8aacaf;
+  text-align: center; letter-spacing: 0.04em;
+}
+.clear-modal-btns { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.clear-modal-btn {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 9px 16px; border-radius: 8px; cursor: pointer;
+  border: 1.5px solid; transition: all 0.15s; text-align: center;
+}
+.clear-modal-btn.fearless { border-color: #4fc3f7; color: #4fc3f7; background: rgba(79,195,247,0.08); }
+.clear-modal-btn.fearless:hover { background: rgba(79,195,247,0.18); }
+.clear-modal-btn.bans     { border-color: #ef5350; color: #ef5350; background: rgba(239,83,80,0.08); }
+.clear-modal-btn.bans:hover { background: rgba(239,83,80,0.18); }
+.clear-modal-btn.both     { border-color: #ffd740; color: #ffd740; background: rgba(255,215,64,0.08); }
+.clear-modal-btn.both:hover { background: rgba(255,215,64,0.18); }
+.clear-modal-cancel {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: #5a7577; background: transparent; border: none;
+  cursor: pointer; text-align: center; padding: 4px; transition: color 0.15s;
+}
+.clear-modal-cancel:hover { color: var(--text); }
+
+/* ─── Customize panel ────────────────────────────────────────────────────────── */
+
+.customize-btn {
+  font-family: 'Rajdhani', sans-serif;
+  padding: 6px 10px;
+  background: rgba(79,195,247,0.08);
+  border: 1px solid rgba(79,195,247,0.25);
+  border-radius: var(--radius-sm);
+  color: var(--blue);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; cursor: pointer;
+  text-transform: uppercase; transition: all 0.2s;
+  white-space: nowrap; flex-shrink: 0;
+}
+.customize-btn:hover, .customize-btn.active {
+  background: rgba(79,195,247,0.18);
+  border-color: var(--blue);
+  box-shadow: 0 0 10px rgba(79,195,247,0.3);
+}
+
+.customize-panel {
+  background: linear-gradient(160deg, #152122, #101a1b);
+  border-bottom: 1px solid rgba(79,195,247,0.15);
+  padding: 10px 14px 12px;
+  flex-shrink: 0;
+  animation: slideDown 0.18s ease;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.cust-section { margin-bottom: 10px; }
+.cust-section:last-of-type { margin-bottom: 6px; }
+.cust-section-label {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-dim); margin-bottom: 5px;
+}
+.cust-row {
+  display: flex; align-items: center; gap: 7px; margin-bottom: 4px;
+}
+.cust-hint {
+  font-size: 9px; font-weight: 600;
+  color: #3a5254; letter-spacing: 0.04em;
+  flex-shrink: 0; width: 42px; text-align: center;
+}
+.cust-row input[type="range"] {
+  flex: 1; -webkit-appearance: none; appearance: none;
+  height: 4px; border-radius: 2px;
+  background: rgba(79,195,247,0.15); outline: none; cursor: pointer;
+}
+.cust-row input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--blue); box-shadow: 0 0 6px rgba(79,195,247,0.6); cursor: pointer;
+}
+.cust-row input[type="range"]::-moz-range-thumb {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--blue); box-shadow: 0 0 6px rgba(79,195,247,0.6);
+  cursor: pointer; border: none;
+}
+.cust-footer { display: flex; justify-content: flex-end; margin-top: 6px; }
+.cust-reset-btn {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-dim); background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px; padding: 4px 10px; cursor: pointer; transition: all 0.15s;
+}
+.cust-reset-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.05); }
+
+/* ─── Toast ──────────────────────────────────────────────────────────────────── */
+
 .toast {
   position: fixed; bottom: 20px; left: 50%;
   transform: translateX(-50%) translateY(20px);
   background: var(--surface-3);
   border: 1px solid var(--border-md);
+  border-left: 3px solid var(--blue);
   border-radius: var(--radius-sm);
   padding: 9px 18px;
   font-size: 12px; color: var(--text);
-  font-family: 'Rajdhani', sans-serif; font-weight: 600; letter-spacing: 0.06em;
+  font-weight: 600; letter-spacing: 0.06em;
   opacity: 0; transition: all 0.3s;
   z-index: 10000; pointer-events: none; white-space: nowrap;
   box-shadow: var(--shadow-md);
-  border-left: 3px solid var(--blue);
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ===== MODAL HOW TO SETUP ===== */
+/* ─── How to setup modal ─────────────────────────────────────────────────────── */
+
 #modal-overlay {
-  display: none;
-  position: fixed; inset: 0;
+  display: none; position: fixed; inset: 0;
   background: rgba(0,0,0,0.75);
   backdrop-filter: blur(6px);
   z-index: 50000;
-  align-items: center;
-  justify-content: center;
+  align-items: center; justify-content: center;
 }
 #modal-overlay.open { display: flex; }
 
 #modal-box {
-  background: linear-gradient(160deg, var(--surface-3) 0%, var(--surface-2) 50%, var(--surface) 100%);
+  background: linear-gradient(160deg, var(--surface-3), var(--surface-2) 50%, var(--surface));
   border: 1px solid var(--border-md);
   border-radius: var(--radius);
   width: 680px; max-width: 96vw; max-height: 88vh;
   overflow-y: auto;
   box-shadow: var(--shadow-lg), 0 0 60px rgba(79,195,247,0.1), 0 0 120px rgba(159,83,236,0.08);
-  scrollbar-width: thin;
-  scrollbar-color: var(--surface-4) transparent;
-  animation: modalIn 0.22s cubic-bezier(0.34, 1.2, 0.64, 1);
+  scrollbar-width: thin; scrollbar-color: var(--surface-4) transparent;
+  animation: modalIn 0.22s cubic-bezier(0.34,1.2,0.64,1);
 }
 @keyframes modalIn {
   from { transform: scale(0.92) translateY(12px); opacity: 0; }
@@ -977,25 +1080,19 @@ body.overlay-mode #app { display: none; }
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
   position: sticky; top: 0;
-  background: linear-gradient(160deg, var(--surface-3) 0%, var(--surface-2) 100%);
+  background: linear-gradient(160deg, var(--surface-3), var(--surface-2));
   z-index: 2;
 }
-
 .modal-header h3 {
   font-family: 'Exo 2', sans-serif;
   font-size: 16px; font-weight: 700;
   letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--blue);
 }
-
 .modal-close {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  background: var(--red-dim);
-  border: 1px solid rgba(239,83,80,0.35);
-  color: var(--red);
-  font-size: 16px;
-  cursor: pointer;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--red-dim); border: 1px solid rgba(239,83,80,0.35);
+  color: var(--red); font-size: 16px; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: all 0.2s;
 }
@@ -1003,420 +1100,190 @@ body.overlay-mode #app { display: none; }
 
 .modal-body { padding: 20px 22px 24px; }
 
-.modal-lang-tabs { display: flex; gap: 6px; margin-bottom: 20px; }
-
-.modal-lang-tab {
-  padding: 6px 18px;
-  border-radius: var(--radius-sm);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 12px; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  cursor: pointer;
-  border: 1px solid var(--border-md);
-  color: var(--text-dim);
-  background: transparent;
-  transition: all 0.15s;
-}
-.modal-lang-tab.active {
-  color: var(--blue);
-  border-color: rgba(79,195,247,0.4);
-  background: var(--blue-dim);
-  box-shadow: 0 0 10px rgba(79,195,247,0.15);
-}
-
-.modal-section { display: none; }
-.modal-section.active { display: block; }
-
 .setup-step {
   display: flex; gap: 14px;
-  margin-bottom: 18px;
-  align-items: flex-start;
+  margin-bottom: 18px; align-items: flex-start;
 }
-
 .step-num {
   flex-shrink: 0;
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  background: var(--blue-dim);
-  border: 1px solid rgba(79,195,247,0.3);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--blue-dim); border: 1px solid rgba(79,195,247,0.3);
   color: var(--blue);
-  font-family: 'Exo 2', sans-serif;
-  font-size: 13px; font-weight: 700;
+  font-family: 'Exo 2', sans-serif; font-size: 13px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
 }
-
 .step-content h4 {
-  font-family: 'Rajdhani', sans-serif;
   font-size: 13px; font-weight: 700;
   letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--text);
-  margin-bottom: 4px;
+  color: var(--text); margin-bottom: 4px;
 }
-.step-content p {
-  font-size: 12px;
-  color: var(--text-mid);
-  line-height: 1.65;
+.step-content p, .step-content ul {
+  font-size: 12px; color: var(--text-mid); line-height: 1.65;
 }
-.step-content ul {
-  margin: 6px 0 0 14px;
-  font-size: 12px;
-  color: var(--text-mid);
-  line-height: 1.8;
-}
-
-.step-content .highlight       { color: var(--blue);   font-weight: 600; }
-.step-content .highlight-orange { color: var(--orange); font-weight: 600; }
-.step-content .highlight-purple { color: var(--violet); font-weight: 600; }
+.step-content ul { margin: 6px 0 0 14px; line-height: 1.8; }
 
 .setup-divider {
   height: 1px;
   background: linear-gradient(90deg, var(--border-md), transparent);
   margin: 18px 0;
 }
-
-.tip-box {
-  background: rgba(159,83,236,0.07);
-  border: 1px solid rgba(159,83,236,0.22);
-  border-radius: var(--radius-sm);
-  padding: 12px 14px;
-  font-size: 12px;
-  color: var(--text-mid);
-  line-height: 1.65;
-  margin-top: 6px;
-}
-.tip-box strong { color: #c085ff; }
-
 .code-block {
   background: rgba(0,0,0,0.35);
   border: 1px solid var(--border-md);
   border-radius: var(--radius-xs);
   padding: 8px 12px;
-  font-family: monospace;
-  font-size: 11px;
-  color: var(--blue);
-  margin-top: 6px;
-  word-break: break-all;
+  font-family: monospace; font-size: 11px;
+  color: var(--blue); margin-top: 6px; word-break: break-all;
 }
 
-/* ===== OVERLAY ROOT ===== */
+/* ─── OBS overlay: picks ─────────────────────────────────────────────────────── */
+
 #overlay-root {
-  display: flex;
-  flex-direction: column;
-  gap: 56px;
-  padding: 16px;
+  display: flex; flex-direction: column;
+  gap: 56px; padding: 16px;
   background: transparent;
 }
 
 #overlay-picks-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-content: flex-start;
-  padding: 4px;
+  display: flex; flex-wrap: wrap;
+  gap: 10px; align-content: flex-start; padding: 4px;
 }
 
-/* ===== BANS OVERLAY ROOT ===== */
+#overlay-picks-row img { filter: grayscale(1) brightness(0.65); }
+
+/* ─── OBS overlay: bans ──────────────────────────────────────────────────────── */
+
 #bans-overlay-root {
-  padding: 12px 16px;
-  background: transparent;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  padding: 12px 16px; background: transparent;
+  display: flex; flex-direction: column; gap: 8px;
 }
-
-.bans-overlay-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+.bans-overlay-row { display: flex; align-items: center; gap: 8px; }
 
 .bans-overlay-team-label {
   font-family: 'Exo 2', sans-serif;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  width: 52px;
-  flex-shrink: 0;
-  text-align: right;
-  padding-right: 4px;
+  font-size: 10px; font-weight: 900;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  width: 52px; flex-shrink: 0; text-align: right; padding-right: 4px;
 }
 .bans-overlay-team-label.purple { color: var(--violet); text-shadow: 0 0 10px rgba(159,83,236,0.7); }
 .bans-overlay-team-label.orange { color: var(--orange); text-shadow: 0 0 10px rgba(255,157,0,0.7); }
 
-.bans-overlay-slots {
-  display: flex;
-  gap: 6px;
-}
+.bans-overlay-slots { display: flex; gap: 6px; }
 
 .bans-overlay-slot {
   position: relative;
-  width: 68px;
-  height: 68px;
+  width: 68px; height: 68px;
   border-radius: var(--radius-xs);
-  overflow: hidden;
-  flex-shrink: 0;
-  border: 1.5px solid;
+  overflow: hidden; flex-shrink: 0; border: 1.5px solid;
 }
 .bans-overlay-slot.purple { border-color: var(--violet); background: rgba(159,83,236,0.22); box-shadow: 0 0 14px rgba(159,83,236,0.45), inset 0 0 0 1px rgba(239,83,80,0.3); }
-.bans-overlay-slot.orange { border-color: var(--orange); background: rgba(255,157,0,0.18);   box-shadow: 0 0 14px rgba(255,157,0,0.45), inset 0 0 0 1px rgba(239,83,80,0.3); }
+.bans-overlay-slot.orange { border-color: var(--orange); background: rgba(255,157,0,0.18);   box-shadow: 0 0 14px rgba(255,157,0,0.45),  inset 0 0 0 1px rgba(239,83,80,0.3); }
 
 .bans-overlay-slot .slot-poke-img {
   width: 100%; height: 100%;
-  object-fit: cover;
-  display: block;
-  filter: var(--ban-overlay-filter, grayscale(0.2) brightness(0.65));
+  object-fit: cover; display: block;
+  filter: grayscale(0.2) brightness(0.65);
 }
-
-/* Red tint overlay */
 .bans-overlay-slot::before {
   content: '';
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   background: rgba(239,83,80,0.2);
-  z-index: 1;
-  pointer-events: none;
+  z-index: 1; pointer-events: none;
 }
-
-/* Small ban icon bottom-right */
 .bans-overlay-slot .slot-missing-img {
-  position: absolute;
-  bottom: 4px;
-  right: 4px;
-  width: 36%;
-  height: 36%;
-  object-fit: contain;
-  display: block;
-  z-index: 3;
-  opacity: 0.9;
+  position: absolute; bottom: 4px; right: 4px;
+  width: 36%; height: 36%;
+  object-fit: contain; z-index: 3; opacity: 0.9;
   filter: drop-shadow(0 1px 4px rgba(0,0,0,0.85));
 }
 
-.bans-overlay-slot.purple.next {
-  border-color: var(--violet);
-  box-shadow: 0 0 14px rgba(159,83,236,0.8), inset 0 0 6px rgba(159,83,236,0.2);
-  animation: pulsePurple 1.5s ease-in-out infinite;
-}
-.bans-overlay-slot.orange.next {
-  border-color: var(--orange);
-  box-shadow: 0 0 14px rgba(255,157,0,0.8), inset 0 0 6px rgba(255,157,0,0.2);
-  animation: pulseOrange 1.5s ease-in-out infinite;
+/* ─── OBS overlay: map ───────────────────────────────────────────────────────── */
+
+#map-overlay-root {
+  display: flex; align-items: center; justify-content: flex-start;
+  padding: 8px; background: transparent;
 }
 
-/* ===== MAP OVERLAY ===== */
 #overlay-map-bar {
-  display: flex;
-  align-items: stretch;
-  gap: 0;
-  background: transparent;
-  border-radius: 10px;
-  border: none;
-  backdrop-filter: none;
-  width: fit-content;
-  overflow: hidden;
-  box-shadow: none;
-  margin: 4px;
+  display: flex; align-items: stretch;
+  background: transparent; border-radius: 10px;
+  width: fit-content; overflow: hidden; margin: 4px;
 }
 
 .overlay-map-item {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  width: 90px;
-  height: 96px;
-  overflow: hidden;
-  cursor: default;
-  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+  width: 90px; height: 96px;
+  overflow: hidden; cursor: default;
+  transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
   opacity: 0.62;
   filter: grayscale(0.55) brightness(0.7);
 }
-
-.overlay-map-item:not(.active) {
-  width: 72px;
-  opacity: 0.62;
-  filter: grayscale(0.55) brightness(0.7);
-}
-
-.overlay-map-item.active {
-  width: 140px;
-  opacity: 1;
-  filter: none;
-}
-
-.overlay-map-item + .overlay-map-item {
-  border-left: 1px solid rgba(255,255,255,0.07);
-}
+.overlay-map-item:not(.active) { width: 72px; }
+.overlay-map-item.active       { width: 140px; opacity: 1; filter: none; }
+.overlay-map-item + .overlay-map-item { border-left: 1px solid rgba(255,255,255,0.07); }
 
 .overlay-map-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center 30%;
-  display: block;
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain; object-position: center 30%;
   padding: 4px 4px 22px;
 }
 
+/* Gradient overlay */
 .overlay-map-item::after {
   content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,0.85) 0%,
-    rgba(0,0,0,0.4) 45%,
-    rgba(0,0,0,0.05) 100%
-  );
-  z-index: 1;
-  transition: opacity 0.35s;
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.4) 45%, rgba(0,0,0,0.05));
+  z-index: 1; transition: opacity 0.35s;
 }
 
-.overlay-map-item.active.rayquaza::before {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--map-rayquaza);
-  box-shadow: 0 0 10px var(--map-rayquaza), 0 0 24px rgba(76,175,130,0.6);
-  z-index: 3;
-}
-.overlay-map-item.active.groudon::before {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--map-groudon);
-  box-shadow: 0 0 10px var(--map-groudon), 0 0 24px rgba(255,112,67,0.6);
-  z-index: 3;
-}
-.overlay-map-item.active.kyogre::before {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--map-kyogre);
-  box-shadow: 0 0 10px var(--map-kyogre), 0 0 24px rgba(79,195,247,0.6);
-  z-index: 3;
-}
+/* Colored bottom line for active map */
+.overlay-map-item.active.rayquaza::before { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:var(--map-rayquaza); box-shadow:0 0 10px var(--map-rayquaza), 0 0 24px rgba(76,175,130,0.6); z-index:3; }
+.overlay-map-item.active.groudon::before  { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:var(--map-groudon);  box-shadow:0 0 10px var(--map-groudon),  0 0 24px rgba(255,112,67,0.6); z-index:3; }
+.overlay-map-item.active.kyogre::before   { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:var(--map-kyogre);   box-shadow:0 0 10px var(--map-kyogre),   0 0 24px rgba(79,195,247,0.6); z-index:3; }
 
-.overlay-map-item.active .overlay-map-badge {
-  display: flex;
-}
 .overlay-map-badge {
-  display: none;
-  position: absolute;
-  top: 6px; right: 6px;
-  background: rgba(255,255,255,0.14);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 3px;
-  padding: 1px 5px;
-  font-family: 'Exo 2', sans-serif;
-  font-size: 7px;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-bright);
-  z-index: 4;
+  display: none; position: absolute; top: 6px; right: 6px;
+  background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 3px; padding: 1px 5px;
+  font-family: 'Exo 2', sans-serif; font-size: 7px; font-weight: 900;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text); z-index: 4;
 }
-.overlay-map-item.active.rayquaza .overlay-map-badge { background: rgba(76,175,130,0.3); border-color: rgba(76,175,130,0.5); color: #b7ffd8; }
+.overlay-map-item.active .overlay-map-badge { display: flex; }
+.overlay-map-item.active.rayquaza .overlay-map-badge { background: rgba(76,175,130,0.3);  border-color: rgba(76,175,130,0.5);  color: #b7ffd8; }
 .overlay-map-item.active.groudon  .overlay-map-badge { background: rgba(255,112,67,0.3);  border-color: rgba(255,112,67,0.5);  color: #ffd4c4; }
 .overlay-map-item.active.kyogre   .overlay-map-badge { background: rgba(79,195,247,0.3);  border-color: rgba(79,195,247,0.5);  color: #c4eeff; }
 
 .overlay-map-name {
-  position: relative;
-  z-index: 2;
+  position: relative; z-index: 2;
   font-family: 'Exo 2', sans-serif;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: 11px; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
   padding-bottom: 7px;
   color: rgba(255,255,255,0.7);
   transition: color 0.3s, font-size 0.35s;
   text-shadow: 0 1px 4px rgba(0,0,0,0.9);
   white-space: nowrap;
 }
-
-.overlay-map-item.active .overlay-map-name {
-  font-size: 13px;
-  letter-spacing: 0.14em;
-}
+.overlay-map-item.active .overlay-map-name { font-size: 13px; letter-spacing: 0.14em; }
 .overlay-map-item.active.rayquaza .overlay-map-name { color: #d4fff0; }
 .overlay-map-item.active.groudon  .overlay-map-name { color: #ffe4d8; }
 .overlay-map-item.active.kyogre   .overlay-map-name { color: #d0f4ff; }
 
 .overlay-map-placeholder {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  z-index: 0;
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; z-index: 0;
 }
-.overlay-map-item.rayquaza .overlay-map-placeholder { background: radial-gradient(ellipse at center, rgba(76,175,130,0.3) 0%, #060d0e 80%); }
-.overlay-map-item.groudon  .overlay-map-placeholder { background: radial-gradient(ellipse at center, rgba(255,112,67,0.3) 0%, #060d0e 80%); }
-.overlay-map-item.kyogre   .overlay-map-placeholder { background: radial-gradient(ellipse at center, rgba(79,195,247,0.3) 0%, #060d0e 80%); }
+.overlay-map-item.rayquaza .overlay-map-placeholder { background: radial-gradient(ellipse at center, rgba(76,175,130,0.3), #060d0e 80%); }
+.overlay-map-item.groudon  .overlay-map-placeholder { background: radial-gradient(ellipse at center, rgba(255,112,67,0.3), #060d0e 80%); }
+.overlay-map-item.kyogre   .overlay-map-placeholder { background: radial-gradient(ellipse at center, rgba(79,195,247,0.3), #060d0e 80%); }
 
-/* ===== SCROLLBARS ===== */
-::-webkit-scrollbar { width: 5px; }
+/* ─── Scrollbars ─────────────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar       { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 3px; }
-
-/* ===== RESPONSIVE — mobile ===== */
-@media (max-width: 768px) {
-  body {
-    margin-left: 0 !important;
-  }
-}
-
-/* Bans — bouton "aucune équipe" dans le header ban */
-.ban-mode-btn.none-btn {
-  border-color: rgba(255,255,255,0.18);
-  color: #8aacaf;
-  flex: 0 0 auto;
-  padding: 7px 10px;
-}
-.ban-mode-btn.none-btn.active {
-  background: rgba(255,255,255,0.07);
-  opacity: 1;
-}
-.ban-mode-btn.none-btn:not(.active) {
-  opacity: 0.45;
-}
-
-/* Bans — "neutral" (sans équipe) */
-.pokemon-card.banned-neutral-colored {
-  filter: none !important;
-  border-color: rgba(255,255,255,0.3) !important;
-  box-shadow: 0 0 10px rgba(255,255,255,0.2), inset 0 0 14px rgba(255,255,255,0.06) !important;
-  background: rgba(255,255,255,0.06) !important;
-}
-
-/* Fearless in-display — moins grisé (était brightness(0.25)) */
-.pokemon-card.in-display {
-  filter: brightness(0.45) saturate(0.25);
-}
-
-/* Display slot — cursor pointer clair et hint qu'on peut cliquer */
-.display-slot {
-  cursor: pointer;
-}
-.display-slot:hover::after {
-  content: '✎';
-  position: absolute;
-  bottom: -6px; left: 50%;
-  transform: translateX(-50%);
-  font-size: 9px;
-  color: rgba(79,195,247,0.7);
-  pointer-events: none;
-  letter-spacing: 0;
-}
-
-/* Overlay picks — un peu moins grisé aussi */
-#overlay-picks-row img {
-  filter: grayscale(1) brightness(0.65);
-}
