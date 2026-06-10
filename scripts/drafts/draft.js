@@ -3,6 +3,7 @@ import { mapImages, draftOrders, swapDraftOrder } from "./constants.js";
 import { updateTurn, highlightCurrentSlot, resetDraftSlots, createRecapSlots, getAllBanSlots, getAllPickSlots } from "./ui.js";
 import { setupTimer } from "./timer.js";
 import { publishPick, publishDraftEnd, publishReturnToLobby, publishNextDraft, mpState } from "./multiplayer.js";
+import { openMapFromDraft } from "./map_draft.js";
 
 window._mpPublishPick = async (stepIndex, monFile) => {
   if (mpState.enabled) await publishPick(stepIndex, monFile);
@@ -175,6 +176,27 @@ function _buildCenterRecap(title) {
   ["teamA", "teamB"].forEach(teamId => teamsEl.appendChild(_buildRecapTeam(teamId)));
 
   document.getElementById("center-recap").style.display = "flex";
+
+  const existingMapBtn = document.getElementById("center-recap-open-map");
+  if (existingMapBtn) existingMapBtn.remove(); // remove stale button from prior draft
+  
+  const openMapBtn = document.createElement("button");
+  openMapBtn.id        = "center-recap-open-map";
+  openMapBtn.className = "open-map-btn";
+  openMapBtn.innerHTML = "🗺 Open on Map";
+  openMapBtn.title     = "Open a new tab with these picks pre-placed on the interactive map";
+  openMapBtn.addEventListener("click", () => {
+    openMapFromDraft(
+      state.selectedMap,
+      getAllPickSlots("teamA"),
+      getAllPickSlots("teamB"),
+      `Draft ${state.draftCount} – ${state.selectedMap}`
+    );
+  });
+  
+  // Insert the button inside the recap box, after the teams row
+  const recapEl = document.getElementById("center-recap");
+  recapEl.appendChild(openMapBtn);
 }
 
 function _buildRecapTeam(teamId) {
@@ -247,6 +269,38 @@ function _appendToSeriesHistory(title) {
     teamsDiv.appendChild(container);
   });
   recapDiv.appendChild(teamsDiv);
+  const snapshotA = getAllPickSlots("teamA").map(s => {
+    const img = s.querySelector("img");
+    return img ? { src: img.src, name: img.alt || "", file: img.dataset.file || "" } : null;
+  }).filter(Boolean);
+  
+  const snapshotB = getAllPickSlots("teamB").map(s => {
+    const img = s.querySelector("img");
+    return img ? { src: img.src, name: img.alt || "", file: img.dataset.file || "" } : null;
+  }).filter(Boolean);
+  
+  const snapshotMap   = state.selectedMap;
+  const snapshotLabel = title; // already in scope
+  
+  const histMapBtn = document.createElement("button");
+  histMapBtn.className = "open-map-btn open-map-btn--history";
+  histMapBtn.innerHTML = "🗺 Open on Map";
+  histMapBtn.title     = "Open a new tab with these picks pre-placed on the interactive map";
+  histMapBtn.addEventListener("click", () => {
+    // openMapFromDraft accepts raw slot arrays OR our pre-snapshotted objects.
+    // We create lightweight fake slot wrappers so the extractor works.
+    const fakeSlots = (snapshots) => snapshots.map(mon => {
+      const div = document.createElement("div");
+      const img = document.createElement("img");
+      img.src          = mon.src;
+      img.alt          = mon.name;
+      img.dataset.file = mon.file;
+      div.appendChild(img);
+      return div;
+    });
+    openMapFromDraft(snapshotMap, fakeSlots(snapshotA), fakeSlots(snapshotB), snapshotLabel);
+  });
+  recapDiv.appendChild(histMapBtn);
   document.getElementById("series-recaps").prepend(recapDiv);
 }
 

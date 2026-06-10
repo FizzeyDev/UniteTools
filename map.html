@@ -207,6 +207,10 @@
   <script src="./scripts/map/sprites.js"></script>
   <script src="./scripts/map/panel.js"></script>
   <script src="./scripts/navbar.js"></script>
+  <script type="module">
+    import { hydrateDraftSprites } from "./scripts/drafts/map_draft.js";
+    setTimeout(hydrateDraftSprites, 0);
+  </script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
     lucide.createIcons();
