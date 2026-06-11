@@ -25,9 +25,9 @@
   <div class="topbar">
     <span class="topbar-title">⚡ XP Calculator</span>
     <div class="topbar-spacer"></div>
-    <button class="disclaimer-btn" id="disclaimerBtn">⚠️ Disclaimer</button>
-    <button class="how-to-use-btn" id="howToUseBtn">📖 How to Use</button>
-    <button class="roadmap-btn" id="roadmapBtn">🗺️ Roadmap</button>
+    <button class="btn btn-topbar btn-orange disclaimer-btn" id="disclaimerBtn">⚠️ Disclaimer</button>
+    <button class="btn btn-topbar btn-blue how-to-use-btn" id="howToUseBtn">📖 How to Use</button>
+    <button class="btn btn-topbar btn-violet roadmap-btn" id="roadmapBtn">🗺️ Roadmap</button>
   </div>
 
   <!-- ── Main Layout ── -->
@@ -158,14 +158,15 @@
     <div class="enemy-config-section">
       <div class="enemy-config-header">
         <span class="enemy-config-title">⚔️ Team Configuration</span>
-        <span class="enemy-config-hint">Configure your <strong>Ally</strong> (Exp. Share) and the <strong>Enemy</strong> (Catch-Up Modifier)</span>
+        <span class="enemy-config-hint">Configure your <strong>Ally</strong> (Exp. Share) and the <strong>Enemy</strong> (Catch-Up Modifier + parallel simulation)</span>
       </div>
       <div class="enemy-config-body two-col">
 
         <!-- ── Ally block ── -->
         <div class="team-config-block ally-block">
           <div class="team-config-block-title">🤝 Ally Pokémon</div>
-          <span class="cfg-label">Ally's current level (for Exp. Share)</span>
+
+          <span class="cfg-label">Ally's starting level</span>
           <div class="ally-level-row">
             <div class="level-stepper">
               <button class="step-btn" id="ally-lvl-minus">−</button>
@@ -173,16 +174,22 @@
               <button class="step-btn" id="ally-lvl-plus">+</button>
             </div>
             <div class="ally-level-info" id="ally-level-info">
-              <span class="ally-badge" id="ally-expshare-badge">—</span>
+              <span class="ally-badge inactive" id="ally-expshare-badge">Exp. Share: Off</span>
             </div>
           </div>
-          <span class="field-hint">The Exp. Share item holder gains 5 XP/sec when they are the lowest level on the team. Set this as the ally's level to verify Exp. Share eligibility.</span>
+
+          <span class="cfg-label" style="margin-top:10px;">Assign a Farm Preset to the ally track</span>
+          <span class="field-hint">The ally will follow this Kill Queue in parallel during Advanced Simulation. Their live XP determines Exp. Share eligibility each tick.</span>
+          <div class="preset-chips preset-selector-row" id="ally-preset-chips">
+            <!-- filled by presets.js -->
+          </div>
         </div>
 
         <!-- ── Enemy block ── -->
         <div class="team-config-block enemy-block">
           <div class="team-config-block-title">🎯 Enemy Team</div>
-          <span class="cfg-label">Highest level on the opposing team</span>
+
+          <span class="cfg-label">Highest level on the opposing team (Catch-Up reference)</span>
           <div class="enemy-level-row">
             <div class="level-stepper">
               <button class="step-btn" id="enemy-lvl-minus">−</button>
@@ -191,10 +198,22 @@
             </div>
             <div class="enemy-level-info">
               <span class="catchup-badge inactive" id="catchup-badge">Catch-Up: Inactive</span>
-              <span class="catchup-detail" id="catchup-detail">Your level (1) ≥ enemy level (1) - no modifier applied.</span>
+              <span class="catchup-detail" id="catchup-detail">Your level (1) ≥ enemy level (1) — no modifier.</span>
             </div>
           </div>
-          <span class="field-hint">Catch-Up activates when the enemy is <strong>2+ levels</strong> ahead.</span>
+
+          <span class="cfg-label" style="margin-top:10px;">Enemy starting level (for simulation track)</span>
+          <div class="level-stepper" style="margin-bottom:6px;">
+            <button class="step-btn" id="enemy-start-lvl-minus">−</button>
+            <span class="level-value" id="enemy-start-lvl-display">1</span>
+            <button class="step-btn" id="enemy-start-lvl-plus">+</button>
+          </div>
+
+          <span class="cfg-label">Assign a Farm Preset to the enemy track</span>
+          <span class="field-hint">The enemy will follow this Kill Queue in Advanced Simulation. Their live level updates the Catch-Up modifier in real time.</span>
+          <div class="preset-chips preset-selector-row" id="enemy-preset-chips">
+            <!-- filled by presets.js -->
+          </div>
         </div>
 
       </div>
@@ -209,7 +228,7 @@
       <div class="kill-queue-panel">
         <div class="panel-header">
           <span class="panel-header-title">📋 Kill Queue</span>
-          <button class="clear-queue-btn" id="clear-queue-btn">🗑 Clear</button>
+          <button class="btn btn-xs btn-red clear-queue-btn" id="clear-queue-btn">🗑 Clear</button>
         </div>
 
         <!-- ── Farm Rota Presets ── -->
@@ -218,6 +237,8 @@
             <span class="preset-bar-label">💾 Farm Presets</span>
             <div class="preset-bar-actions">
               <button class="preset-save-btn" id="preset-save-btn">+ Save Current</button>
+              <button id="preset-export-btn">⬆ Export</button>
+              <button id="preset-import-btn">⬇ Import</button>
             </div>
           </div>
           <div class="preset-chips" id="preset-chips">
@@ -228,15 +249,6 @@
 
         <div class="kill-queue-list" id="kill-queue-list">
           <div class="empty-queue-hint">Add wild Pokémon kills, player KOs or scoring events below.</div>
-        </div>
-
-        <!-- Quick Add: Player KO -->
-        <div class="quick-add-row">
-          <div class="quick-add-block playerko-quick">
-            <span class="quick-add-label">⚔️ Player KO</span>
-            <p class="quick-add-desc">KO an enemy player - calculates XP based on their level, streak and level diff.</p>
-            <button class="quick-add-btn playerko-btn" id="add-player-ko-btn">+ Add Player KO</button>
-          </div>
         </div>
 
         <!-- Quick Add: Scoring -->
@@ -288,7 +300,7 @@
     <div class="result-panel" id="result-panel" style="display:none;">
       <div class="result-header">
         <span class="result-title" id="result-mode-label">Classic Result</span>
-        <button class="result-close-btn" id="result-close-btn">✕ Close</button>
+        <button class="btn btn-xs btn-ghost result-close-btn" id="result-close-btn">✕ Close</button>
       </div>
 
       <!-- Classic result -->
@@ -314,6 +326,12 @@
 
       <!-- Advanced simulation -->
       <div id="result-advanced" class="result-body" style="display:none;">
+
+        <!-- Live track badges: player / ally / enemy levels -->
+        <div class="sim-tracks-header" id="sim-tracks-header">
+          <!-- filled dynamically by simulation.js when sim starts -->
+        </div>
+
         <div class="sim-header-row">
           <div class="sim-timer-display">
             <span class="sim-timer-label">TIMER</span>
@@ -353,8 +371,14 @@
             <button class="sim-ctrl-btn" id="sim-play-pause">▶ Play</button>
             <button class="sim-ctrl-btn" id="sim-speed-btn" data-speed="1">1x</button>
             <button class="sim-ctrl-btn" id="sim-restart-btn">↩ Restart</button>
+            <button class="sim-ctrl-btn secondary" id="sim-add-event-btn" title="Pause and scroll to wild grid to add a kill">+ Wild Kill</button>
+            <button class="sim-ctrl-btn secondary" id="sim-add-pko-btn" title="Pause and open Player KO modal">+ Player KO</button>
           </div>
         </div>
+
+        <!-- Live event indicator -->
+        <div class="sim-live-indicator" id="sim-live-indicator">No events pending</div>
+
         <div class="sim-log" id="sim-log">
           <!-- live events log -->
         </div>
@@ -756,12 +780,21 @@
   </div>
 
   <script src="./scripts/navbar.js"></script>
+
   <script src="./scripts/exp-calc/data.js"></script>
-  <script src="./scripts/exp-calc/app.js"></script>
+
+  <!-- ── App modules — load in dependency order ── -->
+  <script src="./scripts/exp-calc/state.js"></script>
+  <script src="./scripts/exp-calc/presets.js"></script>
+  <script src="./scripts/exp-calc/ui-pokemon.js"></script>
+  <script src="./scripts/exp-calc/ui-queue.js"></script>
+  <script src="./scripts/exp-calc/simulation.js"></script>
+  <script src="./scripts/exp-calc/main.js"></script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
   <script>
-    // Roadmap modal
+    // Roadmap modal (standalone — not part of app logic)
     document.getElementById('roadmapBtn').addEventListener('click', () => {
       document.getElementById('roadmap-modal').style.display = 'flex';
     });

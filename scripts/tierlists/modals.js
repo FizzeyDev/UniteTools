@@ -27,7 +27,10 @@ export function showMoveModal(pokemonName, tierIndex, isEdit, uid = null) {
     const moveData = getMovesForPokemon(pokemonName);
     optionsDiv.innerHTML = '';
 
-    if (!moveData.move1.length && !moveData.move2.length && !moveData.passive && !moveData.unite) {
+    const hasNoMoves = !moveData.move1.length && !moveData.move2.length
+                    && !moveData.passive?.length && !moveData.unite?.length;
+
+    if (hasNoMoves) {
         optionsDiv.innerHTML = '<p class="modal-note">Aucune donnée de move disponible pour ce Pokémon.</p>';
     } else {
         buildMoveModalBody(optionsDiv, moveData, placedItem, state.tierlistMode);
@@ -47,16 +50,21 @@ function buildMoveModalBody(container, moveData, placedItem, mode) {
     }
 
     if (mode === 'moves') {
-        container.appendChild(buildSlotSection('Move Slot 1', moveData.move1, 'move1', placedItem?.move1 || ''));
-        container.appendChild(buildSlotSection('Move Slot 2', moveData.move2, 'move2', placedItem?.move2 || ''));
+        container.appendChild(buildSlotSection('Move Slot 1', moveData.move1, 'move1', placedItem?.move1 || '', placedItem?.move1Img || ''));
+        container.appendChild(buildSlotSection('Move Slot 2', moveData.move2, 'move2', placedItem?.move2 || '', placedItem?.move2Img || ''));
     } else if (mode === 'passive') {
-        container.appendChild(buildSlotSection('Passif', moveData.passive || [], 'passive', placedItem?.passive || ''));
+        container.appendChild(buildSlotSection('Passif', moveData.passive || [], 'passive', placedItem?.passive || '', placedItem?.passiveImg || ''));
     } else if (mode === 'unite') {
-        container.appendChild(buildSlotSection('Unite Move', moveData.unite || [], 'unite', placedItem?.unite || ''));
+        container.appendChild(buildSlotSection('Unite Move', moveData.unite || [], 'unite', placedItem?.unite || '', placedItem?.uniteImg || ''));
     }
 }
 
-function buildSlotSection(label, moves, inputName, currentValue) {
+/**
+ * Build a slot section with radio buttons for each move.
+ * Also adds a "No move" option at the top (selecting it clears the slot).
+ * currentImg is passed to pre-check the right radio even after a mode switch.
+ */
+function buildSlotSection(label, moves, inputName, currentValue, currentImg = '') {
     const section = document.createElement('div');
     section.className = 'move-section';
 
@@ -67,14 +75,51 @@ function buildSlotSection(label, moves, inputName, currentValue) {
     if (!moves || !moves.length) {
         const note = document.createElement('p');
         note.className = 'modal-note';
-        note.textContent = `Aucun move pour ce slot.`;
+        note.textContent = 'Aucun move pour ce slot.';
         section.appendChild(note);
         return section;
     }
 
+    // ── "No move" option ──────────────────────────────────────────────────
+    {
+        const id      = `${inputName}-none`;
+        const checked = currentValue === '' || currentValue === null || currentValue === undefined;
+        const wrapper = document.createElement('label');
+        wrapper.className = `move-option move-option--none ${checked ? 'selected' : ''}`;
+        wrapper.htmlFor   = id;
+
+        const radio   = document.createElement('input');
+        radio.type    = 'radio';
+        radio.id      = id;
+        radio.name    = inputName;
+        radio.value   = '';
+        radio.checked = checked;
+
+        radio.addEventListener('change', () => {
+            section.querySelectorAll('.move-option').forEach(l => l.classList.remove('selected'));
+            wrapper.classList.add('selected');
+        });
+
+        const span       = document.createElement('span');
+        span.className   = 'move-name';
+        span.textContent = '— No move —';
+
+        wrapper.appendChild(radio);
+        wrapper.appendChild(span);
+        section.appendChild(wrapper);
+    }
+
+    // ── Move options ──────────────────────────────────────────────────────
     moves.forEach((mv, idx) => {
-        const id      = `${inputName}-${idx}`;
-        const checked = currentValue ? currentValue === mv.name : idx === 0;
+        const id = `${inputName}-${idx}`;
+
+        // Pre-select by name match; if no currentValue, default to first real move
+        let checked;
+        if (currentValue) {
+            checked = currentValue === mv.name;
+        } else {
+            checked = false; // "No move" is already checked above when no value
+        }
 
         const wrapper     = document.createElement('label');
         wrapper.className = `move-option ${checked ? 'selected' : ''}`;
@@ -95,7 +140,6 @@ function buildSlotSection(label, moves, inputName, currentValue) {
 
         if (mv.image) {
             const moveImg     = document.createElement('img');
-            // image is already a full relative path like "assets/moves/absol/feint.png"
             moveImg.src       = mv.image;
             moveImg.alt       = mv.name;
             moveImg.className = 'move-option__img';
@@ -111,10 +155,9 @@ function buildSlotSection(label, moves, inputName, currentValue) {
         wrapper.appendChild(span);
         section.appendChild(wrapper);
     });
+
     return section;
 }
-
-
 
 export function hideMoveModal() {
     const modal = document.getElementById('move-modal');
@@ -151,10 +194,11 @@ export function onMoveSave() {
                 ? tier.items.find(i => i.uid === uid)
                 : tier.items.find(i => i.name === pokemonName && i.category === 'pokemon');
             if (it) {
-                if (m1.val)  { it.move1 = m1.val;  it.move1Img  = m1.img; }
-                if (m2.val)  { it.move2 = m2.val;  it.move2Img  = m2.img; }
-                if (pa.val)  { it.passive = pa.val; it.passiveImg = pa.img; }
-                if (un.val)  { it.unite  = un.val;  it.uniteImg   = un.img; }
+                // Always overwrite (even with empty string — user chose "No move")
+                it.move1      = m1.val;  it.move1Img   = m1.img;
+                it.move2      = m2.val;  it.move2Img   = m2.img;
+                it.passive    = pa.val;  it.passiveImg  = pa.img;
+                it.unite      = un.val;  it.uniteImg    = un.img;
                 break;
             }
         }
@@ -184,6 +228,8 @@ export function onMoveSave() {
     loadGallery(state.currentCategory);
 }
 
+// ─── Tier modal ───────────────────────────────────────────────────────────────
+
 export function openTierModal(draftId, tierIndex) {
     const draft = state.drafts.find(d => d.id === draftId);
     if (!draft) return;
@@ -194,9 +240,79 @@ export function openTierModal(draftId, tierIndex) {
 
     document.getElementById('tier-name').value  = tier.name;
     document.getElementById('tier-color').value = tier.color || '#4a90e2';
+
+    // Render color presets + history
+    renderColorPresets(modal, draftId, tierIndex);
+
     modal.dataset.draftId   = draftId;
     modal.dataset.tierIndex = tierIndex;
     modal.style.display     = 'flex';
+}
+
+const COLOR_PRESETS = [
+    '#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#1abc9c',
+    '#3498db', '#9b59b6', '#e91e63', '#ff5722', '#607d8b',
+    '#795548', '#00bcd4', '#8bc34a', '#ff9800', '#9e9e9e',
+];
+
+function renderColorPresets(modal, draftId, tierIndex) {
+    // Remove existing preset row if any
+    modal.querySelector('.color-presets-row')?.remove();
+
+    const colorInput = document.getElementById('tier-color');
+    const draft = state.drafts.find(d => d.id === draftId);
+    const currentColor = draft?.tiers[tierIndex]?.color || '#4a90e2';
+
+    const row = document.createElement('div');
+    row.className = 'color-presets-row';
+
+    // Section: presets
+    const presetsLabel = document.createElement('div');
+    presetsLabel.className = 'color-presets-label';
+    presetsLabel.textContent = 'Presets';
+    row.appendChild(presetsLabel);
+
+    const presetsWrap = document.createElement('div');
+    presetsWrap.className = 'color-swatches';
+    COLOR_PRESETS.forEach(color => {
+        const swatch = createSwatch(color, colorInput, currentColor);
+        presetsWrap.appendChild(swatch);
+    });
+    row.appendChild(presetsWrap);
+
+    // Section: history
+    if (state.colorHistory.length > 0) {
+        const histLabel = document.createElement('div');
+        histLabel.className = 'color-presets-label';
+        histLabel.textContent = 'Recent';
+        row.appendChild(histLabel);
+
+        const histWrap = document.createElement('div');
+        histWrap.className = 'color-swatches';
+        state.colorHistory.forEach(color => {
+            const swatch = createSwatch(color, colorInput, currentColor);
+            histWrap.appendChild(swatch);
+        });
+        row.appendChild(histWrap);
+    }
+
+    // Insert before modal-actions
+    const actions = modal.querySelector('.modal-actions');
+    modal.querySelector('.modal-content').insertBefore(row, actions);
+}
+
+function createSwatch(color, colorInput, currentColor) {
+    const swatch = document.createElement('button');
+    swatch.type            = 'button';
+    swatch.className       = 'color-swatch' + (color === currentColor ? ' color-swatch--active' : '');
+    swatch.style.background = color;
+    swatch.title           = color;
+    swatch.addEventListener('click', () => {
+        colorInput.value = color;
+        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('color-swatch--active'));
+        swatch.classList.add('color-swatch--active');
+    });
+    return swatch;
 }
 
 export function hideTierModal() {
@@ -212,8 +328,16 @@ export function onTierSave() {
     const draft     = state.drafts.find(d => d.id === draftId);
     if (!draft) return;
 
+    const newColor = document.getElementById('tier-color').value || draft.tiers[tierIndex].color;
+
+    // Save to color history (deduplicate, max 10)
+    if (newColor && !state.colorHistory.includes(newColor)) {
+        state.colorHistory.unshift(newColor);
+        if (state.colorHistory.length > 10) state.colorHistory.pop();
+    }
+
     draft.tiers[tierIndex].name  = document.getElementById('tier-name').value.trim() || `Tier ${tierIndex + 1}`;
-    draft.tiers[tierIndex].color = document.getElementById('tier-color').value || draft.tiers[tierIndex].color;
+    draft.tiers[tierIndex].color = newColor;
     hideTierModal();
     loadTierList(draftId);
 }

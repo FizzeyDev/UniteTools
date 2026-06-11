@@ -372,7 +372,7 @@
     "passive": [ "flame_body.png" ],
     "unite": [ "firebird_inferno.png" ]
   },
-  "mr_mime": {
+  "mr-mime": {
     "move1": [ "fake_out.png", "confusion.png", "psychic.png" ],
     "move2": [ "light_screen.png", "barrier.png", "power_swap.png" ],
     "passive": [ "filter.png" ],

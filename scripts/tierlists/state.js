@@ -1,6 +1,7 @@
 const state = {
     drafts: [{
         id: 1,
+        label: 'Tierlist 1',
         tiers: [
             { name: 'S', color: '#e74c3c', items: [] },
             { name: 'A', color: '#3498db', items: [] },
@@ -23,6 +24,9 @@ const state = {
     tierlistMode: 'simple',
     itemUsageMode: 'one',
     gallerySearchQuery: '',
+
+    // Color history for the tier color picker (max 10)
+    colorHistory: [],
 
     // Monotonically increasing counter to give each placed item a unique uid
     _uidCounter: 0,

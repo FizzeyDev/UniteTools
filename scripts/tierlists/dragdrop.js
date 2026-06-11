@@ -60,6 +60,8 @@ export function setupDragDrop() {
             t.querySelector('.preview-placeholder')?.remove();
         });
         document.getElementById('remove-zone')?.classList.remove('active');
+        // Always reset — even if DOM was replaced during drop (e.g. after intra-tier
+        // reorder the container is swapped and dragend may fire on a detached node).
         dragPayload = null;
     });
 

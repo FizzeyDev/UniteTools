@@ -133,6 +133,7 @@ export function getMovesForPokemon(pokemonName) {
  * mewtwo-y      → mega_mewtwo_y
  */
 const FOLDER_OVERRIDES = {
+    'mr-mime':       'mr_mime',
     'charizard-x':   'mega_charizard_x',
     'charizard-y':   'mega_charizard_y',
     'gyarados-mega': 'mega_gyarados',
