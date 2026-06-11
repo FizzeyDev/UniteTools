@@ -818,3 +818,35 @@ body::before {
   .entity-panel { display: none; }
   .topbar-title { display: none; }
 }
+
+/* ── 1v1 second selection highlight ── */
+.placed-sprite.second-selected .sprite-team-ring {
+  outline: 3px solid #4fc3f7;
+  outline-offset: 2px;
+  box-shadow: 0 0 10px 3px rgba(79, 195, 247, 0.6);
+  animation: pulse-second 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse-second {
+  0%, 100% { box-shadow: 0 0 8px 2px rgba(79, 195, 247, 0.5); }
+  50%       { box-shadow: 0 0 16px 6px rgba(79, 195, 247, 0.9); }
+}
+
+* Sprites cliquables en mode duel */
+.placed-sprite.duel-pick {
+  cursor: crosshair !important;
+}
+.placed-sprite.duel-pick img {
+  filter: brightness(1.15);
+  transition: transform .15s;
+}
+.placed-sprite.duel-pick:hover img {
+  transform: scale(1.12);
+}
+ 
+/* Sprite sélectionné en mode duel */
+.placed-sprite.duel-selected .sprite-team-ring {
+  outline: 3px solid #ffd740;
+  outline-offset: 2px;
+  box-shadow: 0 0 12px 4px rgba(255, 215, 64, 0.7);
+}

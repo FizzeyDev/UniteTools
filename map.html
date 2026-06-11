@@ -107,6 +107,9 @@
       <button class="sidebar-cat-btn" id="show-names-btn" title="Toggle names">
         <span class="cat-icon" id="names-icon">🏷</span><span>Names</span>
       </button>
+      <button class="sidebar-cat-btn" id="duel-mode-btn" title="1v1 — Open in Damage Calc">
+        <span class="cat-icon">⚔</span><span>1v1</span>
+      </button>
     </div>
 
     <!-- Entity Panel -->
@@ -220,6 +223,11 @@
         document.querySelectorAll('.shape-type-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         App.setCurrentShape && App.setCurrentShape(btn.dataset.shape);
+      });
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('duel-mode-btn').addEventListener('click', () => {
+        if (App.startDuel) App.startDuel();
       });
     });
   </script>

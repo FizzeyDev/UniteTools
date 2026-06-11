@@ -12,9 +12,97 @@
 
   let draggingItem = null;
   let movingEntry  = null;
-  // Offset in canvas-pixel space between cursor and sprite centre at drag-start
   let moveOffsetX  = 0;
   let moveOffsetY  = 0;
+
+  // ── Duel mode ──────────────────────────────────────────────────────────────
+  let dueling   = false;
+  let duelPicks = [];
+
+  const duelOverlay = document.createElement('div');
+  duelOverlay.id = 'duel-overlay';
+  duelOverlay.innerHTML = `
+    <span id="duel-overlay-text" style="
+      color:var(--blue);
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.85rem;
+      font-weight:700;
+    ">Click a first Pokémon…</span>
+    <button id="duel-cancel-btn" style="
+      font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.75rem;
+      padding:4px 10px;border-radius:var(--radius-sm);cursor:pointer;
+      border:1px solid rgba(239,83,80,0.3);background:var(--red-dim);
+      color:var(--red);text-transform:uppercase;letter-spacing:0.05em;
+      transition:all 0.18s;
+    ">✕ Cancel</button>
+  `;
+  Object.assign(duelOverlay.style, {
+    display:      'none',
+    position:     'fixed',
+    bottom:       '20px',
+    left:         '50%',
+    transform:    'translateX(-50%)',
+    zIndex:       '9999',
+    background:   'var(--surface-3)',
+    border:       '1px solid rgba(79,195,247,0.25)',
+    borderRadius: 'var(--radius-sm)',
+    padding:      '8px 16px',
+    alignItems:   'center',
+    gap:          '12px',
+    boxShadow:    'var(--shadow-md)',
+    whiteSpace:   'nowrap',
+  });
+  document.body.appendChild(duelOverlay);
+
+  document.getElementById('duel-cancel-btn').addEventListener('click', stopDuel);
+
+  function startDuel() {
+    dueling   = true;
+    duelPicks = [];
+    App.selectSprite(null);
+    duelOverlay.style.display = 'flex';
+    document.getElementById('duel-overlay-text').textContent = 'Click a first Pokémon…';
+    document.querySelectorAll('.placed-sprite').forEach(el => el.classList.add('duel-pick'));
+  }
+
+  function stopDuel() {
+    dueling   = false;
+    duelPicks = [];
+    duelOverlay.style.display = 'none';
+    document.querySelectorAll('.placed-sprite').forEach(el => {
+      el.classList.remove('duel-pick', 'duel-selected');
+    });
+  }
+
+  function onDuelPick(entry) {
+    if (duelPicks.includes(entry)) {
+      duelPicks = duelPicks.filter(e => e !== entry);
+      entry.el.classList.remove('duel-selected');
+      document.getElementById('duel-overlay-text').textContent =
+        duelPicks.length === 0 ? 'Click a first Pokémon…' : 'Click a second Pokémon…';
+      return;
+    }
+    if (duelPicks.length >= 2) return;
+
+    duelPicks.push(entry);
+    entry.el.classList.add('duel-selected');
+
+    if (duelPicks.length === 1) {
+      document.getElementById('duel-overlay-text').textContent = 'Click a second Pokémon…';
+      return;
+    }
+
+    const [a, b] = duelPicks;
+    let atk = a, def = b;
+    if (b.team === 'purple') { atk = b; def = a; }
+    else if (a.team === 'orange') { atk = b; def = a; }
+
+    window.open(`damage-calc.html?atk=${encodeURIComponent(atk.id)}&def=${encodeURIComponent(def.id)}`, '_blank');
+    stopDuel();
+  }
+
+  App.startDuel = startDuel;
+  // ── Fin duel mode ──────────────────────────────────────────────────────────
 
   /* ──────────── Drag from panel → canvas ──────────── */
   App.startDragFromPanel = function (e, item) {
@@ -55,15 +143,12 @@
   function placeSprite(item, canvasX, canvasY, team = App.currentTeam, size = 48) {
     const canvas = document.getElementById('draw-canvas');
 
-    // Safety: if canvas isn't sized yet, force a resize first
     if (canvas.width <= 300) {
       App.resizeCanvas && App.resizeCanvas();
     }
 
     const spriteEl = document.createElement('div');
     spriteEl.className = `placed-sprite team-${team}`;
-
-    // Position stored as absolute canvas pixels, rendered as % so it follows zoom/pan
     spriteEl.style.left = (canvasX / canvas.width  * 100) + '%';
     spriteEl.style.top  = (canvasY / canvas.height * 100) + '%';
 
@@ -93,6 +178,8 @@
     spriteEl.appendChild(deleteBtn);
     spritesLayer.appendChild(spriteEl);
 
+    if (dueling) spriteEl.classList.add('duel-pick');
+
     const entry = { el: spriteEl, id: item.id, name: item.name, imgSrc: item.img, team, size, img, badge, canvasX, canvasY };
     App.placedSprites.push(entry);
 
@@ -105,6 +192,9 @@
       if (ev.button !== 0) return;
       ev.stopPropagation();
       ev.preventDefault();
+
+      if (dueling) { onDuelPick(entry); return; }
+
       if (App.currentTool === 'eraser') { removeSprite(spriteEl, entry); return; }
       App.selectSprite(entry);
       if (App.currentTool === 'cursor') startMoveSprite(ev, entry);
@@ -114,10 +204,17 @@
     return entry;
   }
 
+  App.placeSprite = placeSprite;
+
   function removeSprite(el, entry) {
     el.remove();
     App.placedSprites = App.placedSprites.filter(e => e !== entry);
     if (App.selectedSprite === entry) App.selectSprite(null);
+    if (duelPicks.includes(entry)) {
+      duelPicks = duelPicks.filter(e => e !== entry);
+      document.getElementById('duel-overlay-text').textContent =
+        duelPicks.length === 0 ? 'Click a first Pokémon…' : 'Click a second Pokémon…';
+    }
   }
 
   App.removeSelectedSprite = function () {
@@ -147,7 +244,6 @@
   /* ──────────── Move sprite ──────────── */
   function startMoveSprite(e, entry) {
     movingEntry = entry;
-    // Compute cursor position in canvas-pixel space and remember offset from sprite centre
     const cursorCanvas = App.clientToCanvas(e.clientX, e.clientY);
     moveOffsetX = cursorCanvas.x - entry.canvasX;
     moveOffsetY = cursorCanvas.y - entry.canvasY;
@@ -203,6 +299,7 @@
   App.clearSprites = function () {
     App.placedSprites.forEach(e => e.el.remove());
     App.placedSprites = [];
+    if (dueling) stopDuel();
     App.selectSprite(null);
   };
   } // end init

@@ -49,8 +49,12 @@ async function initApp() {
   makeCustomStatEditable('defenderDefCustom', 'def');
   makeCustomStatEditable('defenderSpDefCustom', 'sp_def');
 
-  selectAttacker('absol');
-  selectDefender('substitute-doll');
+  // Auto-select from URL params (e.g. ?atk=pikachu&def=lucario)
+  const _p = new URLSearchParams(window.location.search);
+  if (_p.get('atk')) selectAttacker(_p.get('atk'));
+  else selectAttacker('absol');
+  if (_p.get('def')) selectDefender(_p.get('def'));
+  else selectDefender('substitute-doll');
   updateDamages();
 
   initCombatLog();

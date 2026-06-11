@@ -74,23 +74,14 @@ export function hydrateDraftSprites() {
   };
   mapImg.src = MAP_SRCS[picks.map] || MAP_SRCS.groudon;
 
-  // Place sprites after the map image is ready AND the canvas is sized
+  // Place sprites after the map image is ready
   function doPlace() {
     if (!App.clientToCanvas || !App.resizeCanvas) {
       // Modules not ready yet – retry shortly
       setTimeout(doPlace, 120);
       return;
     }
-
     App.resizeCanvas();
-
-    // Wait until the canvas actually has real dimensions before placing sprites
-    const canvas = document.getElementById("draw-canvas");
-    if (!canvas || canvas.width <= 300) {
-      setTimeout(doPlace, 100);
-      return;
-    }
-
     _placeTeam(picks.teamA, "purple");
     _placeTeam(picks.teamB, "orange");
 
@@ -107,6 +98,8 @@ export function hydrateDraftSprites() {
   }
 }
 
+// ─── _placeSpriteOnMap replaced by App.placeSprite (see sprites.js) ───────────
+
 // Spread team sprites in two columns on their respective half of the map
 function _placeTeam(mons, team) {
   if (!mons || !mons.length) return;
@@ -121,9 +114,9 @@ function _placeTeam(mons, team) {
   const isLeft = team === "purple";
 
   // Layout: a neat column near the edge
-  const colX   = isLeft ? W * 0.07 : W * 0.93;
-  const startY = H * 0.12;
-  const stepY  = H * 0.13;
+  const colX   = isLeft ? W * 0.18 : W * 0.82;
+  const startY = H * 0.20;
+  const stepY  = H * 0.10;
 
   mons.forEach((mon, i) => {
     const item = {
@@ -131,82 +124,7 @@ function _placeTeam(mons, team) {
       name: mon.name,
       img:  mon.src,
     };
-
-    // Use App.startDragFromPanel internals by calling placeSprite directly.
-    // placeSprite is not exported, so we recreate the DOM element ourselves
-    // using the same pattern as sprites.js.
-    _placeSpriteOnMap(item, colX, startY + i * stepY, team);
-  });
-}
-
-function _placeSpriteOnMap(item, canvasX, canvasY, team) {
-  // Mirror of the placeSprite() function in sprites.js
-  const spritesLayer = document.getElementById("sprites-layer");
-  const canvas       = document.getElementById("draw-canvas");
-  if (!spritesLayer || !canvas) return;
-
-  const size = 52;
-
-  const spriteEl = document.createElement("div");
-  spriteEl.className = `placed-sprite team-${team}`;
-  spriteEl.style.left = (canvasX / canvas.width  * 100) + "%";
-  spriteEl.style.top  = (canvasY / canvas.height * 100) + "%";
-
-  const ring = document.createElement("div");
-  ring.className = "sprite-team-ring";
-
-  const img = document.createElement("img");
-  img.src       = item.img;
-  img.alt       = item.name;
-  img.draggable = false;
-  img.style.width  = size + "px";
-  img.style.height = size + "px";
-  img.onerror = () => {
-    if (App.generatePlaceholderSvg) img.src = App.generatePlaceholderSvg(item.name);
-  };
-
-  const badge = document.createElement("span");
-  badge.className   = "sprite-name-badge";
-  badge.textContent = item.name;
-  badge.style.display = App.showNames ? "block" : "none";
-
-  const deleteBtn = document.createElement("div");
-  deleteBtn.className   = "sprite-delete";
-  deleteBtn.textContent = "×";
-
-  spriteEl.appendChild(ring);
-  spriteEl.appendChild(img);
-  spriteEl.appendChild(badge);
-  spriteEl.appendChild(deleteBtn);
-  spritesLayer.appendChild(spriteEl);
-
-  const entry = {
-    el: spriteEl, id: item.id, name: item.name,
-    imgSrc: item.img, team, size, img, badge, canvasX, canvasY,
-  };
-  App.placedSprites.push(entry);
-
-  deleteBtn.addEventListener("click", (ev) => {
-    ev.stopPropagation();
-    spriteEl.remove();
-    App.placedSprites = App.placedSprites.filter(e => e !== entry);
-    if (App.selectedSprite === entry) App.selectSprite && App.selectSprite(null);
-  });
-
-  spriteEl.addEventListener("mousedown", (ev) => {
-    if (ev.button !== 0) return;
-    ev.stopPropagation();
-    ev.preventDefault();
-    if (App.currentTool === "eraser") {
-      spriteEl.remove();
-      App.placedSprites = App.placedSprites.filter(e => e !== entry);
-      if (App.selectedSprite === entry) App.selectSprite && App.selectSprite(null);
-      return;
-    }
-    App.selectSprite && App.selectSprite(entry);
-    if (App.currentTool === "cursor") {
-      // trigger move — reuse App's internal move logic by dispatching a mousedown
-      // the sprites.js move handler listens on document, so we just need to let it bubble
-    }
+    // App.placeSprite est exposé par sprites.js → move/select/erase fonctionnent
+    App.placeSprite(item, colX, startY + i * stepY, team, 52);
   });
 }
