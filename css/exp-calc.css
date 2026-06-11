@@ -2093,3 +2093,186 @@ body::before {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 3px; }
+/* ══════════════════════════════════════
+   FARM ROTA PRESETS
+══════════════════════════════════════ */
+.preset-bar {
+  padding: 10px 14px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preset-bar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.preset-bar-label {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.preset-save-btn {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  background: var(--violet-dim);
+  border: 1px solid var(--violet);
+  color: var(--violet);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.preset-save-btn:hover {
+  background: var(--violet);
+  color: #fff;
+}
+
+.preset-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 26px;
+}
+
+.preset-empty-hint {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 26px;
+}
+
+.preset-chip {
+  display: flex;
+  align-items: center;
+  background: var(--surface-3);
+  border: 1px solid var(--border-md);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+}
+
+.preset-chip-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  padding: 3px 10px 3px 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.preset-chip-name:hover {
+  background: var(--blue-dim);
+  color: var(--blue);
+}
+
+.preset-chip-del {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  padding: 3px 7px;
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--border);
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+}
+.preset-chip-del:hover {
+  background: var(--red-dim);
+  color: var(--red);
+}
+
+.preset-save-summary {
+  margin-top: 6px;
+  padding: 8px 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+}
+
+/* ══════════════════════════════════════
+   TEAM CONFIG (Ally + Enemy two-col)
+══════════════════════════════════════ */
+.enemy-config-body.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 720px) {
+  .enemy-config-body.two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.team-config-block {
+  padding: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.team-config-block-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2px;
+}
+
+.ally-block .team-config-block-title { color: var(--green); }
+.enemy-block .team-config-block-title { color: var(--red); }
+
+.ally-level-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ally-badge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--radius-xs);
+  border: 1px solid transparent;
+}
+
+.ally-badge.active {
+  background: var(--green-dim);
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.ally-badge.inactive {
+  background: var(--surface-3);
+  border-color: var(--border);
+  color: var(--text-dim);
+}
+
+/* ══════════════════════════════════════
+   ROADMAP BADGE: done
+══════════════════════════════════════ */
+.roadmap-badge.done {
+  background: rgba(76,175,130,0.15);
+  color: var(--green);
+  border: 1px solid var(--green);
+}

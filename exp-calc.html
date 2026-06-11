@@ -61,9 +61,8 @@
             <div class="exp-share-row">
               <img src="assets/items/exp_share.png" alt="Exp Share" class="exp-share-icon" draggable="false">
               <span class="exp-share-label">Exp. Share</span>
-              <div class="coming-soon-badge">Coming Soon</div>
-              <label class="toggle-switch disabled">
-                <input type="checkbox" id="exp-share-toggle" disabled>
+              <label class="toggle-switch">
+                <input type="checkbox" id="exp-share-toggle">
                 <span class="toggle-slider"></span>
               </label>
             </div>
@@ -158,11 +157,31 @@
     ═══════════════════════════════════════ -->
     <div class="enemy-config-section">
       <div class="enemy-config-header">
-        <span class="enemy-config-title">🎯 Enemy Team Configuration</span>
-        <span class="enemy-config-hint">Set the main enemy reference for the <strong>Catch-Up Modifier</strong></span>
+        <span class="enemy-config-title">⚔️ Team Configuration</span>
+        <span class="enemy-config-hint">Configure your <strong>Ally</strong> (Exp. Share) and the <strong>Enemy</strong> (Catch-Up Modifier)</span>
       </div>
-      <div class="enemy-config-body">
-        <div class="enemy-level-block">
+      <div class="enemy-config-body two-col">
+
+        <!-- ── Ally block ── -->
+        <div class="team-config-block ally-block">
+          <div class="team-config-block-title">🤝 Ally Pokémon</div>
+          <span class="cfg-label">Ally's current level (for Exp. Share)</span>
+          <div class="ally-level-row">
+            <div class="level-stepper">
+              <button class="step-btn" id="ally-lvl-minus">−</button>
+              <span class="level-value" id="ally-lvl-display">1</span>
+              <button class="step-btn" id="ally-lvl-plus">+</button>
+            </div>
+            <div class="ally-level-info" id="ally-level-info">
+              <span class="ally-badge" id="ally-expshare-badge">—</span>
+            </div>
+          </div>
+          <span class="field-hint">The Exp. Share item holder gains 5 XP/sec when they are the lowest level on the team. Set this as the ally's level to verify Exp. Share eligibility.</span>
+        </div>
+
+        <!-- ── Enemy block ── -->
+        <div class="team-config-block enemy-block">
+          <div class="team-config-block-title">🎯 Enemy Team</div>
           <span class="cfg-label">Highest level on the opposing team</span>
           <div class="enemy-level-row">
             <div class="level-stepper">
@@ -175,11 +194,9 @@
               <span class="catchup-detail" id="catchup-detail">Your level (1) ≥ enemy level (1) - no modifier applied.</span>
             </div>
           </div>
+          <span class="field-hint">Catch-Up activates when the enemy is <strong>2+ levels</strong> ahead.</span>
         </div>
-        <div class="enemy-config-note">
-          <span class="enemy-note-icon">ℹ️</span>
-          <span>This enemy is used only as a reference for the Catch-Up modifier. It is not counted among kills or other events. Catch-Up applies to base XP received when the opponent is ahead by at least <strong>2 levels</strong>.</span>
-        </div>
+
       </div>
     </div>
 
@@ -194,6 +211,21 @@
           <span class="panel-header-title">📋 Kill Queue</span>
           <button class="clear-queue-btn" id="clear-queue-btn">🗑 Clear</button>
         </div>
+
+        <!-- ── Farm Rota Presets ── -->
+        <div class="preset-bar">
+          <div class="preset-bar-top">
+            <span class="preset-bar-label">💾 Farm Presets</span>
+            <div class="preset-bar-actions">
+              <button class="preset-save-btn" id="preset-save-btn">+ Save Current</button>
+            </div>
+          </div>
+          <div class="preset-chips" id="preset-chips">
+            <!-- filled by JS -->
+            <span class="preset-empty-hint" id="preset-empty-hint">No presets yet. Build a queue and save it!</span>
+          </div>
+        </div>
+
         <div class="kill-queue-list" id="kill-queue-list">
           <div class="empty-queue-hint">Add wild Pokémon kills, player KOs or scoring events below.</div>
         </div>
@@ -638,9 +670,31 @@
           <div class="roadmap-item-content">
             <div class="roadmap-item-top">
               <span class="roadmap-item-title">Farm Presets</span>
-              <span class="roadmap-badge soon">Priority</span>
+              <span class="roadmap-badge done">✅ Done</span>
             </div>
             <p class="roadmap-item-desc">Save and reload your favorite Kill Queues as named presets. Create an "Early jungle", "Full clear", or any custom rotation to instantly replay your usual scenarios without reconfiguring everything.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-item-icon blue">🤝</div>
+          <div class="roadmap-item-content">
+            <div class="roadmap-item-top">
+              <span class="roadmap-item-title">Ally Configuration</span>
+              <span class="roadmap-badge done">✅ Done</span>
+            </div>
+            <p class="roadmap-item-desc">Set your ally's level in the Team Configuration panel. Used to determine Exp. Share eligibility — the holder gains 5 XP/sec when they are the lowest level on the team.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-item-icon yellow">🔗</div>
+          <div class="roadmap-item-content">
+            <div class="roadmap-item-top">
+              <span class="roadmap-item-title">Exp. Share</span>
+              <span class="roadmap-badge done">✅ Done</span>
+            </div>
+            <p class="roadmap-item-desc">Full support for the Exp. Share item. Enable the toggle next to your Pokémon — grants 5 XP/sec passively when the holder is the lowest level on the team (item level 20+ value).</p>
           </div>
         </div>
 
@@ -652,17 +706,6 @@
               <span class="roadmap-badge next">Up Next</span>
             </div>
             <p class="roadmap-item-desc">In Advanced simulation mode, enable an enemy preset that levels up in parallel. Watch the level gap update in real time and see the Catch-Up Modifier activate or deactivate dynamically.</p>
-          </div>
-        </div>
-
-        <div class="roadmap-item">
-          <div class="roadmap-item-icon yellow">🔗</div>
-          <div class="roadmap-item-content">
-            <div class="roadmap-item-top">
-              <span class="roadmap-item-title">Exp. Share</span>
-              <span class="roadmap-badge wip">In Progress</span>
-            </div>
-            <p class="roadmap-item-desc">Full support for the Exp. Share item.</p>
           </div>
         </div>
 
@@ -684,6 +727,30 @@
           and contribute to the project!
         </p>
 
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PRESET SAVE MODAL ═══ -->
+  <div class="modal-overlay" id="preset-save-modal" style="display:none;">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span class="modal-title">💾 Save Farm Preset</span>
+        <button class="modal-close" id="preset-save-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="field-group">
+          <label class="cfg-label">Preset name</label>
+          <input type="text" id="preset-name-input" class="cfg-input" placeholder="e.g. Early Jungle, Full Clear…" maxlength="32" autocomplete="off">
+          <span class="field-hint">Max 32 characters</span>
+        </div>
+        <div class="preset-save-summary" id="preset-save-summary">
+          <!-- filled by JS -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn confirm" id="preset-save-confirm">💾 Save</button>
+        <button class="modal-btn cancel" id="preset-save-cancel">Cancel</button>
       </div>
     </div>
   </div>

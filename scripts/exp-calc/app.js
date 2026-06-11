@@ -12,6 +12,9 @@
     simulation: null,
     // Enemy main config (for catch-up modifier)
     enemyHighestLevel: 1,
+    // Ally config (for Exp. Share)
+    allyLevel: 1,
+    expShareEnabled: false,
   };
 
   const $ = id => document.getElementById(id);
@@ -23,6 +26,8 @@
     renderXPTable(state.tableMap);
     updateXPProgress();
     updateCatchUpDisplay();
+    updateAllyExpShareDisplay();
+    renderPresetChips();
   }
 
   // ─── Pokemon Picker ────────────────────────────────────────────────────────
@@ -78,6 +83,7 @@
     $('lvl-display').textContent = state.startLevel;
     updateXPProgress();
     updateCatchUpDisplay();
+    updateAllyExpShareDisplay();
   }
 
   function updateXPProgress() {
@@ -123,6 +129,137 @@
       badge.className = 'catchup-badge inactive';
       detail.textContent = `Your level (${myLevel}) ≥ enemy level (${enemyLevel}) - no modifier.`;
     }
+  }
+
+  // ─── Ally / Exp. Share ────────────────────────────────────────────────────
+
+  /**
+   * Exp. Share: +5 XP/sec (item level 20+, fixed at max tier)
+   * Condition: the holder must be the LOWEST level on the team.
+   * We compare state.startLevel (player) vs state.allyLevel.
+   */
+  function isExpShareActive() {
+    if (!state.expShareEnabled) return false;
+    // Exp. Share holder = this Pokémon (state.startLevel)
+    // It gains 5 XP/sec when it is the lowest level on the team.
+    return state.startLevel <= state.allyLevel;
+  }
+
+  function updateAllyExpShareDisplay() {
+    const badge = $('ally-expshare-badge');
+    if (!badge) return;
+
+    if (!state.expShareEnabled) {
+      badge.textContent = 'Exp. Share: Off';
+      badge.className = 'ally-badge inactive';
+      return;
+    }
+
+    if (isExpShareActive()) {
+      badge.textContent = `+5 XP/sec active (Lv.${state.startLevel} ≤ ally Lv.${state.allyLevel})`;
+      badge.className = 'ally-badge active';
+    } else {
+      badge.textContent = `Inactive (Lv.${state.startLevel} > ally Lv.${state.allyLevel})`;
+      badge.className = 'ally-badge inactive';
+    }
+  }
+
+  // ─── Farm Rota Presets ────────────────────────────────────────────────────
+
+  const PRESETS_KEY = 'xpcalc_farm_presets';
+
+  function loadPresets() {
+    try {
+      return JSON.parse(localStorage.getItem(PRESETS_KEY) || '[]');
+    } catch { return []; }
+  }
+
+  function savePresets(presets) {
+    localStorage.setItem(PRESETS_KEY, JSON.stringify(presets));
+  }
+
+  function renderPresetChips() {
+    const container = $('preset-chips');
+    const emptyHint = $('preset-empty-hint');
+    if (!container) return;
+    const presets = loadPresets();
+
+    // Clear old chips (keep empty hint)
+    Array.from(container.querySelectorAll('.preset-chip')).forEach(c => c.remove());
+
+    if (presets.length === 0) {
+      if (emptyHint) emptyHint.style.display = '';
+      return;
+    }
+    if (emptyHint) emptyHint.style.display = 'none';
+
+    presets.forEach((preset, idx) => {
+      const chip = document.createElement('div');
+      chip.className = 'preset-chip';
+
+      const nameBtn = document.createElement('button');
+      nameBtn.className = 'preset-chip-name';
+      nameBtn.textContent = preset.name;
+      nameBtn.title = `Load "${preset.name}" (${preset.queue.length} events)`;
+      nameBtn.addEventListener('click', () => loadPreset(idx));
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'preset-chip-del';
+      delBtn.textContent = '✕';
+      delBtn.title = `Delete "${preset.name}"`;
+      delBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        deletePreset(idx);
+      });
+
+      chip.appendChild(nameBtn);
+      chip.appendChild(delBtn);
+      container.appendChild(chip);
+    });
+  }
+
+  function loadPreset(idx) {
+    const presets = loadPresets();
+    if (!presets[idx]) return;
+    state.killQueue = presets[idx].queue.map(e => ({ ...e }));
+    renderKillQueue();
+  }
+
+  function deletePreset(idx) {
+    const presets = loadPresets();
+    presets.splice(idx, 1);
+    savePresets(presets);
+    renderPresetChips();
+  }
+
+  function openPresetSaveModal() {
+    const input = $('preset-name-input');
+    if (input) input.value = '';
+
+    const summary = $('preset-save-summary');
+    if (summary) {
+      const n = state.killQueue.length;
+      summary.innerHTML = n === 0
+        ? '<span style="color:var(--text-dim);font-size:0.85rem;">⚠️ Your Kill Queue is empty — nothing to save.</span>'
+        : `<span style="color:var(--text-dim);font-size:0.85rem;">Saving <strong style="color:var(--text)">${n} event${n > 1 ? 's' : ''}</strong> from the current Kill Queue.</span>`;
+    }
+
+    $('preset-save-modal').style.display = 'flex';
+    if (input) setTimeout(() => input.focus(), 50);
+  }
+
+  function confirmSavePreset() {
+    const input = $('preset-name-input');
+    const name = (input ? input.value.trim() : '') || 'Unnamed';
+    if (state.killQueue.length === 0) {
+      $('preset-save-modal').style.display = 'none';
+      return;
+    }
+    const presets = loadPresets();
+    presets.push({ name, queue: state.killQueue.map(e => ({ ...e })) });
+    savePresets(presets);
+    renderPresetChips();
+    $('preset-save-modal').style.display = 'none';
   }
 
   function showInfoPopup(name, info) {
@@ -596,7 +733,12 @@
       const rate = t >= boundary ? 4 : 6;
       const level = getLevel(t);
       const catchupMult = D.getCatchUpModifier(level, state.enemyHighestLevel);
-      total += Math.floor(rate * catchupMult);
+      let tickXP = Math.floor(rate * catchupMult);
+      // Exp. Share: +5 XP/sec when holder is lowest level (compare against ally level snapshot)
+      if (state.expShareEnabled && level <= state.allyLevel) {
+        tickXP += 5;
+      }
+      total += tickXP;
     }
 
     return total;
@@ -653,6 +795,9 @@
       passiveDesc = `(4 XP/sec × ${durationSec}s${catchupNote})`;
     } else {
       passiveDesc = `(6 XP/sec × ${durationSec}s${catchupNote})`;
+    }
+    if (state.expShareEnabled && state.startLevel <= state.allyLevel) {
+      passiveDesc += ' · +5/sec Exp. Share';
     }
     addBreakdownRow(breakdown, '⏱', null, 'Passive XP', passiveDesc, passiveTotal);
 
@@ -764,6 +909,14 @@
       addSimLog(startSec, `⚡ Catch-Up ×${initMult.toFixed(2)} active at start (enemy Lv.${state.enemyHighestLevel})`, null, null);
     }
 
+    if (state.expShareEnabled) {
+      if (state.startLevel <= state.allyLevel) {
+        addSimLog(startSec, `🔗 Exp. Share active — +5 XP/sec (Lv.${state.startLevel} ≤ ally Lv.${state.allyLevel})`, null, null);
+      } else {
+        addSimLog(startSec, `🔗 Exp. Share equipped but inactive — Lv.${state.startLevel} > ally Lv.${state.allyLevel}`, null, null);
+      }
+    }
+
     if (isStoredXPLevel(state.startLevel)) {
       const evos = D.PLAYER_POKEMON.find(p => p.name === state.selectedPokemon)?.evolutionLevels || [];
       const nextEvo = evos.find(e => e === state.startLevel + 1);
@@ -853,7 +1006,11 @@
     const catchupMult = D.getCatchUpModifier(prevLevel, state.enemyHighestLevel);
     const passiveRate = D.getPassiveXPPerSec(simState.currentSec);
     const rawPassive = passiveRate; // base before catch-up
-    const passiveXPWithCatchup = Math.floor(rawPassive * catchupMult);
+    let passiveXPWithCatchup = Math.floor(rawPassive * catchupMult);
+
+    // Exp. Share: +5 XP/sec when holder is lowest level on team
+    const expShareBonus = (state.expShareEnabled && prevLevel <= state.allyLevel) ? 5 : 0;
+    passiveXPWithCatchup += expShareBonus;
 
     // ── Passive XP: goes to Stored if on a stored-XP level, otherwise normal ──
     if (isStoredXPLevel(prevLevel)) {
@@ -1324,6 +1481,40 @@
     });
     $('disclaimer-modal').addEventListener('click', e => {
       if (e.target === $('disclaimer-modal')) $('disclaimer-modal').style.display = 'none';
+    });
+
+    // ── Ally level ──
+    $('ally-lvl-minus').addEventListener('click', () => {
+      if (state.allyLevel > 1) {
+        state.allyLevel--;
+        $('ally-lvl-display').textContent = state.allyLevel;
+        updateAllyExpShareDisplay();
+      }
+    });
+    $('ally-lvl-plus').addEventListener('click', () => {
+      if (state.allyLevel < 15) {
+        state.allyLevel++;
+        $('ally-lvl-display').textContent = state.allyLevel;
+        updateAllyExpShareDisplay();
+      }
+    });
+
+    // ── Exp. Share toggle ──
+    $('exp-share-toggle').addEventListener('change', e => {
+      state.expShareEnabled = e.target.checked;
+      updateAllyExpShareDisplay();
+    });
+
+    // ── Farm Presets ──
+    $('preset-save-btn').addEventListener('click', openPresetSaveModal);
+    $('preset-save-close').addEventListener('click', () => { $('preset-save-modal').style.display = 'none'; });
+    $('preset-save-cancel').addEventListener('click', () => { $('preset-save-modal').style.display = 'none'; });
+    $('preset-save-confirm').addEventListener('click', confirmSavePreset);
+    $('preset-save-modal').addEventListener('click', e => {
+      if (e.target === $('preset-save-modal')) $('preset-save-modal').style.display = 'none';
+    });
+    $('preset-name-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') confirmSavePreset();
     });
   }
 
