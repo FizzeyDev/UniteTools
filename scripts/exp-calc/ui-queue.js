@@ -403,7 +403,8 @@ window.XPCalcQueue = (function () {
     $('kill-modal').addEventListener('click', e => { if (e.target === $('kill-modal')) closeKillModal(); });
 
     // Player KO modal
-    $('add-player-ko-btn').addEventListener('click', openPlayerKOModal);
+    const addPKOBtn = $('add-player-ko-btn');
+    if (addPKOBtn) addPKOBtn.addEventListener('click', openPlayerKOModal);
     ['pko-victim-level', 'pko-streak', 'pko-min', 'pko-sec'].forEach(id => $(id).addEventListener('input', updatePlayerKOPreview));
     document.querySelectorAll('input[name="pko-role"]').forEach(r => r.addEventListener('change', updatePlayerKOPreview));
 
