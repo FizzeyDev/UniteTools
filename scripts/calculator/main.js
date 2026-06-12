@@ -1,3 +1,4 @@
+import { state } from './state.js';
 import { loadData } from './dataLoader.js';
 import { populateGrids, setupSearch, setupLevelSliders, setupHPSliders, setupModals, setupCollapsibleSections, makeHPValueEditable, makeCustomStatEditable, setupTimerSlider } from './uiManager.js';
 import { populateItemGrid, setupItemSearch, setupItemSelection } from './itemManager.js';
@@ -9,6 +10,7 @@ import { resetItems } from './itemManager.js';
 import { initCombatLog, initAllySelector } from './combatLog.js';
 import { initAllyManager } from './allyManager.js';
 import { initHowToUse } from './howToUse.js';
+import { enhanceBuffLabels } from './buff-visuals.js';
 
 document.querySelectorAll('.reset-items-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -41,6 +43,7 @@ async function initApp() {
   setupBuffListeners();
   setupDebuffListeners();
   setupStackableDebuffs();
+  enhanceBuffLabels(state.allPokemon);
 
   makeHPValueEditable('hpValueAttacker', 'hpSliderAttacker');
   makeHPValueEditable('hpValueDefender', 'hpSliderDefender');

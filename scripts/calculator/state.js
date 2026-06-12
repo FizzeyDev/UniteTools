@@ -85,6 +85,7 @@ export const state = {
   attackerMimeSwapPlusBuff: false,
   attackerAlcreamieBuff: false,
   attackerMiraidonBuff: false,
+  attackerSkeledirgeBuff: false,
   attackerShellSmashActive: false,
   attackerShellSmashUpgraded: false,
 

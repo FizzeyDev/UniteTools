@@ -384,6 +384,7 @@ function applyItemsAndGlobalEffects(atkStats, defStats) {
   if (state.attackerBlisseyHandBuff)  globalDamageMult *= 1.15;
   if (state.attackerMimeSwapBuff)     globalDamageMult *= 1.15;
   if (state.attackerMimeSwapPlusBuff) globalDamageMult *= 1.20;
+  if (state.attackerSkeledirgeBuff)   globalDamageMult *= 1.15;
   if (state.attackerMiraidonBuff) {
     globalDamageMult *= state.currentAttacker?.pokemonId === "miraidon" ? 1.30 : 1.10;
   }
@@ -1363,8 +1364,13 @@ function itemsToLogEntry(items) {
 }
 
 let activePicker = null;
+let activePickerOutsideHandler = null;
 
 function closeActivePicker() {
+  if (activePickerOutsideHandler) {
+    document.removeEventListener('click', activePickerOutsideHandler);
+    activePickerOutsideHandler = null;
+  }
   if (activePicker) {
     activePicker.remove();
     activePicker = null;
@@ -1729,27 +1735,29 @@ function openLinePicker(card, move, allItems) {
 
   picker.addEventListener('click', (e) => e.stopPropagation());
 
+  picker.style.visibility = 'hidden';
   document.body.appendChild(picker);
 
-  const cardRect = card.getBoundingClientRect();
-  const pickerH  = picker.offsetHeight;
-  const pickerW  = picker.offsetWidth;
-  let top  = cardRect.top - pickerH - 8;
-  let left = cardRect.left;
-  if (top < 8) top = cardRect.bottom + 8;
-  if (left + pickerW > window.innerWidth - 8) left = window.innerWidth - pickerW - 8;
-  if (left < 8) left = 8;
-  picker.style.top  = `${top}px`;
-  picker.style.left = `${left}px`;
-
   requestAnimationFrame(() => {
-    const outsideHandler = (e) => {
+    const cardRect = card.getBoundingClientRect();
+    const pickerH  = picker.offsetHeight;
+    const pickerW  = picker.offsetWidth;
+    let top  = cardRect.top - pickerH - 8;
+    let left = cardRect.left;
+    if (top < 8) top = cardRect.bottom + 8;
+    if (top + pickerH > window.innerHeight - 8) top = Math.max(8, window.innerHeight - pickerH - 8);
+    if (left + pickerW > window.innerWidth - 8) left = window.innerWidth - pickerW - 8;
+    if (left < 8) left = 8;
+    picker.style.top  = `${top}px`;
+    picker.style.left = `${left}px`;
+    picker.style.visibility = '';
+
+    activePickerOutsideHandler = (e) => {
       if (!picker.contains(e.target)) {
         closeActivePicker();
-        document.removeEventListener('click', outsideHandler);
       }
     };
-    document.addEventListener('click', outsideHandler);
+    document.addEventListener('click', activePickerOutsideHandler);
   });
 }
 
