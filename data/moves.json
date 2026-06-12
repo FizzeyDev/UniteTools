@@ -205,7 +205,7 @@
   },
   "gardevoir": {
     "move1": [ "confusion.png", "psychic.png", "moonblast.png" ],
-    "move2": [ "teleport.png", "psychock.png", "future_sight.png" ],
+    "move2": [ "teleport.png", "psyshock.png", "future_sight.png" ],
     "passive": [ "synchronize.png" ],
     "unite": [ "fairy_singularity.png" ]
   },

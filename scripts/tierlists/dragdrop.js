@@ -183,7 +183,6 @@ export function setupDragDrop() {
                     name: dragPayload.name,
                     category: 'pokemon',
                     file,
-                    move1: '', move2: '', passive: '', unite: '',
                 });
             } else {
                 usageMap.set(dragPayload.name, (usageMap.get(dragPayload.name) || 0) + 1);
@@ -251,7 +250,6 @@ export function setupDragDrop() {
             targetTier.items.push({
                 uid: state.nextUid(),
                 name, category: 'pokemon', file,
-                move1: '', move2: '', passive: '', unite: '',
             });
         } else {
             usageMap.set(name, (usageMap.get(name) || 0) + 1);

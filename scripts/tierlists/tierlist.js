@@ -330,19 +330,23 @@ export function createTierItemElement(item, basePath, draftId) {
     const move1Img   = item.move1Img   || findMoveImg(item.move1,   moveData.move1);
     const move2Img   = item.move2Img   || findMoveImg(item.move2,   moveData.move2);
 
-    // Auto-resolve: if a slot has no user selection, fall back to the first available move
-    const resolvedPassive    = item.passive    || moveData.passive?.[0]?.name    || null;
-    const resolvedPassiveImg = passiveImg      || moveData.passive?.[0]?.image   || null;
-    const resolvedUnite      = item.unite      || moveData.unite?.[0]?.name      || null;
-    const resolvedUniteImg   = uniteImg        || moveData.unite?.[0]?.image     || null;
-    const resolvedMove1      = item.move1      || moveData.move1?.[0]?.name      || null;
-    const resolvedMove1Img   = move1Img        || moveData.move1?.[0]?.image     || null;
-    const resolvedMove2      = item.move2      || moveData.move2?.[0]?.name      || null;
-    const resolvedMove2Img   = move2Img        || moveData.move2?.[0]?.image     || null;
+    // Auto-resolve: if a slot was never configured (undefined), fall back to the first available move.
+    // If the user explicitly chose "No move" (empty string ''), keep it empty — do NOT auto-fill.
+    const neverSet = v => v === undefined || v === null;
+    const resolvedPassive    = neverSet(item.passive) ? (moveData.passive?.[0]?.name  || null) : (item.passive  || null);
+    const resolvedPassiveImg = neverSet(item.passive) ? (moveData.passive?.[0]?.image || null) : (passiveImg    || null);
+    const resolvedUnite      = neverSet(item.unite)   ? (moveData.unite?.[0]?.name    || null) : (item.unite    || null);
+    const resolvedUniteImg   = neverSet(item.unite)   ? (moveData.unite?.[0]?.image   || null) : (uniteImg      || null);
+    const resolvedMove1      = neverSet(item.move1)   ? (moveData.move1?.[0]?.name    || null) : (item.move1    || null);
+    const resolvedMove1Img   = neverSet(item.move1)   ? (moveData.move1?.[0]?.image   || null) : (move1Img      || null);
+    const resolvedMove2      = neverSet(item.move2)   ? (moveData.move2?.[0]?.name    || null) : (item.move2    || null);
+    const resolvedMove2Img   = neverSet(item.move2)   ? (moveData.move2?.[0]?.image   || null) : (move2Img      || null);
 
     if (mode === 'moves') {
-        el.appendChild(makeBadge(resolvedMove1 || null, resolvedMove1Img, basePath, 'badge--left',  'badge--move'));
-        el.appendChild(makeBadge(resolvedMove2 || null, resolvedMove2Img, basePath, 'badge--right', 'badge--move'));
+        // If both slots are explicitly "No move" (''), show just the sprite like Simple mode
+        if (item.move1 === '' && item.move2 === '') return el;
+        if (resolvedMove1 !== null) el.appendChild(makeBadge(resolvedMove1, resolvedMove1Img, basePath, 'badge--left',  'badge--move'));
+        if (resolvedMove2 !== null) el.appendChild(makeBadge(resolvedMove2, resolvedMove2Img, basePath, 'badge--right', 'badge--move'));
     } else if (mode === 'passive') {
         return makeMoveCard(el, item, resolvedPassive, resolvedPassiveImg, basePath, 'move-card--passive');
     } else if (mode === 'unite') {

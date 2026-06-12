@@ -119,8 +119,18 @@ function _placeTeam(mons, team) {
   const stepY  = H * 0.10;
 
   mons.forEach((mon, i) => {
+    // Reproduce the same normalisation as data.js so that mapIdToCalcId()
+    // in sprites.js produces the correct poke_data.json key for duel mode.
+    const rawName = mon.name || (mon.file ? mon.file.replace(/\.[^.]+$/, "") : "");
+    const normalizedId = rawName
+      .toLowerCase()
+      .replace(/mega-/g, "mega_")
+      .replace(/\./g, "")
+      .replace(/'/g, "")
+      .replace(/ /g, "_")
+      .replace(/-/g, "_");
     const item = {
-      id:   mon.file ? mon.file.replace(/\.[^.]+$/, "") : mon.name,
+      id:   normalizedId || (mon.file ? mon.file.replace(/\.[^.]+$/, "") : mon.name),
       name: mon.name,
       img:  mon.src,
     };

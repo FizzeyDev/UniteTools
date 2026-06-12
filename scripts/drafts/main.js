@@ -16,20 +16,10 @@ fetch("data/pokemons.json").then(r => r.json()).then(d => {
   renderGallery();
 });
 
-// ─── Mode buttons ─────────────────────────────────────────────────────────────
+// ─── Mode: fixed to tournament (2 bans + picks, no selector UI) ──────────────
 
-document.querySelectorAll(".mode-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    state.selectedMode      = btn.dataset.mode;
-    state.currentDraftOrder = [...draftOrders[state.selectedMode]];
-    document.getElementById("mode-title").textContent = state.langData[`mode_${state.selectedMode}`] || "";
-    document.getElementById("mode-text").textContent  = state.langData[`tooltip_${state.selectedMode}`] || "";
-    document.getElementById("start-draft").disabled      = false;
-    document.getElementById("create-room-btn").disabled  = false;
-  });
-});
+state.selectedMode      = "tournament";
+state.currentDraftOrder = [...draftOrders["tournament"]];
 
 // ─── Map buttons ──────────────────────────────────────────────────────────────
 
@@ -112,7 +102,6 @@ document.getElementById("swap-sides-btn").addEventListener("click", async () => 
 
 
 document.getElementById("create-room-btn").addEventListener("click", async () => {
-  if (!state.selectedMode) { _showMpError("Select a draft mode first."); return; }
   const btn = document.getElementById("create-room-btn");
   btn.disabled = true; btn.textContent = "Creating…";
   try {
