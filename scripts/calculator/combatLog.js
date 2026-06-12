@@ -453,8 +453,13 @@ function itemsToLogEntry(items) {
 }
 
 let activePicker = null;
+let activePickerOutsideHandler = null;
 
 function closeActivePicker() {
+  if (activePickerOutsideHandler) {
+    document.removeEventListener('click', activePickerOutsideHandler);
+    activePickerOutsideHandler = null;
+  }
   if (activePicker) {
     activePicker.remove();
     activePicker = null;
@@ -853,13 +858,12 @@ function openLinePicker(card, move, allItems) {
   picker.style.left = `${left}px`;
 
   requestAnimationFrame(() => {
-    const outsideHandler = (e) => {
+    activePickerOutsideHandler = (e) => {
       if (!picker.contains(e.target)) {
         closeActivePicker();
-        document.removeEventListener('click', outsideHandler);
       }
     };
-    document.addEventListener('click', outsideHandler);
+    document.addEventListener('click', activePickerOutsideHandler);
   });
 }
 

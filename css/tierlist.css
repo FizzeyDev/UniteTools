@@ -384,6 +384,17 @@ h1::after {
 
 .tier-item:has(.move-badge) .tier-item__name { display: none; }
 
+/* ── Move Combo mode: wider item, smaller sprite, room for big badges ── */
+.tier-item:has(.move-badge) {
+  min-width: 80px;
+  max-width: 90px;
+  padding-bottom: 22px;
+}
+.tier-item:has(.move-badge) .tier-item__sprite {
+  width: 52px;
+  height: 52px;
+}
+
 /* ── Remove zone ── */
 .remove-zone {
   margin-top: 12px;
@@ -855,8 +866,8 @@ h1::after {
 /* ── Move badges ── */
 .move-badge {
   position: absolute;
-  bottom: -5px;
-  width: 26px; height: 26px;
+  bottom: -8px;
+  width: 38px; height: 38px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid var(--surface);
@@ -870,26 +881,28 @@ h1::after {
   z-index: 3;
 }
 .move-badge:hover {
-  transform: scale(1.4) !important;
+  transform: scale(1.35) !important;
   box-shadow: 0 4px 16px rgba(0,0,0,0.8);
   z-index: 20;
 }
-.badge--left   { left:  2px; }
-.badge--right  { right: 2px; }
+.badge--left   { left:  0px; }
+.badge--right  { right: 0px; }
 .badge--center { left: 50%; transform: translateX(-50%); }
-.badge--center:hover { transform: translateX(-50%) scale(1.4) !important; }
+.badge--center:hover { transform: translateX(-50%) scale(1.35) !important; }
 .badge--passive { border-color: #3498db; }
 .badge--unite   { border-color: var(--red); }
-.badge--move    { border-color: rgba(255,255,255,0.25); }
+.badge--move    { border-color: rgba(255,255,255,0.35); }
 
 .move-badge__img {
   width: 100%; height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+  object-fit: contain;
+  border-radius: 0;
   display: block;
+  transform: scale(0.60);      /* ← joue sur CE chiffre : 1 = plein, 0.7 = dézoomé */
 }
+
 .move-badge__fallback {
-  font-size: 7px;
+  font-size: 9px;
   font-weight: 700;
   color: var(--text-bright);
   text-align: center;
@@ -1161,4 +1174,184 @@ body.is-dragging * { cursor: grabbing !important; }
   .tier-header { width: 56px; min-width: 56px; font-size: 1.1rem; }
   .howto-panel { width: calc(100vw - 48px); right: 24px; }
   .gallery { max-height: 220px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PATCH — à coller à la FIN de tierlist.css
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Galerie : items déjà placés grisés ────────────────────────────── */
+.gallery-item--placed-once {
+    opacity: 0.55;
+    filter: grayscale(35%) brightness(0.85);
+    cursor: copy;
+    transition: opacity 0.15s, filter 0.15s;
+}
+.gallery-item--placed-once:hover {
+    opacity: 0.9;
+    filter: grayscale(0%);
+}
+.gallery-item--placed {
+    opacity: 0.28;
+    filter: grayscale(70%) brightness(0.7);
+    cursor: copy;
+    transition: opacity 0.15s, filter 0.15s;
+}
+.gallery-item--placed:hover {
+    opacity: 0.7;
+    filter: grayscale(20%);
+}
+
+/* ── Onglets : label + actions ────────────────────────────────────── */
+.tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 7px 10px 7px 14px;
+    cursor: pointer;
+    user-select: none;
+}
+.tab-label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 140px;
+}
+
+/* Action buttons — hidden until tab is hovered or active */
+.tab-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+}
+.tab:hover .tab-actions,
+.tab.active .tab-actions {
+    opacity: 1;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--text-dim);
+    transition: background 0.12s, color 0.12s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+}
+.tab-btn:hover {
+    background: rgba(255,255,255,0.12);
+    color: var(--text);
+}
+.tab-btn--rename:hover { color: var(--blue); }
+.tab-btn--dup:hover    { color: var(--green); }
+.tab-btn--del:hover    { color: var(--red); background: var(--red-dim); }
+
+.tab-rename-input {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(79,195,247,0.5);
+    background: var(--surface-4);
+    color: var(--blue);
+    outline: none;
+    min-width: 60px;
+    max-width: 180px;
+}
+
+/* ── Tier actions : drag handle + ⧉ côte à côte ───────────────────── */
+.tier-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 32px;
+    padding: 0 4px;
+}
+
+.tier-dup-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.45);
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.tier-dup-btn:hover {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border-color: rgba(255,255,255,0.4);
+}
+
+/* ── Indicateur de drop intra-tier ────────────────────────────────── */
+.drop-indicator {
+    width: 3px;
+    min-height: 52px;
+    background: #4a90e2;
+    border-radius: 3px;
+    flex-shrink: 0;
+    pointer-events: none;
+    align-self: stretch;
+}
+
+/* ── Badge vide (move non sélectionné) ────────────────────────────── */
+.move-badge__fallback--empty {
+    opacity: 0.35;
+    font-style: italic;
+}
+
+/* ── Présets couleurs dans le modal Tier ───────────────────────────── */
+.color-presets-row {
+    margin: 8px 0 4px;
+}
+.color-presets-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    margin-bottom: 5px;
+}
+.color-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+.color-swatch {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+    transition: transform 0.1s, border-color 0.1s;
+}
+.color-swatch:hover  { transform: scale(1.2); }
+.color-swatch--active {
+    border-color: #fff;
+    transform: scale(1.15);
 }

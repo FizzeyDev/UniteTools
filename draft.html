@@ -23,19 +23,7 @@
 
   <h1 id="title" data-lang="title">Pokémon Unite Draft Simulator</h1>
 
-  <!-- ── Mode buttons ─────────────────────────────── -->
-  <div id="draft-controls" class="draft-controls">
-    <button class="mode-btn" data-mode="swap"       data-lang="mode_swap">Swap Ban Mode</button>
-    <button class="mode-btn" data-mode="tournament" data-lang="mode_tournament">Tournament - 2 Bans</button>
-    <button class="mode-btn" data-mode="classic"    data-lang="mode_classic">Tournament - 3 Bans</button>
-    <button class="mode-btn" data-mode="reban"      data-lang="mode_reban">Reban Mode</button>
-  </div>
-
-  <!-- ── Mode description ─────────────────────────── -->
-  <div id="mode-description" class="mode-description">
-    <div id="mode-title" data-lang="select_mode_title"></div>
-    <div id="mode-text"  data-lang="select_mode_text"></div>
-  </div>
+  <!-- Mode is fixed to tournament (3 bans) – no selector needed -->
 
   <!-- ── Multiplayer toggle ───────────────────────── -->
   <button id="mp-toggle-btn" style="display:flex;">
@@ -49,8 +37,8 @@
       <h3>Online Multiplayer</h3>
     </div>
     <div class="mp-section">
-      <button id="create-room-btn" class="draft-btn mp-btn" disabled>🎮 Create a room</button>
-      <p class="mp-hint">Select a draft mode first, then create your room.</p>
+      <button id="create-room-btn" class="draft-btn mp-btn">🎮 Create a room</button>
+      
     </div>
     <div class="mp-divider">or</div>
     <div class="mp-section">
@@ -111,7 +99,7 @@
 
   <!-- ── Start / Reset / Undo ─────────────────────── -->
   <div class="start-reset-controls">
-    <button id="start-draft" class="draft-btn" data-lang="start_draft" disabled>▶ Start Draft</button>
+    <button id="start-draft" class="draft-btn" data-lang="start_draft">▶ Start Draft</button>
     <button id="reset-draft" class="draft-btn" data-lang="reset" style="display:none;">↺ Reset</button>
   </div>
   <div id="mp-start-hint" class="mp-start-hint" style="display:none;"></div>

@@ -18,13 +18,11 @@ export function loadGallery(category) {
 
     const activeRole = document.querySelector('.filter-btn.active')?.dataset.role;
 
+    // Filter by role and search only (NOT by usage — we show all, just gray the placed ones)
     const filtered = data.filter(item => {
         if (category === 'pokemon' && activeRole && activeRole !== 'unknown' && item.role !== activeRole)
             return false;
         if (state.gallerySearchQuery && !item.name.toLowerCase().includes(state.gallerySearchQuery))
-            return false;
-        const usageMap = getUsageMap(category);
-        if ((usageMap.get(item.name) || 0) >= getMaxUsage(category))
             return false;
         return true;
     });
@@ -35,14 +33,25 @@ export function loadGallery(category) {
     }
 
     filtered.forEach(item => {
+        const usageMap  = getUsageMap(category);
+        const usageCount = usageMap.get(item.name) || 0;
+        const maxUsage   = getMaxUsage(category);
+        const isMaxed    = usageCount >= maxUsage;
+        const isPlaced   = usageCount > 0;
+
         const img = document.createElement('img');
         img.src = `${basePath}assets/${category}/${item.file}`;
         img.alt = item.name;
-        img.title = item.name;
-        img.dataset.name = item.name;
+        img.title = isPlaced
+            ? `${item.name} (placed ${usageCount}×${isMaxed ? ' — max' : ''})`
+            : item.name;
+        img.dataset.name     = item.name;
         img.dataset.category = category;
-        img.draggable = true;
-        img.className = 'gallery-item';
+        img.draggable        = true;
+        img.className        = 'gallery-item'
+            + (isMaxed  ? ' gallery-item--placed gallery-item--maxed' : '')
+            + (!isMaxed && isPlaced ? ' gallery-item--placed-once' : '');
+
         gallery.appendChild(img);
     });
 }

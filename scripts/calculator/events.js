@@ -6,7 +6,7 @@ export function setupBuffListeners() {
     'registeelBuffAttacker', 'groudonBuffAttacker', 'rayquazaBuffAttacker',
     'xattackBuffAttacker', 'blisseyUltBuffAttacker', 'blisseyHandBuffAttacker',
     'mimeSwapBuffAttacker', 'mimeSwapPlusBuffAttacker', 'alcreamieBuffAttacker',
-    'miraidonBuffAttacker'
+    'miraidonBuffAttacker', 'skeledirgeBuffAttacker'
   ];
 
   attackerBuffIds.forEach(id => {
@@ -24,6 +24,7 @@ export function setupBuffListeners() {
           case 'mimeSwapPlusBuffAttacker': state.attackerMimeSwapPlusBuff = e.target.checked; break;
           case 'alcreamieBuffAttacker': state.attackerAlcreamieBuff = e.target.checked; break;
           case 'miraidonBuffAttacker': state.attackerMiraidonBuff = e.target.checked; break;
+          case 'skeledirgeBuffAttacker': state.attackerSkeledirgeBuff = e.target.checked; break;
         }
         updateDamages();
       });

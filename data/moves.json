@@ -205,7 +205,7 @@
   },
   "gardevoir": {
     "move1": [ "confusion.png", "psychic.png", "moonblast.png" ],
-    "move2": [ "teleport.png", "psychock.png", "future_sight.png" ],
+    "move2": [ "teleport.png", "psyshock.png", "future_sight.png" ],
     "passive": [ "synchronize.png" ],
     "unite": [ "fairy_singularity.png" ]
   },
@@ -372,7 +372,7 @@
     "passive": [ "flame_body.png" ],
     "unite": [ "firebird_inferno.png" ]
   },
-  "mr_mime": {
+  "mr-mime": {
     "move1": [ "fake_out.png", "confusion.png", "psychic.png" ],
     "move2": [ "light_screen.png", "barrier.png", "power_swap.png" ],
     "passive": [ "filter.png" ],

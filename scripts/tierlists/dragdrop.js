@@ -60,6 +60,8 @@ export function setupDragDrop() {
             t.querySelector('.preview-placeholder')?.remove();
         });
         document.getElementById('remove-zone')?.classList.remove('active');
+        // Always reset — even if DOM was replaced during drop (e.g. after intra-tier
+        // reorder the container is swapped and dragend may fire on a detached node).
         dragPayload = null;
     });
 
@@ -181,7 +183,6 @@ export function setupDragDrop() {
                     name: dragPayload.name,
                     category: 'pokemon',
                     file,
-                    move1: '', move2: '', passive: '', unite: '',
                 });
             } else {
                 usageMap.set(dragPayload.name, (usageMap.get(dragPayload.name) || 0) + 1);
@@ -249,7 +250,6 @@ export function setupDragDrop() {
             targetTier.items.push({
                 uid: state.nextUid(),
                 name, category: 'pokemon', file,
-                move1: '', move2: '', passive: '', unite: '',
             });
         } else {
             usageMap.set(name, (usageMap.get(name) || 0) + 1);

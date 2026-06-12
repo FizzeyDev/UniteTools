@@ -1,3 +1,4 @@
+import { state } from './state.js';
 import { loadData } from './dataLoader.js';
 import { populateGrids, setupSearch, setupLevelSliders, setupHPSliders, setupModals, setupCollapsibleSections, makeHPValueEditable, makeCustomStatEditable, setupTimerSlider } from './uiManager.js';
 import { populateItemGrid, setupItemSearch, setupItemSelection } from './itemManager.js';
@@ -9,6 +10,7 @@ import { resetItems } from './itemManager.js';
 import { initCombatLog, initAllySelector } from './combatLog.js';
 import { initAllyManager } from './allyManager.js';
 import { initHowToUse } from './howToUse.js';
+import { enhanceBuffLabels } from './buff-visuals.js';
 
 document.querySelectorAll('.reset-items-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -41,6 +43,7 @@ async function initApp() {
   setupBuffListeners();
   setupDebuffListeners();
   setupStackableDebuffs();
+  enhanceBuffLabels(state.allPokemon);
 
   makeHPValueEditable('hpValueAttacker', 'hpSliderAttacker');
   makeHPValueEditable('hpValueDefender', 'hpSliderDefender');
@@ -49,8 +52,12 @@ async function initApp() {
   makeCustomStatEditable('defenderDefCustom', 'def');
   makeCustomStatEditable('defenderSpDefCustom', 'sp_def');
 
-  selectAttacker('absol');
-  selectDefender('substitute-doll');
+  // Auto-select from URL params (e.g. ?atk=pikachu&def=lucario)
+  const _p = new URLSearchParams(window.location.search);
+  if (_p.get('atk')) selectAttacker(_p.get('atk'));
+  else selectAttacker('absol');
+  if (_p.get('def')) selectDefender(_p.get('def'));
+  else selectDefender('substitute-doll');
   updateDamages();
 
   initCombatLog();

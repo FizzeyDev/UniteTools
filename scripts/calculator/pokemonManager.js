@@ -40,6 +40,7 @@ export function selectAttacker(id) {
   state.attackerMimeSwapPlusBuff = false;
   state.attackerAlcreamieBuff = false;
   state.attackerMiraidonBuff = false;
+  state.attackerSkeledirgeBuff = false;
 
   if (id === "mega-lucario") {
     state.attackerLucarioForm = "normal"

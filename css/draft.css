@@ -1277,3 +1277,39 @@ input:checked + .slider::before { transform: translateX(18px); }
 #center-col.info-collapsed .cbar-spacer {
   display: none;
 }
+
+/* Main recap button */
+.open-map-btn {
+  display:         inline-flex;
+  align-items:     center;
+  gap:             6px;
+  margin-top:      14px;
+  padding:         9px 20px;
+  background:      linear-gradient(135deg, #1e4e5a 0%, #143640 100%);
+  color:           #7dd8f0;
+  border:          1px solid #2a7a96;
+  border-radius:   10px;
+  font-family:     'Exo 2', sans-serif;
+  font-size:       0.82rem;
+  font-weight:     700;
+  letter-spacing:  0.07em;
+  text-transform:  uppercase;
+  cursor:          pointer;
+  transition:      background 0.18s, transform 0.12s, box-shadow 0.18s;
+  box-shadow:      0 2px 10px rgba(0,0,0,0.35);
+}
+.open-map-btn:hover {
+  background:   linear-gradient(135deg, #27657a 0%, #1c4e5e 100%);
+  box-shadow:   0 4px 18px rgba(35,160,200,0.22);
+  transform:    translateY(-1px);
+}
+.open-map-btn:active {
+  transform: translateY(0);
+}
+ 
+/* Compact variant used in the fearless-series history cards */
+.open-map-btn--history {
+  margin-top:   10px;
+  padding:      6px 14px;
+  font-size:    0.75rem;
+}
