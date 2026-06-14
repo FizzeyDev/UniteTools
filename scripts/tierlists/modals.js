@@ -33,7 +33,7 @@ export function showMoveModal(pokemonName, tierIndex, isEdit, uid = null) {
     if (hasNoMoves) {
         optionsDiv.innerHTML = '<p class="modal-note">Aucune donnée de move disponible pour ce Pokémon.</p>';
     } else {
-        buildMoveModalBody(optionsDiv, moveData, placedItem, state.tierlistMode);
+        buildMoveModalBody(optionsDiv, moveData, placedItem);
     }
 
     modal.dataset.pokemon   = pokemonName;
@@ -43,20 +43,64 @@ export function showMoveModal(pokemonName, tierIndex, isEdit, uid = null) {
     modal.style.display     = 'flex';
 }
 
-function buildMoveModalBody(container, moveData, placedItem, mode) {
-    if (mode === 'simple') {
-        container.innerHTML = '<p class="modal-note">En mode <strong>Simple</strong>, les moves ne sont pas affichés. Changez de mode pour les configurer.</p>';
-        return;
-    }
+function buildMoveModalBody(container, moveData, placedItem) {
+    // Always show all 3 sections, each in a collapsible tab
+    const sections = [
+        {
+            key:     'moves',
+            label:   '⚔️ Move Combo',
+            slots: [
+                { label: 'Move Slot 1', moves: moveData.move1,           inputName: 'move1',   currentValue: placedItem?.move1   ?? '', currentImg: placedItem?.move1Img   ?? '' },
+                { label: 'Move Slot 2', moves: moveData.move2,           inputName: 'move2',   currentValue: placedItem?.move2   ?? '', currentImg: placedItem?.move2Img   ?? '' },
+            ],
+        },
+        {
+            key:     'unite',
+            label:   '✨ Unite Move',
+            slots: [
+                { label: 'Unite Move', moves: moveData.unite || [],      inputName: 'unite',   currentValue: placedItem?.unite   ?? '', currentImg: placedItem?.uniteImg   ?? '' },
+            ],
+        },
+        {
+            key:     'passive',
+            label:   '🔮 Passif',
+            slots: [
+                { label: 'Passif',     moves: moveData.passive || [],    inputName: 'passive', currentValue: placedItem?.passive ?? '', currentImg: placedItem?.passiveImg ?? '' },
+            ],
+        },
+    ];
 
-    if (mode === 'moves') {
-        container.appendChild(buildSlotSection('Move Slot 1', moveData.move1, 'move1', placedItem?.move1 || '', placedItem?.move1Img || ''));
-        container.appendChild(buildSlotSection('Move Slot 2', moveData.move2, 'move2', placedItem?.move2 || '', placedItem?.move2Img || ''));
-    } else if (mode === 'passive') {
-        container.appendChild(buildSlotSection('Passif', moveData.passive || [], 'passive', placedItem?.passive || '', placedItem?.passiveImg || ''));
-    } else if (mode === 'unite') {
-        container.appendChild(buildSlotSection('Unite Move', moveData.unite || [], 'unite', placedItem?.unite || '', placedItem?.uniteImg || ''));
-    }
+    sections.forEach(({ key, label, slots }) => {
+        const tab = document.createElement('div');
+        tab.className = 'move-tab';
+        tab.dataset.tab = key;
+
+        const tabHeader = document.createElement('button');
+        tabHeader.type = 'button';
+        tabHeader.className = 'move-tab__header';
+        tabHeader.textContent = label;
+
+        const tabBody = document.createElement('div');
+        tabBody.className = 'move-tab__body';
+
+        slots.forEach(({ label: slotLabel, moves, inputName, currentValue, currentImg }) => {
+            tabBody.appendChild(buildSlotSection(slotLabel, moves, inputName, currentValue, currentImg));
+        });
+
+        tabHeader.addEventListener('click', () => {
+            const isOpen = tab.classList.contains('move-tab--open');
+            // Close all tabs
+            container.querySelectorAll('.move-tab').forEach(t => t.classList.remove('move-tab--open'));
+            if (!isOpen) tab.classList.add('move-tab--open');
+        });
+
+        tab.appendChild(tabHeader);
+        tab.appendChild(tabBody);
+        container.appendChild(tab);
+    });
+
+    // Open first tab by default
+    container.querySelector('.move-tab')?.classList.add('move-tab--open');
 }
 
 /**

@@ -72,8 +72,6 @@ function setupStaticListeners() {
 }
 
 function setupKeyboardShortcuts() {
-    const MODES = ['simple', 'moves', 'passive', 'unite'];
-
     document.addEventListener('keydown', e => {
         // Don't fire shortcuts when typing in inputs
         const tag = document.activeElement?.tagName;
@@ -87,8 +85,6 @@ function setupKeyboardShortcuts() {
                 document.getElementById('gallery-search')?.focus();
                 break;
 
-            // Escape already handled for modals in static listeners
-            // but also clear search
             case 'Escape': {
                 const search = document.getElementById('gallery-search');
                 if (search && document.activeElement === search) {
@@ -99,12 +95,6 @@ function setupKeyboardShortcuts() {
                 }
                 break;
             }
-
-            // 1-4 switch modes
-            case '1': switchMode(MODES[0]); break;
-            case '2': switchMode(MODES[1]); break;
-            case '3': switchMode(MODES[2]); break;
-            case '4': switchMode(MODES[3]); break;
 
             // P = pokemon tab, I = items tab, B = battle items tab
             case 'p':
@@ -153,11 +143,6 @@ function setupKeyboardShortcuts() {
     });
 }
 
-function switchMode(modeKey) {
-    state.tierlistMode = modeKey;
-    loadTierList(state.currentDraft);
-    window.showToast(`Mode: ${modeKey}`, 'info');
-}
 
 function switchCategory(cat) {
     document.querySelectorAll('.category-tab').forEach(t => {
@@ -186,7 +171,8 @@ function setupHowToPanel() {
 
         <div class="howto-section">
             <div class="howto-section-title">Basics</div>
-            <div class="howto-row"><span class="howto-icon">🖱️</span><span>Drag a Pokémon or item from the gallery into a tier row</span></div>
+            <div class="howto-row"><span class="howto-icon">🖱️</span><span>Drag a Pokémon from the gallery into a tier row</span></div>
+            <div class="howto-row"><span class="howto-icon">🎯</span><span>A popup opens to configure Move Combo, Unite Move and Passif</span></div>
             <div class="howto-row"><span class="howto-icon">↔️</span><span>Drag items between tiers to re-order them</span></div>
             <div class="howto-row"><span class="howto-icon">🗑️</span><span>Drop onto the trash zone (bottom) to remove from tier</span></div>
             <div class="howto-row"><span class="howto-icon">✏️</span><span>Click the tier label to edit its name and color</span></div>
@@ -199,10 +185,6 @@ function setupHowToPanel() {
             <div class="howto-section-title">Keyboard Shortcuts</div>
             <div class="howto-row"><kbd>F</kbd><span>Focus the search bar</span></div>
             <div class="howto-row"><kbd>Esc</kbd><span>Close modals / clear search</span></div>
-            <div class="howto-row"><kbd>1</kbd><span>Switch to Simple mode</span></div>
-            <div class="howto-row"><kbd>2</kbd><span>Switch to Move Combo mode</span></div>
-            <div class="howto-row"><kbd>3</kbd><span>Switch to Passive mode</span></div>
-            <div class="howto-row"><kbd>4</kbd><span>Switch to Unite Move mode</span></div>
             <div class="howto-row"><kbd>P</kbd><span>Show Pokémon gallery</span></div>
             <div class="howto-row"><kbd>I</kbd><span>Show Items gallery</span></div>
             <div class="howto-row"><kbd>B</kbd><span>Show Battle Items gallery</span></div>
@@ -214,11 +196,10 @@ function setupHowToPanel() {
         <div class="howto-divider"></div>
 
         <div class="howto-section">
-            <div class="howto-section-title">Modes</div>
-            <div class="howto-row"><span class="howto-icon">🏷️</span><span><strong>Simple</strong> — just the Pokémon, no move info</span></div>
-            <div class="howto-row"><span class="howto-icon">⚔️</span><span><strong>Move Combo</strong> — show selected move slots 1 & 2</span></div>
-            <div class="howto-row"><span class="howto-icon">🔮</span><span><strong>Passive</strong> — show the passive ability</span></div>
-            <div class="howto-row"><span class="howto-icon">✨</span><span><strong>Unite Move</strong> — show the Unite Move</span></div>
+            <div class="howto-section-title">Move Popup</div>
+            <div class="howto-row"><span class="howto-icon">⚔️</span><span><strong>Move Combo</strong> — select moves for slot 1 & 2</span></div>
+            <div class="howto-row"><span class="howto-icon">✨</span><span><strong>Unite Move</strong> — select the Unite Move</span></div>
+            <div class="howto-row"><span class="howto-icon">🔮</span><span><strong>Passif</strong> — select the passive ability</span></div>
         </div>
     `;
     document.body.appendChild(panel);

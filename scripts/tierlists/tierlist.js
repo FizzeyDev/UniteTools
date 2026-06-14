@@ -5,12 +5,6 @@ import { loadGallery } from './gallery.js';
 import { openTierModal, showMoveModal } from './modals.js';
 import { addTier, clearDraft, removeItemByUid, duplicateTier, duplicateDraft, renameDraft } from './actions.js';
 
-const MODES = [
-    { key: 'simple',  label: 'Simple'     },
-    { key: 'moves',   label: 'Move Combo' },
-    { key: 'passive', label: 'Passif'     },
-    { key: 'unite',   label: 'Unite Move' },
-];
 
 // ─── Intra-tier item reorder state ───────────────────────────────────────────
 let intraDrag = null; // { tierIndex, fromIndex, uid }
@@ -148,26 +142,9 @@ export function loadTierList(draftId) {
     container.className = `tierlist-container ${draftId === state.currentDraft ? 'active' : ''}`;
     container.id        = `tierlist-${draftId}`;
 
-    // ── Mode bar ──────────────────────────────────────────────────────────
+    // ── Controls bar ──────────────────────────────────────────────────────
     const modeBar     = document.createElement('div');
     modeBar.className = 'mode-bar';
-
-    const modeLabel       = document.createElement('span');
-    modeLabel.className   = 'mode-label';
-    modeLabel.textContent = 'Mode';
-    modeBar.appendChild(modeLabel);
-
-    const modeBtns     = document.createElement('div');
-    modeBtns.className = 'mode-btns';
-    MODES.forEach(({ key, label }, idx) => {
-        const btn        = document.createElement('button');
-        btn.className    = `mode-btn ${state.tierlistMode === key ? 'active' : ''}`;
-        btn.dataset.mode = key;
-        btn.title        = `Shortcut: ${idx + 1}`;
-        btn.textContent  = label;
-        modeBtns.appendChild(btn);
-    });
-    modeBar.appendChild(modeBtns);
 
     const spacer      = document.createElement('div');
     spacer.style.flex = '1';
@@ -320,18 +297,13 @@ export function createTierItemElement(item, basePath, draftId) {
 
     if (item.category !== 'pokemon') return el;
 
-    const mode     = state.tierlistMode;
     const moveData = getMovesForPokemon(item.name);
-
-    if (mode === 'simple') return el;
 
     const passiveImg = item.passiveImg || findMoveImg(item.passive, moveData.passive) || null;
     const uniteImg   = item.uniteImg   || findMoveImg(item.unite,   moveData.unite)   || null;
     const move1Img   = item.move1Img   || findMoveImg(item.move1,   moveData.move1);
     const move2Img   = item.move2Img   || findMoveImg(item.move2,   moveData.move2);
 
-    // Auto-resolve: if a slot was never configured (undefined), fall back to the first available move.
-    // If the user explicitly chose "No move" (empty string ''), keep it empty — do NOT auto-fill.
     const neverSet = v => v === undefined || v === null;
     const resolvedPassive    = neverSet(item.passive) ? (moveData.passive?.[0]?.name  || null) : (item.passive  || null);
     const resolvedPassiveImg = neverSet(item.passive) ? (moveData.passive?.[0]?.image || null) : (passiveImg    || null);
@@ -342,33 +314,48 @@ export function createTierItemElement(item, basePath, draftId) {
     const resolvedMove2      = neverSet(item.move2)   ? (moveData.move2?.[0]?.name    || null) : (item.move2    || null);
     const resolvedMove2Img   = neverSet(item.move2)   ? (moveData.move2?.[0]?.image   || null) : (move2Img      || null);
 
-    if (mode === 'moves') {
-        // If both slots are explicitly "No move" (''), show just the sprite like Simple mode
-        if (item.move1 === '' && item.move2 === '') return el;
-        if (resolvedMove1 !== null) el.appendChild(makeBadge(resolvedMove1, resolvedMove1Img, basePath, 'badge--left',  'badge--move'));
-        if (resolvedMove2 !== null) el.appendChild(makeBadge(resolvedMove2, resolvedMove2Img, basePath, 'badge--right', 'badge--move'));
-    } else if (mode === 'passive') {
-        return makeMoveCard(el, item, resolvedPassive, resolvedPassiveImg, basePath, 'move-card--passive');
-    } else if (mode === 'unite') {
-        return makeMoveCard(el, item, resolvedUnite, resolvedUniteImg, basePath, 'move-card--unite');
+    const hasPassive = resolvedPassive !== null;
+    const hasUnite   = resolvedUnite   !== null;
+    const hasMove1   = resolvedMove1   !== null;
+    const hasMove2   = resolvedMove2   !== null;
+
+    // If no move data at all, return simple card
+    if (!hasPassive && !hasUnite && !hasMove1 && !hasMove2) return el;
+
+    // Wrap in a group
+    const group = document.createElement('div');
+    group.className        = 'tier-item-group';
+    group.dataset.uid      = item.uid;
+    group.dataset.name     = item.name;
+    group.dataset.category = item.category;
+
+    // Move combo card (sprite + badges) only if moves are set
+    if (hasMove1 || hasMove2) {
+        if (hasMove1) el.appendChild(makeBadge(resolvedMove1, resolvedMove1Img, basePath, 'badge--left',  'badge--move'));
+        if (hasMove2) el.appendChild(makeBadge(resolvedMove2, resolvedMove2Img, basePath, 'badge--right', 'badge--move'));
+        group.appendChild(el);
+    } else if (!hasPassive && !hasUnite) {
+        // No moves at all, just the sprite
+        group.appendChild(el);
     }
 
-    return el;
+    if (hasPassive) group.appendChild(buildMoveCard(item, resolvedPassive, resolvedPassiveImg, basePath, draftId, 'move-card--passive'));
+    if (hasUnite)   group.appendChild(buildMoveCard(item, resolvedUnite,   resolvedUniteImg,   basePath, draftId, 'move-card--unite'));
+
+    return group;
 }
 
-function findMoveImg(moveName, moves = []) {
-    if (!moveName) return null;
-    return moves.find(m => m.name === moveName)?.image || null;
-}
-
-function makeMoveCard(el, item, moveName, moveImg, basePath, typeClass) {
-    el.classList.add('tier-item--move-card', typeClass);
-    el.innerHTML = '';
-
-    el.dataset.name     = item.name;
-    el.dataset.category = item.category;
-    el.dataset.uid      = item.uid;
-    el.draggable        = true;
+/**
+ * Build a standalone move card (passive or unite) linked to the same item uid.
+ * Clicking the remove button on any card removes the whole item.
+ */
+function buildMoveCard(item, moveName, moveImg, basePath, draftId, typeClass) {
+    const card = document.createElement('div');
+    card.className = `tier-item tier-item--move-card ${typeClass}`;
+    card.dataset.name     = item.name;
+    card.dataset.category = item.category;
+    card.dataset.uid      = item.uid;
+    card.draggable        = true;
 
     const avatarWrap     = document.createElement('div');
     avatarWrap.className = 'move-card__avatar';
@@ -378,22 +365,22 @@ function makeMoveCard(el, item, moveName, moveImg, basePath, typeClass) {
     avatarImg.draggable  = false;
     avatarImg.onerror    = () => { avatarImg.style.opacity = '0.2'; };
     avatarWrap.appendChild(avatarImg);
-    el.appendChild(avatarWrap);
+    card.appendChild(avatarWrap);
 
     const moveWrap     = document.createElement('div');
     moveWrap.className = 'move-card__img-wrap';
 
     if (moveImg) {
-        const img        = document.createElement('img');
-        img.src          = moveImg.startsWith('assets/') ? `${basePath}${moveImg}` : moveImg;
-        img.alt          = moveName || item.name;
-        img.className    = 'move-card__img';
-        img.draggable    = false;
-        const fallback   = document.createElement('div');
+        const img      = document.createElement('img');
+        img.src        = moveImg.startsWith('assets/') ? `${basePath}${moveImg}` : moveImg;
+        img.alt        = moveName || item.name;
+        img.className  = 'move-card__img';
+        img.draggable  = false;
+        const fallback = document.createElement('div');
         fallback.className   = 'move-card__fallback';
         fallback.textContent = moveName ? moveName.slice(0, 3).toUpperCase() : '—';
         fallback.style.display = 'none';
-        img.onerror      = () => { img.style.display = 'none'; fallback.style.display = 'flex'; };
+        img.onerror    = () => { img.style.display = 'none'; fallback.style.display = 'flex'; };
         moveWrap.appendChild(img);
         moveWrap.appendChild(fallback);
     } else {
@@ -402,16 +389,34 @@ function makeMoveCard(el, item, moveName, moveImg, basePath, typeClass) {
         fallback.textContent = moveName ? moveName.slice(0, 3).toUpperCase() : '—';
         moveWrap.appendChild(fallback);
     }
-
-    el.appendChild(moveWrap);
+    card.appendChild(moveWrap);
 
     const label       = document.createElement('div');
     label.className   = 'move-card__label';
     label.textContent = moveName || '—';
-    el.appendChild(label);
+    card.appendChild(label);
 
-    return el;
+    if (draftId != null) {
+        const removeBtn       = document.createElement('button');
+        removeBtn.className   = 'tier-item__remove';
+        removeBtn.textContent = '×';
+        removeBtn.title       = 'Remove';
+        removeBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            removeItemByUid(draftId, item.uid);
+        });
+        card.appendChild(removeBtn);
+    }
+
+    return card;
 }
+
+
+function findMoveImg(moveName, moves = []) {
+    if (!moveName) return null;
+    return moves.find(m => m.name === moveName)?.image || null;
+}
+
 
 function makeBadge(moveName, moveImg, basePath, posClass, typeClass) {
     const badge     = document.createElement('div');
@@ -554,13 +559,6 @@ function getDragAfterElement(container, x) {
 function setupTierListeners(draftId) {
     const container = document.getElementById(`tierlist-${draftId}`);
     if (!container) return;
-
-    container.querySelectorAll('.mode-btn[data-mode]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            state.tierlistMode = btn.dataset.mode;
-            loadTierList(draftId);
-        });
-    });
 
     container.querySelectorAll('.item-mode-btn').forEach(btn => {
         btn.addEventListener('click', () => {

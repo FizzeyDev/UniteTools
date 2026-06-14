@@ -893,6 +893,14 @@ h1::after {
 .badge--unite   { border-color: var(--red); }
 .badge--move    { border-color: rgba(255,255,255,0.35); }
 
+/* ── Tier item group (pokemon card + passive card + unite card side by side) ── */
+.tier-item-group {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 2px;
+}
+
 .move-badge__img {
   width: 100%; height: 100%;
   object-fit: contain;
@@ -1082,8 +1090,8 @@ h1::after {
   position: absolute;
   top: 3px;
   right: 3px;
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   overflow: hidden;
   border: 1.5px solid rgba(255,255,255,0.15);
@@ -1354,4 +1362,49 @@ body.is-dragging * { cursor: grabbing !important; }
 .color-swatch--active {
     border-color: #fff;
     transform: scale(1.15);
+}
+/* ── Move popup accordion tabs ── */
+.move-tab {
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+.move-tab__header {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: none;
+    color: var(--text-bright, #e0e0e0);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 14px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.15s;
+}
+.move-tab__header:hover {
+    background: rgba(255,255,255,0.09);
+}
+.move-tab__header::after {
+    content: '▸';
+    font-size: 11px;
+    opacity: 0.5;
+    transition: transform 0.2s;
+}
+.move-tab--open .move-tab__header::after {
+    transform: rotate(90deg);
+}
+.move-tab--open .move-tab__header {
+    background: rgba(79,195,247,0.08);
+    border-bottom: 1px solid rgba(79,195,247,0.2);
+}
+.move-tab__body {
+    display: none;
+    padding: 8px 0 4px;
+}
+.move-tab--open .move-tab__body {
+    display: block;
 }

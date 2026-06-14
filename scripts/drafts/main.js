@@ -16,7 +16,7 @@ fetch("data/pokemons.json").then(r => r.json()).then(d => {
   renderGallery();
 });
 
-// ─── Mode: fixed to tournament (2 bans + picks, no selector UI) ──────────────
+// ─── Mode: fixed to tournament (3 bans + picks, no selector UI) ──────────────
 
 state.selectedMode      = "tournament";
 state.currentDraftOrder = [...draftOrders["tournament"]];

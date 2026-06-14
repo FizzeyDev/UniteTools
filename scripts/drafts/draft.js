@@ -506,10 +506,7 @@ export function updateCollapseBar() {
 
   // Mode / fearless / allstar label
   const modeLabels = {
-    classic:    "Tournament 3 Bans",
-    tournament: "Tournament 2 Bans",
-    swap:       "Swap Ban",
-    reban:      "Reban",
+    tournament: "Tournament 3 Bans",
   };
   if (state.allStarMode && state.draftCount > 0) {
     modeEl.textContent = `🌟 All-Star - Draft #${state.draftCount + 1}`;

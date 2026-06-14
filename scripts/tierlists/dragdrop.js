@@ -170,20 +170,10 @@ export function setupDragDrop() {
             }
 
             if (dragPayload.category === 'pokemon') {
-                if (state.tierlistMode !== 'simple') {
-                    state.pendingAdd = { name: dragPayload.name, category: dragPayload.category, tierIndex };
-                    showMoveModal(dragPayload.name, tierIndex, false);
-                    dragPayload = null;
-                    return;
-                }
-                usageMap.set(dragPayload.name, (usageMap.get(dragPayload.name) || 0) + 1);
-                const file = state.pokemonData.find(p => p.name === dragPayload.name)?.file;
-                targetTier.items.push({
-                    uid: state.nextUid(),
-                    name: dragPayload.name,
-                    category: 'pokemon',
-                    file,
-                });
+                state.pendingAdd = { name: dragPayload.name, category: dragPayload.category, tierIndex };
+                showMoveModal(dragPayload.name, tierIndex, false);
+                dragPayload = null;
+                return;
             } else {
                 usageMap.set(dragPayload.name, (usageMap.get(dragPayload.name) || 0) + 1);
                 const src  = dragPayload.category === 'items' ? state.itemData : state.battleItemData;
@@ -240,17 +230,9 @@ export function setupDragDrop() {
         if (!targetTier) return;
 
         if (category === 'pokemon') {
-            if (state.tierlistMode !== 'simple') {
-                state.pendingAdd = { name, category, tierIndex: targetTierIndex };
-                showMoveModal(name, targetTierIndex, false);
-                return;
-            }
-            usageMap.set(name, (usageMap.get(name) || 0) + 1);
-            const file = state.pokemonData.find(p => p.name === name)?.file;
-            targetTier.items.push({
-                uid: state.nextUid(),
-                name, category: 'pokemon', file,
-            });
+            state.pendingAdd = { name, category, tierIndex: targetTierIndex };
+            showMoveModal(name, targetTierIndex, false);
+            return;
         } else {
             usageMap.set(name, (usageMap.get(name) || 0) + 1);
             const src  = category === 'items' ? state.itemData : state.battleItemData;
