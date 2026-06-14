@@ -1400,3 +1400,42 @@ body.is-dragging * { cursor: grabbing !important; }
 .move-panel.active {
     display: block;
 }
+
+/* ── Mode bar big action buttons ── */
+.mode-bar__action-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    border: 2px solid transparent;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+.mode-bar__action-btn span {
+    font-size: 16px;
+    line-height: 1;
+}
+.mode-bar__action-btn:hover  { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+.mode-bar__action-btn:active { transform: translateY(0); }
+
+.mode-bar__action-btn--add {
+    background: rgba(79,195,247,0.12);
+    border-color: rgba(79,195,247,0.4);
+    color: #4fc3f7;
+}
+.mode-bar__action-btn--add:hover {
+    background: rgba(79,195,247,0.22);
+}
+
+.mode-bar__action-btn--clear {
+    background: rgba(239,83,80,0.1);
+    border-color: rgba(239,83,80,0.35);
+    color: #ef5350;
+}
+.mode-bar__action-btn--clear:hover {
+    background: rgba(239,83,80,0.2);
+}

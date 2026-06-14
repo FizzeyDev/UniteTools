@@ -14,7 +14,7 @@ export function setupDragDrop() {
         if (dragPayload !== null) { e.preventDefault(); return; }
 
         const galleryItem = e.target.closest('#gallery img, #gallery .gallery-item');
-        const tierItem    = e.target.closest('.tier-item');
+        const tierItem    = e.target.closest('.tier-item-group') ?? e.target.closest('.tier-item');
 
         if (galleryItem) {
             dragPayload = {
@@ -70,6 +70,7 @@ export function setupDragDrop() {
         e.preventDefault();
 
         const tierZone   = e.target.closest('.tier-items')
+                        ?? e.target.closest('.tier-item-group')?.closest('.tier-row')?.querySelector('.tier-items')
                         ?? e.target.closest('.tier-item')?.closest('.tier-row')?.querySelector('.tier-items')
                         ?? e.target.closest('.tier-row')?.querySelector('.tier-items');
         const removeZone = e.target.closest('#remove-zone');
@@ -124,6 +125,7 @@ export function setupDragDrop() {
         // be the placeholder itself (a detached node after removal won't climb the DOM).
         const tierZone   = e.target.closest('.tier-items')
                         ?? e.target.closest('.preview-placeholder')?.closest('.tier-items')
+                        ?? e.target.closest('.tier-item-group')?.closest('.tier-row')?.querySelector('.tier-items')
                         ?? e.target.closest('.tier-item')?.closest('.tier-row')?.querySelector('.tier-items')
                         ?? e.target.closest('.tier-row')?.querySelector('.tier-items');
 

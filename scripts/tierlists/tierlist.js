@@ -146,43 +146,24 @@ export function loadTierList(draftId) {
     const modeBar     = document.createElement('div');
     modeBar.className = 'mode-bar';
 
+    const addTierBtn       = document.createElement('button');
+    addTierBtn.className   = 'mode-bar__action-btn mode-bar__action-btn--add';
+    addTierBtn.id          = 'add-tier-btn';
+    addTierBtn.title       = 'Add a new tier row';
+    addTierBtn.innerHTML   = '<span>＋</span> Add Tier';
+    modeBar.appendChild(addTierBtn);
+
     const spacer      = document.createElement('div');
     spacer.style.flex = '1';
     modeBar.appendChild(spacer);
 
-    const controls         = document.createElement('div');
-    controls.className     = 'mode-controls';
-    controls.style.cssText = 'display:flex; gap:6px; align-items:center;';
+    const clearBtn       = document.createElement('button');
+    clearBtn.className   = 'mode-bar__action-btn mode-bar__action-btn--clear';
+    clearBtn.id          = 'clear-draft-btn';
+    clearBtn.title       = 'Clear all items (Ctrl+Delete)';
+    clearBtn.innerHTML   = '<span>✕</span> Clear';
+    modeBar.appendChild(clearBtn);
 
-    const itemModeLabel            = document.createElement('span');
-    itemModeLabel.className        = 'mode-label';
-    itemModeLabel.textContent      = 'Items:';
-    itemModeLabel.style.marginLeft = '8px';
-    controls.appendChild(itemModeLabel);
-
-    const itemModeOne            = document.createElement('button');
-    itemModeOne.className        = `mode-btn item-mode-btn ${state.itemUsageMode === 'one' ? 'active' : ''}`;
-    itemModeOne.dataset.itemMode = 'one';
-    itemModeOne.title            = 'Max 1 copy per item';
-    itemModeOne.textContent      = '×1';
-    controls.appendChild(itemModeOne);
-
-    const itemModeUnlim            = document.createElement('button');
-    itemModeUnlim.className        = `mode-btn item-mode-btn ${state.itemUsageMode === 'unlimited' ? 'active' : ''}`;
-    itemModeUnlim.dataset.itemMode = 'unlimited';
-    itemModeUnlim.title            = 'Unlimited copies per item';
-    itemModeUnlim.textContent      = '∞';
-    controls.appendChild(itemModeUnlim);
-
-    const sep         = document.createElement('span');
-    sep.style.cssText = 'width:1px;height:18px;background:rgba(255,255,255,0.1);margin:0 2px;';
-    controls.appendChild(sep);
-
-    controls.innerHTML += `
-        <button class="mode-btn" id="add-tier-btn" title="Add a new row">+ Tier</button>
-        <button class="mode-btn clear-draft-btn" id="clear-draft-btn" title="Clear all items (Ctrl+Delete)" style="border-color:rgba(239,83,80,0.3); color:#ef5350;">Clear</button>
-    `;
-    modeBar.appendChild(controls);
     container.appendChild(modeBar);
 
     // ── Tier rows ─────────────────────────────────────────────────────────
@@ -328,6 +309,7 @@ export function createTierItemElement(item, basePath, draftId) {
     group.dataset.uid      = item.uid;
     group.dataset.name     = item.name;
     group.dataset.category = item.category;
+    group.draggable        = true;
 
     // Move combo card (sprite + badges) only if moves are set
     if (hasMove1 || hasMove2) {
@@ -448,22 +430,34 @@ function makeBadge(moveName, moveImg, basePath, posClass, typeClass) {
 }
 
 // ─── Intra-tier item drag & drop (reorder within a tier) ─────────────────────
+
+/** Returns the direct draggable unit inside a .tier-items zone for a given element.
+ *  That unit is either a .tier-item-group or a .tier-item (when no group wraps it). */
+function getDragUnit(el) {
+    // Walk up until we find a .tier-item-group or a .tier-item whose parent is .tier-items
+    let cur = el;
+    while (cur) {
+        if (cur.classList?.contains('tier-item-group')) return cur;
+        if (cur.classList?.contains('tier-item') && cur.parentElement?.classList?.contains('tier-items')) return cur;
+        cur = cur.parentElement;
+    }
+    return null;
+}
+
 function setupIntraTierDragDrop(container, draftId) {
-    // dragstart: record which item we're dragging and from which index
     container.addEventListener('dragstart', e => {
-        const tierItem = e.target.closest('.tier-item');
-        if (!tierItem) return;
-        const zone = tierItem.closest('.tier-items');
+        const unit = getDragUnit(e.target);
+        if (!unit) return;
+        const zone = unit.closest('.tier-items');
         if (!zone) return;
 
         const tierIndex = parseInt(zone.dataset.tierIndex);
-        const itemIndex = parseInt(tierItem.dataset.itemIndex);
-        const uid       = parseInt(tierItem.dataset.uid);
+        const itemIndex = parseInt(unit.dataset.itemIndex);
+        const uid       = parseInt(unit.dataset.uid);
         if (isNaN(tierIndex) || isNaN(itemIndex) || isNaN(uid)) return;
 
         intraDrag = { tierIndex, fromIndex: itemIndex, uid };
-        tierItem.dataset.intraDragActive = '1';
-        // Note: don't stopPropagation — dragdrop.js also needs this event
+        unit.dataset.intraDragActive = '1';
     }, true);
 
     container.addEventListener('dragend', () => {
@@ -478,7 +472,6 @@ function setupIntraTierDragDrop(container, draftId) {
         if (!zone) return;
         if (parseInt(zone.dataset.tierIndex) !== intraDrag.tierIndex) return;
 
-        // Same tier → we own this event
         e.preventDefault();
         e.stopPropagation();
 
@@ -506,11 +499,12 @@ function setupIntraTierDragDrop(container, draftId) {
         zone.querySelectorAll('.drop-indicator').forEach(el => el.remove());
 
         const after      = getDragAfterElement(zone, e.clientX);
-        const allItems   = [...zone.querySelectorAll('.tier-item')];
-        const draggedEl  = allItems.find(el => el.dataset.intraDragActive === '1');
-        const otherItems = allItems.filter(el => el !== draggedEl);
-        let toIndex      = after ? otherItems.indexOf(after) : otherItems.length;
-        if (toIndex < 0) toIndex = otherItems.length;
+        // Direct children that are drag units (groups or solo tier-items)
+        const allUnits   = [...zone.children].filter(el => el.classList.contains('tier-item-group') || el.classList.contains('tier-item'));
+        const draggedEl  = allUnits.find(el => el.dataset.intraDragActive === '1');
+        const otherUnits = allUnits.filter(el => el !== draggedEl);
+        let toIndex      = after ? otherUnits.indexOf(after) : otherUnits.length;
+        if (toIndex < 0) toIndex = otherUnits.length;
 
         const { tierIndex, fromIndex } = intraDrag;
         intraDrag = null;
@@ -524,29 +518,27 @@ function setupIntraTierDragDrop(container, draftId) {
         if (!tier) return;
 
         if (fromIndex !== toIndex) {
-            // 1. Update state array
             const [moved] = tier.items.splice(fromIndex, 1);
             const insertAt = toIndex > fromIndex ? toIndex - 1 : toIndex;
             tier.items.splice(insertAt, 0, moved);
 
-            // 2. Move the DOM node in-place -- NO loadTierList, so the
-            //    browser fires dragend on the still-attached element.
-            if (after) {
-                zone.insertBefore(draggedEl, after);
-            } else {
-                zone.appendChild(draggedEl);
-            }
+            if (after) zone.insertBefore(draggedEl, after);
+            else zone.appendChild(draggedEl);
 
-            // 3. Re-sync data-item-index
-            [...zone.querySelectorAll('.tier-item')].forEach((el, i) => {
-                el.dataset.itemIndex = i;
-            });
+            // Re-sync data-item-index on all direct units
+            [...zone.children]
+                .filter(el => el.classList.contains('tier-item-group') || el.classList.contains('tier-item'))
+                .forEach((el, i) => { el.dataset.itemIndex = i; });
         }
     }, true);
 }
 
 function getDragAfterElement(container, x) {
-    const items = [...container.querySelectorAll('.tier-item:not([data-intra-drag-active])')];
+    // Direct children units only (groups or solo items)
+    const items = [...container.children].filter(el =>
+        (el.classList.contains('tier-item-group') || el.classList.contains('tier-item'))
+        && !el.dataset.intraDragActive
+    );
     return items.reduce((closest, child) => {
         const box    = child.getBoundingClientRect();
         const offset = x - box.left - box.width / 2;
@@ -559,17 +551,6 @@ function getDragAfterElement(container, x) {
 function setupTierListeners(draftId) {
     const container = document.getElementById(`tierlist-${draftId}`);
     if (!container) return;
-
-    container.querySelectorAll('.item-mode-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            state.itemUsageMode = btn.dataset.itemMode;
-            import('./usage.js').then(({ recalcUsage }) => {
-                recalcUsage(draftId);
-                loadTierList(draftId);
-                import('./gallery.js').then(({ loadGallery }) => loadGallery(state.currentCategory));
-            });
-        });
-    });
 
     container.querySelector('#add-tier-btn')   ?.addEventListener('click', () => addTier(draftId));
     container.querySelector('#clear-draft-btn')?.addEventListener('click', () => {

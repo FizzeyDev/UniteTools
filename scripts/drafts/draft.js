@@ -342,15 +342,13 @@ export function undoLastPick() {
 
 export function softResetDraft() {
   clearInterval(state.timerInterval);
-  state.currentStep  = 0;
-  state.selectedMode = null;
+  state.currentStep  = 0; 
   state.selectedMap  = null;
   state.sidesSwapped = false;
 
   document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active", "disabled"));
   document.querySelectorAll(".map-btn").forEach(b => b.classList.remove("active"));
   document.getElementById("start-draft").style.display    = "inline-block";
-  document.getElementById("start-draft").disabled         = true;
   document.getElementById("reset-draft").style.display    = "none";
   document.getElementById("backBtn").style.display        = "none";
   document.getElementById("final-draft").style.display    = "none";

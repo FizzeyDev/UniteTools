@@ -41,6 +41,17 @@ export function showMoveModal(pokemonName, tierIndex, isEdit, uid = null) {
     modal.dataset.isEdit    = isEdit;
     modal.dataset.uid       = uid ?? '';
     modal.style.display     = 'flex';
+
+    // Enter key → save (only while this modal is open)
+    const onKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            onMoveSave();
+        }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    // Clean up listener when the modal closes
+    modal._removeEnterListener = () => document.removeEventListener('keydown', onKeyDown);
 }
 
 function buildMoveModalBody(container, moveData, placedItem) {
@@ -210,7 +221,11 @@ function buildSlotSection(label, moves, inputName, currentValue, currentImg = ''
 
 export function hideMoveModal() {
     const modal = document.getElementById('move-modal');
-    if (modal) modal.style.display = 'none';
+    if (modal) {
+        modal.style.display = 'none';
+        modal._removeEnterListener?.();
+        modal._removeEnterListener = null;
+    }
     state.pendingAdd = null;
 }
 
@@ -255,7 +270,7 @@ export function onMoveSave() {
         if (!state.pendingAdd || state.pendingAdd.name !== pokemonName) { hideMoveModal(); return; }
 
         const count = state.pokemonUsage.get(pokemonName) || 0;
-        if (count >= 4) { hideMoveModal(); return; }
+        if (count >= 100) { hideMoveModal(); return; }
 
         state.pokemonUsage.set(pokemonName, count + 1);
         const file = state.pokemonData.find(p => p.name === pokemonName)?.file;
@@ -299,9 +314,9 @@ export function openTierModal(draftId, tierIndex) {
 }
 
 const COLOR_PRESETS = [
-    '#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#1abc9c',
-    '#3498db', '#9b59b6', '#e91e63', '#ff5722', '#607d8b',
-    '#795548', '#00bcd4', '#8bc34a', '#ff9800', '#9e9e9e',
+    '#e74c3c', '#ff6b9d', '#e91e63', '#9c27b0', '#673ab7',
+    '#3f51b5', '#2196f3', '#00bcd4', '#009688', '#4caf50',
+    '#cddc39', '#ffc107', '#ff5722', '#795548', '#607d8b',
 ];
 
 function renderColorPresets(modal, draftId, tierIndex) {
