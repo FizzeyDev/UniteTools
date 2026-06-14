@@ -111,12 +111,22 @@ function setupKeyboardShortcuts() {
                 break;
 
             // N = new tierlist tab
-            case 'n':
-            case 'N':
+            case 'm':
+            case 'M':
                 if (e.ctrlKey || e.metaKey) {
                     e.preventDefault();
                     import('./actions.js').then(m => m.addTab());
                     window.showToast('New tierlist added', 'success');
+                }
+                break;
+
+            // Ctrl+Shift+A = add a new tier to current tierlist
+            case 'a':
+            case 'A':
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey) {
+                    e.preventDefault();
+                    import('./actions.js').then(m => m.addTier(state.currentDraft));
+                    window.showToast('New tier added', 'success');
                 }
                 break;
 
@@ -183,12 +193,14 @@ function setupHowToPanel() {
 
         <div class="howto-section">
             <div class="howto-section-title">Keyboard Shortcuts</div>
+            <div class="howto-row"><kbd>Enter</kbd><span>Confirm</span></div>
             <div class="howto-row"><kbd>F</kbd><span>Focus the search bar</span></div>
             <div class="howto-row"><kbd>Esc</kbd><span>Close modals / clear search</span></div>
             <div class="howto-row"><kbd>P</kbd><span>Show Pokémon gallery</span></div>
             <div class="howto-row"><kbd>I</kbd><span>Show Items gallery</span></div>
             <div class="howto-row"><kbd>B</kbd><span>Show Battle Items gallery</span></div>
-            <div class="howto-row"><kbd>Ctrl</kbd><kbd>N</kbd><span>Add a new tierlist tab</span></div>
+            <div class="howto-row"><kbd>Ctrl</kbd><kbd>M</kbd><span>Add a new tierlist tab</span></div>
+            <div class="howto-row"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>A</kbd><span>Add a new tier row</span></div>
             <div class="howto-row"><kbd>Ctrl</kbd><kbd>Del</kbd><span>Clear current tierlist</span></div>
             <div class="howto-row"><kbd>?</kbd><span>Toggle this panel</span></div>
         </div>
