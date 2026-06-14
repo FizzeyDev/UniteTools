@@ -1090,8 +1090,8 @@ h1::after {
   position: absolute;
   top: 3px;
   right: 3px;
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   overflow: hidden;
   border: 1.5px solid rgba(255,255,255,0.15);
@@ -1364,47 +1364,39 @@ body.is-dragging * { cursor: grabbing !important; }
     transform: scale(1.15);
 }
 /* ── Move popup accordion tabs ── */
-.move-tab {
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 8px;
-    margin-bottom: 8px;
-    overflow: hidden;
-}
-.move-tab__header {
-    width: 100%;
-    background: rgba(255,255,255,0.05);
-    border: none;
-    color: var(--text-bright, #e0e0e0);
-    font-size: 14px;
-    font-weight: 600;
-    padding: 10px 14px;
-    text-align: left;
-    cursor: pointer;
+/* ── Move modal tab bar ── */
+.move-tabbar {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: background 0.15s;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+    margin-bottom: 12px;
+    gap: 2px;
 }
-.move-tab__header:hover {
-    background: rgba(255,255,255,0.09);
+.move-tabbar__btn {
+    flex: 1;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 8px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    border-radius: 6px 6px 0 0;
 }
-.move-tab__header::after {
-    content: '▸';
-    font-size: 11px;
-    opacity: 0.5;
-    transition: transform 0.2s;
+.move-tabbar__btn:hover {
+    color: var(--text-bright, #e0e0e0);
+    background: rgba(255,255,255,0.04);
 }
-.move-tab--open .move-tab__header::after {
-    transform: rotate(90deg);
+.move-tabbar__btn.active {
+    color: var(--text-bright, #e0e0e0);
+    border-bottom-color: #4fc3f7;
+    background: rgba(79,195,247,0.07);
 }
-.move-tab--open .move-tab__header {
-    background: rgba(79,195,247,0.08);
-    border-bottom: 1px solid rgba(79,195,247,0.2);
-}
-.move-tab__body {
+.move-panel {
     display: none;
-    padding: 8px 0 4px;
 }
-.move-tab--open .move-tab__body {
+.move-panel.active {
     display: block;
 }

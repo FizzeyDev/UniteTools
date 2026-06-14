@@ -70,37 +70,42 @@ function buildMoveModalBody(container, moveData, placedItem) {
         },
     ];
 
-    sections.forEach(({ key, label, slots }) => {
-        const tab = document.createElement('div');
-        tab.className = 'move-tab';
-        tab.dataset.tab = key;
+    // Tab bar
+    const tabBar = document.createElement('div');
+    tabBar.className = 'move-tabbar';
 
-        const tabHeader = document.createElement('button');
-        tabHeader.type = 'button';
-        tabHeader.className = 'move-tab__header';
-        tabHeader.textContent = label;
+    const panelsWrap = document.createElement('div');
+    panelsWrap.className = 'move-panels';
 
-        const tabBody = document.createElement('div');
-        tabBody.className = 'move-tab__body';
+    sections.forEach(({ key, label, slots }, i) => {
+        const tabBtn = document.createElement('button');
+        tabBtn.type = 'button';
+        tabBtn.className = 'move-tabbar__btn' + (i === 0 ? ' active' : '');
+        tabBtn.dataset.tab = key;
+        tabBtn.textContent = label;
+        tabBar.appendChild(tabBtn);
+
+        const panel = document.createElement('div');
+        panel.className = 'move-panel' + (i === 0 ? ' active' : '');
+        panel.dataset.tab = key;
 
         slots.forEach(({ label: slotLabel, moves, inputName, currentValue, currentImg }) => {
-            tabBody.appendChild(buildSlotSection(slotLabel, moves, inputName, currentValue, currentImg));
+            panel.appendChild(buildSlotSection(slotLabel, moves, inputName, currentValue, currentImg));
         });
 
-        tabHeader.addEventListener('click', () => {
-            const isOpen = tab.classList.contains('move-tab--open');
-            // Close all tabs
-            container.querySelectorAll('.move-tab').forEach(t => t.classList.remove('move-tab--open'));
-            if (!isOpen) tab.classList.add('move-tab--open');
-        });
-
-        tab.appendChild(tabHeader);
-        tab.appendChild(tabBody);
-        container.appendChild(tab);
+        panelsWrap.appendChild(panel);
     });
 
-    // Open first tab by default
-    container.querySelector('.move-tab')?.classList.add('move-tab--open');
+    tabBar.addEventListener('click', e => {
+        const btn = e.target.closest('.move-tabbar__btn');
+        if (!btn) return;
+        const key = btn.dataset.tab;
+        tabBar.querySelectorAll('.move-tabbar__btn').forEach(b => b.classList.toggle('active', b === btn));
+        panelsWrap.querySelectorAll('.move-panel').forEach(p => p.classList.toggle('active', p.dataset.tab === key));
+    });
+
+    container.appendChild(tabBar);
+    container.appendChild(panelsWrap);
 }
 
 /**
