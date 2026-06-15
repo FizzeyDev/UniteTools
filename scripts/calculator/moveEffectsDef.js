@@ -69,10 +69,41 @@ function applyArmarougeArmorCannon(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── BLASTOISE — Rapid Spin ────────────────────────────────────────────────────
+function applyBlastoiseRapidSpin(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const isActive = state.defenderBlastoiseRapidSpinDefBuff ?? false;
+  const defBonus = 17 * (level - 1) + 500;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/blastoise/rapid_spin.png')}
+    <div style="flex:1;">
+      ${moveBadge('Rapid Spin+', 13)}
+      While spinning → <strong style="color:#fff;">+${defBonus} Def & Sp. Def</strong><br>
+      <button class="rapid-spin-def-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.rapid-spin-def-toggle').onclick = () => {
+    state.defenderBlastoiseRapidSpinDefBuff = !state.defenderBlastoiseRapidSpinDefBuff;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
     armarouge: [applyArmarougeFlameCharge, applyArmarougeArmorCannon],
+    blastoise: [applyBlastoiseRapidSpin],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

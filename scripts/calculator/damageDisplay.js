@@ -68,6 +68,8 @@ import {
 } from './moveEffectsAtk.js';
 
 import { applyDefenderMoveEffects } from './moveEffectsDef.js';
+import { applyPokemonStatMutations } from './statsManager.js';
+import { computeGlobalDamageMult, computeDefenderDamageMult } from './multiplierManager.js';
 
 
 const movesGrid = document.getElementById("movesGrid");
@@ -142,124 +144,15 @@ export function updateDamages() {
     defStats.hp = getMobHPAtTimer(state.currentDefender.hpTable, state.defenderTimer);
   }
 
-  if (state.currentAttacker?.pokemonId === "mega-gyarados" && state.attackerMoldBreakerActive) {
-    atkStats.atk = Math.floor(atkStats.atk * (1 + state.currentAttacker.passive.bonusPercentAtk / 100));
-  }
-
-  if (state.currentDefender?.pokemonId === "mega-gyarados" && state.defenderMoldBreakerActive) {
-    defStats.def    = Math.floor(defStats.def    * (1 + state.currentDefender.passive.bonusPercentDef    / 100));
-    defStats.sp_def = Math.floor(defStats.sp_def * (1 + state.currentDefender.passive.bonusPercentSpDef / 100));
-  }
-
-  if (state.currentDefender?.pokemonId === "mamoswine") {
-    const stacks = Math.min(state.defenderPassiveStacks, 3);
-    if (stacks > 0) {
-      const levelBonus = 10 * (state.defenderLevel - 1) + 20;
-      defStats.def    = Math.floor(defStats.def    + stacks * levelBonus);
-      defStats.sp_def = Math.floor(defStats.sp_def + stacks * levelBonus);
-    }
-  }
-
-  if (state.currentDefender?.pokemonId === "mega-charizard-x" && state.defenderZardToughClaw) {
-    defStats.def    = Math.floor(defStats.def    * (1 + state.currentDefender.passive.bonusPercentDef    / 100));
-    defStats.sp_def = Math.floor(defStats.sp_def * (1 + state.currentDefender.passive.bonusPercentSpDef / 100));
-  }
-
-  if (state.currentAttacker?.pokemonId === "blastoise" && state.attackerHPPercent <= state.currentAttacker.passive.lowHpThreshold) {
-    atkStats.atk    = Math.floor(atkStats.atk    * (1 + state.currentAttacker.passive.bonusPercentAtk    / 100));
-    atkStats.sp_atk = Math.floor(atkStats.sp_atk * (1 + state.currentAttacker.passive.bonusPercentSpAtk / 100));
-  }
-
-  if (state.currentAttacker?.pokemonId === "mega-lucario") {
-    if (state.attackerLucarioForm === "normal")
-      atkStats.atk += Math.floor(atkStats.atk * 0.08 * state.attackerLucarioJustifiedStacks);
-    if (state.attackerLucarioForm === "mega")
-      atkStats.atk += Math.floor(atkStats.atk * 0.05 * state.attackerLucarioAdaptabilityStacks);
-  }
-
-  if (state.currentAttacker?.pokemonId === "mewtwo_x") {
-    atkStats.atk = Math.floor(atkStats.atk * (1 + state.attackerMewtwoPressureStacks * 0.02 + (state.attackerMewtwoForm === "mega" ? 0.18 : 0)));
-  }
-
-  if (state.currentDefender?.pokemonId === "mewtwo_x") {
-    defStats.def    = Math.floor(defStats.def    * (1 + state.defenderMewtwoPressureStacks * 0.02 + (state.defenderMewtwoForm === "mega" ? 0.18 : 0)));
-    defStats.sp_def = Math.floor(defStats.sp_def * (1 + state.defenderMewtwoPressureStacks * 0.02 + (state.defenderMewtwoForm === "mega" ? 0.18 : 0)));
-  }
-
-  if (state.currentAttacker?.pokemonId === "mewtwo_y") {
-    atkStats.sp_atk = Math.floor(atkStats.sp_atk * (1 + state.attackerMewtwoYPressureStacks * 0.015 + (state.attackerMewtwoYForm === "mega" ? 0.10 : 0)));
-  }
-
-  if (state.currentDefender?.pokemonId === "sylveon" && state.defenderLevel > 3) {
-    defStats.sp_def = Math.floor(defStats.sp_def * (1 + state.defenderPassiveStacks * 0.025));
-  }
-
-  if (state.currentAttacker?.pokemonId === "machamp" && state.attackerMachampActive) {
-    atkStats.atk = Math.floor(atkStats.atk * (1 + state.currentAttacker.passive.bonusPercentAtk / 100));
-  }
-
-  if (state.currentAttacker?.pokemonId === "greninja" && state.attackerHPPercent <= state.currentAttacker.passive.lowHpThreshold) {
-    atkStats.atk = Math.floor(atkStats.atk * (1 + state.currentAttacker.passive.bonusPercentAtk / 100));
-  }
-
-  if (state.currentAttacker?.pokemonId === "tyranitar" && state.attackerLevel <= 5 && state.attackerTyranitarGutsActive) {
-    atkStats.atk = Math.floor(atkStats.atk * 1.30);
-  }
-
-  if (state.currentAttacker?.pokemonId === "sylveon") {
-    const percent = state.attackerLevel <= 3 ? 0.05 : 0.025;
-    atkStats.sp_atk = Math.floor(atkStats.sp_atk * (1 + percent * state.attackerPassiveStacks));
-  }
-
-  if (state.currentAttacker?.pokemonId === "zeraora") {
-    atkStats.atk += Math.min(Math.floor(state.attackerZeraoraDamageReceived * 0.08), 200);
-  }
-
-  if (state.currentAttacker?.pokemonId === "tinkaton") {
-    atkStats.atk = Math.floor(atkStats.atk * (1 + 0.005 * state.attackerPassiveStacks));
-  }
-
-  // ── TYPHLOSION — Blaze : +15% Sp. Atk ───────────────────────────────────
-  if (state.currentAttacker?.pokemonId === "typhlosion" && state.attackerTyphlosionBlazeActive) {
-    atkStats.sp_atk = Math.floor(atkStats.sp_atk * 1.15);
-  }
-
-  // ── DRAGONITE — Dragon Dance : +10/20/30% ATK ────────────────────────────
-  if (state.currentAttacker?.pokemonId === "dragonite") {
-    const ddStacks = state.attackerDragonDanceStacks ?? 0;
-    if (ddStacks > 0) {
-      atkStats.atk = Math.floor(atkStats.atk * (1 + ddStacks * 0.10));
-    }
-  }
-
-  const currentDefHP = state.defenderHPAbsolute != null
-    ? Math.min(state.defenderHPAbsolute, defStats.hp)
-    : Math.floor(defStats.hp * (state.defenderHPPercent / 100));
-
-  if (state.currentAttacker?.pokemonId === "crustle" && state.attackerShellSmashActive) {
-    const level = state.attackerLevel;
-    const baseStats = state.currentAttacker.stats[level - 1];
-    const rate = state.attackerShellSmashUpgraded ? 0.50 : 0.40;
-  }
+  // ── Toutes les mutations de stats Pokémon ─────────────────────────────────
+  applyPokemonStatMutations(atkStats, defStats);
 
   document.getElementById('resultsAttackerName').textContent = state.currentAttacker.displayName;
   document.getElementById('resultsDefenderName').textContent = state.currentDefender?.displayName || 'Aucun';
 
-  // ── Move Effects : mutations de stats AVANT affichage et calcul ───────────
-  applyGreninjaSmokescreenStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
-  applyAegislashSacredSwordStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
-  applyAegislashIronHeadStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
-  applyAzumarillBellyBashStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
-
-  if (state.currentDefender?.pokemonId === 'armarouge' && state.defenderLevel >= 5 && state.defenderArmarougeArmorCannonDebuff) {
-    defStats.def    = Math.floor(defStats.def    * 0.95);
-    defStats.sp_def = Math.floor(defStats.sp_def * 0.95);
-  }
-
-  // Aegislash Sacred Sword — pénétration de défense −25% sur le défenseur
-  if (state.currentAttacker?.pokemonId === 'aegislash' && state.attackerLevel >= 5 && state.attackerAegislashSacredSwordDefPen) {
-    defStats.def = Math.floor(defStats.def * 0.75);
-  }
+  const currentDefHP = state.defenderHPAbsolute != null
+    ? Math.min(state.defenderHPAbsolute, defStats.hp)
+    : Math.floor(defStats.hp * (state.defenderHPPercent / 100));
 
   if (state.currentAttacker?.pokemonId === "crustle" && state.attackerShellSmashActive) {
     const level = state.attackerLevel;
@@ -329,24 +222,7 @@ export function updateDamages() {
 
   updateDefenderStatsUI(defStats);
 
-  let defenderDamageMult = 1.0;
-  if (state.defenderEldegossBuff)          defenderDamageMult *= 0.85;
-  if (state.defenderNinetailsBuff)         defenderDamageMult *= 0.65;
-  if (state.defenderNinetailsPlusBuff)     defenderDamageMult *= 0.60;
-  if (state.defenderUmbreonBuff)           defenderDamageMult *= 0.85;
-  if (state.defenderUmbreonPlusBuff)       defenderDamageMult *= 0.75;
-  if (state.defenderBlisseyRedirectionBuff) defenderDamageMult *= 0.50;
-  if (state.defenderHoOhRedirectionBuff)   defenderDamageMult *= 0.40;
-  if (state.defenderDhelmiseAnchorShotPlus) defenderDamageMult *= 1.50;
-  if (state.currentDefender?.pokemonId === "dragonite" && state.defenderMultiscaleActive) defenderDamageMult *= 0.70;
-  if (state.defenderMimeActive)            defenderDamageMult *= 0.90;
-
-  // ── Snow Cloak : réduction via defenderDamageMult ────────────────────────
-  if (state.currentDefender?.pokemonId === "articuno") {
-    const snowCloakState = state.defenderSnowCloakState || "none";
-    if (snowCloakState === "low")  defenderDamageMult *= (1 - 0.10);
-    if (snowCloakState === "high") defenderDamageMult *= (1 - 0.20);
-  }
+  const defenderDamageMult = computeDefenderDamageMult();
 
   // ── SKELEDIRGE — Blaze : 35% Sp. Def Pierce sur le prochain move ─────────
   const skeledirgeBlazeIgnore = (
@@ -401,26 +277,7 @@ function applyItemsAndGlobalEffects(atkStats, defStats) {
 
   let slickIgnore      = 0;
   let scopeCritBonus   = 1.0;
-  let globalDamageMult = 1.0;
-
-  if (state.attackerGroudonBuff)      globalDamageMult *= 1.50;
-  if (state.attackerRayquazaBuff)     globalDamageMult *= 1.40;
-  if (state.attackerBlisseyHandBuff)  globalDamageMult *= 1.15;
-  if (state.attackerMimeSwapBuff)     globalDamageMult *= 1.15;
-  if (state.attackerMimeSwapPlusBuff) globalDamageMult *= 1.20;
-  if (state.attackerSkeledirgeBuff)   globalDamageMult *= 1.15;
-  if (state.attackerMiraidonBuff) {
-    globalDamageMult *= state.currentAttacker?.pokemonId === "miraidon" ? 1.30 : 1.10;
-  }
-  if (state.currentAttacker?.pokemonId === "mega-charizard-y" && state.attackerDroughtActive) globalDamageMult *= 1.10;
-  if (state.debuffGoodraMuddyWater)        globalDamageMult *= 0.85;
-  if (state.debuffMimePowerSwap)           globalDamageMult *= 0.85;
-  if (state.debuffMimePowerSwapPlus)       globalDamageMult *= 0.80;
-  if (state.debuffTrevenantWoodHammerPlus) globalDamageMult *= 0.80;
-  if (state.debuffPsyduckSurfPlus)         globalDamageMult *= 0.75;
-  if (state.debuffPsyduckUnite)            globalDamageMult *= 0.70;
-  if (state.debuffLatiasMistBall)          globalDamageMult *= 0.75;
-  if (state.currentDefender?.pokemonId === 'armarouge' && state.defenderLevel >= 13 && state.defenderArmarougeFlameChargeDmgReduc) globalDamageMult *= 0.80;
+  let globalDamageMult = computeGlobalDamageMult();
 
   state.attackerItems.forEach((item, i) => {
     if (!item) return;
