@@ -1,0 +1,78 @@
+import { state } from './state.js';
+import { updateDamages } from './damageDisplay.js';
+import { MOVE_DEF, moveBadge } from './effectColors.js';
+
+const { color: C, bg: BG, border: BORDER } = MOVE_DEF;
+
+function wrap(content) {
+  return `<div style="margin:12px 0;padding:10px;background:${BG};border-radius:8px;${BORDER};display:flex;align-items:center;gap:12px;">${content}</div>`;
+}
+function icon(src) {
+  return `<img src="${src}" style="width:40px;height:40px;border-radius:6px;" onerror="this.src='assets/moves/missing.png'">`;
+}
+
+// ── ARMAROUGE ─────────────────────────────────────────────────────────────────
+function applyArmarougeFlameCharge(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const isActive = state.defenderArmarougeFlameChargeDmgReduc ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/armarouge/flame_charge.png')}
+    <div style="flex:1;">
+      ${moveBadge('Flame Charge+', 13)}
+      Flame Charge hits → <strong style="color:#fff;">−20% damage received</strong><br>
+      <button class="flame-charge-reduc-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.flame-charge-reduc-toggle').onclick = () => {
+    state.defenderArmarougeFlameChargeDmgReduc = !state.defenderArmarougeFlameChargeDmgReduc;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── ARMAROUGE — Armor Cannon ──────────────────────────────────────────────────
+function applyArmarougeArmorCannon(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 5) return; // Armor Cannon learned at level 5
+
+  const isActive = state.defenderArmarougeArmorCannonDebuff ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/armarouge/armor_cannon.png')}
+    <div style="flex:1;">
+      ${moveBadge('Armor Cannon', 5)}
+      On cooldown → <strong style="color:#fff;">−5% Def & Sp. Def</strong><br>
+      <button class="armor-cannon-debuff-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.armor-cannon-debuff-toggle').onclick = () => {
+    state.defenderArmarougeArmorCannonDebuff = !state.defenderArmarougeArmorCannonDebuff;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── Dispatcher ────────────────────────────────────────────────────────────────
+export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
+  const handlers = {
+    armarouge: [applyArmarougeFlameCharge, applyArmarougeArmorCannon],
+  };
+  (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
+}

@@ -61,8 +61,13 @@ import {
 
 import {
   applyAttackerMoveEffects,
-  applyGreninjaSmokescreenStatBuff
+  applyGreninjaSmokescreenStatBuff,
+  applyAegislashSacredSwordStatBuff,
+  applyAegislashIronHeadStatBuff,
+  applyAzumarillBellyBashStatBuff
 } from './moveEffectsAtk.js';
+
+import { applyDefenderMoveEffects } from './moveEffectsDef.js';
 
 
 const movesGrid = document.getElementById("movesGrid");
@@ -242,6 +247,19 @@ export function updateDamages() {
 
   // ── Move Effects : mutations de stats AVANT affichage et calcul ───────────
   applyGreninjaSmokescreenStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyAegislashSacredSwordStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyAegislashIronHeadStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyAzumarillBellyBashStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+
+  if (state.currentDefender?.pokemonId === 'armarouge' && state.defenderLevel >= 5 && state.defenderArmarougeArmorCannonDebuff) {
+    defStats.def    = Math.floor(defStats.def    * 0.95);
+    defStats.sp_def = Math.floor(defStats.sp_def * 0.95);
+  }
+
+  // Aegislash Sacred Sword — pénétration de défense −25% sur le défenseur
+  if (state.currentAttacker?.pokemonId === 'aegislash' && state.attackerLevel >= 5 && state.attackerAegislashSacredSwordDefPen) {
+    defStats.def = Math.floor(defStats.def * 0.75);
+  }
 
   if (state.currentAttacker?.pokemonId === "crustle" && state.attackerShellSmashActive) {
     const level = state.attackerLevel;
@@ -301,6 +319,12 @@ export function updateDamages() {
   const attackerCardForMoves = document.querySelector('.attacker-stats');
   if (attackerCardForMoves && state.currentAttacker) {
     applyAttackerMoveEffects(state.currentAttacker.pokemonId, atkStats, defStats, attackerCardForMoves);
+  }
+
+  // ── Move Effects UI (blocs dans la card défenseur, après passives) ──────────
+  const defenderCardForMoves = document.querySelector('.defender-stats');
+  if (defenderCardForMoves && state.currentDefender) {
+    applyDefenderMoveEffects(state.currentDefender.pokemonId, atkStats, defStats, defenderCardForMoves);
   }
 
   updateDefenderStatsUI(defStats);
@@ -396,6 +420,7 @@ function applyItemsAndGlobalEffects(atkStats, defStats) {
   if (state.debuffPsyduckSurfPlus)         globalDamageMult *= 0.75;
   if (state.debuffPsyduckUnite)            globalDamageMult *= 0.70;
   if (state.debuffLatiasMistBall)          globalDamageMult *= 0.75;
+  if (state.currentDefender?.pokemonId === 'armarouge' && state.defenderLevel >= 13 && state.defenderArmarougeFlameChargeDmgReduc) globalDamageMult *= 0.80;
 
   state.attackerItems.forEach((item, i) => {
     if (!item) return;
@@ -999,7 +1024,10 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
 
       const line      = document.createElement("div");
       line.className  = "damage-line";
-      const canCrit   = move.can_crit === "true" || move.can_crit === true;
+      const moveCrit  = move.can_crit === "true" || move.can_crit === true;
+      const canCrit   = dmg.can_crit !== undefined
+        ? (dmg.can_crit === "true" || dmg.can_crit === true)
+        : moveCrit;
       const isTick    = !!dmg.is_tick;
       const tickCount = dmg.tick_count || 1;
 
@@ -1071,6 +1099,57 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       }
 
     });
+
+    // ── ABSOL — Night Slash+ (lvl 11) ───────────
+    if (
+      state.currentAttacker?.pokemonId === "absol" &&
+      move.name === "Night Slash" &&
+      upgraded
+    ) {
+      const secondHitDmg = move.damages?.find(d => d.name === "Second Hit");
+      if (secondHitDmg) {
+        const relevantAtk = atkStats.atk;
+        let effectiveDef  = defStats.def;
+        if (slickIgnore > 0)       effectiveDef = Math.floor(effectiveDef * (1 - slickIgnore));
+        if (infiltratorIgnore > 0) effectiveDef = Math.floor(effectiveDef * (1 - infiltratorIgnore));
+
+        const secondHitNormal = Math.floor(
+          calculateDamage(secondHitDmg, relevantAtk, effectiveDef, state.attackerLevel, false,
+            state.currentAttacker.pokemonId, 1.0, globalDamageMult, defStats.hp, currentDefHP)
+          * defenderDamageMult
+        );
+        const secondHitCrit = Math.floor(
+          calculateDamage(secondHitDmg, relevantAtk, effectiveDef, state.attackerLevel, true,
+            state.currentAttacker.pokemonId, scopeCritBonus, globalDamageMult, defStats.hp, currentDefHP)
+          * defenderDamageMult
+        );
+
+        const bigRootIdx  = state.attackerItems.findIndex(i => i?.name === "Big Root");
+        const bigRootMult = bigRootIdx !== -1 ? 1 + parseFloat(state.attackerItems[bigRootIdx].level20.replace('%', '')) / 100 : 1.0;
+        let curseMult = 1.0;
+        const cbdi = state.defenderItems.findIndex(i => i?.name === "Curse Bangle");
+        const cidi = state.defenderItems.findIndex(i => i?.name === "Curse Incense");
+        if (cbdi !== -1 && state.defenderItemActivated[cbdi]) curseMult *= 1 - parseFloat(state.defenderItems[cbdi].level20.replace('%', '')) / 100;
+        if (cidi !== -1 && state.defenderItemActivated[cidi]) curseMult *= 1 - parseFloat(state.defenderItems[cidi].level20.replace('%', '')) / 100;
+
+        const healNormal = Math.floor(secondHitNormal * 0.50 * bigRootMult * curseMult);
+        const healCrit   = Math.floor(secondHitCrit   * 0.50 * bigRootMult * curseMult);
+
+        const healLine = document.createElement("div");
+        healLine.className = "damage-line";
+        healLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;">
+            Heal (2nd hit)
+            <br><i style="font-size:0.8em;color:#4caf8299;">50% of damage dealt</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${healNormal.toLocaleString()}</span>
+            <span class="dmg-heal" style="opacity:0.75;">(${healCrit.toLocaleString()})</span>
+          </div>
+        `;
+        card.appendChild(healLine);
+      }
+    }
 
     // ── HEALS ──────────────────────────────────────────────────────────────
     if (visibleHeals?.length > 0) {

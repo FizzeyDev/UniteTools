@@ -68,11 +68,154 @@ function applyDragoniteDragonDance(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── AEGISLASH ─────────────────────────────────────────────────────────────────
+function applyAegislashSacredSword(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Sacred Sword learned at level 5
+
+  // Effect level 5+ : −25% defender Defense for 3s after the Slash hits
+  const isDefPenActive = state.attackerAegislashSacredSwordDefPen ?? false;
+  const lineDefPen = document.createElement('div');
+  lineDefPen.className = 'global-bonus-line';
+  lineDefPen.innerHTML = wrap(`
+    ${icon('assets/moves/aegislash/sacred_sword.png')}
+    <div style="flex:1;">
+      ${moveBadge('Sacred Sword', 5)}
+      Slash hits → <strong style="color:#fff;">−25% defender's Defense</strong> for 3s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Applies to all following moves</span><br>
+      <button class="sacred-sword-defpen-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isDefPenActive ? C : '#0d2428'};
+        color:${isDefPenActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isDefPenActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  lineDefPen.querySelector('.sacred-sword-defpen-toggle').onclick = () => {
+    state.attackerAegislashSacredSwordDefPen = !state.attackerAegislashSacredSwordDefPen;
+    updateDamages();
+  };
+  card.appendChild(lineDefPen);
+
+  // Effect level 11+ : +50 ATK for 3s if the triangular zone hits
+  if (level >= 11) {
+    const isAtkActive = state.attackerAegislashSacredSwordAtkBuff ?? false;
+    const lineAtk = document.createElement('div');
+    lineAtk.className = 'global-bonus-line';
+    lineAtk.innerHTML = wrap(`
+      ${icon('assets/moves/aegislash/sacred_sword.png')}
+      <div style="flex:1;">
+        ${moveBadge('Sacred Sword+', 11)}
+        Triangular zone hits → <strong style="color:#fff;">+50 ATK</strong> for 3s<br>
+        <span style="font-size:0.8rem;color:${C}99;">Applies to all following moves</span><br>
+        <button class="sacred-sword-atk-toggle" style="
+          margin-top:8px;padding:6px 16px;
+          background:${isAtkActive ? C : '#0d2428'};
+          color:${isAtkActive ? '#000' : C};
+          border:1px solid ${C};border-radius:6px;cursor:pointer;
+          font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+        ">${isAtkActive ? '✓ Active' : 'Activate'}</button>
+      </div>
+    `);
+    lineAtk.querySelector('.sacred-sword-atk-toggle').onclick = () => {
+      state.attackerAegislashSacredSwordAtkBuff = !state.attackerAegislashSacredSwordAtkBuff;
+      updateDamages();
+    };
+    card.appendChild(lineAtk);
+  }
+}
+
+export function applyAegislashSacredSwordStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'aegislash') return;
+  if (level < 11) return;
+  if (!state.attackerAegislashSacredSwordAtkBuff) return;
+  atkStats.atk += 50;
+}
+
+// ── AEGISLASH — Iron Head ─────────────────────────────────────────────────────
+function applyAegislashIronHead(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const isActive = state.attackerAegislashIronHeadAtkBuff ?? false;
+  const bonusPct = 10;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/aegislash/iron_head.png')}
+    <div style="flex:1;">
+      ${moveBadge('Iron Head+', 13)}
+      Shield blocks an attack → <strong style="color:#fff;">+${bonusPct}% ATK</strong> for 3s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Applies to all following moves</span><br>
+      <button class="iron-head-atk-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.iron-head-atk-toggle').onclick = () => {
+    state.attackerAegislashIronHeadAtkBuff = !state.attackerAegislashIronHeadAtkBuff;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyAegislashIronHeadStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'aegislash') return;
+  if (level < 13) return;
+  if (!state.attackerAegislashIronHeadAtkBuff) return;
+  atkStats.atk += Math.floor(atkStats.atk * 0.10);
+}
+
+// ── AZUMARILL ─────────────────────────────────────────────────────────────────
+function applyAzumarillBellyBash(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 8) return; // Unite unlocks at level 8
+
+  const isActive = state.attackerAzumarillBellyBashAtkBuff ?? false;
+  const flatBonus = 6 * (level - 1) + 72;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/azumarill/belly_bash.png')}
+    <div style="flex:1;">
+      ${moveBadge('Belly Bash (Unite)', 8)}
+      Belly pounds → <strong style="color:#fff;">+${flatBonus} ATK</strong> for 8s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Flat bonus — scales with level</span><br>
+      <button class="belly-bash-atk-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.belly-bash-atk-toggle').onclick = () => {
+    state.attackerAzumarillBellyBashAtkBuff = !state.attackerAzumarillBellyBashAtkBuff;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyAzumarillBellyBashStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'azumarill') return;
+  if (level < 8) return;
+  if (!state.attackerAzumarillBellyBashAtkBuff) return;
+  atkStats.atk += 6 * (level - 1) + 72;
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
-    greninja:  applyGreninjaSmokescreenAttacker,
-    dragonite: applyDragoniteDragonDance,
+    greninja:  [applyGreninjaSmokescreenAttacker],
+    dragonite: [applyDragoniteDragonDance],
+    aegislash: [applyAegislashSacredSword, applyAegislashIronHead],
+    azumarill: [applyAzumarillBellyBash],
   };
-  handlers[pokemonId]?.(atkStats, defStats, card);
+  (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

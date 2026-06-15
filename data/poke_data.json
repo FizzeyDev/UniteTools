@@ -165,8 +165,9 @@
         "image": "assets/moves/basic_attack.png",
         "damages": [
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Boosted (Sword Stance)", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "Pierce + 8.5% max HP (cap 1000 vs wild)"},
-          {"name": "Boosted (Shield Stance)", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "Stun + Heal + CDR"}
+          {"name": "Boosted (Sword Stance)", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Boosted (Shield Stance)", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Boosted - Additional (Sword Stance)", "max_hp_percent": 15, "wild_cap": 1000, "dealDamage": true, "can_crit": false, "notes": "8.5% Max HP damage" }
         ],
         "heals": [
           { "name": "Heal - Boosted (Shield Stance)", "scaling": "atk", "multiplier": 150, "levelCoef": 12, "constant": 72 }
@@ -468,7 +469,8 @@
         "image": "assets/moves/basic_attack.png",
         "damages": [
           {"name": "Basic Attack", "multiplier": 30, "levelCoef": 5, "constant": 150, "dealDamage": true},
-          {"name": "Boosted Attack (Cannon Full)", "multiplier": 40, "levelCoef": 5, "constant": 220, "dealDamage": true, "notes": "Large AoE + close range boosted"}
+          {"name": "Boosted Attack (Cannon Full)", "multiplier": 40, "levelCoef": 5, "constant": 220, "dealDamage": true, "notes": "Large AoE + close range boosted"},
+          {"name": "Blazing Marks (3 stacks consumed)", "max_hp_percent": 10, "wild_cap": 1000, "dealDamage": true, "can_crit": false, "notes": "10% of Max HP, apply only with 3 Marks, capped at 1000"}
         ]
       },
       {
@@ -555,7 +557,7 @@
         "can_crit": "false",
         "image": "assets/moves/armarouge/psyshock.png",
         "damages": [
-          {"name": "Damage per Hit (3 hits)", "multiplier": 63, "levelCoef": 8, "constant": 360, "dealDamage": true, "is_tick": true, "tick_count": 3, "notes": "Ignores 35% Sp.Def ; 2nd hit -25%, 3rd hit -50%"}
+          {"name": "Damage per Hit (3 hits)", "multiplier": 63, "levelCoef": 8, "constant": 360, "dealDamage": true, "is_tick": true, "tick_count": 3, "tick_scaling": [1.0, 0.75, 0.50], "sp_def_pen": 35}
         ]
       },
       {
@@ -800,11 +802,18 @@
         "can_crit": "true",
         "image": "assets/moves/azumarill/belly_bash.png",
         "damages": [
-          {"name": "Damage", "multiplier": 108, "levelCoef": 9, "constant": 260, "dealDamage": true}
+          {"name": "Charge Damage", "multiplier": 108, "levelCoef": 9, "constant": 260, "dealDamage": true}
         ],
         "shields": [
           {
-            "name": "Shield",
+            "name": "Shield (3x Belly Pound, 6.5% Max HP each)",
+            "scaling": "hp",
+            "multiplier": 19.5,
+            "levelCoef": 0,
+            "constant": 0
+          },
+          {
+            "name": "Shield (Unite Buff, 20% Max HP)",
             "scaling": "hp",
             "multiplier": 20,
             "levelCoef": 0,

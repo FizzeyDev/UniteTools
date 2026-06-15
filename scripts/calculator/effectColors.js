@@ -16,6 +16,12 @@ export const MOVE_ATK = {
   border: 'border-left:4px solid #26c6da',
 };
 
+export const MOVE_DEF = {
+  color:  '#ff7043',
+  bg:     '#2a1000',
+  border: 'border-left:4px solid #ff7043',
+};
+
 export function passiveBadge(name, level = null, theme) {
   return `
     <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
