@@ -209,6 +209,81 @@ export function applyAzumarillBellyBashStatBuff(pokemon, atkStats, level) {
   atkStats.atk += 6 * (level - 1) + 72;
 }
 
+// ── BLAZIKEN — Spinning Flame Kick (Unite) ──────────────────────────────────
+function applyBlazikenSpinningFlameKick(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 8) return; // Unite unlocks at level 8
+
+  const isActive = state.attackerBlazikenSpinningFlameKickAtkBuff ?? false;
+  const bonusPct = 30;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/blaziken/spinning_flame_kick.png')}
+    <div style="flex:1;">
+      ${moveBadge('Spinning Flame Kick (Unite)', 8)}
+      Flaming kick hits → <strong style="color:#fff;">+${bonusPct}% ATK</strong> for 4s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Switches user to Kick Style</span><br>
+      <button class="spinning-flame-kick-atk-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.spinning-flame-kick-atk-toggle').onclick = () => {
+    state.attackerBlazikenSpinningFlameKickAtkBuff = !state.attackerBlazikenSpinningFlameKickAtkBuff;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyBlazikenSpinningFlameKickStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'blaziken') return;
+  if (level < 8) return;
+  if (!state.attackerBlazikenSpinningFlameKickAtkBuff) return;
+  atkStats.atk += Math.floor(atkStats.atk * 0.30);
+}
+
+// ── BUZZWOLE — Lunge ──────────────────────────────────────────────────────────
+function applyBuzzwoleLunge(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const stacks    = state.attackerBuzzwoleLungeStacks ?? 0;
+  const maxStacks = 5;
+  const bonusPct  = stacks * 10;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/buzzwole/lunge.png')}
+    <div style="flex:1;">
+      ${moveBadge('Lunge+', 13)}
+      Players hit: <button class="stack-btn minus lunge-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus lunge-plus">+</button><br>
+      → ATK <strong style="color:${bonusPct > 0 ? '#88ff88' : '#888'};">+${bonusPct}%</strong> for 2s
+      ${bonusPct >= 50 ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ MAX</span>' : ''}
+    </div>
+  `);
+  line.querySelector('.lunge-minus').onclick = () => { if ((state.attackerBuzzwoleLungeStacks ?? 0) > 0)        { state.attackerBuzzwoleLungeStacks = (state.attackerBuzzwoleLungeStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.lunge-plus').onclick  = () => { if ((state.attackerBuzzwoleLungeStacks ?? 0) < maxStacks) { state.attackerBuzzwoleLungeStacks = (state.attackerBuzzwoleLungeStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
+// ── BUZZWOLE — Leech Life+ (lvl 11) is automatic and rendered directly in
+// damageDisplay.js via the move's tick scaling — no toggle needed here.
+
+export function applyBuzzwoleLungeStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'buzzwole') return;
+  if (level < 13) return;
+  const stacks = state.attackerBuzzwoleLungeStacks ?? 0;
+  if (stacks <= 0) return;
+  atkStats.atk += Math.floor(atkStats.atk * 0.10 * stacks);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -216,6 +291,8 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     dragonite: [applyDragoniteDragonDance],
     aegislash: [applyAegislashSacredSword, applyAegislashIronHead],
     azumarill: [applyAzumarillBellyBash],
+    blaziken:  [applyBlazikenSpinningFlameKick],
+    buzzwole:  [applyBuzzwoleLunge],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

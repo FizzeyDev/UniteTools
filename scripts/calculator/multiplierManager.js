@@ -56,5 +56,9 @@ export function computeGlobalDamageMult() {
     globalDamageMult *= 0.80;
   }
 
+  if (state.currentDefender?.pokemonId === 'blaziken' && state.defenderLevel >= 7 && state.defenderBlazikenOverheatDmgReduc) {
+    globalDamageMult *= 0.75;
+  }
+
   return globalDamageMult;
 }

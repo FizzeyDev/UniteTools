@@ -888,8 +888,20 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       const isTick    = !!dmg.is_tick;
       const tickCount = dmg.tick_count || 1;
 
-      const tickScalingAttr = dmg.tick_scaling
-        ? `data-tick-scaling='${JSON.stringify(dmg.tick_scaling)}'`
+      // ── BUZZWOLE — Leech Life+ (lvl 11) : +5% additif par tick successif ──
+      let effectiveTickScaling = dmg.tick_scaling;
+      if (
+        state.currentAttacker?.pokemonId === "buzzwole" &&
+        move.name === "Leech Life" &&
+        dmg.name.includes("per Tick") &&
+        state.attackerLevel >= 11 &&
+        !effectiveTickScaling
+      ) {
+        effectiveTickScaling = Array.from({ length: tickCount }, (_, i) => 1 + 0.05 * i);
+      }
+
+      const tickScalingAttr = effectiveTickScaling
+        ? `data-tick-scaling='${JSON.stringify(effectiveTickScaling)}'`
         : '';
 
       if (isTick) {
@@ -901,11 +913,11 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           return sum;
         };
 
-        const normalTotal = dmg.tick_scaling
-          ? computeScaledTotal(displayedNormal, dmg.tick_scaling, tickCount)
+        const normalTotal = effectiveTickScaling
+          ? computeScaledTotal(displayedNormal, effectiveTickScaling, tickCount)
           : displayedNormal * tickCount;
-        const critTotal = dmg.tick_scaling
-          ? computeScaledTotal(displayedCrit, dmg.tick_scaling, tickCount)
+        const critTotal = effectiveTickScaling
+          ? computeScaledTotal(displayedCrit, effectiveTickScaling, tickCount)
           : displayedCrit * tickCount;
 
         if (canCrit) {

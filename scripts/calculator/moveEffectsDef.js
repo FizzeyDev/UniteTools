@@ -99,11 +99,42 @@ function applyBlastoiseRapidSpin(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── BLAZIKEN — Overheat ───────────────────────────────────────────────────────
+function applyBlazikenOverheat(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 7) return; // Overheat learned at level 7
+
+  const isActive = state.defenderBlazikenOverheatDmgReduc ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/blaziken/overheat.png')}
+    <div style="flex:1;">
+      ${moveBadge('Overheat', 7)}
+      Charging in place → <strong style="color:#fff;">−25% damage received</strong> & Hindrance Resistant<br>
+      <span style="font-size:0.8rem;color:${C}99;">Active only while charging</span><br>
+      <button class="overheat-dmgreduc-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.overheat-dmgreduc-toggle').onclick = () => {
+    state.defenderBlazikenOverheatDmgReduc = !state.defenderBlazikenOverheatDmgReduc;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
     armarouge: [applyArmarougeFlameCharge, applyArmarougeArmorCannon],
     blastoise: [applyBlastoiseRapidSpin],
+    blaziken:  [applyBlazikenOverheat],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }
