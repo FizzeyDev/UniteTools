@@ -129,12 +129,43 @@ function applyBlazikenOverheat(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── CERULEDGE — Revenant Rend (Unite) ─────────────────────────────────────────
+function applyCeruledgeRevenantRend(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 9) return; // Unite unlocks at level 9
+
+  const isActive = state.defenderCeruledgeRevenantRendBuff ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/ceruledge/revenant_rend.png')}
+    <div style="flex:1;">
+      ${moveBadge('Revenant Rend (Unite)', 9)}
+      Charging the blades → <strong style="color:#fff;">−70% damage received</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Active only during the 0.5s charge before the slash</span><br>
+      <button class="revenant-rend-dmgreduc-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.revenant-rend-dmgreduc-toggle').onclick = () => {
+    state.defenderCeruledgeRevenantRendBuff = !state.defenderCeruledgeRevenantRendBuff;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
     armarouge: [applyArmarougeFlameCharge, applyArmarougeArmorCannon],
     blastoise: [applyBlastoiseRapidSpin],
     blaziken:  [applyBlazikenOverheat],
+    ceruledge: [applyCeruledgeRevenantRend],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

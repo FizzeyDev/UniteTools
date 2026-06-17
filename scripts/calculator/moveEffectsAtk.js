@@ -209,6 +209,37 @@ export function applyAzumarillBellyBashStatBuff(pokemon, atkStats, level) {
   atkStats.atk += 6 * (level - 1) + 72;
 }
 
+// ── CERULEDGE — Lava Plume ───────────────────────────────────────────────────
+function applyCeruledgeLavaPlume(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level > 5) return;
+
+  const isActive = state.attackerLavaPlumeActive ?? false;
+  const bonusPct = 15;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/ceruledge/lava_plume.png')}
+    <div style="flex:1;">
+      ${moveBadge('Lava Plume', 1)}
+      Lava Plume hits → next basic attack deals <strong style="color:#fff;">+${bonusPct}% damage</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Applies to the next Auto-attack only</span><br>
+      <button class="lava-plume-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.lava-plume-toggle').onclick = () => {
+    state.attackerLavaPlumeActive = !state.attackerLavaPlumeActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── BLAZIKEN — Spinning Flame Kick (Unite) ──────────────────────────────────
 function applyBlazikenSpinningFlameKick(atkStats, defStats, card) {
   const level = state.attackerLevel;
@@ -293,6 +324,7 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     azumarill: [applyAzumarillBellyBash],
     blaziken:  [applyBlazikenSpinningFlameKick],
     buzzwole:  [applyBuzzwoleLunge],
+    ceruledge: [applyCeruledgeLavaPlume],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

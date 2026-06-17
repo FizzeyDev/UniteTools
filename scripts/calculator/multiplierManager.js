@@ -60,5 +60,9 @@ export function computeGlobalDamageMult() {
     globalDamageMult *= 0.75;
   }
 
+  if (state.currentDefender?.pokemonId === 'ceruledge' && state.defenderLevel >= 9 && state.defenderCeruledgeRevenantRendBuff) {
+    globalDamageMult *= 0.30;
+  }
+
   return globalDamageMult;
 }

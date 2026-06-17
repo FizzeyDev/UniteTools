@@ -688,21 +688,21 @@
     "role": "all-rounder",
     "style": "physical",
     "stats": [
-      {"level": 1, "hp": 3250, "atk": 125, "def": 80, "sp_atk": 20, "sp_def": 80, "crit": 0},
-      {"level": 2, "hp": 3352, "atk": 132, "def": 87, "sp_atk": 22, "sp_def": 87, "crit": 0},
-      {"level": 3, "hp": 3469, "atk": 141, "def": 95, "sp_atk": 24, "sp_def": 95, "crit": 0},
-      {"level": 4, "hp": 4064, "atk": 185, "def": 136, "sp_atk": 36, "sp_def": 136, "crit": 0},
-      {"level": 5, "hp": 4219, "atk": 196, "def": 147, "sp_atk": 40, "sp_def": 147, "crit": 0},
-      {"level": 6, "hp": 4398, "atk": 209, "def": 159, "sp_atk": 44, "sp_def": 159, "crit": 0},
-      {"level": 7, "hp": 4603, "atk": 224, "def": 173, "sp_atk": 48, "sp_def": 173, "crit": 0},
-      {"level": 8, "hp": 4839, "atk": 241, "def": 189, "sp_atk": 53, "sp_def": 189, "crit": 0},
-      {"level": 9, "hp": 5111, "atk": 261, "def": 208, "sp_atk": 59, "sp_def": 208, "crit": 0},
-      {"level": 10, "hp": 5424, "atk": 284, "def": 230, "sp_atk": 65, "sp_def": 230, "crit": 0},
-      {"level": 11, "hp": 5784, "atk": 310, "def": 255, "sp_atk": 72, "sp_def": 255, "crit": 0},
-      {"level": 12, "hp": 6198, "atk": 340, "def": 284, "sp_atk": 81, "sp_def": 284, "crit": 0},
-      {"level": 13, "hp": 6674, "atk": 375, "def": 317, "sp_atk": 91, "sp_def": 317, "crit": 0},
-      {"level": 14, "hp": 7221, "atk": 415, "def": 355, "sp_atk": 102, "sp_def": 355, "crit": 0},
-      {"level": 15, "hp": 7850, "atk": 461, "def": 399, "sp_atk": 115, "sp_def": 399, "crit": 0}
+      {"level": 1, "hp": 3250, "atk": 125, "def": 80, "sp_atk": 20, "sp_def": 80, "crit": 0, "lifesteal": 0},
+      {"level": 2, "hp": 3352, "atk": 132, "def": 87, "sp_atk": 22, "sp_def": 87, "crit": 0, "lifesteal": 0},
+      {"level": 3, "hp": 3469, "atk": 141, "def": 95, "sp_atk": 24, "sp_def": 95, "crit": 0, "lifesteal": 0},
+      {"level": 4, "hp": 4064, "atk": 185, "def": 136, "sp_atk": 36, "sp_def": 136, "crit": 0, "lifesteal": 0},
+      {"level": 5, "hp": 4219, "atk": 196, "def": 147, "sp_atk": 40, "sp_def": 147, "crit": 0, "lifesteal": 5},
+      {"level": 6, "hp": 4398, "atk": 209, "def": 159, "sp_atk": 44, "sp_def": 159, "crit": 0, "lifesteal": 5},
+      {"level": 7, "hp": 4603, "atk": 224, "def": 173, "sp_atk": 48, "sp_def": 173, "crit": 0, "lifesteal": 5},
+      {"level": 8, "hp": 4839, "atk": 241, "def": 189, "sp_atk": 53, "sp_def": 189, "crit": 0, "lifesteal": 5},
+      {"level": 9, "hp": 5111, "atk": 261, "def": 208, "sp_atk": 59, "sp_def": 208, "crit": 0, "lifesteal": 10},
+      {"level": 10, "hp": 5424, "atk": 284, "def": 230, "sp_atk": 65, "sp_def": 230, "crit": 0, "lifesteal": 10},
+      {"level": 11, "hp": 5784, "atk": 310, "def": 255, "sp_atk": 72, "sp_def": 255, "crit": 0, "lifesteal": 10},
+      {"level": 12, "hp": 6198, "atk": 340, "def": 284, "sp_atk": 81, "sp_def": 284, "crit": 0, "lifesteal": 10},
+      {"level": 13, "hp": 6674, "atk": 375, "def": 317, "sp_atk": 91, "sp_def": 317, "crit": 0, "lifesteal": 10},
+      {"level": 14, "hp": 7221, "atk": 415, "def": 355, "sp_atk": 102, "sp_def": 355, "crit": 0, "lifesteal": 10},
+      {"level": 15, "hp": 7850, "atk": 461, "def": 399, "sp_atk": 115, "sp_def": 399, "crit": 0, "lifesteal": 10}
     ],
     "moves": [
       {
@@ -981,21 +981,21 @@
     "role": "all-rounder",
     "style": "physical",
     "stats": [
-      {"level": 1, "hp": 3250, "atk": 160, "def": 80, "sp_atk": 20, "sp_def": 60, "crit": 0},
-      {"level": 2, "hp": 3315, "atk": 165, "def": 85, "sp_atk": 21, "sp_def": 64, "crit": 0},
-      {"level": 3, "hp": 3393, "atk": 171, "def": 92, "sp_atk": 23, "sp_def": 69, "crit": 0},
-      {"level": 4, "hp": 3487, "atk": 178, "def": 100, "sp_atk": 25, "sp_def": 75, "crit": 0},
-      {"level": 5, "hp": 3827, "atk": 203, "def": 128, "sp_atk": 32, "sp_def": 97, "crit": 5},
-      {"level": 6, "hp": 3963, "atk": 213, "def": 139, "sp_atk": 35, "sp_def": 106, "crit": 5},
-      {"level": 7, "hp": 4581, "atk": 258, "def": 190, "sp_atk": 48, "sp_def": 145, "crit": 5},
-      {"level": 8, "hp": 4776, "atk": 272, "def": 206, "sp_atk": 52, "sp_def": 157, "crit": 5},
-      {"level": 9, "hp": 5010, "atk": 289, "def": 226, "sp_atk": 57, "sp_def": 172, "crit": 10},
-      {"level": 10, "hp": 5291, "atk": 309, "def": 249, "sp_atk": 63, "sp_def": 190, "crit": 10},
-      {"level": 11, "hp": 5628, "atk": 333, "def": 277, "sp_atk": 70, "sp_def": 212, "crit": 10},
-      {"level": 12, "hp": 6033, "atk": 362, "def": 311, "sp_atk": 78, "sp_def": 238, "crit": 10},
-      {"level": 13, "hp": 6518, "atk": 397, "def": 351, "sp_atk": 88, "sp_def": 269, "crit": 10},
-      {"level": 14, "hp": 7101, "atk": 439, "def": 400, "sp_atk": 100, "sp_def": 306, "crit": 10},
-      {"level": 15, "hp": 7800, "atk": 490, "def": 458, "sp_atk": 115, "sp_def": 351, "crit": 10}
+      {"level": 1, "hp": 3250, "atk": 160, "def": 80, "sp_atk": 20, "sp_def": 60, "crit": 0, "lifesteal": 0},
+      {"level": 2, "hp": 3315, "atk": 165, "def": 85, "sp_atk": 21, "sp_def": 64, "crit": 0, "lifesteal": 0},
+      {"level": 3, "hp": 3393, "atk": 171, "def": 92, "sp_atk": 23, "sp_def": 69, "crit": 0, "lifesteal": 0},
+      {"level": 4, "hp": 3487, "atk": 178, "def": 100, "sp_atk": 25, "sp_def": 75, "crit": 0, "lifesteal": 0},
+      {"level": 5, "hp": 3827, "atk": 203, "def": 128, "sp_atk": 32, "sp_def": 97, "crit": 5, "lifesteal": 5},
+      {"level": 6, "hp": 3963, "atk": 213, "def": 139, "sp_atk": 35, "sp_def": 106, "crit": 5, "lifesteal": 5},
+      {"level": 7, "hp": 4581, "atk": 258, "def": 190, "sp_atk": 48, "sp_def": 145, "crit": 5, "lifesteal": 5},
+      {"level": 8, "hp": 4776, "atk": 272, "def": 206, "sp_atk": 52, "sp_def": 157, "crit": 5, "lifesteal": 10},
+      {"level": 9, "hp": 5010, "atk": 289, "def": 226, "sp_atk": 57, "sp_def": 172, "crit": 10, "lifesteal": 10},
+      {"level": 10, "hp": 5291, "atk": 309, "def": 249, "sp_atk": 63, "sp_def": 190, "crit": 10, "lifesteal": 10},
+      {"level": 11, "hp": 5628, "atk": 333, "def": 277, "sp_atk": 70, "sp_def": 212, "crit": 10, "lifesteal": 10},
+      {"level": 12, "hp": 6033, "atk": 362, "def": 311, "sp_atk": 78, "sp_def": 238, "crit": 10, "lifesteal": 10},
+      {"level": 13, "hp": 6518, "atk": 397, "def": 351, "sp_atk": 88, "sp_def": 269, "crit": 10, "lifesteal": 10},
+      {"level": 14, "hp": 7101, "atk": 439, "def": 400, "sp_atk": 100, "sp_def": 306, "crit": 10, "lifesteal": 10},
+      {"level": 15, "hp": 7800, "atk": 490, "def": 458, "sp_atk": 115, "sp_def": 351, "crit": 10, "lifesteal": 10}
     ],
     "moves": [
       {
@@ -1273,21 +1273,21 @@
     "role": "tank",
     "style": "physical",
     "stats": [
-        {"level": 1, "hp": 3250, "atk": 170, "def": 120, "sp_atk": 20, "sp_def": 80, "crit": 0},
-        {"level": 2, "hp": 3412, "atk": 180, "def": 134, "sp_atk": 23, "sp_def": 91, "crit": 0},
-        {"level": 3, "hp": 3590, "atk": 191, "def": 149, "sp_atk": 27, "sp_def": 103, "crit": 0},
-        {"level": 4, "hp": 3786, "atk": 203, "def": 165, "sp_atk": 31, "sp_def": 116, "crit": 0},
-        {"level": 5, "hp": 4001, "atk": 216, "def": 183, "sp_atk": 35, "sp_def": 130, "crit": 10},
-        {"level": 6, "hp": 4238, "atk": 231, "def": 203, "sp_atk": 40, "sp_def": 146, "crit": 10},
-        {"level": 7, "hp": 4499, "atk": 247, "def": 225, "sp_atk": 45, "sp_def": 163, "crit": 10},
-        {"level": 8, "hp": 4786, "atk": 265, "def": 249, "sp_atk": 51, "sp_def": 182, "crit": 10},
-        {"level": 9, "hp": 5103, "atk": 285, "def": 275, "sp_atk": 58, "sp_def": 203, "crit": 20},
-        {"level": 10, "hp": 5452, "atk": 306, "def": 304, "sp_atk": 65, "sp_def": 226, "crit": 20},
-        {"level": 11, "hp": 5836, "atk": 330, "def": 336, "sp_atk": 73, "sp_def": 251, "crit": 20},
-        {"level": 12, "hp": 6259, "atk": 356, "def": 371, "sp_atk": 82, "sp_def": 279, "crit": 20},
-        {"level": 13, "hp": 6724, "atk": 385, "def": 410, "sp_atk": 92, "sp_def": 309, "crit": 20},
-        {"level": 14, "hp": 7236, "atk": 417, "def": 453, "sp_atk": 103, "sp_def": 343, "crit": 20},
-        {"level": 15, "hp": 7800, "atk": 452, "def": 500, "sp_atk": 115, "sp_def": 380, "crit": 20}
+        {"level": 1, "hp": 3250, "atk": 170, "def": 120, "sp_atk": 20, "sp_def": 80, "crit": 0, "lifesteal": 0},
+        {"level": 2, "hp": 3412, "atk": 180, "def": 134, "sp_atk": 23, "sp_def": 91, "crit": 0, "lifesteal": 0},
+        {"level": 3, "hp": 3590, "atk": 191, "def": 149, "sp_atk": 27, "sp_def": 103, "crit": 0, "lifesteal": 0},
+        {"level": 4, "hp": 3786, "atk": 203, "def": 165, "sp_atk": 31, "sp_def": 116, "crit": 0, "lifesteal": 0},
+        {"level": 5, "hp": 4001, "atk": 216, "def": 183, "sp_atk": 35, "sp_def": 130, "crit": 10, "lifesteal": 5},
+        {"level": 6, "hp": 4238, "atk": 231, "def": 203, "sp_atk": 40, "sp_def": 146, "crit": 10, "lifesteal": 5},
+        {"level": 7, "hp": 4499, "atk": 247, "def": 225, "sp_atk": 45, "sp_def": 163, "crit": 10, "lifesteal": 5},
+        {"level": 8, "hp": 4786, "atk": 265, "def": 249, "sp_atk": 51, "sp_def": 182, "crit": 10, "lifesteal": 5},
+        {"level": 9, "hp": 5103, "atk": 285, "def": 275, "sp_atk": 58, "sp_def": 203, "crit": 20, "lifesteal": 10},
+        {"level": 10, "hp": 5452, "atk": 306, "def": 304, "sp_atk": 65, "sp_def": 226, "crit": 20, "lifesteal": 10},
+        {"level": 11, "hp": 5836, "atk": 330, "def": 336, "sp_atk": 73, "sp_def": 251, "crit": 20, "lifesteal": 10},
+        {"level": 12, "hp": 6259, "atk": 356, "def": 371, "sp_atk": 82, "sp_def": 279, "crit": 20, "lifesteal": 10},
+        {"level": 13, "hp": 6724, "atk": 385, "def": 410, "sp_atk": 92, "sp_def": 309, "crit": 20, "lifesteal": 15},
+        {"level": 14, "hp": 7236, "atk": 417, "def": 453, "sp_atk": 103, "sp_def": 343, "crit": 20, "lifesteal": 15},
+        {"level": 15, "hp": 7800, "atk": 452, "def": 500, "sp_atk": 115, "sp_def": 380, "crit": 20, "lifesteal": 15}
     ],
     "passive": {
       "name": "Beast Boost",
@@ -1413,21 +1413,21 @@
     "role": "attacker",
     "style": "physical",
     "stats": [
-        {"level": 1, "hp": 3250, "atk": 125, "def": 80, "sp_atk": 20, "sp_def": 64, "crit": 0},
-        {"level": 2, "hp": 3352, "atk": 132, "def": 85, "sp_atk": 22, "sp_def": 71, "crit": 0},
-        {"level": 3, "hp": 3469, "atk": 140, "def": 91, "sp_atk": 24, "sp_def": 79, "crit": 0},
-        {"level": 4, "hp": 3604, "atk": 149, "def": 98, "sp_atk": 27, "sp_def": 88, "crit": 0},
-        {"level": 5, "hp": 4219, "atk": 190, "def": 130, "sp_atk": 40, "sp_def": 130, "crit": 10},
-        {"level": 6, "hp": 4398, "atk": 202, "def": 139, "sp_atk": 44, "sp_def": 142, "crit": 10},
-        {"level": 7, "hp": 4603, "atk": 216, "def": 150, "sp_atk": 48, "sp_def": 156, "crit": 10},
-        {"level": 8, "hp": 4839, "atk": 232, "def": 162, "sp_atk": 53, "sp_def": 172, "crit": 10},
-        {"level": 9, "hp": 5111, "atk": 250, "def": 176, "sp_atk": 59, "sp_def": 191, "crit": 20},
-        {"level": 10, "hp": 5424, "atk": 271, "def": 192, "sp_atk": 66, "sp_def": 213, "crit": 20},
-        {"level": 11, "hp": 5784, "atk": 295, "def": 211, "sp_atk": 73, "sp_def": 238, "crit": 20},
-        {"level": 12, "hp": 6198, "atk": 322, "def": 233, "sp_atk": 82, "sp_def": 266, "crit": 20},
-        {"level": 13, "hp": 6674, "atk": 353, "def": 258, "sp_atk": 92, "sp_def": 299, "crit": 20},
-        {"level": 14, "hp": 7221, "atk": 389, "def": 287, "sp_atk": 103, "sp_def": 337, "crit": 20},
-        {"level": 15, "hp": 7850, "atk": 430, "def": 320, "sp_atk": 116, "sp_def": 380, "crit": 20}
+        {"level": 1, "hp": 3250, "atk": 125, "def": 80, "sp_atk": 20, "sp_def": 64, "crit": 0, "lifesteal": 0},
+        {"level": 2, "hp": 3352, "atk": 132, "def": 85, "sp_atk": 22, "sp_def": 71, "crit": 0, "lifesteal": 0},
+        {"level": 3, "hp": 3469, "atk": 140, "def": 91, "sp_atk": 24, "sp_def": 79, "crit": 0, "lifesteal": 0},
+        {"level": 4, "hp": 3604, "atk": 149, "def": 98, "sp_atk": 27, "sp_def": 88, "crit": 0, "lifesteal": 0},
+        {"level": 5, "hp": 4219, "atk": 190, "def": 130, "sp_atk": 40, "sp_def": 130, "crit": 10, "lifesteal": 25},
+        {"level": 6, "hp": 4398, "atk": 202, "def": 139, "sp_atk": 44, "sp_def": 142, "crit": 10, "lifesteal": 25},
+        {"level": 7, "hp": 4603, "atk": 216, "def": 150, "sp_atk": 48, "sp_def": 156, "crit": 10, "lifesteal": 25},
+        {"level": 8, "hp": 4839, "atk": 232, "def": 162, "sp_atk": 53, "sp_def": 172, "crit": 10, "lifesteal": 25},
+        {"level": 9, "hp": 5111, "atk": 250, "def": 176, "sp_atk": 59, "sp_def": 191, "crit": 20, "lifesteal": 30},
+        {"level": 10, "hp": 5424, "atk": 271, "def": 192, "sp_atk": 66, "sp_def": 213, "crit": 20, "lifesteal": 30},
+        {"level": 11, "hp": 5784, "atk": 295, "def": 211, "sp_atk": 73, "sp_def": 238, "crit": 20, "lifesteal": 30},
+        {"level": 12, "hp": 6198, "atk": 322, "def": 233, "sp_atk": 82, "sp_def": 266, "crit": 20, "lifesteal": 30},
+        {"level": 13, "hp": 6674, "atk": 353, "def": 258, "sp_atk": 92, "sp_def": 299, "crit": 20, "lifesteal": 30},
+        {"level": 14, "hp": 7221, "atk": 389, "def": 287, "sp_atk": 103, "sp_def": 337, "crit": 20, "lifesteal": 30},
+        {"level": 15, "hp": 7850, "atk": 430, "def": 320, "sp_atk": 116, "sp_def": 380, "crit": 20, "lifesteal": 30}
     ],
     "passive": {
       "name": "Weak Armor",
@@ -1465,9 +1465,9 @@
         "unlearn": null,
         "upgradeLevel": null,
         "can_crit": "true",
-        "image": "assets/moves/ceruledge/flame_body.png",
+        "image": "assets/moves/ceruledge/weak_armor.png",
         "damages": [
-          {"name": "Damage", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Damage", "multiplier": 10, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 6, "tick_scaling": [1.00, 1.50, 2.00, 2.50, 3.00, 3.50]}
         ]
       },
       {
@@ -1523,7 +1523,7 @@
         "can_crit": "false",
         "image": "assets/moves/ceruledge/phantom_force.png",
         "damages": [
-          {"name": "Damage", "multiplier": 135, "levelCoef": 9, "constant": 334, "dealDamage": true, "notes": "Ignores Defense & shields"}
+          {"name": "Damage", "multiplier": 135, "levelCoef": 9, "constant": 334, "dealDamage": true, "def_ignore": 1, "notes": "Ignores Defense & shields"}
         ]
       },
       {

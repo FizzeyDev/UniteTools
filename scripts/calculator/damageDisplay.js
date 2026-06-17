@@ -848,7 +848,14 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           moltresBurnMult = 1 + 0.10 * state.attackerPassiveStacks;
         }
       }
-      const effectiveGlobalMult = globalDamageMult * moltresBurnMult;
+
+      // ── Ceruledge : Lava Plume → +15% sur le prochain Auto-attack ────────
+      let lavaPlumeMult = 1.0;
+      if (state.currentAttacker?.pokemonId === "ceruledge" && state.attackerLavaPlumeActive && move.name === "Auto-attack") {
+        lavaPlumeMult = 1.15;
+      }
+
+      const effectiveGlobalMult = globalDamageMult * moltresBurnMult * lavaPlumeMult;
 
       let normal = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0,           effectiveGlobalMult, defStats.hp, currentDefHP);
       let crit   = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, true,  state.currentAttacker.pokemonId, scopeCritBonus, effectiveGlobalMult, defStats.hp, currentDefHP);
@@ -1010,6 +1017,52 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           <span class="dmg-name" style="color:#4caf82;">
             Heal (2nd hit)
             <br><i style="font-size:0.8em;color:#4caf8299;">50% of damage dealt</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${healNormal.toLocaleString()}</span>
+            <span class="dmg-heal" style="opacity:0.75;">(${healCrit.toLocaleString()})</span>
+          </div>
+        `;
+        card.appendChild(healLine);
+      }
+    }
+
+    // ── CERULEDGE — Bitter Blade (heal proportionnel aux dégâts) ──────────
+    if (
+      state.currentAttacker?.pokemonId === "ceruledge" &&
+      move.name === "Bitter Blade"
+    ) {
+      const mainDmg = move.damages?.find(d => d.dealDamage);
+      if (mainDmg) {
+        const relevantAtk = atkStats.atk;
+        let effectiveDef  = defStats.def;
+        if (slickIgnore > 0)       effectiveDef = Math.floor(effectiveDef * (1 - slickIgnore));
+        if (infiltratorIgnore > 0) effectiveDef = Math.floor(effectiveDef * (1 - infiltratorIgnore));
+
+        const mainNormal = Math.floor(
+          calculateDamage(mainDmg, relevantAtk, effectiveDef, state.attackerLevel, false,
+            state.currentAttacker.pokemonId, 1.0, globalDamageMult, defStats.hp, currentDefHP)
+          * defenderDamageMult
+        );
+        const mainCrit = Math.floor(
+          calculateDamage(mainDmg, relevantAtk, effectiveDef, state.attackerLevel, true,
+            state.currentAttacker.pokemonId, scopeCritBonus, globalDamageMult, defStats.hp, currentDefHP)
+          * defenderDamageMult
+        );
+
+        // 50% avant niveau 11, 70% à partir du niveau 11 (upgradeLevel)
+        const healPct = upgraded ? 0.70 : 0.50;
+
+        const isWild = state.currentDefender?.category === 'mob';
+        const healNormal = isWild ? Math.floor(mainNormal * healPct * 0.5) : Math.floor(mainNormal * healPct);
+        const healCrit   = isWild ? Math.floor(mainCrit   * healPct * 0.5) : Math.floor(mainCrit   * healPct);
+
+        const healLine = document.createElement("div");
+        healLine.className = "damage-line";
+        healLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;">
+            Heal
+            <br><i style="font-size:0.8em;color:#4caf8299;">${Math.round(healPct * 100)}% of damage dealt${isWild ? " (half vs wild)" : ""}</i>
           </span>
           <div class="dmg-values">
             <span class="dmg-heal">${healNormal.toLocaleString()}</span>
