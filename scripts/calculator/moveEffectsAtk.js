@@ -212,7 +212,7 @@ export function applyAzumarillBellyBashStatBuff(pokemon, atkStats, level) {
 // ── CERULEDGE — Lava Plume ───────────────────────────────────────────────────
 function applyCeruledgeLavaPlume(atkStats, defStats, card) {
   const level = state.attackerLevel;
-  if (level > 5) return;
+  if (level < 1) return; // Lava Plume learned at level 1
 
   const isActive = state.attackerLavaPlumeActive ?? false;
   const bonusPct = 15;
@@ -235,6 +235,68 @@ function applyCeruledgeLavaPlume(atkStats, defStats, card) {
   `);
   line.querySelector('.lava-plume-toggle').onclick = () => {
     state.attackerLavaPlumeActive = !state.attackerLavaPlumeActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── CHANDELURE — Flamethrower+ ───────────────────────────────────────────────
+function applyChandelureFlamethrowerPlus(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 11) return; // Upgrade at level 11
+
+  const isActive = state.attackerFlamethrowerPlusActive ?? false;
+  const bonusPct = 20;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/chandelure/flamethrower.png')}
+    <div style="flex:1;">
+      ${moveBadge('Flamethrower+', 11)}
+      Explosion hits → <strong style="color:#fff;">+${bonusPct}% damage</strong> on all moves for 3s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Also applies to the triggering explosion itself</span><br>
+      <button class="flamethrower-plus-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.flamethrower-plus-toggle').onclick = () => {
+    state.attackerFlamethrowerPlusActive = !state.attackerFlamethrowerPlusActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── CHARIZARD — Seismic Slam (Unite) ─────────────────────────────────────────
+function applyCharizardSeismicSlam(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 9) return; // Unite unlocks at level 9
+
+  const isActive = state.attackerSeismicSlamActive ?? false;
+  const bonusPct = 60;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/charizard/seismic_slam.png')}
+    <div style="flex:1;">
+      ${moveBadge('Seismic Slam (Unite)', 9)}
+      While flying after the slam → basic attacks heal <strong style="color:#fff;">${bonusPct}% of damage dealt</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Basic hit only — excludes burns & additional damage</span><br>
+      <button class="seismic-slam-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.seismic-slam-toggle').onclick = () => {
+    state.attackerSeismicSlamActive = !state.attackerSeismicSlamActive;
     updateDamages();
   };
   card.appendChild(line);
@@ -325,6 +387,10 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     blaziken:  [applyBlazikenSpinningFlameKick],
     buzzwole:  [applyBuzzwoleLunge],
     ceruledge: [applyCeruledgeLavaPlume],
+    chandelure: [applyChandelureFlamethrowerPlus],
+    charizard: [applyCharizardSeismicSlam],
+    "mega-charizard-x": [applyCharizardSeismicSlam],
+    "mega-charizard-y": [applyCharizardSeismicSlam],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

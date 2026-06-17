@@ -855,7 +855,13 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         lavaPlumeMult = 1.15;
       }
 
-      const effectiveGlobalMult = globalDamageMult * moltresBurnMult * lavaPlumeMult;
+      // ── Chandelure : Flamethrower+ → +20% sur tous les dégâts (lvl 11+) ──
+      let flamethrowerPlusMult = 1.0;
+      if (state.currentAttacker?.pokemonId === "chandelure" && state.attackerFlamethrowerPlusActive) {
+        flamethrowerPlusMult = 1.20;
+      }
+
+      const effectiveGlobalMult = globalDamageMult * moltresBurnMult * lavaPlumeMult * flamethrowerPlusMult;
 
       let normal = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0,           effectiveGlobalMult, defStats.hp, currentDefHP);
       let crit   = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, true,  state.currentAttacker.pokemonId, scopeCritBonus, effectiveGlobalMult, defStats.hp, currentDefHP);
@@ -963,6 +969,74 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       card.appendChild(line);
 
       addFormulaTooltip(line, dmg, relevantAtk, state.currentAttacker, level);
+
+      // ── LIFESTEAL — % de vol de vie sur les auto-attacks (physical only) ───
+      // Stat "lifesteal" du JSON, par entrée de damages[] sauf {"lifesteal": false}.
+      if (move.name === "Auto-attack" && dmg.lifesteal !== false) {
+        const lifestealPct = (state.currentAttacker?.stats?.[state.attackerLevel - 1]?.lifesteal ?? 0) / 100;
+        if (lifestealPct > 0) {
+          const lsComputeTotal = (base, scaling, n) => {
+            if (!scaling) return base * n;
+            let sum = 0;
+            for (let i = 0; i < n; i++) sum += Math.floor(base * (scaling[i] ?? scaling[scaling.length - 1]));
+            return sum;
+          };
+          const lsNormalTotal = isTick ? lsComputeTotal(displayedNormal, effectiveTickScaling, tickCount) : displayedNormal;
+          const lsCritTotal   = isTick ? lsComputeTotal(displayedCrit,   effectiveTickScaling, tickCount) : displayedCrit;
+
+          const lsHealNormal = Math.floor(lsNormalTotal * lifestealPct);
+          const lsHealCrit   = Math.floor(lsCritTotal   * lifestealPct);
+
+          const lsLine = document.createElement("div");
+          lsLine.className = "damage-line";
+          lsLine.innerHTML = `
+            <span class="dmg-name" style="color:#4caf82;font-size:0.85em;">
+              Lifesteal (${dmg.name})
+              <br><i style="font-size:0.85em;color:#4caf8299;">${Math.round(lifestealPct * 100)}% of damage dealt</i>
+            </span>
+            <div class="dmg-values">
+              <span class="dmg-heal">${lsHealNormal.toLocaleString()}</span>
+              ${canCrit ? `<span class="dmg-heal" style="opacity:0.75;">(${lsHealCrit.toLocaleString()})</span>` : ""}
+            </div>
+          `;
+          card.appendChild(lsLine);
+        }
+      }
+
+      // ── CHARIZARD — Seismic Slam (Unite) : heal 60% sur le Basic hit only ──
+      if (
+        ["charizard", "mega-charizard-x", "mega-charizard-y"].includes(state.currentAttacker?.pokemonId) &&
+        state.attackerSeismicSlamActive &&
+        move.name === "Auto-attack" &&
+        dmg.name === "Basic (per hit x4)"
+      ) {
+        const computeTotal = (base, scaling, n) => {
+          if (!scaling) return base * n;
+          let sum = 0;
+          for (let i = 0; i < n; i++) sum += Math.floor(base * (scaling[i] ?? scaling[scaling.length - 1]));
+          return sum;
+        };
+        const basicNormalTotal = computeTotal(displayedNormal, effectiveTickScaling, tickCount);
+        const basicCritTotal   = computeTotal(displayedCrit,   effectiveTickScaling, tickCount);
+
+        const healPct  = 0.60;
+        const healNormal = Math.floor(basicNormalTotal * healPct);
+        const healCrit   = Math.floor(basicCritTotal   * healPct);
+
+        const healLine = document.createElement("div");
+        healLine.className = "damage-line";
+        healLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;">
+            Heal (Seismic Slam)
+            <br><i style="font-size:0.8em;color:#4caf8299;">60% of Basic hit damage · excludes burns & additional damage</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${healNormal.toLocaleString()}</span>
+            <span class="dmg-heal" style="opacity:0.75;">(${healCrit.toLocaleString()})</span>
+          </div>
+        `;
+        card.appendChild(healLine);
+      }
 
       if (state.currentDefender?.pokemonId === "falinks" && state.defenderFalinksMultiHit) {
         const capLine = document.createElement("div");
