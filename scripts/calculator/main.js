@@ -11,6 +11,7 @@ import { initCombatLog, initAllySelector } from './combatLog.js';
 import { initAllyManager } from './allyManager.js';
 import { initHowToUse } from './howToUse.js';
 import { enhanceBuffLabels } from './buff-visuals.js';
+import { initBuildOptimizer } from './buildOptimizer.js';
 
 document.querySelectorAll('.reset-items-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -31,6 +32,7 @@ async function initApp() {
 
   populateGrids();
   populateItemGrid();
+  initBuildOptimizer();
   setupItemSelection();
   setupItemSearch();
   setupSearch();

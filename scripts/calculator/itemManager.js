@@ -283,7 +283,6 @@ function attachStackButtons(side, slot) {
 }
 
 export function resetItems(side) {
-  console.log("zizi");
   const itemsArray = side === 'attacker' ? state.attackerItems : state.defenderItems;
   const stacksArray = side === 'attacker' ? state.attackerItemStacks : state.defenderItemStacks;
   const activatedArray = side === 'attacker' ? state.attackerItemActivated : state.defenderItemActivated;

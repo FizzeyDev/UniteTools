@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/damage-calc.css" />
   <link rel="stylesheet" href="css/damage-calc-ux.css" />
   <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/buildOptimizer.css">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
   <script>
@@ -22,6 +23,35 @@
     .editable-custom { cursor:pointer; color:#ffdd77; font-weight:bold; font-size:1.1rem; }
     .editable-custom:hover { text-decoration:underline; color:#ffeaaa; }
     .custom-stat { background:rgba(255,221,119,0.1); border-radius:8px; padding:4px 0; margin:4px 0; }
+
+    /* ── Tabs principaux ── */
+    .main-tabs {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem 0;
+      background: var(--bg-secondary, #1a1a2e);
+      border-bottom: 2px solid var(--border, #2a2a4a);
+    }
+    .main-tab-btn {
+      padding: 0.5rem 1.2rem;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      background: transparent;
+      color: var(--text-muted, #888);
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .main-tab-btn:hover { background: rgba(255,255,255,0.06); color: #fff; }
+    .main-tab-btn.active {
+      background: var(--bg-primary, #12122a);
+      color: #fff;
+      border-bottom: 2px solid var(--accent, #7b61ff);
+      margin-bottom: -2px;
+    }
+    .main-tab-panel { display: none; }
+    .main-tab-panel.active { display: block; }
   </style>
 </head>
 <body>
@@ -35,443 +65,451 @@
   <h1 data-lang="calc_h1">Pokémon UNITE Damage Calculator</h1>
 
   <!-- ═══════════════════════════════════════════════════════════
-       NOUVEAU LAYOUT : 3 colonnes full-height
+       TABS PRINCIPAUX : Calculateur | Build Optimizer
        ═══════════════════════════════════════════════════════════ -->
-  <div class="app-layout">
+  <div class="main-tabs">
+    <button class="main-tab-btn active" data-tab="calculator">🗡️ Damage Calculator</button>
+    <button class="main-tab-btn" data-tab="optimizer">⚡ Build Optimizer</button>
+  </div>
 
-    <!-- ── COLONNE GAUCHE : Attaquant ─────────────────────────── -->
-    <div class="col-attacker">
+  <!-- ── PANNEAU : Calculateur ─────────────────────────────────── -->
+  <div id="tab-calculator" class="main-tab-panel active">
 
-      <!-- Sélection Pokémon (collapsible) -->
-      <div class="poke-select-panel open" id="atkSelectPanel">
-        <div class="poke-select-header" id="atkSelectToggle">
-          <div class="poke-selected-mini">
-            <img id="atkMiniImg" src="assets/items/none.png" alt="">
-            <span class="poke-name" id="atkMiniName">Choose Attacker</span>
-          </div>
-          <span id="atkToggleIcon" class="poke-toggle-icon">▼</span>
-        </div>
-        <div class="poke-select-body">
-          <div class="poke-select-body-inner">
-            <input type="text" id="searchAttacker" class="pokemon-search" placeholder="Search a Pokémon..." data-lang-placeholder="calc_search_placeholder">
-            <div class="pokemon-grid-wrapper">
-              <div id="pokemonGridAttacker" class="pokemon-grid"></div>
+    <!-- ═══════════════════════════════════════════════════════════
+         LAYOUT : 3 colonnes full-height
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="app-layout">
+
+      <!-- ── COLONNE GAUCHE : Attaquant ─────────────────────────── -->
+      <div class="col-attacker">
+
+        <!-- Sélection Pokémon (collapsible) -->
+        <div class="poke-select-panel open" id="atkSelectPanel">
+          <div class="poke-select-header" id="atkSelectToggle">
+            <div class="poke-selected-mini">
+              <img id="atkMiniImg" src="assets/items/none.png" alt="">
+              <span class="poke-name" id="atkMiniName">Choose Attacker</span>
             </div>
+            <span id="atkToggleIcon" class="poke-toggle-icon">▼</span>
           </div>
-        </div>
-      </div>
-
-      <!-- Stats Card -->
-      <div class="stats-card attacker-stats stats-card-compact">
-        <div class="pokemon-name-header">
-          <img id="resultsAttackerImg" class="stats-pokemon-img" src="assets/items/none.png" alt="">
-          <span id="resultsAttackerName" data-lang="calc_select_attacker">Select an attacker</span>
-          <span id="attackerRole" class="role-icon"></span>
-        </div>
-
-        <!-- HP + Level -->
-        <div class="stat-item" style="margin-bottom:0.6rem;">
-          <div class="slider-block hp-slider-block">
-            <div class="hp-bar-header">
-              <span class="hp-level-badge" id="hpLevelBadgeAttacker">Lv.15</span>
-              <span id="hpValueAttacker" class="hp-value-inline">0 / 0</span>
-            </div>
-            <input type="range" id="hpSliderAttacker" min="0" max="100" value="100" class="hp-slider">
-          </div>
-          <div class="slider-block" style="margin-top:0.4rem;">
-            <label>Level <span id="levelValueAttacker">15</span></label>
-            <input type="range" id="levelSliderAttacker" min="1" max="15" value="15">
-          </div>
-        </div>
-
-        <!-- Stats ATK / Sp.ATK / Crit en grille 2 colonnes -->
-        <div class="stats-inline-grid">
-          <div class="stat-inline-item">
-            <span class="stat-inline-label" data-lang="calc_stat_atk">ATK</span>
-            <span class="stat-inline-value" id="attackerAtk">0</span>
-          </div>
-          <div class="stat-inline-item">
-            <span class="stat-inline-label" data-lang="calc_stat_spatk">Sp.Atk</span>
-            <span class="stat-inline-value" id="attackerSpAtk">0</span>
-          </div>
-          <div class="stat-inline-item full-width">
-            <span class="stat-inline-label" data-lang="calc_stat_crit">Crit Chance</span>
-            <span class="stat-inline-value" id="attackerCritChance">0%</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Items -->
-      <div class="items-section">
-        <h3 data-lang="calc_equipped_items">Equipped Items</h3>
-        <div class="items-equipped-grid" id="itemsEquippedAttacker">
-          <div class="item-equipped-card" data-slot="0">
-            <div class="item-equipped-icon"><img src="assets/items/none.png" alt="Empty"></div>
-            <div class="item-equipped-name">Empty</div>
-            <div class="item-equipped-stats"></div>
-            <div class="item-equipped-stacks" style="display:none;">
-              <div class="stacks-controls">
-                <button class="stack-btn minus">-</button>
-                <span class="stack-value">0</span>
-                <button class="stack-btn plus">+</button>
+          <div class="poke-select-body">
+            <div class="poke-select-body-inner">
+              <input type="text" id="searchAttacker" class="pokemon-search" placeholder="Search a Pokémon..." data-lang-placeholder="calc_search_placeholder">
+              <div class="pokemon-grid-wrapper">
+                <div id="pokemonGridAttacker" class="pokemon-grid"></div>
               </div>
-              <div class="stack-max">/6</div>
             </div>
           </div>
-          <div class="item-equipped-card" data-slot="1">
-            <div class="item-equipped-icon"><img src="assets/items/none.png" alt="Empty"></div>
-            <div class="item-equipped-name">Empty</div>
-            <div class="item-equipped-stats"></div>
-            <div class="item-equipped-stacks" style="display:none;">
-              <div class="stacks-controls">
-                <button class="stack-btn minus">-</button>
-                <span class="stack-value">0</span>
-                <button class="stack-btn plus">+</button>
+        </div>
+
+        <!-- Stats Card -->
+        <div class="stats-card attacker-stats stats-card-compact">
+          <div class="pokemon-name-header">
+            <img id="resultsAttackerImg" class="stats-pokemon-img" src="assets/items/none.png" alt="">
+            <span id="resultsAttackerName" data-lang="calc_select_attacker">Select an attacker</span>
+            <span id="attackerRole" class="role-icon"></span>
+          </div>
+
+          <!-- HP + Level -->
+          <div class="stat-item" style="margin-bottom:0.6rem;">
+            <div class="slider-block hp-slider-block">
+              <div class="hp-bar-header">
+                <span class="hp-level-badge" id="hpLevelBadgeAttacker">Lv.15</span>
+                <span id="hpValueAttacker" class="hp-value-inline">0 / 0</span>
               </div>
-              <div class="stack-max">/6</div>
+              <input type="range" id="hpSliderAttacker" min="0" max="100" value="100" class="hp-slider">
             </div>
-          </div>
-          <div class="item-equipped-card" data-slot="2">
-            <div class="item-equipped-icon"><img src="assets/items/none.png" alt="Empty"></div>
-            <div class="item-equipped-name">Empty</div>
-            <div class="item-equipped-stats"></div>
-            <div class="item-equipped-stacks" style="display:none;">
-              <div class="stacks-controls">
-                <button class="stack-btn minus">-</button>
-                <span class="stack-value">0</span>
-                <button class="stack-btn plus">+</button>
-              </div>
-              <div class="stack-max">/6</div>
-            </div>
-          </div>
-        </div>
-        <button class="reset-items-btn" data-side="attacker" data-lang="calc_reset_items">Reset Items</button>
-      </div>
-
-      <!-- Allies -->
-      <div class="allies-section" id="alliesSection">
-        <div class="allies-header">
-          <span class="allies-label">ALLIES</span>
-          <span class="allies-hint">Heals &amp; Shields will be shown for each ally</span>
-        </div>
-        <div class="allies-row" id="alliesRow">
-          <button class="ally-add-btn" id="allyAddBtn" title="Add an ally">
-            <span class="ally-add-icon">＋</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Buffs offensifs -->
-      <div class="buffs-drawer" id="atkBuffsDrawer">
-        <div class="buffs-drawer-header" id="atkBuffsToggle">
-          <span class="buffs-drawer-title">
-            ⚡ <span data-lang="calc_off_buffs">Universal Offensive Buffs</span>
-            <span class="buff-active-count" id="atkBuffCount">0</span>
-          </span>
-          <span class="buffs-drawer-chevron">▼</span>
-        </div>
-        <div class="buffs-drawer-body">
-          <div class="buffs-drawer-inner">
-            <input type="text" class="buff-search" placeholder="Filter buffs..." id="atkBuffSearch">
-            <div class="buff-checkboxes" id="atkBuffList">
-              <label class="buff-label"><input type="checkbox" id="registeelBuffAttacker">Registeel Buff (+15% Atk / Sp.Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="groudonBuffAttacker">Groudon Buff (+50% Damage)</label>
-              <label class="buff-label"><input type="checkbox" id="rayquazaBuffAttacker">Rayquaza Buff (+40% Damage)</label>
-              <label class="buff-label"><input type="checkbox" id="xattackBuffAttacker">XAttack Item (+20% Atk / Sp.Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="blisseyUltBuffAttacker">Blissey: Bliss Assistance (Unite Move) (+20% Atk / Sp.Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="blisseyHandBuffAttacker">Blissey: Helping Hand + (+15% Damage)</label>
-              <label class="buff-label"><input type="checkbox" id="mimeSwapBuffAttacker">Mr. Mime: Power Swap (+15% Damage)</label>
-              <label class="buff-label"><input type="checkbox" id="mimeSwapPlusBuffAttacker">Mr. Mime: Power Swap + (+20% Damage)</label>
-              <label class="buff-label"><input type="checkbox" id="alcreamieBuffAttacker">Alcreamie: Helping Hand (+40 Atk / +25 Sp.Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="miraidonBuffAttacker">Miraidon: Hadron Engine (Passive) (+10% Damage / +30% if Miraidon)</label>
-              <label class="buff-label"><input type="checkbox" id="skeledirgeBuffAttacker">Skeledirge: Rousing Symphony (Unite Move) (+15% Damage)</label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Debuffs offensifs -->
-      <div class="buffs-drawer" id="atkDebuffsDrawer">
-        <div class="buffs-drawer-header" id="atkDebuffsToggle">
-          <span class="buffs-drawer-title">
-            🔥 <span data-lang="calc_off_debuffs">Universal Offensive Debuffs</span>
-            <span class="buff-active-count" id="atkDebuffCount">0</span>
-          </span>
-          <span class="buffs-drawer-chevron">▼</span>
-        </div>
-        <div class="buffs-drawer-body">
-          <div class="buffs-drawer-inner">
-            <input type="text" class="buff-search" placeholder="Filter debuffs..." id="atkDebuffSearch">
-            <div class="buff-checkboxes" id="atkDebuffList">
-              <label class="buff-label"><input type="checkbox" id="buzzwoleLungeDebuffAttacker">Buzzwole: Lunge (-30% Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="charizardBurnDebuffAttacker">Charizard: Burn (-5% Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="cinderaceBurnDebuffAttacker">Cinderace: Burn (-5% Atk / Sp.Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="cramorantFeatherDanceDebuffAttacker">Cramorant: Feather Dance (-30% Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="dodrioTriAttackFlameDebuffAttacker">Dodrio: Tri Attack Flame (-8% Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="dodrioTriAttackFlameSprintDebuffAttacker">Dodrio: Tri Attack Flame Sprint (-12% Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="gengarWillOWispDebuffAttacker">Gengar: Will-o-Wisp (-10% Atk / -5% Sp.Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="slowbroScaldDebuffAttacker">Slowbro: Scald (-60% Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="sylveonBabyDollEyesDebuffAttacker">Sylveon: Baby-Doll Eyes (-15% Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="sylveonMysticalFireDebuffAttacker">Sylveon: Mystical Fire (-15% Sp.Atk x4 (-60% Sp.Atk max))</label>
-              <label class="buff-label"><input type="checkbox" id="trevenantWillOWispDebuffAttacker">Trevenant: Will-o-Wisp (-10% Atk / -5% Sp.Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="tsareenaTropKickDebuffAttacker">Tsareena: Trop Kick (-25% Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="goodraMuddyWaterDebuffAttacker">Goodra: Muddy Water (-15% Damage)</label>
-              <label class="buff-label"><input type="checkbox" id="mimePowerSwapDebuffAttacker">Mr. Mime: Power Swap (-15% Damage)</label>
-              <label class="buff-label"><input type="checkbox" id="mimePowerSwapPlusDebuffAttacker">Mr. Mime: Power Swap + (-20% Damage)</label>
-              <label class="buff-label"><input type="checkbox" id="trevenantWoodHammerPlusDebuffAttacker">Trevenant: Wood Hammer + (-20% Damage)</label>
-              <label class="buff-label"><input type="checkbox" id="umbreonSnarlDebuffAttacker">Umbreon: Snarl (-3% Atk / Sp.Atk x6 (-18% Atk / Sp.Atk max))</label>
-              <label class="buff-label"><input type="checkbox" id="umbreonSnarlFinalHitDebuffAttacker">Umbreon: Snarl Final Hit (-15% Atk / Sp.Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="inteleonTearfulLookDebuffAttacker">Inteleon: Tearful Look (-20% Atk / Sp.Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="hoohFlamethrowerDebuffAttacker">Ho-Oh: Flamethrower (-20% Atk / Sp.Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="hoohSacredFireDebuffAttacker">Ho-Oh: Sacred Fire (-10% Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="hoohSacredFirePlusDebuffAttacker">Ho-Oh: Sacred Fire + (-20% Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="psyduckSurfPlusDebuffAttacker">Psyduck: Surf + (-25% Damage)</label>
-              <label class="buff-label"><input type="checkbox" id="psyduckUniteDebuffAttacker">Psyduck: Full Power Psy-Ay-Ay! (Unite Move) (-30% Damage)</label>
-              <label class="buff-label"><input type="checkbox" id="tinkatonIceHammerDebuffAttacker">Tinkaton: Ice Hammer (-30% Atk / -15% Sp.Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="tinkatonIceHammerPlusDebuffAttacker">Tinkaton: Ice Hammer + (-50% Atk / -30% Sp.Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="alcremieCharmDebuffAttacker">Alcremie: Charm (-30 Atk / -20 Sp.Atk)</label>
-              <label class="buff-label"><input type="checkbox" id="latiasMistBallDebuffAttacker">Latias: Mist Ball (-25% Damage)</label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /col-attacker -->
-
-    <!-- ── COLONNE CENTRE : Moves Damage ──────────────────────── -->
-    <div class="col-moves">
-      <div class="moves-col-header" data-lang="calc_section_moves">Moves Damage</div>
-      <!-- Move effects spécifiques au Pokémon (passive/move cards) -->
-      <div id="globalBonusAttacker"></div>
-      <div id="globalBonusDefender"></div>
-      <!-- Grille des moves -->
-      <div id="movesGrid" class="moves-grid"></div>
-    </div><!-- /col-moves -->
-
-    <!-- ── COLONNE DROITE : Défenseur ─────────────────────────── -->
-    <div class="col-defender">
-
-      <!-- Sélection Pokémon (collapsible) -->
-      <div class="poke-select-panel open" id="defSelectPanel">
-        <div class="poke-select-header" id="defSelectToggle">
-          <div class="poke-selected-mini">
-            <img id="defMiniImg" src="assets/items/none.png" alt="">
-            <span class="poke-name" id="defMiniName">Choose Defender</span>
-          </div>
-          <span id="defToggleIcon" class="poke-toggle-icon">▼</span>
-        </div>
-        <div class="poke-select-body">
-          <div class="poke-select-body-inner">
-            <!-- Onglets catégorie -->
-            <div class="category-tabs defender-tabs">
-              <button class="tab-button active" data-category="playable" data-lang="calc_tab_playable">Playable</button>
-              <button class="tab-button" data-category="mob" data-lang="calc_tab_wilds">Wild</button>
-              <button class="tab-button" data-category="other" data-lang="calc_tab_other">Other</button>
-            </div>
-            <input type="text" id="searchDefender" class="pokemon-search" placeholder="Search a Pokémon..." data-lang-placeholder="calc_search_placeholder">
-            <div class="pokemon-grid-wrapper">
-              <div id="pokemonGridDefender" class="pokemon-grid"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Stats Card Défenseur -->
-      <div class="stats-card defender-stats stats-card-compact">
-        <div class="pokemon-name-header">
-          <span id="resultsDefenderName" data-lang="calc_select_defender">Select a defender</span>
-          <img id="resultsDefenderImg" class="stats-pokemon-img" src="assets/items/none.png" alt="">
-        </div>
-
-        <!-- HP + Level/Timer -->
-        <div class="stat-item" style="margin-bottom:0.6rem;">
-          <div class="slider-block hp-slider-block">
-            <div class="hp-bar-header">
-              <span class="hp-level-badge defender-level-badge" id="hpLevelBadgeDefender">Lv.15</span>
-              <span id="hpValueDefender" class="hp-value-inline">0 / 0</span>
-            </div>
-            <input type="range" id="hpSliderDefender" min="0" max="100" value="100" class="hp-slider">
-          </div>
-
-          <!-- Level (mode normal) -->
-          <div id="defenderLevelBlock">
             <div class="slider-block" style="margin-top:0.4rem;">
-              <label>Level <span id="levelValueDefender">15</span></label>
-              <input type="range" id="levelSliderDefender" min="1" max="15" value="15">
+              <label>Level <span id="levelValueAttacker">15</span></label>
+              <input type="range" id="levelSliderAttacker" min="1" max="15" value="15">
             </div>
           </div>
 
-          <!-- Timer (mode mob) -->
-          <div id="defenderTimerBlock" style="display:none;">
-            <span class="stat-label mob-timer-label">⏱ TIMER</span>
-            <div class="slider-block">
-              <label>Timer <span id="timerValueDefender" class="mob-timer-value"></span></label>
-              <input type="range" id="timerSliderDefender" min="0" max="590" value="470" step="10" class="timer-slider">
+          <!-- Stats ATK / Sp.ATK / Crit -->
+          <div class="stats-inline-grid">
+            <div class="stat-inline-item">
+              <span class="stat-inline-label" data-lang="calc_stat_atk">ATK</span>
+              <span class="stat-inline-value" id="attackerAtk">0</span>
             </div>
-            <div class="mob-timer-ticks">
-              <span>10:00</span><span>5:00</span><span>0:00</span>
+            <div class="stat-inline-item">
+              <span class="stat-inline-label" data-lang="calc_stat_spatk">Sp.Atk</span>
+              <span class="stat-inline-value" id="attackerSpAtk">0</span>
+            </div>
+            <div class="stat-inline-item full-width">
+              <span class="stat-inline-label" data-lang="calc_stat_crit">Crit Chance</span>
+              <span class="stat-inline-value" id="attackerCritChance">0%</span>
             </div>
           </div>
         </div>
 
-        <!-- Stats DEF / Sp.DEF -->
-        <div class="stats-inline-grid">
-          <!-- HP Max éditable (Custom Doll) -->
-          <div class="stat-item custom-stat full-width" style="display:none;">
-            <span class="stat-inline-label" data-lang="calc_stat_hp">HP Max</span>
-            <span id="defenderMaxHP" class="stat-inline-value editable-custom">10 000</span>
-          </div>
-
-          <div class="stat-inline-item" id="defenderDefNormal">
-            <span class="stat-inline-label" data-lang="calc_stat_def">DEF</span>
-            <span class="stat-inline-value" id="defenderDef">0</span>
-          </div>
-          <div class="stat-item custom-stat" style="display:none;">
-            <span class="stat-inline-label" data-lang="calc_stat_def">DEF</span>
-            <span id="defenderDefCustom" class="stat-inline-value editable-custom">100</span>
-          </div>
-
-          <div class="stat-inline-item" id="defenderSpDefNormal">
-            <span class="stat-inline-label" data-lang="calc_stat_spdef">Sp.Def</span>
-            <span class="stat-inline-value" id="defenderSpDef">0</span>
-          </div>
-          <div class="stat-item custom-stat" style="display:none;">
-            <span class="stat-inline-label" data-lang="calc_stat_spdef">Sp.Def</span>
-            <span id="defenderSpDefCustom" class="stat-inline-value editable-custom">100</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Items Défenseur -->
-      <div class="items-section">
-        <h3 data-lang="calc_equipped_items">Equipped Items</h3>
-        <div class="items-equipped-grid" id="itemsEquippedDefender">
-          <div class="item-equipped-card" data-slot="0">
-            <div class="item-equipped-icon"><img src="assets/items/none.png" alt="Vide"></div>
-            <div class="item-equipped-name">Empty</div>
-            <div class="item-equipped-stats"></div>
-            <div class="item-equipped-stacks" style="display:none;">
-              <div class="stacks-controls">
-                <button class="stack-btn minus">-</button>
-                <span class="stack-value">0</span>
-                <button class="stack-btn plus">+</button>
+        <!-- Items -->
+        <div class="items-section">
+          <h3 data-lang="calc_equipped_items">Equipped Items</h3>
+          <div class="items-equipped-grid" id="itemsEquippedAttacker">
+            <div class="item-equipped-card" data-slot="0">
+              <div class="item-equipped-icon"><img src="assets/items/none.png" alt="Empty"></div>
+              <div class="item-equipped-name">Empty</div>
+              <div class="item-equipped-stats"></div>
+              <div class="item-equipped-stacks" style="display:none;">
+                <div class="stacks-controls">
+                  <button class="stack-btn minus">-</button>
+                  <span class="stack-value">0</span>
+                  <button class="stack-btn plus">+</button>
+                </div>
+                <div class="stack-max">/6</div>
               </div>
-              <div class="stack-max">/6</div>
             </div>
-          </div>
-          <div class="item-equipped-card" data-slot="1">
-            <div class="item-equipped-icon"><img src="assets/items/none.png" alt="Vide"></div>
-            <div class="item-equipped-name">Empty</div>
-            <div class="item-equipped-stats"></div>
-            <div class="item-equipped-stacks" style="display:none;">
-              <div class="stacks-controls">
-                <button class="stack-btn minus">-</button>
-                <span class="stack-value">0</span>
-                <button class="stack-btn plus">+</button>
+            <div class="item-equipped-card" data-slot="1">
+              <div class="item-equipped-icon"><img src="assets/items/none.png" alt="Empty"></div>
+              <div class="item-equipped-name">Empty</div>
+              <div class="item-equipped-stats"></div>
+              <div class="item-equipped-stacks" style="display:none;">
+                <div class="stacks-controls">
+                  <button class="stack-btn minus">-</button>
+                  <span class="stack-value">0</span>
+                  <button class="stack-btn plus">+</button>
+                </div>
+                <div class="stack-max">/6</div>
               </div>
-              <div class="stack-max">/6</div>
             </div>
-          </div>
-          <div class="item-equipped-card" data-slot="2">
-            <div class="item-equipped-icon"><img src="assets/items/none.png" alt="Vide"></div>
-            <div class="item-equipped-name">Empty</div>
-            <div class="item-equipped-stats"></div>
-            <div class="item-equipped-stacks" style="display:none;">
-              <div class="stacks-controls">
-                <button class="stack-btn minus">-</button>
-                <span class="stack-value">0</span>
-                <button class="stack-btn plus">+</button>
+            <div class="item-equipped-card" data-slot="2">
+              <div class="item-equipped-icon"><img src="assets/items/none.png" alt="Empty"></div>
+              <div class="item-equipped-name">Empty</div>
+              <div class="item-equipped-stats"></div>
+              <div class="item-equipped-stacks" style="display:none;">
+                <div class="stacks-controls">
+                  <button class="stack-btn minus">-</button>
+                  <span class="stack-value">0</span>
+                  <button class="stack-btn plus">+</button>
+                </div>
+                <div class="stack-max">/6</div>
               </div>
-              <div class="stack-max">/6</div>
+            </div>
+          </div>
+          <button class="reset-items-btn" data-side="attacker" data-lang="calc_reset_items">Reset Items</button>
+        </div>
+
+        <!-- Allies -->
+        <div class="allies-section" id="alliesSection">
+          <div class="allies-header">
+            <span class="allies-label">ALLIES</span>
+            <span class="allies-hint">Heals &amp; Shields will be shown for each ally</span>
+          </div>
+          <div class="allies-row" id="alliesRow">
+            <button class="ally-add-btn" id="allyAddBtn" title="Add an ally">
+              <span class="ally-add-icon">＋</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Buffs offensifs -->
+        <div class="buffs-drawer" id="atkBuffsDrawer">
+          <div class="buffs-drawer-header" id="atkBuffsToggle">
+            <span class="buffs-drawer-title">
+              ⚡ <span data-lang="calc_off_buffs">Universal Offensive Buffs</span>
+              <span class="buff-active-count" id="atkBuffCount">0</span>
+            </span>
+            <span class="buffs-drawer-chevron">▼</span>
+          </div>
+          <div class="buffs-drawer-body">
+            <div class="buffs-drawer-inner">
+              <input type="text" class="buff-search" placeholder="Filter buffs..." id="atkBuffSearch">
+              <div class="buff-checkboxes" id="atkBuffList">
+                <label class="buff-label"><input type="checkbox" id="registeelBuffAttacker">Registeel Buff (+15% Atk / Sp.Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="groudonBuffAttacker">Groudon Buff (+50% Damage)</label>
+                <label class="buff-label"><input type="checkbox" id="rayquazaBuffAttacker">Rayquaza Buff (+40% Damage)</label>
+                <label class="buff-label"><input type="checkbox" id="xattackBuffAttacker">XAttack Item (+20% Atk / Sp.Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="blisseyUltBuffAttacker">Blissey: Bliss Assistance (Unite Move) (+20% Atk / Sp.Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="blisseyHandBuffAttacker">Blissey: Helping Hand + (+15% Damage)</label>
+                <label class="buff-label"><input type="checkbox" id="mimeSwapBuffAttacker">Mr. Mime: Power Swap (+15% Damage)</label>
+                <label class="buff-label"><input type="checkbox" id="mimeSwapPlusBuffAttacker">Mr. Mime: Power Swap + (+20% Damage)</label>
+                <label class="buff-label"><input type="checkbox" id="alcreamieBuffAttacker">Alcreamie: Helping Hand (+40 Atk / +25 Sp.Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="miraidonBuffAttacker">Miraidon: Hadron Engine (Passive) (+10% Damage / +30% if Miraidon)</label>
+                <label class="buff-label"><input type="checkbox" id="skeledirgeBuffAttacker">Skeledirge: Rousing Symphony (Unite Move) (+15% Damage)</label>
+              </div>
             </div>
           </div>
         </div>
-        <button class="reset-items-btn" data-side="defender" data-lang="calc_reset_items">Reset Items</button>
-      </div>
 
-      <!-- Buffs défensifs -->
-      <div class="buffs-drawer" id="defBuffsDrawer">
-        <div class="buffs-drawer-header" id="defBuffsToggle">
-          <span class="buffs-drawer-title">
-            🛡️ <span data-lang="calc_def_buffs">Universal Defensive Buffs</span>
-            <span class="buff-active-count" id="defBuffCount">0</span>
-          </span>
-          <span class="buffs-drawer-chevron">▼</span>
-        </div>
-        <div class="buffs-drawer-body">
-          <div class="buffs-drawer-inner">
-            <input type="text" class="buff-search" placeholder="Filter buffs..." id="defBuffSearch">
-            <div class="buff-checkboxes" id="defBuffList">
-              <label class="buff-label"><input type="checkbox" id="regirockBuffDefender">Regirock Buff (+30% Def / +25% Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="eldegossBuffDefender">Eldegoss: Pollen Puff + (-20% Damage Received)</label>
-              <label class="buff-label"><input type="checkbox" id="ninetailsBuffDefender">Ninetails [Alolan]: Aurora Veil (-35% Damage Received)</label>
-              <label class="buff-label"><input type="checkbox" id="ninetailsPlusBuffDefender">Ninetails [Alolan]: Aurora Veil + (-40% Damage Received)</label>
-              <label class="buff-label"><input type="checkbox" id="umbreonBuffDefender">Umbreon: Wish (-15% Damage Received)</label>
-              <label class="buff-label"><input type="checkbox" id="umbreonPlusBuffDefender">Umbreon: Wish + (-25% Damage Received)</label>
-              <label class="buff-label"><input type="checkbox" id="blisseyRedirectionBuffDefender">Blissey: Bliss Assistance (Unite Move) (-50% Damage Redirection)</label>
-              <label class="buff-label"><input type="checkbox" id="hoohRedirectionBuffDefender">Ho-Oh: Fire Spin (-60% Damage Redirection)</label>
+        <!-- Debuffs offensifs -->
+        <div class="buffs-drawer" id="atkDebuffsDrawer">
+          <div class="buffs-drawer-header" id="atkDebuffsToggle">
+            <span class="buffs-drawer-title">
+              🔥 <span data-lang="calc_off_debuffs">Universal Offensive Debuffs</span>
+              <span class="buff-active-count" id="atkDebuffCount">0</span>
+            </span>
+            <span class="buffs-drawer-chevron">▼</span>
+          </div>
+          <div class="buffs-drawer-body">
+            <div class="buffs-drawer-inner">
+              <input type="text" class="buff-search" placeholder="Filter debuffs..." id="atkDebuffSearch">
+              <div class="buff-checkboxes" id="atkDebuffList">
+                <label class="buff-label"><input type="checkbox" id="buzzwoleLungeDebuffAttacker">Buzzwole: Lunge (-30% Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="charizardBurnDebuffAttacker">Charizard: Burn (-5% Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="cinderaceBurnDebuffAttacker">Cinderace: Burn (-5% Atk / Sp.Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="cramorantFeatherDanceDebuffAttacker">Cramorant: Feather Dance (-30% Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="dodrioTriAttackFlameDebuffAttacker">Dodrio: Tri Attack Flame (-8% Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="dodrioTriAttackFlameSprintDebuffAttacker">Dodrio: Tri Attack Flame Sprint (-12% Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="gengarWillOWispDebuffAttacker">Gengar: Will-o-Wisp (-10% Atk / -5% Sp.Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="slowbroScaldDebuffAttacker">Slowbro: Scald (-60% Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="sylveonBabyDollEyesDebuffAttacker">Sylveon: Baby-Doll Eyes (-15% Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="sylveonMysticalFireDebuffAttacker">Sylveon: Mystical Fire (-15% Sp.Atk x4 (-60% Sp.Atk max))</label>
+                <label class="buff-label"><input type="checkbox" id="trevenantWillOWispDebuffAttacker">Trevenant: Will-o-Wisp (-10% Atk / -5% Sp.Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="tsareenaTropKickDebuffAttacker">Tsareena: Trop Kick (-25% Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="goodraMuddyWaterDebuffAttacker">Goodra: Muddy Water (-15% Damage)</label>
+                <label class="buff-label"><input type="checkbox" id="mimePowerSwapDebuffAttacker">Mr. Mime: Power Swap (-15% Damage)</label>
+                <label class="buff-label"><input type="checkbox" id="mimePowerSwapPlusDebuffAttacker">Mr. Mime: Power Swap + (-20% Damage)</label>
+                <label class="buff-label"><input type="checkbox" id="trevenantWoodHammerPlusDebuffAttacker">Trevenant: Wood Hammer + (-20% Damage)</label>
+                <label class="buff-label"><input type="checkbox" id="umbreonSnarlDebuffAttacker">Umbreon: Snarl (-3% Atk / Sp.Atk x6 (-18% Atk / Sp.Atk max))</label>
+                <label class="buff-label"><input type="checkbox" id="umbreonSnarlFinalHitDebuffAttacker">Umbreon: Snarl Final Hit (-15% Atk / Sp.Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="inteleonTearfulLookDebuffAttacker">Inteleon: Tearful Look (-20% Atk / Sp.Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="hoohFlamethrowerDebuffAttacker">Ho-Oh: Flamethrower (-20% Atk / Sp.Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="hoohSacredFireDebuffAttacker">Ho-Oh: Sacred Fire (-10% Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="hoohSacredFirePlusDebuffAttacker">Ho-Oh: Sacred Fire + (-20% Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="psyduckSurfPlusDebuffAttacker">Psyduck: Surf + (-25% Damage)</label>
+                <label class="buff-label"><input type="checkbox" id="psyduckUniteDebuffAttacker">Psyduck: Full Power Psy-Ay-Ay! (Unite Move) (-30% Damage)</label>
+                <label class="buff-label"><input type="checkbox" id="tinkatonIceHammerDebuffAttacker">Tinkaton: Ice Hammer (-30% Atk / -15% Sp.Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="tinkatonIceHammerPlusDebuffAttacker">Tinkaton: Ice Hammer + (-50% Atk / -30% Sp.Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="alcremieCharmDebuffAttacker">Alcremie: Charm (-30 Atk / -20 Sp.Atk)</label>
+                <label class="buff-label"><input type="checkbox" id="latiasMistBallDebuffAttacker">Latias: Mist Ball (-25% Damage)</label>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Debuffs défensifs -->
-      <div class="buffs-drawer" id="defDebuffsDrawer">
-        <div class="buffs-drawer-header" id="defDebuffsToggle">
-          <span class="buffs-drawer-title">
-            ⬇️ <span data-lang="calc_def_debuffs">Universal Defensive Debuffs</span>
-            <span class="buff-active-count" id="defDebuffCount">0</span>
-          </span>
-          <span class="buffs-drawer-chevron">▼</span>
-        </div>
-        <div class="buffs-drawer-body">
-          <div class="buffs-drawer-inner">
-            <input type="text" class="buff-search" placeholder="Filter debuffs..." id="defDebuffSearch">
-            <div class="buff-checkboxes" id="defDebuffList">
-              <label class="buff-label"><input type="checkbox" id="absolBoostedDebuffDefender">Absol: Boosted (-15% Def)</label>
-              <label class="buff-label"><input type="checkbox" id="cramorantBoostedGulpMissileDebuffDefender">Cramorant: Boosted/Gulp Missile (-20% Def / -5% Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="decidueyeShadowSneakDebuffDefender">Decidueye: Shadow Sneak (-40% Def)</label>
-              <label class="buff-label"><input type="checkbox" id="decidueyeShadowSneakPlusDebuffDefender">Decidueye: Shadow Sneak + (-60% Def)</label>
-              <label class="buff-label"><input type="checkbox" id="gardevoirBoostedDebuffDefender">Gardevoir: Boosted (-10% Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="gardevoirPsychicDebuffDefender">Gardevoir: Psychic (-27% Sp.Def x3 (-81% Sp.Def))</label>
-              <label class="buff-label"><input type="checkbox" id="gengarShadowBallDebuffDefender">Gengar: Shadow Ball (-80-(5*(Lv-1)) Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="glaceonTailWhipDebuffDefender">Glaceon: Tail Whip (-30% Def / Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="hoopaShadowBallDebuffDefender">Hoopa: Shadow Ball (-30% Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="mimePsychicDebuffDefender">Mr. Mime: Psychic (-5% Sp.Def x8 (-40% Sp.Def))</label>
-              <label class="buff-label"><input type="checkbox" id="slowbroObliviousDebuffDefender">Slowbro: Oblivious (-4% Sp.Def x5 (-20% Sp.Def))</label>
-              <label class="buff-label"><input type="checkbox" id="sylveonHyperVoiceDebuffDefender">Sylveon: Hyper Voice (-20% Sp.Def x4 (-80% Sp.Def))</label>
-              <label class="buff-label"><input type="checkbox" id="tsareenaBoostedDebuffDefender">Tsareena: Boosted (-20% Def)</label>
-              <label class="buff-label"><input type="checkbox" id="urshifuLiquidationDebuffDefender">Urshifu: Liquidation (-30% Def)</label>
-              <label class="buff-label"><input type="checkbox" id="venusaurSludgeBombDebuffDefender">Venusaur: Sludge Bomb (-40% Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="wigglytuffSingDebuffDefender">Wigglytuff: Sing (-25% Def / Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="umbreonFakeTearsDebuffDefender">Umbreon: Fake Tears (-20% Def / Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="mewtwoXUniteDebuffDefender">Mewtwo X: Infinite Psyburn (Unite Move) (-20% Def)</label>
-              <label class="buff-label"><input type="checkbox" id="mewtwoYUniteDebuffDefender">Mewtwo Y: Infinite Psyburn (Unite Move) (-15% Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="ceruledgePsychoCutDebuffDefender">Ceruledge: Psycho Cut (-10-(2*(Lv-1)) Def)</label>
-              <label class="buff-label"><input type="checkbox" id="ceruledgePsychoCutPlusDebuffDefender">Ceruledge: Psycho Cut + (-15-(3*(Lv-1)) Def)</label>
-              <label class="buff-label"><input type="checkbox" id="tinkatonThiefDebuffDefender">Tinkaton: Thief (-10% Def / Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="tinkatonThiefPlusDebuffDefender">Tinkaton: Thief + (-25% Def / Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="psyduckTailWhipDebuffDefender">Psyduck: Tail Whip (-20% Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="psyduckTailWhipMysteriousDebuffDefender">Psyduck: Tail Whip (Mysterious Power) (-30% Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="psyduckPsychicPlusDebuffDefender">Psyduck: Psychic + (-25% Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="alolanRaichuStoredPowerPlusDebuffDefender">Alolan Raichu: Stored Power + (-5% Sp.Def x3 (-15% Sp.Def))</label>
-              <label class="buff-label"><input type="checkbox" id="latiasDragonBreathDebuffDefender">Latias: Dragon Breath (-30% Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="empoleonAquaJetTorrentDebuffDefender">Empoleon: Aqua Jet (Torrent) (-60% Sp.Def)</label>
-              <label class="buff-label"><input type="checkbox" id="dhelmiseAnchorShotPlusDebuffDefender">Dhelmise: Anchor Shot + (+50% Damage Received)</label>
+      </div><!-- /col-attacker -->
+
+      <!-- ── COLONNE CENTRE : Moves Damage ──────────────────────── -->
+      <div class="col-moves">
+        <div class="moves-col-header" data-lang="calc_section_moves">Moves Damage</div>
+        <div id="globalBonusAttacker"></div>
+        <div id="globalBonusDefender"></div>
+        <div id="movesGrid" class="moves-grid"></div>
+      </div><!-- /col-moves -->
+
+      <!-- ── COLONNE DROITE : Défenseur ─────────────────────────── -->
+      <div class="col-defender">
+
+        <!-- Sélection Pokémon (collapsible) -->
+        <div class="poke-select-panel open" id="defSelectPanel">
+          <div class="poke-select-header" id="defSelectToggle">
+            <div class="poke-selected-mini">
+              <img id="defMiniImg" src="assets/items/none.png" alt="">
+              <span class="poke-name" id="defMiniName">Choose Defender</span>
+            </div>
+            <span id="defToggleIcon" class="poke-toggle-icon">▼</span>
+          </div>
+          <div class="poke-select-body">
+            <div class="poke-select-body-inner">
+              <div class="category-tabs defender-tabs">
+                <button class="tab-button active" data-category="playable" data-lang="calc_tab_playable">Playable</button>
+                <button class="tab-button" data-category="mob" data-lang="calc_tab_wilds">Wild</button>
+                <button class="tab-button" data-category="other" data-lang="calc_tab_other">Other</button>
+              </div>
+              <input type="text" id="searchDefender" class="pokemon-search" placeholder="Search a Pokémon..." data-lang-placeholder="calc_search_placeholder">
+              <div class="pokemon-grid-wrapper">
+                <div id="pokemonGridDefender" class="pokemon-grid"></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-    </div><!-- /col-defender -->
+        <!-- Stats Card Défenseur -->
+        <div class="stats-card defender-stats stats-card-compact">
+          <div class="pokemon-name-header">
+            <span id="resultsDefenderName" data-lang="calc_select_defender">Select a defender</span>
+            <img id="resultsDefenderImg" class="stats-pokemon-img" src="assets/items/none.png" alt="">
+          </div>
 
-  </div><!-- /app-layout -->
+          <div class="stat-item" style="margin-bottom:0.6rem;">
+            <div class="slider-block hp-slider-block">
+              <div class="hp-bar-header">
+                <span class="hp-level-badge defender-level-badge" id="hpLevelBadgeDefender">Lv.15</span>
+                <span id="hpValueDefender" class="hp-value-inline">0 / 0</span>
+              </div>
+              <input type="range" id="hpSliderDefender" min="0" max="100" value="100" class="hp-slider">
+            </div>
+
+            <div id="defenderLevelBlock">
+              <div class="slider-block" style="margin-top:0.4rem;">
+                <label>Level <span id="levelValueDefender">15</span></label>
+                <input type="range" id="levelSliderDefender" min="1" max="15" value="15">
+              </div>
+            </div>
+
+            <div id="defenderTimerBlock" style="display:none;">
+              <span class="stat-label mob-timer-label">⏱ TIMER</span>
+              <div class="slider-block">
+                <label>Timer <span id="timerValueDefender" class="mob-timer-value"></span></label>
+                <input type="range" id="timerSliderDefender" min="0" max="590" value="470" step="10" class="timer-slider">
+              </div>
+              <div class="mob-timer-ticks">
+                <span>10:00</span><span>5:00</span><span>0:00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-inline-grid">
+            <div class="stat-item custom-stat full-width" style="display:none;">
+              <span class="stat-inline-label" data-lang="calc_stat_hp">HP Max</span>
+              <span id="defenderMaxHP" class="stat-inline-value editable-custom">10 000</span>
+            </div>
+
+            <div class="stat-inline-item" id="defenderDefNormal">
+              <span class="stat-inline-label" data-lang="calc_stat_def">DEF</span>
+              <span class="stat-inline-value" id="defenderDef">0</span>
+            </div>
+            <div class="stat-item custom-stat" style="display:none;">
+              <span class="stat-inline-label" data-lang="calc_stat_def">DEF</span>
+              <span id="defenderDefCustom" class="stat-inline-value editable-custom">100</span>
+            </div>
+
+            <div class="stat-inline-item" id="defenderSpDefNormal">
+              <span class="stat-inline-label" data-lang="calc_stat_spdef">Sp.Def</span>
+              <span class="stat-inline-value" id="defenderSpDef">0</span>
+            </div>
+            <div class="stat-item custom-stat" style="display:none;">
+              <span class="stat-inline-label" data-lang="calc_stat_spdef">Sp.Def</span>
+              <span id="defenderSpDefCustom" class="stat-inline-value editable-custom">100</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items Défenseur -->
+        <div class="items-section">
+          <h3 data-lang="calc_equipped_items">Equipped Items</h3>
+          <div class="items-equipped-grid" id="itemsEquippedDefender">
+            <div class="item-equipped-card" data-slot="0">
+              <div class="item-equipped-icon"><img src="assets/items/none.png" alt="Vide"></div>
+              <div class="item-equipped-name">Empty</div>
+              <div class="item-equipped-stats"></div>
+              <div class="item-equipped-stacks" style="display:none;">
+                <div class="stacks-controls">
+                  <button class="stack-btn minus">-</button>
+                  <span class="stack-value">0</span>
+                  <button class="stack-btn plus">+</button>
+                </div>
+                <div class="stack-max">/6</div>
+              </div>
+            </div>
+            <div class="item-equipped-card" data-slot="1">
+              <div class="item-equipped-icon"><img src="assets/items/none.png" alt="Vide"></div>
+              <div class="item-equipped-name">Empty</div>
+              <div class="item-equipped-stats"></div>
+              <div class="item-equipped-stacks" style="display:none;">
+                <div class="stacks-controls">
+                  <button class="stack-btn minus">-</button>
+                  <span class="stack-value">0</span>
+                  <button class="stack-btn plus">+</button>
+                </div>
+                <div class="stack-max">/6</div>
+              </div>
+            </div>
+            <div class="item-equipped-card" data-slot="2">
+              <div class="item-equipped-icon"><img src="assets/items/none.png" alt="Vide"></div>
+              <div class="item-equipped-name">Empty</div>
+              <div class="item-equipped-stats"></div>
+              <div class="item-equipped-stacks" style="display:none;">
+                <div class="stacks-controls">
+                  <button class="stack-btn minus">-</button>
+                  <span class="stack-value">0</span>
+                  <button class="stack-btn plus">+</button>
+                </div>
+                <div class="stack-max">/6</div>
+              </div>
+            </div>
+          </div>
+          <button class="reset-items-btn" data-side="defender" data-lang="calc_reset_items">Reset Items</button>
+        </div>
+
+        <!-- Buffs défensifs -->
+        <div class="buffs-drawer" id="defBuffsDrawer">
+          <div class="buffs-drawer-header" id="defBuffsToggle">
+            <span class="buffs-drawer-title">
+              🛡️ <span data-lang="calc_def_buffs">Universal Defensive Buffs</span>
+              <span class="buff-active-count" id="defBuffCount">0</span>
+            </span>
+            <span class="buffs-drawer-chevron">▼</span>
+          </div>
+          <div class="buffs-drawer-body">
+            <div class="buffs-drawer-inner">
+              <input type="text" class="buff-search" placeholder="Filter buffs..." id="defBuffSearch">
+              <div class="buff-checkboxes" id="defBuffList">
+                <label class="buff-label"><input type="checkbox" id="regirockBuffDefender">Regirock Buff (+30% Def / +25% Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="eldegossBuffDefender">Eldegoss: Pollen Puff + (-25% Damage Received)</label>
+                <label class="buff-label"><input type="checkbox" id="ninetailsBuffDefender">Ninetails [Alolan]: Aurora Veil (-35% Damage Received)</label>
+                <label class="buff-label"><input type="checkbox" id="ninetailsPlusBuffDefender">Ninetails [Alolan]: Aurora Veil + (-40% Damage Received)</label>
+                <label class="buff-label"><input type="checkbox" id="umbreonBuffDefender">Umbreon: Wish (-15% Damage Received)</label>
+                <label class="buff-label"><input type="checkbox" id="umbreonPlusBuffDefender">Umbreon: Wish + (-25% Damage Received)</label>
+                <label class="buff-label"><input type="checkbox" id="blisseyRedirectionBuffDefender">Blissey: Bliss Assistance (Unite Move) (-50% Damage Redirection)</label>
+                <label class="buff-label"><input type="checkbox" id="hoohRedirectionBuffDefender">Ho-Oh: Fire Spin (-60% Damage Redirection)</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Debuffs défensifs -->
+        <div class="buffs-drawer" id="defDebuffsDrawer">
+          <div class="buffs-drawer-header" id="defDebuffsToggle">
+            <span class="buffs-drawer-title">
+              ⬇️ <span data-lang="calc_def_debuffs">Universal Defensive Debuffs</span>
+              <span class="buff-active-count" id="defDebuffCount">0</span>
+            </span>
+            <span class="buffs-drawer-chevron">▼</span>
+          </div>
+          <div class="buffs-drawer-body">
+            <div class="buffs-drawer-inner">
+              <input type="text" class="buff-search" placeholder="Filter debuffs..." id="defDebuffSearch">
+              <div class="buff-checkboxes" id="defDebuffList">
+                <label class="buff-label"><input type="checkbox" id="absolBoostedDebuffDefender">Absol: Boosted (-15% Def)</label>
+                <label class="buff-label"><input type="checkbox" id="cramorantBoostedGulpMissileDebuffDefender">Cramorant: Boosted/Gulp Missile (-20% Def / -5% Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="decidueyeShadowSneakDebuffDefender">Decidueye: Shadow Sneak (-40% Def)</label>
+                <label class="buff-label"><input type="checkbox" id="decidueyeShadowSneakPlusDebuffDefender">Decidueye: Shadow Sneak + (-60% Def)</label>
+                <label class="buff-label"><input type="checkbox" id="gardevoirBoostedDebuffDefender">Gardevoir: Boosted (-10% Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="gardevoirPsychicDebuffDefender">Gardevoir: Psychic (-27% Sp.Def x3 (-81% Sp.Def))</label>
+                <label class="buff-label"><input type="checkbox" id="gengarShadowBallDebuffDefender">Gengar: Shadow Ball (-80-(5*(Lv-1)) Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="glaceonTailWhipDebuffDefender">Glaceon: Tail Whip (-30% Def / Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="hoopaShadowBallDebuffDefender">Hoopa: Shadow Ball (-30% Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="mimePsychicDebuffDefender">Mr. Mime: Psychic (-5% Sp.Def x8 (-40% Sp.Def))</label>
+                <label class="buff-label"><input type="checkbox" id="slowbroObliviousDebuffDefender">Slowbro: Oblivious (-4% Sp.Def x5 (-20% Sp.Def))</label>
+                <label class="buff-label"><input type="checkbox" id="sylveonHyperVoiceDebuffDefender">Sylveon: Hyper Voice (-20% Sp.Def x4 (-80% Sp.Def))</label>
+                <label class="buff-label"><input type="checkbox" id="tsareenaBoostedDebuffDefender">Tsareena: Boosted (-20% Def)</label>
+                <label class="buff-label"><input type="checkbox" id="urshifuLiquidationDebuffDefender">Urshifu: Liquidation (-30% Def)</label>
+                <label class="buff-label"><input type="checkbox" id="venusaurSludgeBombDebuffDefender">Venusaur: Sludge Bomb (-40% Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="wigglytuffSingDebuffDefender">Wigglytuff: Sing (-25% Def / Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="umbreonFakeTearsDebuffDefender">Umbreon: Fake Tears (-20% Def / Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="mewtwoXUniteDebuffDefender">Mewtwo X: Infinite Psyburn (Unite Move) (-20% Def)</label>
+                <label class="buff-label"><input type="checkbox" id="mewtwoYUniteDebuffDefender">Mewtwo Y: Infinite Psyburn (Unite Move) (-15% Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="ceruledgePsychoCutDebuffDefender">Ceruledge: Psycho Cut (-10-(2*(Lv-1)) Def)</label>
+                <label class="buff-label"><input type="checkbox" id="ceruledgePsychoCutPlusDebuffDefender">Ceruledge: Psycho Cut + (-15-(3*(Lv-1)) Def)</label>
+                <label class="buff-label"><input type="checkbox" id="tinkatonThiefDebuffDefender">Tinkaton: Thief (-10% Def / Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="tinkatonThiefPlusDebuffDefender">Tinkaton: Thief + (-25% Def / Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="psyduckTailWhipDebuffDefender">Psyduck: Tail Whip (-20% Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="psyduckTailWhipMysteriousDebuffDefender">Psyduck: Tail Whip (Mysterious Power) (-30% Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="psyduckPsychicPlusDebuffDefender">Psyduck: Psychic + (-25% Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="alolanRaichuStoredPowerPlusDebuffDefender">Alolan Raichu: Stored Power + (-5% Sp.Def x3 (-15% Sp.Def))</label>
+                <label class="buff-label"><input type="checkbox" id="latiasDragonBreathDebuffDefender">Latias: Dragon Breath (-30% Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="empoleonAquaJetTorrentDebuffDefender">Empoleon: Aqua Jet (Torrent) (-60% Sp.Def)</label>
+                <label class="buff-label"><input type="checkbox" id="dhelmiseAnchorShotPlusDebuffDefender">Dhelmise: Anchor Shot + (+50% Damage Received)</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /col-defender -->
+
+    </div><!-- /app-layout -->
+
+  </div><!-- /tab-calculator -->
+
+  <!-- ── PANNEAU : Build Optimizer ────────────────────────────── -->
+  <div id="tab-optimizer" class="main-tab-panel">
+    <div id="buildOptimizerContainer"></div>
+  </div>
 
   <!-- ══════════════════════════════════════════════
        ÉLÉMENTS CACHÉS — gardés pour la compatibilité JS
        ══════════════════════════════════════════════ -->
-
-  <!-- battle-container caché : le JS l'utilise pour attacher des events -->
   <div class="battle-container" style="display:none!important;">
     <div class="pokemon-panel attacker">
       <div class="pokemon-header">
@@ -488,7 +526,6 @@
     </div>
   </div>
 
-  <!-- results-container caché : le JS y place les cartes passive/move -->
   <div class="results-container" style="display:none!important;">
     <div class="stats-card attacker-stats" style="display:none!important;"></div>
     <div class="moves-section" style="display:none!important;"></div>
@@ -539,6 +576,29 @@
   <script>
     document.getElementById('warningBtn').addEventListener('click', function() {
       this.classList.remove('unread');
+    });
+
+    /* ── Tabs principaux : Calculateur | Build Optimizer ── */
+    function setCombatLogVisible(visible) {
+      const cl = document.getElementById('combatLogPanel');
+      if (cl) cl.style.display = visible ? '' : 'none';
+    }
+
+    document.querySelectorAll('.main-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.main-tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.main-tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const panel = document.getElementById(`tab-${btn.dataset.tab}`);
+        if (panel) panel.classList.add('active');
+        setCombatLogVisible(btn.dataset.tab === 'calculator');
+      });
+    });
+
+    // Hide combat log if optimizer is somehow the default active tab
+    window.addEventListener('load', () => {
+      const activeTab = document.querySelector('.main-tab-btn.active')?.dataset.tab;
+      setCombatLogVisible(activeTab === 'calculator');
     });
 
     /* ── Toggle panels de sélection Pokémon ── */
@@ -602,7 +662,6 @@
     setupBuffCounter('defDebuffList', 'defDebuffCount');
 
     /* ── Sync mini header attaquant/défenseur ── */
-    // Observe les mutations sur les noms pour mettre à jour les mini-headers
     function syncMiniHeader(nameElId, imgElId, miniNameId, miniImgId) {
       const nameEl = document.getElementById(nameElId);
       const imgEl  = document.getElementById(imgElId);
@@ -621,7 +680,7 @@
         obs.observe(imgEl, { attributes: true, attributeFilter: ['src'] });
       }
     }
-    // Sync après que le JS principal a chargé
+
     window.addEventListener('load', () => {
       syncMiniHeader('resultsAttackerName', 'resultsAttackerImg', 'atkMiniName', 'atkMiniImg');
       syncMiniHeader('resultsDefenderName', 'resultsDefenderImg', 'defMiniName', 'defMiniImg');
@@ -639,8 +698,6 @@
       });
 
       // Rediriger les globalBonus cards vers la colonne centrale
-      // Le JS génère les cartes passive/move dans les stats-card originales
-      // On les intercepte et les place dans la colonne centre
       const atkStatsCard = document.querySelector('.results-container .attacker-stats');
       const defStatsCard = document.querySelector('.results-container .defender-stats');
       const atkTarget    = document.getElementById('globalBonusAttacker');
