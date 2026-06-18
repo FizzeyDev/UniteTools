@@ -61,8 +61,15 @@ import {
 
 import {
   applyAttackerMoveEffects,
-  applyGreninjaSmokescreenStatBuff
+  applyGreninjaSmokescreenStatBuff,
+  applyAegislashSacredSwordStatBuff,
+  applyAegislashIronHeadStatBuff,
+  applyAzumarillBellyBashStatBuff
 } from './moveEffectsAtk.js';
+
+import { applyDefenderMoveEffects } from './moveEffectsDef.js';
+import { applyPokemonStatMutations } from './statsManager.js';
+import { computeGlobalDamageMult, computeDefenderDamageMult } from './multiplierManager.js';
 
 
 const movesGrid = document.getElementById("movesGrid");
@@ -137,111 +144,15 @@ export function updateDamages() {
     defStats.hp = getMobHPAtTimer(state.currentDefender.hpTable, state.defenderTimer);
   }
 
-  if (state.currentAttacker?.pokemonId === "mega-gyarados" && state.attackerMoldBreakerActive) {
-    atkStats.atk = Math.floor(atkStats.atk * (1 + state.currentAttacker.passive.bonusPercentAtk / 100));
-  }
-
-  if (state.currentDefender?.pokemonId === "mega-gyarados" && state.defenderMoldBreakerActive) {
-    defStats.def    = Math.floor(defStats.def    * (1 + state.currentDefender.passive.bonusPercentDef    / 100));
-    defStats.sp_def = Math.floor(defStats.sp_def * (1 + state.currentDefender.passive.bonusPercentSpDef / 100));
-  }
-
-  if (state.currentDefender?.pokemonId === "mamoswine") {
-    const stacks = Math.min(state.defenderPassiveStacks, 3);
-    if (stacks > 0) {
-      const levelBonus = 10 * (state.defenderLevel - 1) + 20;
-      defStats.def    = Math.floor(defStats.def    + stacks * levelBonus);
-      defStats.sp_def = Math.floor(defStats.sp_def + stacks * levelBonus);
-    }
-  }
-
-  if (state.currentDefender?.pokemonId === "mega-charizard-x" && state.defenderZardToughClaw) {
-    defStats.def    = Math.floor(defStats.def    * (1 + state.currentDefender.passive.bonusPercentDef    / 100));
-    defStats.sp_def = Math.floor(defStats.sp_def * (1 + state.currentDefender.passive.bonusPercentSpDef / 100));
-  }
-
-  if (state.currentAttacker?.pokemonId === "blastoise" && state.attackerHPPercent <= state.currentAttacker.passive.lowHpThreshold) {
-    atkStats.atk    = Math.floor(atkStats.atk    * (1 + state.currentAttacker.passive.bonusPercentAtk    / 100));
-    atkStats.sp_atk = Math.floor(atkStats.sp_atk * (1 + state.currentAttacker.passive.bonusPercentSpAtk / 100));
-  }
-
-  if (state.currentAttacker?.pokemonId === "mega-lucario") {
-    if (state.attackerLucarioForm === "normal")
-      atkStats.atk += Math.floor(atkStats.atk * 0.08 * state.attackerLucarioJustifiedStacks);
-    if (state.attackerLucarioForm === "mega")
-      atkStats.atk += Math.floor(atkStats.atk * 0.05 * state.attackerLucarioAdaptabilityStacks);
-  }
-
-  if (state.currentAttacker?.pokemonId === "mewtwo_x") {
-    atkStats.atk = Math.floor(atkStats.atk * (1 + state.attackerMewtwoPressureStacks * 0.02 + (state.attackerMewtwoForm === "mega" ? 0.18 : 0)));
-  }
-
-  if (state.currentDefender?.pokemonId === "mewtwo_x") {
-    defStats.def    = Math.floor(defStats.def    * (1 + state.defenderMewtwoPressureStacks * 0.02 + (state.defenderMewtwoForm === "mega" ? 0.18 : 0)));
-    defStats.sp_def = Math.floor(defStats.sp_def * (1 + state.defenderMewtwoPressureStacks * 0.02 + (state.defenderMewtwoForm === "mega" ? 0.18 : 0)));
-  }
-
-  if (state.currentAttacker?.pokemonId === "mewtwo_y") {
-    atkStats.sp_atk = Math.floor(atkStats.sp_atk * (1 + state.attackerMewtwoYPressureStacks * 0.015 + (state.attackerMewtwoYForm === "mega" ? 0.10 : 0)));
-  }
-
-  if (state.currentDefender?.pokemonId === "sylveon" && state.defenderLevel > 3) {
-    defStats.sp_def = Math.floor(defStats.sp_def * (1 + state.defenderPassiveStacks * 0.025));
-  }
-
-  if (state.currentAttacker?.pokemonId === "machamp" && state.attackerMachampActive) {
-    atkStats.atk = Math.floor(atkStats.atk * (1 + state.currentAttacker.passive.bonusPercentAtk / 100));
-  }
-
-  if (state.currentAttacker?.pokemonId === "greninja" && state.attackerHPPercent <= state.currentAttacker.passive.lowHpThreshold) {
-    atkStats.atk = Math.floor(atkStats.atk * (1 + state.currentAttacker.passive.bonusPercentAtk / 100));
-  }
-
-  if (state.currentAttacker?.pokemonId === "tyranitar" && state.attackerLevel <= 5 && state.attackerTyranitarGutsActive) {
-    atkStats.atk = Math.floor(atkStats.atk * 1.30);
-  }
-
-  if (state.currentAttacker?.pokemonId === "sylveon") {
-    const percent = state.attackerLevel <= 3 ? 0.05 : 0.025;
-    atkStats.sp_atk = Math.floor(atkStats.sp_atk * (1 + percent * state.attackerPassiveStacks));
-  }
-
-  if (state.currentAttacker?.pokemonId === "zeraora") {
-    atkStats.atk += Math.min(Math.floor(state.attackerZeraoraDamageReceived * 0.08), 200);
-  }
-
-  if (state.currentAttacker?.pokemonId === "tinkaton") {
-    atkStats.atk = Math.floor(atkStats.atk * (1 + 0.005 * state.attackerPassiveStacks));
-  }
-
-  // ── TYPHLOSION — Blaze : +15% Sp. Atk ───────────────────────────────────
-  if (state.currentAttacker?.pokemonId === "typhlosion" && state.attackerTyphlosionBlazeActive) {
-    atkStats.sp_atk = Math.floor(atkStats.sp_atk * 1.15);
-  }
-
-  // ── DRAGONITE — Dragon Dance : +10/20/30% ATK ────────────────────────────
-  if (state.currentAttacker?.pokemonId === "dragonite") {
-    const ddStacks = state.attackerDragonDanceStacks ?? 0;
-    if (ddStacks > 0) {
-      atkStats.atk = Math.floor(atkStats.atk * (1 + ddStacks * 0.10));
-    }
-  }
-
-  const currentDefHP = state.defenderHPAbsolute != null
-    ? Math.min(state.defenderHPAbsolute, defStats.hp)
-    : Math.floor(defStats.hp * (state.defenderHPPercent / 100));
-
-  if (state.currentAttacker?.pokemonId === "crustle" && state.attackerShellSmashActive) {
-    const level = state.attackerLevel;
-    const baseStats = state.currentAttacker.stats[level - 1];
-    const rate = state.attackerShellSmashUpgraded ? 0.50 : 0.40;
-  }
+  // ── Toutes les mutations de stats Pokémon ─────────────────────────────────
+  applyPokemonStatMutations(atkStats, defStats);
 
   document.getElementById('resultsAttackerName').textContent = state.currentAttacker.displayName;
   document.getElementById('resultsDefenderName').textContent = state.currentDefender?.displayName || 'Aucun';
 
-  // ── Move Effects : mutations de stats AVANT affichage et calcul ───────────
-  applyGreninjaSmokescreenStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  const currentDefHP = state.defenderHPAbsolute != null
+    ? Math.min(state.defenderHPAbsolute, defStats.hp)
+    : Math.floor(defStats.hp * (state.defenderHPPercent / 100));
 
   if (state.currentAttacker?.pokemonId === "crustle" && state.attackerShellSmashActive) {
     const level = state.attackerLevel;
@@ -303,26 +214,15 @@ export function updateDamages() {
     applyAttackerMoveEffects(state.currentAttacker.pokemonId, atkStats, defStats, attackerCardForMoves);
   }
 
+  // ── Move Effects UI (blocs dans la card défenseur, après passives) ──────────
+  const defenderCardForMoves = document.querySelector('.defender-stats');
+  if (defenderCardForMoves && state.currentDefender) {
+    applyDefenderMoveEffects(state.currentDefender.pokemonId, atkStats, defStats, defenderCardForMoves);
+  }
+
   updateDefenderStatsUI(defStats);
 
-  let defenderDamageMult = 1.0;
-  if (state.defenderEldegossBuff)          defenderDamageMult *= 0.85;
-  if (state.defenderNinetailsBuff)         defenderDamageMult *= 0.65;
-  if (state.defenderNinetailsPlusBuff)     defenderDamageMult *= 0.60;
-  if (state.defenderUmbreonBuff)           defenderDamageMult *= 0.85;
-  if (state.defenderUmbreonPlusBuff)       defenderDamageMult *= 0.75;
-  if (state.defenderBlisseyRedirectionBuff) defenderDamageMult *= 0.50;
-  if (state.defenderHoOhRedirectionBuff)   defenderDamageMult *= 0.40;
-  if (state.defenderDhelmiseAnchorShotPlus) defenderDamageMult *= 1.50;
-  if (state.currentDefender?.pokemonId === "dragonite" && state.defenderMultiscaleActive) defenderDamageMult *= 0.70;
-  if (state.defenderMimeActive)            defenderDamageMult *= 0.90;
-
-  // ── Snow Cloak : réduction via defenderDamageMult ────────────────────────
-  if (state.currentDefender?.pokemonId === "articuno") {
-    const snowCloakState = state.defenderSnowCloakState || "none";
-    if (snowCloakState === "low")  defenderDamageMult *= (1 - 0.10);
-    if (snowCloakState === "high") defenderDamageMult *= (1 - 0.20);
-  }
+  const defenderDamageMult = computeDefenderDamageMult();
 
   // ── SKELEDIRGE — Blaze : 35% Sp. Def Pierce sur le prochain move ─────────
   const skeledirgeBlazeIgnore = (
@@ -377,25 +277,7 @@ function applyItemsAndGlobalEffects(atkStats, defStats) {
 
   let slickIgnore      = 0;
   let scopeCritBonus   = 1.0;
-  let globalDamageMult = 1.0;
-
-  if (state.attackerGroudonBuff)      globalDamageMult *= 1.50;
-  if (state.attackerRayquazaBuff)     globalDamageMult *= 1.40;
-  if (state.attackerBlisseyHandBuff)  globalDamageMult *= 1.15;
-  if (state.attackerMimeSwapBuff)     globalDamageMult *= 1.15;
-  if (state.attackerMimeSwapPlusBuff) globalDamageMult *= 1.20;
-  if (state.attackerSkeledirgeBuff)   globalDamageMult *= 1.15;
-  if (state.attackerMiraidonBuff) {
-    globalDamageMult *= state.currentAttacker?.pokemonId === "miraidon" ? 1.30 : 1.10;
-  }
-  if (state.currentAttacker?.pokemonId === "mega-charizard-y" && state.attackerDroughtActive) globalDamageMult *= 1.10;
-  if (state.debuffGoodraMuddyWater)        globalDamageMult *= 0.85;
-  if (state.debuffMimePowerSwap)           globalDamageMult *= 0.85;
-  if (state.debuffMimePowerSwapPlus)       globalDamageMult *= 0.80;
-  if (state.debuffTrevenantWoodHammerPlus) globalDamageMult *= 0.80;
-  if (state.debuffPsyduckSurfPlus)         globalDamageMult *= 0.75;
-  if (state.debuffPsyduckUnite)            globalDamageMult *= 0.70;
-  if (state.debuffLatiasMistBall)          globalDamageMult *= 0.75;
+  let globalDamageMult = computeGlobalDamageMult();
 
   state.attackerItems.forEach((item, i) => {
     if (!item) return;
@@ -966,7 +848,20 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           moltresBurnMult = 1 + 0.10 * state.attackerPassiveStacks;
         }
       }
-      const effectiveGlobalMult = globalDamageMult * moltresBurnMult;
+
+      // ── Ceruledge : Lava Plume → +15% sur le prochain Auto-attack ────────
+      let lavaPlumeMult = 1.0;
+      if (state.currentAttacker?.pokemonId === "ceruledge" && state.attackerLavaPlumeActive && move.name === "Auto-attack") {
+        lavaPlumeMult = 1.15;
+      }
+
+      // ── Chandelure : Flamethrower+ → +20% sur tous les dégâts (lvl 11+) ──
+      let flamethrowerPlusMult = 1.0;
+      if (state.currentAttacker?.pokemonId === "chandelure" && state.attackerFlamethrowerPlusActive) {
+        flamethrowerPlusMult = 1.20;
+      }
+
+      const effectiveGlobalMult = globalDamageMult * moltresBurnMult * lavaPlumeMult * flamethrowerPlusMult;
 
       let normal = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0,           effectiveGlobalMult, defStats.hp, currentDefHP);
       let crit   = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, true,  state.currentAttacker.pokemonId, scopeCritBonus, effectiveGlobalMult, defStats.hp, currentDefHP);
@@ -999,12 +894,27 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
 
       const line      = document.createElement("div");
       line.className  = "damage-line";
-      const canCrit   = move.can_crit === "true" || move.can_crit === true;
+      const moveCrit  = move.can_crit === "true" || move.can_crit === true;
+      const canCrit   = dmg.can_crit !== undefined
+        ? (dmg.can_crit === "true" || dmg.can_crit === true)
+        : moveCrit;
       const isTick    = !!dmg.is_tick;
       const tickCount = dmg.tick_count || 1;
 
-      const tickScalingAttr = dmg.tick_scaling
-        ? `data-tick-scaling='${JSON.stringify(dmg.tick_scaling)}'`
+      // ── BUZZWOLE — Leech Life+ (lvl 11) : +5% additif par tick successif ──
+      let effectiveTickScaling = dmg.tick_scaling;
+      if (
+        state.currentAttacker?.pokemonId === "buzzwole" &&
+        move.name === "Leech Life" &&
+        dmg.name.includes("per Tick") &&
+        state.attackerLevel >= 11 &&
+        !effectiveTickScaling
+      ) {
+        effectiveTickScaling = Array.from({ length: tickCount }, (_, i) => 1 + 0.05 * i);
+      }
+
+      const tickScalingAttr = effectiveTickScaling
+        ? `data-tick-scaling='${JSON.stringify(effectiveTickScaling)}'`
         : '';
 
       if (isTick) {
@@ -1016,11 +926,11 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           return sum;
         };
 
-        const normalTotal = dmg.tick_scaling
-          ? computeScaledTotal(displayedNormal, dmg.tick_scaling, tickCount)
+        const normalTotal = effectiveTickScaling
+          ? computeScaledTotal(displayedNormal, effectiveTickScaling, tickCount)
           : displayedNormal * tickCount;
-        const critTotal = dmg.tick_scaling
-          ? computeScaledTotal(displayedCrit, dmg.tick_scaling, tickCount)
+        const critTotal = effectiveTickScaling
+          ? computeScaledTotal(displayedCrit, effectiveTickScaling, tickCount)
           : displayedCrit * tickCount;
 
         if (canCrit) {
@@ -1060,6 +970,74 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
 
       addFormulaTooltip(line, dmg, relevantAtk, state.currentAttacker, level);
 
+      // ── LIFESTEAL — % de vol de vie sur les auto-attacks (physical only) ───
+      // Stat "lifesteal" du JSON, par entrée de damages[] sauf {"lifesteal": false}.
+      if (move.name === "Auto-attack" && dmg.lifesteal !== false) {
+        const lifestealPct = (state.currentAttacker?.stats?.[state.attackerLevel - 1]?.lifesteal ?? 0) / 100;
+        if (lifestealPct > 0) {
+          const lsComputeTotal = (base, scaling, n) => {
+            if (!scaling) return base * n;
+            let sum = 0;
+            for (let i = 0; i < n; i++) sum += Math.floor(base * (scaling[i] ?? scaling[scaling.length - 1]));
+            return sum;
+          };
+          const lsNormalTotal = isTick ? lsComputeTotal(displayedNormal, effectiveTickScaling, tickCount) : displayedNormal;
+          const lsCritTotal   = isTick ? lsComputeTotal(displayedCrit,   effectiveTickScaling, tickCount) : displayedCrit;
+
+          const lsHealNormal = Math.floor(lsNormalTotal * lifestealPct);
+          const lsHealCrit   = Math.floor(lsCritTotal   * lifestealPct);
+
+          const lsLine = document.createElement("div");
+          lsLine.className = "damage-line";
+          lsLine.innerHTML = `
+            <span class="dmg-name" style="color:#4caf82;font-size:0.85em;">
+              Lifesteal (${dmg.name})
+              <br><i style="font-size:0.85em;color:#4caf8299;">${Math.round(lifestealPct * 100)}% of damage dealt</i>
+            </span>
+            <div class="dmg-values">
+              <span class="dmg-heal">${lsHealNormal.toLocaleString()}</span>
+              ${canCrit ? `<span class="dmg-heal" style="opacity:0.75;">(${lsHealCrit.toLocaleString()})</span>` : ""}
+            </div>
+          `;
+          card.appendChild(lsLine);
+        }
+      }
+
+      // ── CHARIZARD — Seismic Slam (Unite) : heal 60% sur le Basic hit only ──
+      if (
+        ["charizard", "mega-charizard-x", "mega-charizard-y"].includes(state.currentAttacker?.pokemonId) &&
+        state.attackerSeismicSlamActive &&
+        move.name === "Auto-attack" &&
+        dmg.name === "Basic (per hit x4)"
+      ) {
+        const computeTotal = (base, scaling, n) => {
+          if (!scaling) return base * n;
+          let sum = 0;
+          for (let i = 0; i < n; i++) sum += Math.floor(base * (scaling[i] ?? scaling[scaling.length - 1]));
+          return sum;
+        };
+        const basicNormalTotal = computeTotal(displayedNormal, effectiveTickScaling, tickCount);
+        const basicCritTotal   = computeTotal(displayedCrit,   effectiveTickScaling, tickCount);
+
+        const healPct  = 0.60;
+        const healNormal = Math.floor(basicNormalTotal * healPct);
+        const healCrit   = Math.floor(basicCritTotal   * healPct);
+
+        const healLine = document.createElement("div");
+        healLine.className = "damage-line";
+        healLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;">
+            Heal (Seismic Slam)
+            <br><i style="font-size:0.8em;color:#4caf8299;">60% of Basic hit damage · excludes burns & additional damage</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${healNormal.toLocaleString()}</span>
+            <span class="dmg-heal" style="opacity:0.75;">(${healCrit.toLocaleString()})</span>
+          </div>
+        `;
+        card.appendChild(healLine);
+      }
+
       if (state.currentDefender?.pokemonId === "falinks" && state.defenderFalinksMultiHit) {
         const capLine = document.createElement("div");
         capLine.className = "damage-line";
@@ -1071,6 +1049,103 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       }
 
     });
+
+    // ── ABSOL — Night Slash+ (lvl 11) ───────────
+    if (
+      state.currentAttacker?.pokemonId === "absol" &&
+      move.name === "Night Slash" &&
+      upgraded
+    ) {
+      const secondHitDmg = move.damages?.find(d => d.name === "Second Hit");
+      if (secondHitDmg) {
+        const relevantAtk = atkStats.atk;
+        let effectiveDef  = defStats.def;
+        if (slickIgnore > 0)       effectiveDef = Math.floor(effectiveDef * (1 - slickIgnore));
+        if (infiltratorIgnore > 0) effectiveDef = Math.floor(effectiveDef * (1 - infiltratorIgnore));
+
+        const secondHitNormal = Math.floor(
+          calculateDamage(secondHitDmg, relevantAtk, effectiveDef, state.attackerLevel, false,
+            state.currentAttacker.pokemonId, 1.0, globalDamageMult, defStats.hp, currentDefHP)
+          * defenderDamageMult
+        );
+        const secondHitCrit = Math.floor(
+          calculateDamage(secondHitDmg, relevantAtk, effectiveDef, state.attackerLevel, true,
+            state.currentAttacker.pokemonId, scopeCritBonus, globalDamageMult, defStats.hp, currentDefHP)
+          * defenderDamageMult
+        );
+
+        const bigRootIdx  = state.attackerItems.findIndex(i => i?.name === "Big Root");
+        const bigRootMult = bigRootIdx !== -1 ? 1 + parseFloat(state.attackerItems[bigRootIdx].level20.replace('%', '')) / 100 : 1.0;
+        let curseMult = 1.0;
+        const cbdi = state.defenderItems.findIndex(i => i?.name === "Curse Bangle");
+        const cidi = state.defenderItems.findIndex(i => i?.name === "Curse Incense");
+        if (cbdi !== -1 && state.defenderItemActivated[cbdi]) curseMult *= 1 - parseFloat(state.defenderItems[cbdi].level20.replace('%', '')) / 100;
+        if (cidi !== -1 && state.defenderItemActivated[cidi]) curseMult *= 1 - parseFloat(state.defenderItems[cidi].level20.replace('%', '')) / 100;
+
+        const healNormal = Math.floor(secondHitNormal * 0.50 * bigRootMult * curseMult);
+        const healCrit   = Math.floor(secondHitCrit   * 0.50 * bigRootMult * curseMult);
+
+        const healLine = document.createElement("div");
+        healLine.className = "damage-line";
+        healLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;">
+            Heal (2nd hit)
+            <br><i style="font-size:0.8em;color:#4caf8299;">50% of damage dealt</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${healNormal.toLocaleString()}</span>
+            <span class="dmg-heal" style="opacity:0.75;">(${healCrit.toLocaleString()})</span>
+          </div>
+        `;
+        card.appendChild(healLine);
+      }
+    }
+
+    // ── CERULEDGE — Bitter Blade (heal proportionnel aux dégâts) ──────────
+    if (
+      state.currentAttacker?.pokemonId === "ceruledge" &&
+      move.name === "Bitter Blade"
+    ) {
+      const mainDmg = move.damages?.find(d => d.dealDamage);
+      if (mainDmg) {
+        const relevantAtk = atkStats.atk;
+        let effectiveDef  = defStats.def;
+        if (slickIgnore > 0)       effectiveDef = Math.floor(effectiveDef * (1 - slickIgnore));
+        if (infiltratorIgnore > 0) effectiveDef = Math.floor(effectiveDef * (1 - infiltratorIgnore));
+
+        const mainNormal = Math.floor(
+          calculateDamage(mainDmg, relevantAtk, effectiveDef, state.attackerLevel, false,
+            state.currentAttacker.pokemonId, 1.0, globalDamageMult, defStats.hp, currentDefHP)
+          * defenderDamageMult
+        );
+        const mainCrit = Math.floor(
+          calculateDamage(mainDmg, relevantAtk, effectiveDef, state.attackerLevel, true,
+            state.currentAttacker.pokemonId, scopeCritBonus, globalDamageMult, defStats.hp, currentDefHP)
+          * defenderDamageMult
+        );
+
+        // 50% avant niveau 11, 70% à partir du niveau 11 (upgradeLevel)
+        const healPct = upgraded ? 0.70 : 0.50;
+
+        const isWild = state.currentDefender?.category === 'mob';
+        const healNormal = isWild ? Math.floor(mainNormal * healPct * 0.5) : Math.floor(mainNormal * healPct);
+        const healCrit   = isWild ? Math.floor(mainCrit   * healPct * 0.5) : Math.floor(mainCrit   * healPct);
+
+        const healLine = document.createElement("div");
+        healLine.className = "damage-line";
+        healLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;">
+            Heal
+            <br><i style="font-size:0.8em;color:#4caf8299;">${Math.round(healPct * 100)}% of damage dealt${isWild ? " (half vs wild)" : ""}</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${healNormal.toLocaleString()}</span>
+            <span class="dmg-heal" style="opacity:0.75;">(${healCrit.toLocaleString()})</span>
+          </div>
+        `;
+        card.appendChild(healLine);
+      }
+    }
 
     // ── HEALS ──────────────────────────────────────────────────────────────
     if (visibleHeals?.length > 0) {

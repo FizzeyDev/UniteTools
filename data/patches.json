@@ -1,6 +1,32 @@
 {
   "patches": [
     {
+      "version": "1.22.1.11",
+      "name": "Enduring Patch",
+      "date": "2026-06-17",
+      "buffs": [
+        "Sylveon",
+        "Armarouge",
+        "Tinkaton",
+        "Falinks",
+        "Empoleon",
+        "Absol",
+        "Eldegoss",
+        "Lapras",
+        "Skeledirge"
+      ],
+      "nerfs": [
+        "Greninja",
+        "Decidueye",
+        "Moltres",
+        "Machamp",
+        "Meganium",
+        "Articuno"
+      ],
+      "tweaks": [],
+      "notes": "Shop update, Event update, Bug fixes, Text fixes"
+    },
+    {
       "version": "1.22.1.10",
       "name": "Revival Stars Part 2",
       "date": "2026-05-13",

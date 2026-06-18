@@ -459,10 +459,10 @@ function applySylveonAttacker(atkStats, defStats, card) {
   const level     = state.attackerLevel;
   const isEevee   = level <= 3;
   const stacks    = state.attackerPassiveStacks;
-  const maxStacks = isEevee ? 4 : 6;
+  const maxStacks = 4;
   const passiveName = isEevee ? 'Adaptability' : 'Pixilate';
   const passiveImg  = isEevee ? 'assets/moves/sylveon/adaptability.png' : 'assets/moves/sylveon/pixilate.png';
-  const spAtkPct    = isEevee ? stacks * 5 : stacks * 2.5;
+  const spAtkPct    = isEevee ? stacks * 5 : stacks * 5;
   const line = document.createElement('div');
   line.className = 'global-bonus-line';
   line.innerHTML = wrap(`
@@ -489,13 +489,13 @@ function applyTinkatonAttacker(atkStats, defStats, card) {
     <div style="flex:1;">
       ${passiveBadge('Mold Breaker', null, PASSIVE_ATK)}
       Stacks: <button class="stack-btn minus">-</button>
-      <strong style="color:${C};">${state.attackerPassiveStacks}</strong>/60
+      <strong style="color:${C};">${state.attackerPassiveStacks}</strong>/100
       <button class="stack-btn plus">+</button>
       <br>→ +${(state.attackerPassiveStacks * 0.5).toFixed(1)}% Atk
     </div>
   `);
   line.querySelector('.minus').onclick = () => { if (state.attackerPassiveStacks > 0)  { state.attackerPassiveStacks--; updateDamages(); } };
-  line.querySelector('.plus').onclick  = () => { if (state.attackerPassiveStacks < 60) { state.attackerPassiveStacks++; updateDamages(); } };
+  line.querySelector('.plus').onclick  = () => { if (state.attackerPassiveStacks < 100) { state.attackerPassiveStacks++; updateDamages(); } };
   card.appendChild(line);
 }
 

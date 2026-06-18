@@ -5,21 +5,21 @@
     "role": "speedster",
     "style": "physical",
     "stats": [
-      {"level": 1, "hp": 3000, "atk": 140, "def": 52, "sp_atk": 20, "sp_def": 36, "crit": 15},
-      {"level": 2, "hp": 3114, "atk": 159, "def": 61, "sp_atk": 23, "sp_def": 42, "crit": 15},
-      {"level": 3, "hp": 3239, "atk": 180, "def": 71, "sp_atk": 27, "sp_def": 48, "crit": 15},
-      {"level": 4, "hp": 3377, "atk": 203, "def": 82, "sp_atk": 31, "sp_def": 55, "crit": 15},
-      {"level": 5, "hp": 3528, "atk": 228, "def": 94, "sp_atk": 36, "sp_def": 63, "crit": 20},
-      {"level": 6, "hp": 3695, "atk": 256, "def": 107, "sp_atk": 41, "sp_def": 72, "crit": 20},
-      {"level": 7, "hp": 3878, "atk": 286, "def": 121, "sp_atk": 47, "sp_def": 81, "crit": 20},
-      {"level": 8, "hp": 4080, "atk": 319, "def": 137, "sp_atk": 53, "sp_def": 91, "crit": 20},
-      {"level": 9, "hp": 4303, "atk": 356, "def": 154, "sp_atk": 60, "sp_def": 102, "crit": 25},
-      {"level": 10, "hp": 4549, "atk": 397, "def": 173, "sp_atk": 68, "sp_def": 115, "crit": 25},
-      {"level": 11, "hp": 4819, "atk": 442, "def": 194, "sp_atk": 76, "sp_def": 129, "crit": 25},
-      {"level": 12, "hp": 5116, "atk": 491, "def": 217, "sp_atk": 85, "sp_def": 144, "crit": 25},
-      {"level": 13, "hp": 5443, "atk": 545, "def": 242, "sp_atk": 95, "sp_def": 161, "crit": 25},
-      {"level": 14, "hp": 5803, "atk": 605, "def": 270, "sp_atk": 106, "sp_def": 180, "crit": 25},
-      {"level": 15, "hp": 6200, "atk": 670, "def": 300, "sp_atk": 118, "sp_def": 200, "crit": 25}
+      {"level": 1, "hp": 3000, "atk": 140, "def": 52, "sp_atk": 20, "sp_def": 36, "crit": 15, "lifesteal": 0},
+      {"level": 2, "hp": 3114, "atk": 159, "def": 61, "sp_atk": 23, "sp_def": 42, "crit": 15, "lifesteal": 0},
+      {"level": 3, "hp": 3239, "atk": 180, "def": 71, "sp_atk": 27, "sp_def": 48, "crit": 15, "lifesteal": 0},
+      {"level": 4, "hp": 3377, "atk": 203, "def": 82, "sp_atk": 31, "sp_def": 55, "crit": 15, "lifesteal": 0},
+      {"level": 5, "hp": 3528, "atk": 228, "def": 94, "sp_atk": 36, "sp_def": 63, "crit": 20, "lifesteal": 5},
+      {"level": 6, "hp": 3695, "atk": 256, "def": 107, "sp_atk": 41, "sp_def": 72, "crit": 20, "lifesteal": 5},
+      {"level": 7, "hp": 3878, "atk": 286, "def": 121, "sp_atk": 47, "sp_def": 81, "crit": 20, "lifesteal": 5},
+      {"level": 8, "hp": 4080, "atk": 319, "def": 137, "sp_atk": 53, "sp_def": 91, "crit": 20, "lifesteal": 5},
+      {"level": 9, "hp": 4303, "atk": 356, "def": 154, "sp_atk": 60, "sp_def": 102, "crit": 25, "lifesteal": 10},
+      {"level": 10, "hp": 4549, "atk": 397, "def": 173, "sp_atk": 68, "sp_def": 115, "crit": 25, "lifesteal": 10},
+      {"level": 11, "hp": 4819, "atk": 442, "def": 194, "sp_atk": 76, "sp_def": 129, "crit": 25, "lifesteal": 10},
+      {"level": 12, "hp": 5116, "atk": 491, "def": 217, "sp_atk": 85, "sp_def": 144, "crit": 25, "lifesteal": 10},
+      {"level": 13, "hp": 5443, "atk": 545, "def": 242, "sp_atk": 95, "sp_def": 161, "crit": 25, "lifesteal": 10},
+      {"level": 14, "hp": 5803, "atk": 605, "def": 270, "sp_atk": 106, "sp_def": 180, "crit": 25, "lifesteal": 10},
+      {"level": 15, "hp": 6200, "atk": 670, "def": 300, "sp_atk": 118, "sp_def": 200, "crit": 25, "lifesteal": 10}
     ],
     "passive": {
       "name": "Super Luck",
@@ -35,7 +35,7 @@
         "damages": [
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
           {"name": "Boosted", "multiplier": 51, "levelCoef": 5, "constant": 100, "dealDamage": true},
-          {"name": "Single Target Bonus", "multiplier": 37.5, "levelCoef": 1, "constant": 20, "dealDamage": true}
+          {"name": "Single Target Bonus", "multiplier": 37.5, "levelCoef": 1, "constant": 20, "dealDamage": true, "lifesteal": false}
         ]
       },
       {
@@ -67,8 +67,8 @@
 		    "can_crit": "true",
         "image": "assets/moves/absol/pursuit.png",
         "damages": [
-          {"name": "Normal", "multiplier": 132, "levelCoef": 13, "constant": 160, "dealDamage": true},
-          {"name": "Backstab", "multiplier": 198, "levelCoef": 19, "constant": 240, "dealDamage": true}
+          {"name": "Normal", "multiplier": 143, "levelCoef": 14, "constant": 173, "dealDamage": true},
+          {"name": "Backstab", "multiplier": 214, "levelCoef": 21, "constant": 259, "dealDamage": true}
         ]
       },
       {
@@ -89,8 +89,8 @@
         "image": "assets/moves/absol/psycho_cut.png",
         "damages": [
           {"name": "Initial Hit", "multiplier": 50, "levelCoef": 1, "constant": 65, "dealDamage": true},
-          {"name": "First 2 markers", "multiplier": 60, "levelCoef": 4, "constant": 40, "dealDamage": true},
-          {"name": "Last Marker", "multiplier": 90, "levelCoef": 6, "constant": 60, "dealDamage": true}
+          {"name": "First 2 markers", "multiplier": 72, "levelCoef": 5, "constant": 48, "dealDamage": true},
+          {"name": "Last Marker", "multiplier": 108, "levelCoef": 7, "constant": 72, "dealDamage": true}
         ]
       },
       {
@@ -165,8 +165,9 @@
         "image": "assets/moves/basic_attack.png",
         "damages": [
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Boosted (Sword Stance)", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "Pierce + 8.5% max HP (cap 1000 vs wild)"},
-          {"name": "Boosted (Shield Stance)", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "Stun + Heal + CDR"}
+          {"name": "Boosted (Sword Stance)", "multiplier": 135, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Boosted (Shield Stance)", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Boosted - Additional (Sword Stance)", "max_hp_percent": 15, "wild_cap": 1000, "dealDamage": true, "can_crit": false, "notes": "8.5% Max HP damage" }
         ],
         "heals": [
           { "name": "Heal - Boosted (Shield Stance)", "scaling": "atk", "multiplier": 150, "levelCoef": 12, "constant": 72 }
@@ -468,7 +469,8 @@
         "image": "assets/moves/basic_attack.png",
         "damages": [
           {"name": "Basic Attack", "multiplier": 30, "levelCoef": 5, "constant": 150, "dealDamage": true},
-          {"name": "Boosted Attack (Cannon Full)", "multiplier": 40, "levelCoef": 5, "constant": 220, "dealDamage": true, "notes": "Large AoE + close range boosted"}
+          {"name": "Boosted Attack (Cannon Full)", "multiplier": 40, "levelCoef": 5, "constant": 220, "dealDamage": true, "notes": "Large AoE + close range boosted"},
+          {"name": "Blazing Marks (3 stacks consumed)", "max_hp_percent": 10, "wild_cap": 1000, "dealDamage": true, "can_crit": false, "notes": "10% of Max HP, apply only with 3 Marks, capped at 1000"}
         ]
       },
       {
@@ -497,9 +499,9 @@
           {
             "name": "Shield (up to 6 total)",
             "scaling": "sp_atk",
-            "multiplier": 18,
+            "multiplier": 20,
             "levelCoef": 0,
-            "constant": 22, "is_tick": true, "tick_count": 6
+            "constant": 24, "is_tick": true, "tick_count": 6
           }
         ]
       },
@@ -535,15 +537,15 @@
         "can_crit": "false",
         "image": "assets/moves/armarouge/flame_charge.png",
         "damages": [
-          {"name": "Damage", "multiplier": 65, "levelCoef": 8, "constant": 300, "dealDamage": true}
+          {"name": "Damage", "multiplier": 85, "levelCoef": 10, "constant": 390, "dealDamage": true}
         ],
         "shields": [
           {
             "name": "Shield",
             "scaling": "sp_atk",
-            "multiplier": 138,
+            "multiplier": 152,
             "levelCoef": 0,
-            "constant": 172
+            "constant": 189
           }
         ]
       },
@@ -555,7 +557,7 @@
         "can_crit": "false",
         "image": "assets/moves/armarouge/psyshock.png",
         "damages": [
-          {"name": "Damage per Hit (3 hits)", "multiplier": 63, "levelCoef": 8, "constant": 360, "dealDamage": true, "is_tick": true, "tick_count": 3, "notes": "Ignores 35% Sp.Def ; 2nd hit -25%, 3rd hit -50%"}
+          {"name": "Damage per Hit (3 hits)", "multiplier": 63, "levelCoef": 8, "constant": 360, "dealDamage": true, "is_tick": true, "tick_count": 3, "tick_scaling": [1.0, 0.75, 0.50], "sp_def_pen": 35}
         ]
       },
       {
@@ -566,7 +568,7 @@
         "can_crit": "false",
         "image": "assets/moves/armarouge/psykaboom.png",
         "damages": [
-          {"name": "Damage", "multiplier": 250, "levelCoef": 16, "constant": 600, "dealDamage": true}
+          {"name": "Damage", "multiplier": 270, "levelCoef": 17, "constant": 648, "dealDamage": true}
         ],
         "shields": [
           {
@@ -608,7 +610,7 @@
         "can_crit": "false",
         "image": "assets/moves/basic_attack.png",
         "damages": [
-          {"name": "Basic Attack", "multiplier": 50, "levelCoef": 0, "constant": 200, "dealDamage": true}
+          {"name": "Basic Attack", "multiplier": 40, "levelCoef": 0, "constant": 160, "dealDamage": true}
         ]
       },
       {
@@ -686,21 +688,21 @@
     "role": "all-rounder",
     "style": "physical",
     "stats": [
-      {"level": 1, "hp": 3250, "atk": 125, "def": 80, "sp_atk": 20, "sp_def": 80, "crit": 0},
-      {"level": 2, "hp": 3352, "atk": 132, "def": 87, "sp_atk": 22, "sp_def": 87, "crit": 0},
-      {"level": 3, "hp": 3469, "atk": 141, "def": 95, "sp_atk": 24, "sp_def": 95, "crit": 0},
-      {"level": 4, "hp": 4064, "atk": 185, "def": 136, "sp_atk": 36, "sp_def": 136, "crit": 0},
-      {"level": 5, "hp": 4219, "atk": 196, "def": 147, "sp_atk": 40, "sp_def": 147, "crit": 0},
-      {"level": 6, "hp": 4398, "atk": 209, "def": 159, "sp_atk": 44, "sp_def": 159, "crit": 0},
-      {"level": 7, "hp": 4603, "atk": 224, "def": 173, "sp_atk": 48, "sp_def": 173, "crit": 0},
-      {"level": 8, "hp": 4839, "atk": 241, "def": 189, "sp_atk": 53, "sp_def": 189, "crit": 0},
-      {"level": 9, "hp": 5111, "atk": 261, "def": 208, "sp_atk": 59, "sp_def": 208, "crit": 0},
-      {"level": 10, "hp": 5424, "atk": 284, "def": 230, "sp_atk": 65, "sp_def": 230, "crit": 0},
-      {"level": 11, "hp": 5784, "atk": 310, "def": 255, "sp_atk": 72, "sp_def": 255, "crit": 0},
-      {"level": 12, "hp": 6198, "atk": 340, "def": 284, "sp_atk": 81, "sp_def": 284, "crit": 0},
-      {"level": 13, "hp": 6674, "atk": 375, "def": 317, "sp_atk": 91, "sp_def": 317, "crit": 0},
-      {"level": 14, "hp": 7221, "atk": 415, "def": 355, "sp_atk": 102, "sp_def": 355, "crit": 0},
-      {"level": 15, "hp": 7850, "atk": 461, "def": 399, "sp_atk": 115, "sp_def": 399, "crit": 0}
+      {"level": 1, "hp": 3250, "atk": 125, "def": 80, "sp_atk": 20, "sp_def": 80, "crit": 0, "lifesteal": 0},
+      {"level": 2, "hp": 3352, "atk": 132, "def": 87, "sp_atk": 22, "sp_def": 87, "crit": 0, "lifesteal": 0},
+      {"level": 3, "hp": 3469, "atk": 141, "def": 95, "sp_atk": 24, "sp_def": 95, "crit": 0, "lifesteal": 0},
+      {"level": 4, "hp": 4064, "atk": 185, "def": 136, "sp_atk": 36, "sp_def": 136, "crit": 0, "lifesteal": 0},
+      {"level": 5, "hp": 4219, "atk": 196, "def": 147, "sp_atk": 40, "sp_def": 147, "crit": 0, "lifesteal": 5},
+      {"level": 6, "hp": 4398, "atk": 209, "def": 159, "sp_atk": 44, "sp_def": 159, "crit": 0, "lifesteal": 5},
+      {"level": 7, "hp": 4603, "atk": 224, "def": 173, "sp_atk": 48, "sp_def": 173, "crit": 0, "lifesteal": 5},
+      {"level": 8, "hp": 4839, "atk": 241, "def": 189, "sp_atk": 53, "sp_def": 189, "crit": 0, "lifesteal": 5},
+      {"level": 9, "hp": 5111, "atk": 261, "def": 208, "sp_atk": 59, "sp_def": 208, "crit": 0, "lifesteal": 10},
+      {"level": 10, "hp": 5424, "atk": 284, "def": 230, "sp_atk": 65, "sp_def": 230, "crit": 0, "lifesteal": 10},
+      {"level": 11, "hp": 5784, "atk": 310, "def": 255, "sp_atk": 72, "sp_def": 255, "crit": 0, "lifesteal": 10},
+      {"level": 12, "hp": 6198, "atk": 340, "def": 284, "sp_atk": 81, "sp_def": 284, "crit": 0, "lifesteal": 10},
+      {"level": 13, "hp": 6674, "atk": 375, "def": 317, "sp_atk": 91, "sp_def": 317, "crit": 0, "lifesteal": 10},
+      {"level": 14, "hp": 7221, "atk": 415, "def": 355, "sp_atk": 102, "sp_def": 355, "crit": 0, "lifesteal": 10},
+      {"level": 15, "hp": 7850, "atk": 461, "def": 399, "sp_atk": 115, "sp_def": 399, "crit": 0, "lifesteal": 10}
     ],
     "moves": [
       {
@@ -800,11 +802,18 @@
         "can_crit": "true",
         "image": "assets/moves/azumarill/belly_bash.png",
         "damages": [
-          {"name": "Damage", "multiplier": 108, "levelCoef": 9, "constant": 260, "dealDamage": true}
+          {"name": "Charge Damage", "multiplier": 108, "levelCoef": 9, "constant": 260, "dealDamage": true}
         ],
         "shields": [
           {
-            "name": "Shield",
+            "name": "Shield (3x Belly Pound, 6.5% Max HP each)",
+            "scaling": "hp",
+            "multiplier": 19.5,
+            "levelCoef": 0,
+            "constant": 0
+          },
+          {
+            "name": "Shield (Unite Buff, 20% Max HP)",
             "scaling": "hp",
             "multiplier": 20,
             "levelCoef": 0,
@@ -972,21 +981,21 @@
     "role": "all-rounder",
     "style": "physical",
     "stats": [
-      {"level": 1, "hp": 3250, "atk": 160, "def": 80, "sp_atk": 20, "sp_def": 60, "crit": 0},
-      {"level": 2, "hp": 3315, "atk": 165, "def": 85, "sp_atk": 21, "sp_def": 64, "crit": 0},
-      {"level": 3, "hp": 3393, "atk": 171, "def": 92, "sp_atk": 23, "sp_def": 69, "crit": 0},
-      {"level": 4, "hp": 3487, "atk": 178, "def": 100, "sp_atk": 25, "sp_def": 75, "crit": 0},
-      {"level": 5, "hp": 3827, "atk": 203, "def": 128, "sp_atk": 32, "sp_def": 97, "crit": 5},
-      {"level": 6, "hp": 3963, "atk": 213, "def": 139, "sp_atk": 35, "sp_def": 106, "crit": 5},
-      {"level": 7, "hp": 4581, "atk": 258, "def": 190, "sp_atk": 48, "sp_def": 145, "crit": 5},
-      {"level": 8, "hp": 4776, "atk": 272, "def": 206, "sp_atk": 52, "sp_def": 157, "crit": 5},
-      {"level": 9, "hp": 5010, "atk": 289, "def": 226, "sp_atk": 57, "sp_def": 172, "crit": 10},
-      {"level": 10, "hp": 5291, "atk": 309, "def": 249, "sp_atk": 63, "sp_def": 190, "crit": 10},
-      {"level": 11, "hp": 5628, "atk": 333, "def": 277, "sp_atk": 70, "sp_def": 212, "crit": 10},
-      {"level": 12, "hp": 6033, "atk": 362, "def": 311, "sp_atk": 78, "sp_def": 238, "crit": 10},
-      {"level": 13, "hp": 6518, "atk": 397, "def": 351, "sp_atk": 88, "sp_def": 269, "crit": 10},
-      {"level": 14, "hp": 7101, "atk": 439, "def": 400, "sp_atk": 100, "sp_def": 306, "crit": 10},
-      {"level": 15, "hp": 7800, "atk": 490, "def": 458, "sp_atk": 115, "sp_def": 351, "crit": 10}
+      {"level": 1, "hp": 3250, "atk": 160, "def": 80, "sp_atk": 20, "sp_def": 60, "crit": 0, "lifesteal": 0},
+      {"level": 2, "hp": 3315, "atk": 165, "def": 85, "sp_atk": 21, "sp_def": 64, "crit": 0, "lifesteal": 0},
+      {"level": 3, "hp": 3393, "atk": 171, "def": 92, "sp_atk": 23, "sp_def": 69, "crit": 0, "lifesteal": 0},
+      {"level": 4, "hp": 3487, "atk": 178, "def": 100, "sp_atk": 25, "sp_def": 75, "crit": 0, "lifesteal": 0},
+      {"level": 5, "hp": 3827, "atk": 203, "def": 128, "sp_atk": 32, "sp_def": 97, "crit": 5, "lifesteal": 5},
+      {"level": 6, "hp": 3963, "atk": 213, "def": 139, "sp_atk": 35, "sp_def": 106, "crit": 5, "lifesteal": 5},
+      {"level": 7, "hp": 4581, "atk": 258, "def": 190, "sp_atk": 48, "sp_def": 145, "crit": 5, "lifesteal": 5},
+      {"level": 8, "hp": 4776, "atk": 272, "def": 206, "sp_atk": 52, "sp_def": 157, "crit": 5, "lifesteal": 10},
+      {"level": 9, "hp": 5010, "atk": 289, "def": 226, "sp_atk": 57, "sp_def": 172, "crit": 10, "lifesteal": 10},
+      {"level": 10, "hp": 5291, "atk": 309, "def": 249, "sp_atk": 63, "sp_def": 190, "crit": 10, "lifesteal": 10},
+      {"level": 11, "hp": 5628, "atk": 333, "def": 277, "sp_atk": 70, "sp_def": 212, "crit": 10, "lifesteal": 10},
+      {"level": 12, "hp": 6033, "atk": 362, "def": 311, "sp_atk": 78, "sp_def": 238, "crit": 10, "lifesteal": 10},
+      {"level": 13, "hp": 6518, "atk": 397, "def": 351, "sp_atk": 88, "sp_def": 269, "crit": 10, "lifesteal": 10},
+      {"level": 14, "hp": 7101, "atk": 439, "def": 400, "sp_atk": 100, "sp_def": 306, "crit": 10, "lifesteal": 10},
+      {"level": 15, "hp": 7800, "atk": 490, "def": 458, "sp_atk": 115, "sp_def": 351, "crit": 10, "lifesteal": 10}
     ],
     "moves": [
       {
@@ -1264,21 +1273,21 @@
     "role": "tank",
     "style": "physical",
     "stats": [
-        {"level": 1, "hp": 3250, "atk": 170, "def": 120, "sp_atk": 20, "sp_def": 80, "crit": 0},
-        {"level": 2, "hp": 3412, "atk": 180, "def": 134, "sp_atk": 23, "sp_def": 91, "crit": 0},
-        {"level": 3, "hp": 3590, "atk": 191, "def": 149, "sp_atk": 27, "sp_def": 103, "crit": 0},
-        {"level": 4, "hp": 3786, "atk": 203, "def": 165, "sp_atk": 31, "sp_def": 116, "crit": 0},
-        {"level": 5, "hp": 4001, "atk": 216, "def": 183, "sp_atk": 35, "sp_def": 130, "crit": 10},
-        {"level": 6, "hp": 4238, "atk": 231, "def": 203, "sp_atk": 40, "sp_def": 146, "crit": 10},
-        {"level": 7, "hp": 4499, "atk": 247, "def": 225, "sp_atk": 45, "sp_def": 163, "crit": 10},
-        {"level": 8, "hp": 4786, "atk": 265, "def": 249, "sp_atk": 51, "sp_def": 182, "crit": 10},
-        {"level": 9, "hp": 5103, "atk": 285, "def": 275, "sp_atk": 58, "sp_def": 203, "crit": 20},
-        {"level": 10, "hp": 5452, "atk": 306, "def": 304, "sp_atk": 65, "sp_def": 226, "crit": 20},
-        {"level": 11, "hp": 5836, "atk": 330, "def": 336, "sp_atk": 73, "sp_def": 251, "crit": 20},
-        {"level": 12, "hp": 6259, "atk": 356, "def": 371, "sp_atk": 82, "sp_def": 279, "crit": 20},
-        {"level": 13, "hp": 6724, "atk": 385, "def": 410, "sp_atk": 92, "sp_def": 309, "crit": 20},
-        {"level": 14, "hp": 7236, "atk": 417, "def": 453, "sp_atk": 103, "sp_def": 343, "crit": 20},
-        {"level": 15, "hp": 7800, "atk": 452, "def": 500, "sp_atk": 115, "sp_def": 380, "crit": 20}
+        {"level": 1, "hp": 3250, "atk": 170, "def": 120, "sp_atk": 20, "sp_def": 80, "crit": 0, "lifesteal": 0},
+        {"level": 2, "hp": 3412, "atk": 180, "def": 134, "sp_atk": 23, "sp_def": 91, "crit": 0, "lifesteal": 0},
+        {"level": 3, "hp": 3590, "atk": 191, "def": 149, "sp_atk": 27, "sp_def": 103, "crit": 0, "lifesteal": 0},
+        {"level": 4, "hp": 3786, "atk": 203, "def": 165, "sp_atk": 31, "sp_def": 116, "crit": 0, "lifesteal": 0},
+        {"level": 5, "hp": 4001, "atk": 216, "def": 183, "sp_atk": 35, "sp_def": 130, "crit": 10, "lifesteal": 5},
+        {"level": 6, "hp": 4238, "atk": 231, "def": 203, "sp_atk": 40, "sp_def": 146, "crit": 10, "lifesteal": 5},
+        {"level": 7, "hp": 4499, "atk": 247, "def": 225, "sp_atk": 45, "sp_def": 163, "crit": 10, "lifesteal": 5},
+        {"level": 8, "hp": 4786, "atk": 265, "def": 249, "sp_atk": 51, "sp_def": 182, "crit": 10, "lifesteal": 5},
+        {"level": 9, "hp": 5103, "atk": 285, "def": 275, "sp_atk": 58, "sp_def": 203, "crit": 20, "lifesteal": 10},
+        {"level": 10, "hp": 5452, "atk": 306, "def": 304, "sp_atk": 65, "sp_def": 226, "crit": 20, "lifesteal": 10},
+        {"level": 11, "hp": 5836, "atk": 330, "def": 336, "sp_atk": 73, "sp_def": 251, "crit": 20, "lifesteal": 10},
+        {"level": 12, "hp": 6259, "atk": 356, "def": 371, "sp_atk": 82, "sp_def": 279, "crit": 20, "lifesteal": 10},
+        {"level": 13, "hp": 6724, "atk": 385, "def": 410, "sp_atk": 92, "sp_def": 309, "crit": 20, "lifesteal": 15},
+        {"level": 14, "hp": 7236, "atk": 417, "def": 453, "sp_atk": 103, "sp_def": 343, "crit": 20, "lifesteal": 15},
+        {"level": 15, "hp": 7800, "atk": 452, "def": 500, "sp_atk": 115, "sp_def": 380, "crit": 20, "lifesteal": 15}
     ],
     "passive": {
       "name": "Beast Boost",
@@ -1404,21 +1413,21 @@
     "role": "attacker",
     "style": "physical",
     "stats": [
-        {"level": 1, "hp": 3250, "atk": 125, "def": 80, "sp_atk": 20, "sp_def": 64, "crit": 0},
-        {"level": 2, "hp": 3352, "atk": 132, "def": 85, "sp_atk": 22, "sp_def": 71, "crit": 0},
-        {"level": 3, "hp": 3469, "atk": 140, "def": 91, "sp_atk": 24, "sp_def": 79, "crit": 0},
-        {"level": 4, "hp": 3604, "atk": 149, "def": 98, "sp_atk": 27, "sp_def": 88, "crit": 0},
-        {"level": 5, "hp": 4219, "atk": 190, "def": 130, "sp_atk": 40, "sp_def": 130, "crit": 10},
-        {"level": 6, "hp": 4398, "atk": 202, "def": 139, "sp_atk": 44, "sp_def": 142, "crit": 10},
-        {"level": 7, "hp": 4603, "atk": 216, "def": 150, "sp_atk": 48, "sp_def": 156, "crit": 10},
-        {"level": 8, "hp": 4839, "atk": 232, "def": 162, "sp_atk": 53, "sp_def": 172, "crit": 10},
-        {"level": 9, "hp": 5111, "atk": 250, "def": 176, "sp_atk": 59, "sp_def": 191, "crit": 20},
-        {"level": 10, "hp": 5424, "atk": 271, "def": 192, "sp_atk": 66, "sp_def": 213, "crit": 20},
-        {"level": 11, "hp": 5784, "atk": 295, "def": 211, "sp_atk": 73, "sp_def": 238, "crit": 20},
-        {"level": 12, "hp": 6198, "atk": 322, "def": 233, "sp_atk": 82, "sp_def": 266, "crit": 20},
-        {"level": 13, "hp": 6674, "atk": 353, "def": 258, "sp_atk": 92, "sp_def": 299, "crit": 20},
-        {"level": 14, "hp": 7221, "atk": 389, "def": 287, "sp_atk": 103, "sp_def": 337, "crit": 20},
-        {"level": 15, "hp": 7850, "atk": 430, "def": 320, "sp_atk": 116, "sp_def": 380, "crit": 20}
+        {"level": 1, "hp": 3250, "atk": 125, "def": 80, "sp_atk": 20, "sp_def": 64, "crit": 0, "lifesteal": 0},
+        {"level": 2, "hp": 3352, "atk": 132, "def": 85, "sp_atk": 22, "sp_def": 71, "crit": 0, "lifesteal": 0},
+        {"level": 3, "hp": 3469, "atk": 140, "def": 91, "sp_atk": 24, "sp_def": 79, "crit": 0, "lifesteal": 0},
+        {"level": 4, "hp": 3604, "atk": 149, "def": 98, "sp_atk": 27, "sp_def": 88, "crit": 0, "lifesteal": 0},
+        {"level": 5, "hp": 4219, "atk": 190, "def": 130, "sp_atk": 40, "sp_def": 130, "crit": 10, "lifesteal": 25},
+        {"level": 6, "hp": 4398, "atk": 202, "def": 139, "sp_atk": 44, "sp_def": 142, "crit": 10, "lifesteal": 25},
+        {"level": 7, "hp": 4603, "atk": 216, "def": 150, "sp_atk": 48, "sp_def": 156, "crit": 10, "lifesteal": 25},
+        {"level": 8, "hp": 4839, "atk": 232, "def": 162, "sp_atk": 53, "sp_def": 172, "crit": 10, "lifesteal": 25},
+        {"level": 9, "hp": 5111, "atk": 250, "def": 176, "sp_atk": 59, "sp_def": 191, "crit": 20, "lifesteal": 30},
+        {"level": 10, "hp": 5424, "atk": 271, "def": 192, "sp_atk": 66, "sp_def": 213, "crit": 20, "lifesteal": 30},
+        {"level": 11, "hp": 5784, "atk": 295, "def": 211, "sp_atk": 73, "sp_def": 238, "crit": 20, "lifesteal": 30},
+        {"level": 12, "hp": 6198, "atk": 322, "def": 233, "sp_atk": 82, "sp_def": 266, "crit": 20, "lifesteal": 30},
+        {"level": 13, "hp": 6674, "atk": 353, "def": 258, "sp_atk": 92, "sp_def": 299, "crit": 20, "lifesteal": 30},
+        {"level": 14, "hp": 7221, "atk": 389, "def": 287, "sp_atk": 103, "sp_def": 337, "crit": 20, "lifesteal": 30},
+        {"level": 15, "hp": 7850, "atk": 430, "def": 320, "sp_atk": 116, "sp_def": 380, "crit": 20, "lifesteal": 30}
     ],
     "passive": {
       "name": "Weak Armor",
@@ -1456,9 +1465,9 @@
         "unlearn": null,
         "upgradeLevel": null,
         "can_crit": "true",
-        "image": "assets/moves/ceruledge/flame_body.png",
+        "image": "assets/moves/ceruledge/weak_armor.png",
         "damages": [
-          {"name": "Damage", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Damage", "multiplier": 10, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 6, "tick_scaling": [1.00, 1.50, 2.00, 2.50, 3.00, 3.50]}
         ]
       },
       {
@@ -1514,7 +1523,7 @@
         "can_crit": "false",
         "image": "assets/moves/ceruledge/phantom_force.png",
         "damages": [
-          {"name": "Damage", "multiplier": 135, "levelCoef": 9, "constant": 334, "dealDamage": true, "notes": "Ignores Defense & shields"}
+          {"name": "Damage", "multiplier": 135, "levelCoef": 9, "constant": 334, "dealDamage": true, "def_ignore": 1, "notes": "Ignores Defense & shields"}
         ]
       },
       {
@@ -1682,21 +1691,21 @@
     "role": "attacker",
     "style": "physical",
     "stats": [
-      {"level": 1, "hp": 3200, "atk": 161, "def": 70, "sp_atk": 20, "sp_def": 54, "crit": 0},
-      {"level": 2, "hp": 3264, "atk": 165, "def": 75, "sp_atk": 21, "sp_def": 58, "crit": 0},
-      {"level": 3, "hp": 3341, "atk": 170, "def": 81, "sp_atk": 23, "sp_def": 63, "crit": 0},
-      {"level": 4, "hp": 3434, "atk": 176, "def": 88, "sp_atk": 25, "sp_def": 68, "crit": 0},
-      {"level": 5, "hp": 3771, "atk": 199, "def": 121, "sp_atk": 32, "sp_def": 95, "crit": 15},
-      {"level": 6, "hp": 3905, "atk": 208, "def": 131, "sp_atk": 35, "sp_def": 103, "crit": 15},
-      {"level": 7, "hp": 4516, "atk": 249, "def": 168, "sp_atk": 48, "sp_def": 132, "crit": 15},
-      {"level": 8, "hp": 4709, "atk": 262, "def": 182, "sp_atk": 52, "sp_def": 143, "crit": 15},
-      {"level": 9, "hp": 4941, "atk": 277, "def": 199, "sp_atk": 57, "sp_def": 157, "crit": 30},
-      {"level": 10, "hp": 5219, "atk": 296, "def": 219, "sp_atk": 63, "sp_def": 173, "crit": 30},
-      {"level": 11, "hp": 5553, "atk": 318, "def": 243, "sp_atk": 70, "sp_def": 193, "crit": 30},
-      {"level": 12, "hp": 5953, "atk": 345, "def": 272, "sp_atk": 78, "sp_def": 217, "crit": 30},
-      {"level": 13, "hp": 6433, "atk": 377, "def": 307, "sp_atk": 88, "sp_def": 245, "crit": 30},
-      {"level": 14, "hp": 7009, "atk": 416, "def": 349, "sp_atk": 100, "sp_def": 279, "crit": 30},
-      {"level": 15, "hp": 7700, "atk": 462, "def": 400, "sp_atk": 115, "sp_def": 320, "crit": 30}
+      {"level": 1, "hp": 3200, "atk": 161, "def": 70, "sp_atk": 20, "sp_def": 54, "crit": 0, "lifesteal": 0},
+      {"level": 2, "hp": 3264, "atk": 165, "def": 75, "sp_atk": 21, "sp_def": 58, "crit": 0, "lifesteal": 0},
+      {"level": 3, "hp": 3341, "atk": 170, "def": 81, "sp_atk": 23, "sp_def": 63, "crit": 0, "lifesteal": 0},
+      {"level": 4, "hp": 3434, "atk": 176, "def": 88, "sp_atk": 25, "sp_def": 68, "crit": 0, "lifesteal": 0},
+      {"level": 5, "hp": 3771, "atk": 199, "def": 121, "sp_atk": 32, "sp_def": 95, "crit": 15, "lifesteal": 5},
+      {"level": 6, "hp": 3905, "atk": 208, "def": 131, "sp_atk": 35, "sp_def": 103, "crit": 15, "lifesteal": 5},
+      {"level": 7, "hp": 4516, "atk": 249, "def": 168, "sp_atk": 48, "sp_def": 132, "crit": 15, "lifesteal": 5},
+      {"level": 8, "hp": 4709, "atk": 262, "def": 182, "sp_atk": 52, "sp_def": 143, "crit": 15, "lifesteal": 5},
+      {"level": 9, "hp": 4941, "atk": 277, "def": 199, "sp_atk": 57, "sp_def": 157, "crit": 30, "lifesteal": 10},
+      {"level": 10, "hp": 5219, "atk": 296, "def": 219, "sp_atk": 63, "sp_def": 173, "crit": 30, "lifesteal": 10},
+      {"level": 11, "hp": 5553, "atk": 318, "def": 243, "sp_atk": 70, "sp_def": 193, "crit": 30, "lifesteal": 10},
+      {"level": 12, "hp": 5953, "atk": 345, "def": 272, "sp_atk": 78, "sp_def": 217, "crit": 30, "lifesteal": 10},
+      {"level": 13, "hp": 6433, "atk": 377, "def": 307, "sp_atk": 88, "sp_def": 245, "crit": 30, "lifesteal": 15},
+      {"level": 14, "hp": 7009, "atk": 416, "def": 349, "sp_atk": 100, "sp_def": 279, "crit": 30, "lifesteal": 15},
+      {"level": 15, "hp": 7700, "atk": 462, "def": 400, "sp_atk": 115, "sp_def": 320, "crit": 30, "lifesteal": 15}
     ],
     "passive": {
       "name": "Blaze",
@@ -1712,7 +1721,7 @@
         "image": "assets/moves/basic_attack.png",
         "damages": [
             {"name": "Basic (per hit x4)", "multiplier": 30.8, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 4},
-            {"name": "Additional to burned targets (per hit x4)", "multiplier": 32, "levelCoef": 2, "constant": 10, "dealDamage": true, "is_tick": true, "tick_count": 4, "notes": "Lifesteal applies"}
+            {"name": "Additional to burned targets (per hit x4)", "multiplier": 32, "levelCoef": 2, "constant": 10, "dealDamage": true, "is_tick": true, "tick_count": 4, "can_crit": false}
         ]
       },
       {
@@ -1828,21 +1837,21 @@
     "role": "attacker",
     "style": "physical",
     "stats": [
-        {"level": 1, "hp": 3200, "atk": 161, "def": 70, "sp_atk": 20, "sp_def": 54, "crit": 0},
-        {"level": 2, "hp": 3264, "atk": 165, "def": 75, "sp_atk": 21, "sp_def": 58, "crit": 0},
-        {"level": 3, "hp": 3341, "atk": 170, "def": 81, "sp_atk": 23, "sp_def": 63, "crit": 0},
-        {"level": 4, "hp": 3434, "atk": 176, "def": 88, "sp_atk": 25, "sp_def": 68, "crit": 0},
-        {"level": 5, "hp": 3771, "atk": 199, "def": 121, "sp_atk": 32, "sp_def": 95, "crit": 15},
-        {"level": 6, "hp": 3905, "atk": 208, "def": 131, "sp_atk": 35, "sp_def": 103, "crit": 15},
-        {"level": 7, "hp": 4516, "atk": 249, "def": 168, "sp_atk": 48, "sp_def": 132, "crit": 15},
-        {"level": 8, "hp": 4709, "atk": 262, "def": 182, "sp_atk": 52, "sp_def": 143, "crit": 15},
-        {"level": 9, "hp": 4941, "atk": 277, "def": 199, "sp_atk": 57, "sp_def": 157, "crit": 30},
-        {"level": 10, "hp": 5219, "atk": 296, "def": 219, "sp_atk": 63, "sp_def": 173, "crit": 30},
-        {"level": 11, "hp": 5553, "atk": 318, "def": 243, "sp_atk": 70, "sp_def": 193, "crit": 30},
-        {"level": 12, "hp": 5953, "atk": 345, "def": 272, "sp_atk": 78, "sp_def": 217, "crit": 30},
-        {"level": 13, "hp": 6433, "atk": 377, "def": 307, "sp_atk": 88, "sp_def": 245, "crit": 30},
-        {"level": 14, "hp": 7009, "atk": 416, "def": 349, "sp_atk": 100, "sp_def": 279, "crit": 30},
-        {"level": 15, "hp": 7700, "atk": 462, "def": 400, "sp_atk": 115, "sp_def": 320, "crit": 30}
+        {"level": 1, "hp": 3200, "atk": 161, "def": 70, "sp_atk": 20, "sp_def": 54, "crit": 0, "lifesteal": 0},
+        {"level": 2, "hp": 3264, "atk": 165, "def": 75, "sp_atk": 21, "sp_def": 58, "crit": 0, "lifesteal": 0},
+        {"level": 3, "hp": 3341, "atk": 170, "def": 81, "sp_atk": 23, "sp_def": 63, "crit": 0, "lifesteal": 0},
+        {"level": 4, "hp": 3434, "atk": 176, "def": 88, "sp_atk": 25, "sp_def": 68, "crit": 0, "lifesteal": 0},
+        {"level": 5, "hp": 3771, "atk": 199, "def": 121, "sp_atk": 32, "sp_def": 95, "crit": 15, "lifesteal": 5},
+        {"level": 6, "hp": 3905, "atk": 208, "def": 131, "sp_atk": 35, "sp_def": 103, "crit": 15, "lifesteal": 5},
+        {"level": 7, "hp": 4516, "atk": 249, "def": 168, "sp_atk": 48, "sp_def": 132, "crit": 15, "lifesteal": 5},
+        {"level": 8, "hp": 4709, "atk": 262, "def": 182, "sp_atk": 52, "sp_def": 143, "crit": 15, "lifesteal": 5},
+        {"level": 9, "hp": 4941, "atk": 277, "def": 199, "sp_atk": 57, "sp_def": 157, "crit": 30, "lifesteal": 10},
+        {"level": 10, "hp": 5219, "atk": 296, "def": 219, "sp_atk": 63, "sp_def": 173, "crit": 30, "lifesteal": 10},
+        {"level": 11, "hp": 5553, "atk": 318, "def": 243, "sp_atk": 70, "sp_def": 193, "crit": 30, "lifesteal": 10},
+        {"level": 12, "hp": 5953, "atk": 345, "def": 272, "sp_atk": 78, "sp_def": 217, "crit": 30, "lifesteal": 10},
+        {"level": 13, "hp": 6433, "atk": 377, "def": 307, "sp_atk": 88, "sp_def": 245, "crit": 30, "lifesteal": 15},
+        {"level": 14, "hp": 7009, "atk": 416, "def": 349, "sp_atk": 100, "sp_def": 279, "crit": 30, "lifesteal": 15},
+        {"level": 15, "hp": 7700, "atk": 462, "def": 400, "sp_atk": 115, "sp_def": 320, "crit": 30, "lifesteal": 15}
     ],
     "passive": {
       "name": "Tough Claw",
@@ -1959,21 +1968,21 @@
     "role": "all-rounder",
     "style": "physical",
     "stats": [
-      {"level": 1, "hp": 3200, "atk": 161, "def": 70, "sp_atk": 20, "sp_def": 54, "crit": 0},
-      {"level": 2, "hp": 3264, "atk": 165, "def": 75, "sp_atk": 21, "sp_def": 58, "crit": 0},
-      {"level": 3, "hp": 3341, "atk": 170, "def": 81, "sp_atk": 23, "sp_def": 63, "crit": 0},
-      {"level": 4, "hp": 3434, "atk": 176, "def": 88, "sp_atk": 25, "sp_def": 68, "crit": 0},
-      {"level": 5, "hp": 3771, "atk": 199, "def": 121, "sp_atk": 32, "sp_def": 95, "crit": 15},
-      {"level": 6, "hp": 3905, "atk": 208, "def": 131, "sp_atk": 35, "sp_def": 103, "crit": 15},
-      {"level": 7, "hp": 4516, "atk": 249, "def": 168, "sp_atk": 48, "sp_def": 132, "crit": 15},
-      {"level": 8, "hp": 4709, "atk": 262, "def": 182, "sp_atk": 52, "sp_def": 143, "crit": 15},
-      {"level": 9, "hp": 4941, "atk": 277, "def": 199, "sp_atk": 57, "sp_def": 157, "crit": 30},
-      {"level": 10, "hp": 5219, "atk": 296, "def": 219, "sp_atk": 63, "sp_def": 173, "crit": 30},
-      {"level": 11, "hp": 5553, "atk": 318, "def": 243, "sp_atk": 70, "sp_def": 193, "crit": 30},
-      {"level": 12, "hp": 5953, "atk": 345, "def": 272, "sp_atk": 78, "sp_def": 217, "crit": 30},
-      {"level": 13, "hp": 6433, "atk": 377, "def": 307, "sp_atk": 88, "sp_def": 245, "crit": 30},
-      {"level": 14, "hp": 7009, "atk": 416, "def": 349, "sp_atk": 100, "sp_def": 279, "crit": 30},
-      {"level": 15, "hp": 7700, "atk": 462, "def": 400, "sp_atk": 115, "sp_def": 320, "crit": 30}
+      {"level": 1, "hp": 3200, "atk": 161, "def": 70, "sp_atk": 20, "sp_def": 54, "crit": 0, "lifesteal": 0},
+      {"level": 2, "hp": 3264, "atk": 165, "def": 75, "sp_atk": 21, "sp_def": 58, "crit": 0, "lifesteal": 0},
+      {"level": 3, "hp": 3341, "atk": 170, "def": 81, "sp_atk": 23, "sp_def": 63, "crit": 0, "lifesteal": 0},
+      {"level": 4, "hp": 3434, "atk": 176, "def": 88, "sp_atk": 25, "sp_def": 68, "crit": 0, "lifesteal": 0},
+      {"level": 5, "hp": 3771, "atk": 199, "def": 121, "sp_atk": 32, "sp_def": 95, "crit": 15, "lifesteal": 5},
+      {"level": 6, "hp": 3905, "atk": 208, "def": 131, "sp_atk": 35, "sp_def": 103, "crit": 15, "lifesteal": 5},
+      {"level": 7, "hp": 4516, "atk": 249, "def": 168, "sp_atk": 48, "sp_def": 132, "crit": 15, "lifesteal": 5},
+      {"level": 8, "hp": 4709, "atk": 262, "def": 182, "sp_atk": 52, "sp_def": 143, "crit": 15, "lifesteal": 5},
+      {"level": 9, "hp": 4941, "atk": 277, "def": 199, "sp_atk": 57, "sp_def": 157, "crit": 30, "lifesteal": 10},
+      {"level": 10, "hp": 5219, "atk": 296, "def": 219, "sp_atk": 63, "sp_def": 173, "crit": 30, "lifesteal": 10},
+      {"level": 11, "hp": 5553, "atk": 318, "def": 243, "sp_atk": 70, "sp_def": 193, "crit": 30, "lifesteal": 10},
+      {"level": 12, "hp": 5953, "atk": 345, "def": 272, "sp_atk": 78, "sp_def": 217, "crit": 30, "lifesteal": 10},
+      {"level": 13, "hp": 6433, "atk": 377, "def": 307, "sp_atk": 88, "sp_def": 245, "crit": 30, "lifesteal": 15},
+      {"level": 14, "hp": 7009, "atk": 416, "def": 349, "sp_atk": 100, "sp_def": 279, "crit": 30, "lifesteal": 15},
+      {"level": 15, "hp": 7700, "atk": 462, "def": 400, "sp_atk": 115, "sp_def": 320, "crit": 30, "lifesteal": 15}
     ],
     "moves": [
       {
@@ -1981,7 +1990,7 @@
         "can_crit": "true",
         "image": "assets/moves/basic_attack.png",
         "damages": [
-          {"name": "Basic (4 hits)", "multiplier": 30.8, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 4},
+          {"name": "Basic (per hit x4)", "multiplier": 30.8, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 4},
           {"name": "Additional vs Burned (4 hits)", "multiplier": 32, "levelCoef": 2, "constant": 10, "dealDamage": true, "is_tick": true, "tick_count": 4}
         ]
       },
@@ -4130,7 +4139,7 @@
           {"name": "Damage - DoT + (every 0.5s, up to 4)", "multiplier": 9, "levelCoef": 1, "constant": 18, "dealDamage": true, "is_tick": true, "tick_count": 4}
         ],
         "heals": [
-          { "name": "Heal", "scaling": "sp_atk", "multiplier": 150, "levelCoef": 13, "constant": 300 }
+          { "name": "Heal", "scaling": "sp_atk", "multiplier": 165, "levelCoef": 14, "constant": 330 }
         ]
       },
       {
@@ -4187,7 +4196,7 @@
           {"name": "Damage", "multiplier": 200, "levelCoef": 8, "constant": 530, "dealDamage": true}
         ],
         "heals": [
-          { "name": "Heal", "scaling": "sp_atk", "multiplier": 306, "levelCoef": 13, "constant": 636 }
+          { "name": "Heal", "scaling": "sp_atk", "multiplier": 337, "levelCoef": 14, "constant": 700 }
         ],
         "shields": [
           {
@@ -4268,7 +4277,7 @@
           {"name": "Damage - Whirlpool (Torrent, up to 6)", "multiplier": 46, "levelCoef": 3, "constant": 70, "dealDamage": true, "is_tick": true, "tick_count": 6}
         ],
         "heals": [
-          { "name": "Healing - Whirlpool (Torrent)", "scaling": "sp_atk", "multiplier": 47, "levelCoef": 0, "constant": 128 }
+          { "name": "Healing - Whirlpool (Torrent)", "scaling": "sp_atk", "multiplier": 52, "levelCoef": 0, "constant": 141 }
         ]
       },
       {
@@ -4279,10 +4288,10 @@
         "can_crit": "false",
         "image": "assets/moves/empoleon/whirlpool.png",
         "damages": [
-          {"name": "Damage (up to 4)", "multiplier": 62, "levelCoef": 4, "constant": 90, "dealDamage": true, "is_tick": true, "tick_count": 4},
-          {"name": "Damage + (up to 4)", "multiplier": 74, "levelCoef": 5, "constant": 108, "dealDamage": true, "is_tick": true, "tick_count": 4, "upgraded": true},
-          {"name": "Damage (Torrent, up to 4)", "multiplier": 74, "levelCoef": 5, "constant": 108, "dealDamage": true, "is_tick": true, "tick_count": 4},
-          {"name": "Damage + (Torrent, up to 4)", "multiplier": 88, "levelCoef": 6, "constant": 130, "dealDamage": true, "is_tick": true, "tick_count": 4, "upgraded": true},
+          {"name": "Damage (up to 4)", "multiplier": 69, "levelCoef": 4, "constant": 101, "dealDamage": true, "is_tick": true, "tick_count": 4},
+          {"name": "Damage + (up to 4)", "multiplier": 83, "levelCoef": 6, "constant": 121, "dealDamage": true, "is_tick": true, "tick_count": 4, "upgraded": true},
+          {"name": "Damage (Torrent, up to 4)", "multiplier": 83, "levelCoef": 6, "constant": 121, "dealDamage": true, "is_tick": true, "tick_count": 4},
+          {"name": "Damage + (Torrent, up to 4)", "multiplier": 99, "levelCoef": 7, "constant": 146, "dealDamage": true, "is_tick": true, "tick_count": 4, "upgraded": true},
           {"name": "Damage - Slash (Torrent)", "multiplier": 74, "levelCoef": 5, "constant": 108, "dealDamage": true},
           {"name": "Damage - Slash + (Torrent)", "multiplier": 88, "levelCoef": 6, "constant": 130, "dealDamage": true, "upgraded": true}
         ]
@@ -4295,9 +4304,7 @@
         "can_crit": "false",
         "image": "assets/moves/empoleon/metal_claw.png",
         "damages": [
-          {"name": "Damage", "multiplier": 207, "levelCoef": 11, "constant": 310, "dealDamage": true},
-          {"name": "Shield (Torrent)", "multiplier": 135, "levelCoef": 14, "constant": 352, "shield": true},
-          {"name": "Enhanced+ Shield (Torrent)", "multiplier": 162, "levelCoef": 17, "constant": 424, "shield": true}
+          {"name": "Damage", "multiplier": 228, "levelCoef": 12, "constant": 341, "dealDamage": true}
         ],
         "shields": [
           {"name": "Shield (Torrent)", "scaling": "sp_atk", "multiplier": 135, "levelCoef": 14, "constant": 352},
@@ -4525,7 +4532,7 @@
         "damages": [
           {"name": "Damage (Column Group, x2)", "multiplier": 170, "levelCoef": 10, "constant": 200, "dealDamage": true, "is_tick": true, "tick_count": 2},
           {"name": "Damage (No Retreat)", "multiplier": 270, "levelCoef": 100, "constant": 400, "dealDamage": true},
-          {"name": "Damage (No Retreat - Additional)", "max_hp_percent": 3, "dealDamage": true, "notes":"Capped at 1000"},
+          {"name": "Damage (No Retreat - Additional)", "max_hp_percent": 5, "dealDamage": true, "notes":"Capped at 1000"},
           {"name": "Damage (Dispatch formation Trooper)", "multiplier": 59.5, "levelCoef": 4, "constant": 95, "dealDamage": true}
         ],
         "shields": [
@@ -5652,8 +5659,8 @@
         "can_crit": "false",
         "image": "assets/moves/greninja/water_shuriken.png",
         "damages": [
-          {"name": "Damage per Shuriken", "multiplier": 135, "levelCoef": 8, "constant": 210, "dealDamage": true, "is_tick": true, "tick_count": 4},
-          {"name": "Damage per Shuriken +", "multiplier": 135, "levelCoef": 8, "constant": 210, "dealDamage": true, "is_tick": true, "tick_count": 5, "upgraded": true}
+          {"name": "Damage per Shuriken", "multiplier": 122, "levelCoef": 7, "constant": 189, "dealDamage": true, "is_tick": true, "tick_count": 4},
+          {"name": "Damage per Shuriken +", "multiplier": 122, "levelCoef": 7, "constant": 189, "dealDamage": true, "is_tick": true, "tick_count": 5, "upgraded": true}
           
         ],
         "heals": [
@@ -5672,8 +5679,8 @@
           {"name": "Bonus (<50% HP)", "multiplier": 90, "levelCoef": 4, "constant": 165, "wild_cap": 600, "dealDamage": true}
         ],
         "heals": [
-          {"name": "Healing per Enemy hit", "scaling": "atk", "multiplier": 41, "levelCoef": 5, "constant": 75, "target": "self"},
-          {"name": "Healing per Enemy hit +", "scaling": "atk", "multiplier": 49, "levelCoef": 6, "constant": 138, "target": "self", "upgraded": true}
+          {"name": "Healing per Enemy hit", "scaling": "atk", "multiplier": 37, "levelCoef": 5, "constant": 68, "target": "self"},
+          {"name": "Healing per Enemy hit +", "scaling": "atk", "multiplier": 44, "levelCoef": 5, "constant": 124, "target": "self", "upgraded": true}
         ]
       },
       {
@@ -6486,7 +6493,7 @@
     "passive": {
       "name": "Shell Armor",
       "image": "assets/moves/lapras/shell_armor.png",
-      "description": "If damage > 10% max HP, damage reduced by 20%."
+      "description": "If damage > 10% max HP, damage reduced by 25%."
     },
     "moves": [
       {
@@ -6498,7 +6505,7 @@
           {"name": "Boosted (x3)", "multiplier": 20, "levelCoef": 3, "constant": 60, "dealDamage": true, "scaling": "special", "is_tick": true, "tick_count": 3}
         ],
         "heals": [
-          { "name": "Heal - Per tick (max 3 per boosted)", "scaling": "hp", "multiplier": 3.5, "levelCoef": 0, "constant": 0, "is_tick": true, "tick_count": 3 }
+          { "name": "Heal - Per tick (max 3 per boosted)", "scaling": "hp", "multiplier": 4, "levelCoef": 0, "constant": 0, "is_tick": true, "tick_count": 3 }
         ]
       },
       {
@@ -7552,8 +7559,7 @@
         "can_crit": "false",
         "image": "assets/moves/meganium/grass_knot.png",
         "damages": [
-          {"name": "Damage", "multiplier": 192, "levelCoef": 0, "constant": 576, "dealDamage": true},
-          {"name": "Damage +", "multiplier": 192, "levelCoef": 0, "constant": 576, "dealDamage": true, "upgraded": true}
+          {"name": "Damage", "multiplier": 154, "levelCoef": 0, "constant": 461, "dealDamage": true}
         ]
       },
       {
@@ -7565,7 +7571,8 @@
         "image": "assets/moves/meganium/synthesis.png",
         "damages": [],
         "heals": [
-          {"name": "Heal", "scaling": "sp_atk", "multiplier": 180, "levelCoef": 0, "constant": 50}
+          {"name": "Heal", "scaling": "sp_atk", "multiplier": 180, "levelCoef": 0, "constant": 50},
+          {"name": "Heal (Second circle overlapping)", "scaling": "sp_atk", "multiplier": 90, "levelCoef": 0, "constant": 25}
         ]
       },
       {
@@ -8678,8 +8685,8 @@
       "name": "Flame Body",
       "image": "assets/moves/moltres/flame_body.png",
       "description": "Whenever the user deals damage with a Basic Attack, Boosted Attack, Wing Attack, or Sky Attack, the target is left with a burn and a burn counter (max 5 stacks, lasts 4s, ticks every 0.5s). If Incinerate or Heat Wave are used, the burn is cleansed and the counter is consumed, increasing the move's damage by 10% per stack.",
-      "burnTickRatio": 18,
-      "burnTickBase": 18,
+      "burnTickRatio": 14,
+      "burnTickBase": 14,
       "burnDmgType": "sp_atk",
       "burnMaxStacks": 5,
       "burnDuration": 4,
@@ -8748,13 +8755,13 @@
         "can_crit": "false",
         "image": "assets/moves/moltres/heat_wave.png",
         "damages": [
-          {"name": "Damage", "multiplier": 147, "levelCoef": 8, "constant": 434, "dealDamage": true}
+          {"name": "Damage", "multiplier": 132, "levelCoef": 7, "constant": 391, "dealDamage": true}
         ],
         "heals": [
           {
             "name": "Healing per tick (4 ticks)",
             "scaling": "hp",
-            "multiplier": 5,
+            "multiplier": 4,
             "levelCoef": 0,
             "constant": 0,
             "is_tick": true,
@@ -10803,9 +10810,9 @@
         "can_crit": "false",
         "image": "assets/moves/sylveon/mystical_fire.png",
         "damages": [
-          {"name": "First Hit", "multiplier": 74, "levelCoef": 12, "constant": 446, "dealDamage": true},
-          {"name": "Subsequent Hit (x3)", "multiplier": 21, "levelCoef": 3, "constant": 125, "dealDamage": true, "is_tick": true, "tick_count": 3, "notes": "28% of First Hit"},
-          {"name": "Subsequent Hit + (x4)", "multiplier": 21, "levelCoef": 3, "constant": 125, "dealDamage": true, "is_tick": true, "tick_count": 4, "notes": "28% of First Hit"}
+          {"name": "First Hit", "multiplier": 80, "levelCoef": 13, "constant": 482, "dealDamage": true},
+          {"name": "Subsequent Hit (x3)", "multiplier": 22.4, "levelCoef": 3.64, "constant": 134.96, "dealDamage": true, "is_tick": true, "tick_count": 3, "notes": "28% of First Hit"},
+          {"name": "Subsequent Hit + (x4)", "multiplier": 22.4, "levelCoef": 3.64, "constant": 134.96, "dealDamage": true, "is_tick": true, "tick_count": 4, "notes": "28% of First Hit"}
         ]
       },
       {
@@ -10817,7 +10824,7 @@
         "image": "assets/moves/sylveon/hyper_voice.png",
         "damages": [
           {"name": "Near (6x)", "multiplier": 25, "levelCoef": 6, "constant": 105, "dealDamage": true, "is_tick": true, "tick_count": 6},
-          {"name": "Far (6x)", "multiplier": 42, "levelCoef": 10, "constant": 175, "dealDamage": true, "is_tick": true, "tick_count": 6}
+          {"name": "Far (6x)", "multiplier": 48, "levelCoef": 12, "constant": 201, "dealDamage": true, "is_tick": true, "tick_count": 6}
         ]
       },
       {
@@ -11072,8 +11079,8 @@
         "can_crit": "false",
         "image": "assets/moves/tinkaton/gigaton_hammer.png",
         "damages": [
-          {"name": "Low Charge", "multiplier": 168, "levelCoef": 12, "constant": 260, "dealDamage": true},
-          {"name": "Mid Charge", "multiplier": 294, "levelCoef": 21, "constant": 454, "dealDamage": true},
+          {"name": "Low Charge", "multiplier": 210, "levelCoef": 15, "constant": 325, "dealDamage": true},
+          {"name": "Mid Charge", "multiplier": 318, "levelCoef": 23, "constant": 490, "dealDamage": true},
           {"name": "Max Charge", "multiplier": 420, "levelCoef": 30, "constant": 650, "dealDamage": true}
         ]
       },
