@@ -176,8 +176,8 @@ function applyDebuffs(pokemon, stats) {
 
     if (state.defenderAbsolBoosted) defMult *= 0.85;
     if (state.defenderCramorantBoostedGulpMissile) { defMult *= 0.80; spDefMult *= 0.95; }
-    if (state.defenderDecidueyeShadowSneak) defMult *= 0.40;
-    if (state.defenderDecidueyeShadowSneakPlus) defMult *= 0.20;
+    if (state.defenderDecidueyeShadowSneak) defMult *= 0.60;
+    if (state.defenderDecidueyeShadowSneakPlus) defMult *= 0.40;
     if (state.defenderGlaceonTailWhip) { defMult *= 0.70; spDefMult *= 0.70; }
     if (state.defenderTsareenaBoosted) defMult *= 0.80;
     if (state.defenderUrshifuLiquidation) defMult *= 0.70;
@@ -231,7 +231,7 @@ export function getModifiedStats(pokemon, level, items, stacksArray, activatedAr
 function applyDefenderDamagePassives(damage, defenderId, defenderMaxHP) {
   if (defenderId === "lapras" && defenderMaxHP !== null) {
     const threshold = defenderMaxHP * 0.10;
-    if (damage > threshold) return Math.floor(damage * 0.8);
+    if (damage > threshold) return Math.floor(damage * 0.75);
   }
   return damage;
 }

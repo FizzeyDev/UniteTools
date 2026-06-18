@@ -9,7 +9,7 @@ import { state } from './state.js';
 export function computeDefenderDamageMult() {
   let defenderDamageMult = 1.0;
 
-  if (state.defenderEldegossBuff)           defenderDamageMult *= 0.85;
+  if (state.defenderEldegossBuff)           defenderDamageMult *= 0.80;
   if (state.defenderNinetailsBuff)          defenderDamageMult *= 0.65;
   if (state.defenderNinetailsPlusBuff)      defenderDamageMult *= 0.60;
   if (state.defenderUmbreonBuff)            defenderDamageMult *= 0.85;
