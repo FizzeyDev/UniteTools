@@ -19,7 +19,7 @@
   },
   "armarouge": {
     "move1": [ "incinerate.png", "fire_spin.png", "armor_cannon.png" ],
-    "move2": [ "will_o_wisp.png", "flame_charge.png", "psychock.png" ],
+    "move2": [ "will_o_wisp.png", "flame_charge.png", "psyshock.png" ],
     "passive": [ "flash_fire.png" ],
     "unite": [ "psykaboom.png" ]
   },
