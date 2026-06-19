@@ -3,6 +3,31 @@
  * Web Worker — moteur de recherche du Build Optimizer.
  * Fonctions pures copiées/adaptées depuis damageCalculator.js & healCalculator.js
  * SANS dépendance à `state` (tout est passé en paramètre).
+ *
+ * ── Couverture des effets d'objets ──────────────────────────────────────────
+ * Modélisés :
+ *  - Tous les bonus de stats plats/% (stats[]), y compris les stacks (Attack
+ *    Weight, Sp. Atk Specs, Aeos Cookie, Drive Lens, Accel Bracer, Weakness
+ *    Policy) et le bonus conditionnel de Wise Glasses.
+ *  - Les effets activables génériques (activation_effect.stats), ex: Tenacity
+ *    Belt, Buddy Barrier, Focus Band, Leftovers, Score Shield, Energy
+ *    Amplifier — appliqués comme bonus de stats lorsque la case "activé" est
+ *    cochée pour ce build.
+ *  - Choice Specs (bonus de dégâts ponctuel, une fois par combat simulé).
+ *  - Slick Spoon, lorsqu'activé (pénétration de Sp. Def).
+ *
+ * Volontairement non modélisés (le moteur n'a pas de notion de temps/CD/PA) :
+ *  - Vitesse d'attaque (Choice Scarf, Rapid-Fire Scarf, Muscle Band) : leur
+ *    impact dépend du nombre d'auto-attaques réellement effectuées.
+ *  - Critique (Scope Lens, Razor Claw) : aucune notion de taux de critique de
+ *    base n'existe dans les données Pokémon, on ne peut donc pas calculer une
+ *    espérance fiable.
+ *  - Lifesteal / heal-on-hit hors mouvements (Drain Crown, Shell Bell,
+ *    Big Root, Rescue Hood) : n'affectent pas un score de dégâts/défense.
+ *  - Rocky Helmet (riposte de dégâts) et Curse Bangle/Incense (réduction de
+ *    soin adverse) : effets de zone/debuff sans cible mesurable ici.
+ * Ces items restent sélectionnables (leurs stats plates comptent toujours),
+ * seul leur effet spécial n'est pas ajouté au score.
  */
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -224,7 +249,35 @@ function scoreDamageVsEnemy(attacker, atkLevel, atkItems, atkStacks, atkActivate
   const defHP = defStats.hp;
   const defCurrentHP = defHP; // on suppose plein HP pour l'optimizer
 
+  // ── Effets d'items supplémentaires (au-delà des simples bonus de stats) ──
+  // NOTE — modélisation volontairement prudente : le moteur de score n'a pas
+  // de notion de temps/CD, donc on ne modélise que les effets dont l'ordre
+  // de grandeur est connu avec certitude depuis items_data.json. Les items
+  // liés à la vitesse d'attaque (Choice Scarf, Rapid-Fire Scarf, Muscle Band)
+  // ou au critique (Scope Lens, Razor Claw) ne sont pas comptabilisés ici car
+  // leur contribution dépend du nombre d'auto-attaques réellement effectuées
+  // pendant le combat, donnée que l'optimizer ne simule pas.
+  const choiceSpecs = atkItems.find(it => it && it.name === 'Choice Specs');
+  const slickSpoon  = atkItems.find((it, i) => it && it.name === 'Slick Spoon' && atkActivated[i]);
+
+  // Choice Specs : "deals additional damage" sur coup de move (CD 8s).
+  // C'est un objet Sp.Attaque — sur un Pokémon physique, le move scale sur
+  // l'Attaque et non le Sp.Atk, donc ce bonus ne s'applique pas (sinon
+  // l'optimizer le recommandait à tort même sur des attaquants physiques).
+  // Approximation : une seule activation comptée sur l'ensemble du combat
+  // plutôt qu'à chaque move, pour ne pas surestimer un proc à cooldown.
+  let oneTimeBonus = 0;
+  if (choiceSpecs && attacker.style !== 'physical') {
+    const flat = parseFloat(choiceSpecs.level20) || 0;
+    const pct  = parseFloat((choiceSpecs.level20_multiplier || '0').replace('%', '')) / 100;
+    oneTimeBonus += Math.floor(flat + atkStats.sp_atk * pct);
+  }
+
+  // Slick Spoon (activé) : les dégâts Sp.Atk ignorent un % de la Sp.Def adverse.
+  const spDefPenetration = slickSpoon ? (parseFloat(slickSpoon.level20) || 0) / 100 : 0;
+
   let total = 0;
+  let appliedOneTimeBonus = false;
 
   for (const move of (attacker.moves || [])) {
     if (move.learnLevel != null && move.learnLevel > atkLevel) continue;
@@ -236,11 +289,20 @@ function scoreDamageVsEnemy(attacker, atkLevel, atkItems, atkStacks, atkActivate
 
       const isPhysical = attacker.style === 'physical';
       const atkStat = isPhysical ? atkStats.atk : atkStats.sp_atk;
-      const defStat = isPhysical ? defStats.def  : defStats.sp_def;
+      let   defStat = isPhysical ? defStats.def  : defStats.sp_def;
+
+      if (!isPhysical && spDefPenetration > 0) {
+        defStat = Math.floor(defStat * (1 - spDefPenetration));
+      }
 
       const dmgVal = calculateDamagePure(dmg, atkStat, defStat, atkLevel, 1.0, defHP, defCurrentHP);
       const ticks  = dmg.is_tick ? (dmg.tick_count || 1) : 1;
       total += dmgVal * ticks;
+
+      if (choiceSpecs && !appliedOneTimeBonus) {
+        total += oneTimeBonus;
+        appliedOneTimeBonus = true;
+      }
     }
   }
 

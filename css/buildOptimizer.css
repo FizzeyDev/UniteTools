@@ -494,6 +494,117 @@
   border-top: 1px solid var(--bopt-border);
 }
 
+/* ── Held items on enemies ───────────────────────────────────────────────── */
+.bopt-enemy-items {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--bopt-border);
+}
+
+.bopt-enemy-items-label {
+  font-size: 0.69rem;
+  color: var(--bopt-muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.bopt-enemy-items-slots {
+  display: flex;
+  gap: 8px;
+}
+
+.bopt-enemy-item-slot {
+  position: relative;
+  width: 52px;
+  min-height: 52px;
+  background: var(--bopt-surface2);
+  border: 1px dashed var(--bopt-border-md);
+  border-radius: var(--bopt-radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 4px 2px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.bopt-enemy-item-slot:hover { border-color: var(--bopt-accent2); }
+
+.bopt-enemy-item-slot.has-item {
+  border: 1px solid rgba(255,215,64,0.3);
+  box-shadow: 0 0 10px rgba(255,215,64,0.08);
+}
+
+.bopt-enemy-item-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.bopt-enemy-item-clear {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bopt-red);
+  color: #fff;
+  font-size: 0.55rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bopt-enemy-item-stacks {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.bopt-enemy-stack-btn {
+  width: 14px;
+  height: 14px;
+  border: none;
+  border-radius: 3px;
+  background: var(--bopt-accent);
+  color: #000;
+  font-size: 0.55rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+.bopt-enemy-stack-btn:hover { filter: brightness(1.15); }
+
+.bopt-enemy-stack-val {
+  font-size: 0.6rem;
+  color: var(--bopt-text-mid);
+  min-width: 12px;
+  text-align: center;
+}
+
+.bopt-enemy-item-toggle {
+  font-size: 0.55rem;
+  padding: 1px 5px;
+  border-radius: 8px;
+  border: 1px solid var(--bopt-border-md);
+  background: transparent;
+  color: var(--bopt-muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.bopt-enemy-item-toggle.active {
+  border-color: rgba(76,175,130,0.45);
+  background: var(--bopt-green, rgba(76,175,130,0.15));
+  color: var(--bopt-green);
+}
+
 .bopt-enemy-moves-label {
   font-size: 0.69rem;
   color: var(--bopt-muted);

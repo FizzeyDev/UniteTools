@@ -51,7 +51,12 @@
       margin-bottom: -2px;
     }
     .main-tab-panel { display: none; }
-    .main-tab-panel.active { display: block; }
+    .main-tab-panel.active {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
   </style>
 </head>
 <body>

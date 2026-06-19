@@ -171,6 +171,18 @@ function buildOptimizerUI() {
         <div class="bopt-modal-grid" id="boptEnemyGrid"></div>
       </div>
     </div>
+
+    <!-- MODAL enemy item selection -->
+    <div class="bopt-modal" id="boptEnemyItemModal" style="display:none">
+      <div class="bopt-modal-inner">
+        <div class="bopt-modal-header">
+          <span>Choose an item for this enemy</span>
+          <button class="bopt-modal-close" id="boptEnemyItemClose">✕</button>
+        </div>
+        <input type="text" class="bopt-search" id="boptEnemyItemSearch" placeholder="Search an item...">
+        <div class="bopt-modal-grid" id="boptEnemyItemGrid"></div>
+      </div>
+    </div>
   `;
 }
 
@@ -183,6 +195,7 @@ function bindOptimizerEvents() {
   populateBoptExcludedGrid();
   populateBoptFixedItemGrid();
   populateBoptEnemyGrid();
+  populateBoptEnemyItemGrid();
 
   // Recherche attaquant
   document.getElementById('boptAtkSearch')?.addEventListener('input', e => {
@@ -235,6 +248,9 @@ function bindOptimizerEvents() {
   document.getElementById('boptEnemyModalClose')?.addEventListener('click', () => {
     document.getElementById('boptEnemyModal').style.display = 'none';
   });
+  document.getElementById('boptEnemyItemClose')?.addEventListener('click', () => {
+    document.getElementById('boptEnemyItemModal').style.display = 'none';
+  });
 
   // Recherche dans modals
   document.getElementById('boptFixedItemSearch')?.addEventListener('input', e => {
@@ -247,6 +263,12 @@ function bindOptimizerEvents() {
     const term = e.target.value.toLowerCase();
     document.querySelectorAll('#boptEnemyGrid .bopt-poke-item').forEach(el => {
       el.style.display = el.dataset.name.includes(term) ? '' : 'none';
+    });
+  });
+  document.getElementById('boptEnemyItemSearch')?.addEventListener('input', e => {
+    const term = e.target.value.toLowerCase();
+    document.querySelectorAll('#boptEnemyItemGrid .bopt-grid-item').forEach(el => {
+      el.style.display = el.dataset.name.toLowerCase().includes(term) ? '' : 'none';
     });
   });
 
@@ -370,6 +392,89 @@ function populateBoptFixedItemGrid() {
     });
 }
 
+// ── Items équipés sur les ennemis ──────────────────────────────────────────
+// Liste des items pouvant porter des stacks (max repris de buildOptimizerWorker.js
+// pour rester cohérent avec le moteur de calcul).
+const ENEMY_STACKABLE_MAX = {
+  'Attack Weight':    6,
+  'Sp. Atk Specs':    6,
+  'Aeos Cookie':       6,
+  'Drive Lens':        20,
+  'Accel Bracer':      20,
+  'Weakness Policy':   4,
+};
+
+function populateBoptEnemyItemGrid() {
+  const grid = document.getElementById('boptEnemyItemGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  const excluded = Object.values(specialHeldItems || {});
+  state.allItems
+    .filter(item => !excluded.includes(item.name))
+    .forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'bopt-grid-item';
+      div.dataset.name = (item.display_name || item.name).toLowerCase();
+      div.innerHTML = `
+        <img src="${item.image}" alt="${item.name}" onerror="this.src='assets/items/missing.png'">
+        <span>${item.display_name || item.name}</span>
+      `;
+      div.addEventListener('click', () => {
+        const { idx, slot } = optState._enemyItemModalTarget || {};
+        if (idx == null) return;
+        setEnemyItem(idx, slot, item);
+        document.getElementById('boptEnemyItemModal').style.display = 'none';
+        document.getElementById('boptEnemyItemSearch').value = '';
+        document.querySelectorAll('#boptEnemyItemGrid .bopt-grid-item').forEach(el => el.style.display = '');
+      });
+      grid.appendChild(div);
+    });
+}
+
+function openEnemyItemModal(idx, slot) {
+  optState._enemyItemModalTarget = { idx, slot };
+  document.getElementById('boptEnemyItemModal').style.display = 'flex';
+}
+
+function setEnemyItem(idx, slot, item) {
+  const enemy = optState.enemies[idx];
+  if (!enemy) return;
+  enemy.items[slot] = item;
+  enemy.stacks[slot] = ENEMY_STACKABLE_MAX[item.name] ? Math.floor(ENEMY_STACKABLE_MAX[item.name] / 2) : 0;
+  enemy.activated[slot] = item.activable ? true : false;
+  renderEnemiesList();
+  updateComboCount();
+}
+
+function clearEnemyItem(idx, slot) {
+  const enemy = optState.enemies[idx];
+  if (!enemy) return;
+  enemy.items[slot] = null;
+  enemy.stacks[slot] = 0;
+  enemy.activated[slot] = false;
+  renderEnemiesList();
+  updateComboCount();
+}
+
+function changeEnemyStack(idx, slot, delta) {
+  const enemy = optState.enemies[idx];
+  const item = enemy?.items[slot];
+  if (!item) return;
+  const max = ENEMY_STACKABLE_MAX[item.name] || 0;
+  if (max === 0) return;
+  enemy.stacks[slot] = Math.max(0, Math.min(max, (enemy.stacks[slot] || 0) + delta));
+  renderEnemiesList();
+}
+
+function toggleEnemyActivation(idx, slot) {
+  const enemy = optState.enemies[idx];
+  const item = enemy?.items[slot];
+  if (!item || !item.activable) return;
+  enemy.activated[slot] = !enemy.activated[slot];
+  renderEnemiesList();
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // SÉLECTION ATTAQUANT
 // ─────────────────────────────────────────────────────────────────────────────
@@ -482,6 +587,35 @@ function renderEnemiesList() {
         <button class="bopt-enemy-remove" data-idx="${idx}" title="Remove">✕</button>
       </div>
 
+      <!-- Enemy held items -->
+      <div class="bopt-enemy-items">
+        <div class="bopt-enemy-items-label">Held items:</div>
+        <div class="bopt-enemy-items-slots">
+          ${[0, 1, 2].map(slot => {
+            const item = enemy.items[slot];
+            const max  = item ? ENEMY_STACKABLE_MAX[item.name] : 0;
+            return `
+              <div class="bopt-enemy-item-slot ${item ? 'has-item' : ''}" data-idx="${idx}" data-slot="${slot}">
+                <img src="${item ? item.image : 'assets/items/none.png'}" onerror="this.src='assets/items/missing.png'" class="bopt-enemy-item-icon">
+                ${item ? `<button class="bopt-enemy-item-clear" data-idx="${idx}" data-slot="${slot}" title="Remove">✕</button>` : ''}
+                ${item && max ? `
+                  <div class="bopt-enemy-item-stacks">
+                    <button class="bopt-enemy-stack-btn" data-action="minus" data-idx="${idx}" data-slot="${slot}">−</button>
+                    <span class="bopt-enemy-stack-val">${enemy.stacks[slot] || 0}</span>
+                    <button class="bopt-enemy-stack-btn" data-action="plus" data-idx="${idx}" data-slot="${slot}">+</button>
+                  </div>
+                ` : ''}
+                ${item && item.activable ? `
+                  <button class="bopt-enemy-item-toggle ${enemy.activated[slot] ? 'active' : ''}" data-idx="${idx}" data-slot="${slot}" title="Toggle activation effect">
+                    ${enemy.activated[slot] ? '⚡ On' : '⚡ Off'}
+                  </button>
+                ` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
       <!-- Move checkboxes -->
       <div class="bopt-enemy-moves">
         <div class="bopt-enemy-moves-label">Moves included:</div>
@@ -499,6 +633,33 @@ function renderEnemiesList() {
 
     // Events
     card.querySelector('.bopt-enemy-remove').addEventListener('click', () => removeEnemy(idx));
+
+    // Item slots — click opens the item picker (unless clicking a sub-control)
+    card.querySelectorAll('.bopt-enemy-item-slot').forEach(slotEl => {
+      slotEl.addEventListener('click', e => {
+        if (e.target.closest('.bopt-enemy-item-clear, .bopt-enemy-stack-btn, .bopt-enemy-item-toggle')) return;
+        openEnemyItemModal(parseInt(slotEl.dataset.idx), parseInt(slotEl.dataset.slot));
+      });
+    });
+    card.querySelectorAll('.bopt-enemy-item-clear').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        clearEnemyItem(parseInt(btn.dataset.idx), parseInt(btn.dataset.slot));
+      });
+    });
+    card.querySelectorAll('.bopt-enemy-stack-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const delta = btn.dataset.action === 'plus' ? 1 : -1;
+        changeEnemyStack(parseInt(btn.dataset.idx), parseInt(btn.dataset.slot), delta);
+      });
+    });
+    card.querySelectorAll('.bopt-enemy-item-toggle').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        toggleEnemyActivation(parseInt(btn.dataset.idx), parseInt(btn.dataset.slot));
+      });
+    });
 
     card.querySelector('.bopt-priority-cb').addEventListener('change', e => {
       // Max 3 prioritaires
