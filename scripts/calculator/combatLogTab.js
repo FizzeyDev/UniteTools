@@ -69,11 +69,13 @@ const clState = {
   pokemonModalTarget: null, // slotId
   entries: [],         // log figé
   entrySeq: 1,
+  expandedEntryId: null, // id de l'entrée dont le détail est ouvert dans la séquence
   target: {
     hpCurrent: null,    // PV courants (absolu), null = pas encore initialisé
     startMode: 'percent', // 'percent' | 'absolute'
     startValue: 100,
   },
+  targetCategoryFilter: 'playable', // 'playable' | 'mob' | 'other' — filtre du picker de la Target
 };
 
 TEAM_SLOTS.forEach(s => { clState.slots[s.id] = freshSlot(s.id, s.team); });
@@ -258,14 +260,23 @@ function injectStyles() {
 #tab-combatlog.main-tab-panel.active::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: 3px; }
 #tab-combatlog.main-tab-panel.active::-webkit-scrollbar-track { background: transparent; }
 
-.clt-roster { display:flex; flex-wrap:wrap; gap:1.4rem; align-items:flex-start; }
-.clt-team { display:flex; flex-direction:column; gap:0.5rem; min-width:220px; flex:1; }
+.clt-roster { display:flex; flex-wrap:wrap; gap:1.4rem; align-items:flex-start; justify-content:center; }
+.clt-team { display:flex; flex-direction:column; gap:0.5rem; min-width:220px; flex:1; order:1; }
+.clt-team.purple { order:0; }
+.clt-team.orange { order:2; }
 .clt-team-title { font-family:'Rajdhani',sans-serif; font-weight:700; letter-spacing:0.05em; font-size:0.95rem; }
 .clt-team.purple .clt-team-title { color: var(--violet); }
 .clt-team.orange .clt-team-title { color: var(--orange); }
 .clt-team-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(96px,1fr)); gap:0.5rem; }
-.clt-target-wrap { display:flex; flex-direction:column; align-items:center; gap:0.5rem; padding:0.8rem; background:var(--surface-2); border:1px solid var(--border-md); border-radius:var(--radius); }
+.clt-target-wrap { order:1; display:flex; flex-direction:column; align-items:center; gap:0.5rem; padding:0.8rem; background:var(--surface-2); border:1px solid var(--border-md); border-radius:var(--radius); min-width:240px; }
 .clt-target-wrap .clt-team-title { color: var(--blue); }
+.clt-target-filters { display:flex; gap:0.4rem; flex-wrap:wrap; justify-content:center; }
+.clt-target-filter-btn { background:var(--surface-3); border:1px solid var(--border-md); color:var(--text-mid); border-radius:6px; padding:0.25rem 0.6rem; font-size:0.72rem; cursor:pointer; transition:background .15s,color .15s,border-color .15s; }
+.clt-target-filter-btn:hover { border-color:var(--blue); color:var(--text); }
+.clt-target-filter-btn.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+.clt-modal-filters { display:flex; gap:0.4rem; flex-wrap:wrap; }
+.clt-modal-filter-btn { background:var(--surface-3); border:1px solid var(--border-md); color:var(--text-mid); border-radius:6px; padding:0.3rem 0.7rem; font-size:0.75rem; cursor:pointer; }
+.clt-modal-filter-btn.active { background:var(--blue); color:#fff; border-color:var(--blue); }
 
 .clt-slot-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.5rem; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:0.3rem; transition:border-color .15s, transform .1s; text-align:center; }
 .clt-slot-card:hover { border-color:var(--border-md); transform:translateY(-1px); }
@@ -361,6 +372,20 @@ function injectStyles() {
 
 .clt-reset-btn { background:var(--surface-3); border:1px solid var(--border-md); color:var(--text-mid); border-radius:6px; padding:0.35rem 0.8rem; cursor:pointer; font-size:0.78rem; }
 .clt-clear-btn { background:var(--red-dim); border:1px solid var(--red); color:var(--red); border-radius:6px; padding:0.35rem 0.8rem; cursor:pointer; font-size:0.78rem; }
+
+.clt-chip { cursor:pointer; }
+.clt-chip.active { border-color:var(--blue) !important; box-shadow:0 0 0 1px var(--blue-glow); }
+.clt-entry-detail-host { margin-top:0.3rem; }
+.clt-detail-header { font-family:'Rajdhani',sans-serif; font-weight:700; color:var(--text-bright); margin-bottom:0.4rem; }
+.clt-detail-line { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem; padding:0.3rem 0; border-bottom:1px solid var(--border); font-size:0.82rem; }
+.clt-detail-line:last-of-type { border-bottom:none; }
+.clt-detail-line-val { font-weight:700; color:var(--text-bright); }
+.clt-detail-line-sub { flex-basis:100%; font-size:0.72rem; color:var(--text-dim); }
+.clt-detail-crit { color:var(--red); }
+.clt-detail-buffs { margin-top:0.5rem; font-size:0.78rem; color:var(--text-mid); background:var(--surface-3); border-radius:6px; padding:0.4rem 0.6rem; }
+.clt-detail-buffs-empty { color:var(--text-dim); font-style:italic; }
+.clt-detail-footer { margin-top:0.5rem; font-size:0.8rem; color:var(--text-mid); }
+.clt-entry-detail-host > div { background:var(--surface-2); border:1px solid var(--border-md); border-radius:var(--radius-sm); padding:0.7rem; }
 `;
   document.head.appendChild(style);
 }
@@ -406,6 +431,7 @@ function buildTabAndPanel() {
     <div class="clt-modal" id="cltPokemonModal">
       <div class="clt-modal-inner">
         <button class="clt-modal-close" id="cltPokemonModalClose">✕ Close</button>
+        <div class="clt-modal-filters" id="cltPokemonModalFilters" style="display:none;"></div>
         <input type="text" class="clt-modal-search" id="cltPokemonModalSearch" placeholder="Search a Pokémon...">
         <div class="clt-modal-grid" id="cltPokemonModalGrid"></div>
       </div>
@@ -443,22 +469,48 @@ function buildTabAndPanel() {
 // ROSTER (11 slots)
 // ─────────────────────────────────────────────────────────────────────────────
 
+function buildTeamWrap(team) {
+  const wrap = document.createElement('div');
+  wrap.className = `clt-team ${team}`;
+  wrap.innerHTML = `<div class="clt-team-title">${teamLabel(team)}</div><div class="clt-team-grid" id="cltGrid-${team}"></div>`;
+  return wrap;
+}
+
+function buildTargetWrap() {
+  const targetWrap = document.createElement('div');
+  targetWrap.className = 'clt-target-wrap';
+  const cats = [
+    ['playable', '🎮 Playable'],
+    ['mob', '🌿 Wild'],
+    ['other', '🎯 Dummy'],
+  ];
+  targetWrap.innerHTML = `
+    <div class="clt-team-title">🎯 Target</div>
+    <div class="clt-target-filters" id="cltTargetFilters">
+      ${cats.map(([val, label]) => `<button class="clt-target-filter-btn${clState.targetCategoryFilter === val ? ' active' : ''}" data-cat="${val}">${label}</button>`).join('')}
+    </div>
+  `;
+  targetWrap.querySelectorAll('.clt-target-filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      clState.targetCategoryFilter = btn.dataset.cat;
+      targetWrap.querySelectorAll('.clt-target-filter-btn').forEach(b => b.classList.toggle('active', b === btn));
+    });
+  });
+  return targetWrap;
+}
+
 function renderRoster() {
   const root = document.getElementById('cltRoster');
   if (!root) return;
   root.innerHTML = '';
 
-  ['purple', 'orange'].forEach(team => {
-    const wrap = document.createElement('div');
-    wrap.className = `clt-team ${team}`;
-    wrap.innerHTML = `<div class="clt-team-title">${teamLabel(team)}</div><div class="clt-team-grid" id="cltGrid-${team}"></div>`;
-    root.appendChild(wrap);
-  });
-
-  const targetWrap = document.createElement('div');
-  targetWrap.className = 'clt-target-wrap';
-  targetWrap.innerHTML = `<div class="clt-team-title">🎯 Target</div>`;
+  // Centre la Target entre les deux équipes : Violet (gauche) — Target (centre) — Orange (droite)
+  const purpleWrap = buildTeamWrap('purple');
+  const targetWrap = buildTargetWrap();
+  const orangeWrap = buildTeamWrap('orange');
+  root.appendChild(purpleWrap);
   root.appendChild(targetWrap);
+  root.appendChild(orangeWrap);
 
   TEAM_SLOTS.forEach(s => {
     const slot = clState.slots[s.id];
@@ -601,34 +653,69 @@ function bindItemSlotEvents(slot) {
 
 function openPokemonModal(slotId) {
   clState.pokemonModalTarget = slotId;
+  const slotTeam = clState.slots[slotId]?.team;
   const modal = document.getElementById('cltPokemonModal');
   modal.classList.add('open');
   const grid = document.getElementById('cltPokemonModalGrid');
-  grid.innerHTML = '';
 
-  state.allPokemon.forEach(poke => {
-    const div = document.createElement('div');
-    div.className = 'clt-modal-item';
-    div.dataset.name = (poke.displayName || '').toLowerCase();
-    div.innerHTML = `<img src="${poke.image}" onerror="this.src='assets/pokemon/missing.png'"><span>${poke.displayName}</span>`;
-    div.addEventListener('click', () => {
-      const slot = clState.slots[slotId];
-      slot.pokemon = poke;
-      slot.items = [null, null, null];
-      slot.stacks = [0, 0, 0];
-      slot.activated = [false, false, false];
-      const specialName = specialHeldItems[poke.pokemonId];
-      if (specialName) {
-        const it = state.allItems.find(i => i.name === specialName);
-        if (it) slot.items[0] = it;
-      }
-      modal.classList.remove('open');
-      renderRoster();
-      renderConfigPanel();
-      renderMovesPanel();
+  const populate = () => {
+    grid.innerHTML = '';
+    const cat = slotTeam === 'target' ? clState.targetCategoryFilter : 'playable';
+    const list = state.allPokemon.filter(p => p.category === cat);
+    list.forEach(poke => {
+      const div = document.createElement('div');
+      div.className = 'clt-modal-item';
+      div.dataset.name = (poke.displayName || '').toLowerCase();
+      div.innerHTML = `<img src="${poke.image}" onerror="this.src='assets/pokemon/missing.png'"><span>${poke.displayName}</span>`;
+      div.addEventListener('click', () => {
+        const slot = clState.slots[slotId];
+        slot.pokemon = poke;
+        slot.items = [null, null, null];
+        slot.stacks = [0, 0, 0];
+        slot.activated = [false, false, false];
+        const specialName = specialHeldItems[poke.pokemonId];
+        if (specialName) {
+          const it = state.allItems.find(i => i.name === specialName);
+          if (it) slot.items[0] = it;
+        }
+        modal.classList.remove('open');
+        renderRoster();
+        renderConfigPanel();
+        renderMovesPanel();
+      });
+      grid.appendChild(div);
     });
-    grid.appendChild(div);
-  });
+    const search = document.getElementById('cltPokemonModalSearch');
+    const term = (search.value || '').toLowerCase();
+    grid.querySelectorAll('.clt-modal-item').forEach(el => {
+      el.style.display = el.dataset.name.includes(term) ? '' : 'none';
+    });
+  };
+
+  const filtersHost = document.getElementById('cltPokemonModalFilters');
+  if (slotTeam === 'target') {
+    const cats = [
+      ['playable', '🎮 Playable'],
+      ['mob', '🌿 Wild'],
+      ['other', '🎯 Dummy'],
+    ];
+    filtersHost.style.display = 'flex';
+    filtersHost.innerHTML = cats.map(([val, label]) =>
+      `<button class="clt-modal-filter-btn${clState.targetCategoryFilter === val ? ' active' : ''}" data-cat="${val}">${label}</button>`
+    ).join('');
+    filtersHost.querySelectorAll('.clt-modal-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        clState.targetCategoryFilter = btn.dataset.cat;
+        filtersHost.querySelectorAll('.clt-modal-filter-btn').forEach(b => b.classList.toggle('active', b === btn));
+        populate();
+      });
+    });
+  } else {
+    filtersHost.style.display = 'none';
+    filtersHost.innerHTML = '';
+  }
+
+  populate();
 
   const search = document.getElementById('cltPokemonModalSearch');
   search.value = '';
@@ -831,7 +918,11 @@ function openPicker(actorSlot, move) {
         } else {
           value = opt.value;
         }
-        return { kind: opt.kind, name: opt.name, target: opt.target, value, isCrit: rowState[idx].isCrit };
+        return {
+          kind: opt.kind, name: opt.name, target: opt.target, value, isCrit: rowState[idx].isCrit,
+          canCrit: opt.canCrit, normalValue: opt.value, critValue: opt.critValue,
+          isTick: opt.isTick, tickCount: opt.tickCount, hitsUsed: rowState[idx].hitCount,
+        };
       })
       .filter(Boolean);
 
@@ -934,6 +1025,7 @@ function renderHpSection() {
 
   document.getElementById('cltLogClearBtn').addEventListener('click', () => {
     clState.entries = [];
+    clState.expandedEntryId = null;
     clState.target.hpCurrent = null;
     renderHpSection();
     renderLogSection();
@@ -952,6 +1044,16 @@ function renderHpSection() {
 // LOG / CHIPS (§2)
 // ─────────────────────────────────────────────────────────────────────────────
 
+function getActiveBuffsSnapshot() {
+  const all = [
+    ...(typeof ATTACKER_BUFFS !== 'undefined' ? ATTACKER_BUFFS : []),
+    ...(typeof DEFENDER_BUFFS !== 'undefined' ? DEFENDER_BUFFS : []),
+    ...(typeof ATTACKER_DEBUFFS !== 'undefined' ? ATTACKER_DEBUFFS : []),
+    ...(typeof DEFENDER_DEBUFFS !== 'undefined' ? DEFENDER_DEBUFFS : []),
+  ];
+  return all.filter(([key]) => !!state[key]).map(([, label]) => label);
+}
+
 function addLogEntry(actorSlot, move, lines) {
   applyEntryToHP(lines);
   clState.entries.push({
@@ -959,10 +1061,12 @@ function addLogEntry(actorSlot, move, lines) {
     actorId: actorSlot.id,
     actorName: actorSlot.pokemon.displayName,
     actorImage: actorSlot.pokemon.image,
+    actorLevel: actorSlot.level,
     moveName: move.name,
     moveImage: move.image,
     lines,
     hpAfter: clState.target.hpCurrent,
+    buffsSnapshot: getActiveBuffsSnapshot(),
   });
   renderHpSection();
   renderLogSection();
@@ -970,6 +1074,7 @@ function addLogEntry(actorSlot, move, lines) {
 
 function removeLogEntry(entryId) {
   clState.entries = clState.entries.filter(e => e.id !== entryId);
+  if (clState.expandedEntryId === entryId) clState.expandedEntryId = null;
   replayHPFromEntries();
   renderHpSection();
   renderLogSection();
@@ -977,6 +1082,36 @@ function removeLogEntry(entryId) {
 
 function buildChipTooltip(entry) {
   return entry.lines.map(l => `${l.name}${l.isCrit ? ' (crit)' : ''}: ${l.value.toLocaleString()}`).join('\n');
+}
+
+function buildEntryDetailHTML(entry) {
+  const lineRows = entry.lines.map(l => {
+    const kindIcon = l.kind === 'damage' ? '💥' : l.kind === 'heal' ? '❤️' : '🛡️';
+    const tgt = l.target === 'self' ? '(self)' : l.target === 'ally' ? '(ally)' : '';
+    let breakdown = '';
+    if (l.canCrit) {
+      breakdown = `Normal: <b>${l.normalValue?.toLocaleString() ?? '—'}</b> · Crit: <b>${l.critValue?.toLocaleString() ?? '—'}</b> → used: <b class="${l.isCrit ? 'clt-detail-crit' : ''}">${l.isCrit ? 'CRIT' : 'Normal'}</b>`;
+    } else if (l.isTick && l.tickCount > 1) {
+      breakdown = `Per-hit: <b>${(l.normalValue ?? l.value / Math.max(l.hitsUsed || 1, 1)).toLocaleString()}</b> × ${l.hitsUsed ?? l.tickCount} hits (of ${l.tickCount})`;
+    }
+    return `
+      <div class="clt-detail-line">
+        <span>${kindIcon} ${l.name} ${tgt}</span>
+        <span class="clt-detail-line-val">${l.value.toLocaleString()}</span>
+        ${breakdown ? `<div class="clt-detail-line-sub">${breakdown}</div>` : ''}
+      </div>`;
+  }).join('');
+
+  const buffsHTML = entry.buffsSnapshot && entry.buffsSnapshot.length
+    ? `<div class="clt-detail-buffs"><strong>Active buffs/debuffs:</strong> ${entry.buffsSnapshot.join(', ')}</div>`
+    : `<div class="clt-detail-buffs clt-detail-buffs-empty">No global buff/debuff active for this hit.</div>`;
+
+  return `
+    <div class="clt-detail-header">${entry.actorName} (Lv.${entry.actorLevel ?? '?'}) — ${entry.moveName}</div>
+    ${lineRows}
+    ${buffsHTML}
+    <div class="clt-detail-footer">Target HP after this entry: <b>${entry.hpAfter != null ? entry.hpAfter.toLocaleString() : '—'}</b></div>
+  `;
 }
 
 function renderLogSection() {
@@ -993,8 +1128,9 @@ function renderLogSection() {
   }));
 
   root.innerHTML = `
-    <div class="clt-log-header"><strong style="color:var(--text-bright);">Séquence</strong></div>
+    <div class="clt-log-header"><strong style="color:var(--text-bright);">Séquence</strong> <span style="color:var(--text-dim);font-size:0.78rem;">(cliquez sur une étape pour voir le détail)</span></div>
     <div class="clt-chips" id="cltChips"></div>
+    <div class="clt-entry-detail-host" id="cltEntryDetailHost"></div>
     <div class="clt-totals">
       <span>💥 Dégâts total : <b>${totalDmg.toLocaleString()}</b></span>
       <span>❤️ Soins (soi) : <b>${totalHealSelf.toLocaleString()}</b></span>
@@ -1005,6 +1141,7 @@ function renderLogSection() {
   `;
 
   const chipsHost = document.getElementById('cltChips');
+  const detailHost = document.getElementById('cltEntryDetailHost');
   if (clState.entries.length === 0) {
     chipsHost.innerHTML = `<span style="color:var(--text-dim);font-size:0.85rem;">Cliquez sur un move d'un Pokémon pour l'ajouter au combo...</span>`;
     return;
@@ -1018,7 +1155,7 @@ function renderLogSection() {
       chipsHost.appendChild(arrow);
     }
     const chip = document.createElement('div');
-    chip.className = 'clt-chip';
+    chip.className = 'clt-chip' + (clState.expandedEntryId === entry.id ? ' active' : '');
     chip.title = buildChipTooltip(entry);
     chip.innerHTML = `
       <img src="${entry.actorImage}" onerror="this.src='assets/pokemon/missing.png'">
@@ -1027,9 +1164,23 @@ function renderLogSection() {
       <span>${entry.moveName}</span>
       <button class="clt-chip-x" data-entry-id="${entry.id}">×</button>
     `;
+    chip.addEventListener('click', (e) => {
+      if (e.target.closest('.clt-chip-x')) return;
+      clState.expandedEntryId = clState.expandedEntryId === entry.id ? null : entry.id;
+      renderLogSection();
+    });
     chip.querySelector('.clt-chip-x').addEventListener('click', () => removeLogEntry(entry.id));
     chipsHost.appendChild(chip);
   });
+
+  if (clState.expandedEntryId != null) {
+    const entry = clState.entries.find(e => e.id === clState.expandedEntryId);
+    if (entry) {
+      detailHost.innerHTML = buildEntryDetailHTML(entry);
+    } else {
+      clState.expandedEntryId = null;
+    }
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
