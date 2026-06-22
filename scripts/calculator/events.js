@@ -143,6 +143,7 @@ export function setupDebuffListeners() {
     'sylveonHyperVoiceDebuffDefender',
     'tsareenaBoostedDebuffDefender',
     'urshifuLiquidationDebuffDefender',
+    'quaquavalLiquidationDebuffDefender',
     'venusaurSludgeBombDebuffDefender',
     'wigglytuffSingDebuffDefender',
     'umbreonFakeTearsDebuffDefender',
@@ -180,6 +181,7 @@ export function setupDebuffListeners() {
           case 'sylveonHyperVoiceDebuffDefender': state.defenderSylveonHyperVoice = e.target.checked; break;
           case 'tsareenaBoostedDebuffDefender': state.defenderTsareenaBoosted = e.target.checked; break;
           case 'urshifuLiquidationDebuffDefender': state.defenderUrshifuLiquidation = e.target.checked; break;
+          case 'quaquavalLiquidationDebuffDefender': state.defenderQuaquavalLiquidation = e.target.checked; break;
           case 'venusaurSludgeBombDebuffDefender': state.defenderVenusaurSludgeBomb = e.target.checked; break;
           case 'wigglytuffSingDebuffDefender': state.defenderWigglytuffSing = e.target.checked; break;
           case 'umbreonFakeTearsDebuffDefender': state.defenderUmbreonFakeTears = e.target.checked; break;

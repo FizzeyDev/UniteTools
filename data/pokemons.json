@@ -1811,5 +1811,23 @@
       5,
       7
     ]
+  },
+  {
+    "name": "Quaquaval",
+    "name_fr": "Palmaval",
+    "file": "quaquaval_all.png",
+    "role": "all",
+    "dex": 965,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
+    "annee": 2026,
+    "stade": "2ème évo",
+    "evo_niveaux": "5/7",
+    "mega": false,
+    "unite_move_cost": 90,
+    "evolution_levels": [
+      5,
+      7
+    ]
   }
 ]

@@ -9461,6 +9461,125 @@
     ]
   },
   {
+    "pokemonId": "quaquaval",
+    "dex": 965,
+    "role": "all-rounder",
+    "style": "physical",
+    "stats": [
+      {"level": 1, "hp": 3460, "atk": 160, "def": 94, "sp_atk": 20, "sp_def": 92, "crit": 0, "lifesteal": 0},
+      {"level": 2, "hp": 3528, "atk": 165, "def": 100, "sp_atk": 21, "sp_def": 97, "crit": 0, "lifesteal": 0},
+      {"level": 3, "hp": 3610, "atk": 172, "def": 106, "sp_atk": 23, "sp_def": 104, "crit": 0, "lifesteal": 0},
+      {"level": 4, "hp": 3708, "atk": 179, "def": 114, "sp_atk": 25, "sp_def": 112, "crit": 0, "lifesteal": 0},
+      {"level": 5, "hp": 4062, "atk": 207, "def": 143, "sp_atk": 32, "sp_def": 140, "crit": 10, "lifesteal": 5},
+      {"level": 6, "hp": 4203, "atk": 218, "def": 155, "sp_atk": 35, "sp_def": 151, "crit": 10, "lifesteal": 5},
+      {"level": 7, "hp": 4847, "atk": 268, "def": 207, "sp_atk": 48, "sp_def": 203, "crit": 10, "lifesteal": 5},
+      {"level": 8, "hp": 5050, "atk": 284, "def": 223, "sp_atk": 52, "sp_def": 219, "crit": 10, "lifesteal": 5},
+      {"level": 9, "hp": 5294, "atk": 303, "def": 243, "sp_atk": 57, "sp_def": 238, "crit": 20, "lifesteal": 10},
+      {"level": 10, "hp": 5587, "atk": 326, "def": 267, "sp_atk": 63, "sp_def": 262, "crit": 20, "lifesteal": 10},
+      {"level": 11, "hp": 5938, "atk": 353, "def": 296, "sp_atk": 70, "sp_def": 290, "crit": 20, "lifesteal": 10},
+      {"level": 12, "hp": 6359, "atk": 386, "def": 330, "sp_atk": 79, "sp_def": 323, "crit": 20, "lifesteal": 10},
+      {"level": 13, "hp": 6865, "atk": 426, "def": 371, "sp_atk": 89, "sp_def": 364, "crit": 20, "lifesteal": 15},
+      {"level": 14, "hp": 7472, "atk": 473, "def": 421, "sp_atk": 101, "sp_def": 412, "crit": 20, "lifesteal": 15},
+      {"level": 15, "hp": 8200, "atk": 530, "def": 480, "sp_atk": 116, "sp_def": 470, "crit": 20, "lifesteal": 15}
+    ],
+    "passive": {
+      "name": "Moxie",
+      "image": "assets/moves/quaquaval/moxie.png",
+      "description": "When the user deals damage with auto attacks or moves, vibes increase, which increase Attack by 5% per stack up to 3. If no vibes are gained within 3s, they are lost, along with the user's boosted gauge. After evolving into Quaquaval, the next auto attack when vibes are maxed becomes Spinning Edge. Each time Spinning Edge hits opposing Pokémon, the user's movement speed is increased by 15% for 3s, stacking up to 3 times."
+    },
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "true",
+        "image": "assets/moves/basic_attack.png",
+        "damages": [
+          {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Boosted", "multiplier": 130, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Spinning Edge (x6 hits)", "multiplier": 50, "levelCoef": 0, "constant": 150, "dealDamage": true, "is_tick": true, "tick_count": 6, "can_crit": "false"},
+          {"name": "Spinning Edge (Low Sweep) [x6]", "multiplier": 57, "levelCoef": 0, "constant": 172, "dealDamage": true, "is_tick": true, "tick_count": 6, "can_crit": "false", "notes": "Preceded by Low Sweep"},
+          {"name": "Spinning Edge (Low Sweep+) [x6]", "multiplier": 66, "levelCoef": 0, "constant": 200, "dealDamage": true, "is_tick": true, "tick_count": 6, "can_crit": "false", "upgraded": true, "notes": "Preceded by upgraded Low Sweep"}
+        ],
+        "shields": [
+          {"name": "Shield - Spinning Edge (Liquidation)", "scaling": "hp", "multiplier": 12, "levelCoef": 0, "constant": 0, "notes": "Preceded by Liquidation"},
+          {"name": "Shield - Spinning Edge (Liquidation+)", "scaling": "hp", "multiplier": 15, "levelCoef": 0, "constant": 0, "upgraded": true, "notes": "Preceded by upgraded Liquidation"}
+        ]
+      },
+      {
+        "name": "Pound",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "cd": 6,
+        "image": "assets/moves/quaquaval/pound.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 145, "levelCoef": 0, "constant": 435, "dealDamage": true, "notes": "Slows opposing Pokémon by 30% for 2s."}
+        ]
+      },
+      {
+        "name": "Low Sweep",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "cd": 7,
+        "image": "assets/moves/quaquaval/low_sweep.png",
+        "damages": [
+          {"name": "Damage - 3 hits", "multiplier": 100, "levelCoef": 0, "constant": 300, "dealDamage": true, "is_tick": true, "tick_count": 3, "notes": "Slows opposing Pokémon by 60% for 1s, decaying by 15% every 0.25s. Third kick can be aimed."},
+          {"name": "Damage - 3 hits (Upgraded)", "multiplier": 115, "levelCoef": 0, "constant": 345, "dealDamage": true, "is_tick": true, "tick_count": 3, "upgraded": true, "notes": "Increases the damage of this move, and Spinning Edge when this move precedes it."}
+        ]
+      },
+      {
+        "name": "Wing Attack",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "cd": 6,
+        "image": "assets/moves/quaquaval/wing_attack.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 105, "levelCoef": 0, "constant": 315, "dealDamage": true, "notes": "Gains a shield for 3s on hit."},
+          {"name": "Damage (Shield)", "multiplier": 125, "levelCoef": 0, "constant": 375, "dealDamage": true, "upgraded": true}
+        ]
+      },
+      {
+        "name": "Liquidation",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "cd": 7,
+        "image": "assets/moves/quaquaval/liquidation.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 190, "levelCoef": 0, "constant": 570, "dealDamage": true, "notes": "Lowers Defense of opposing Pokémon by 30% for 3s. Two uses can be kept in reserve, with a 0.5s cooldown between uses."}
+        ],
+        "heals": [
+          {"name": "Healing", "scaling": "hp", "multiplier": 8, "levelCoef": 0, "constant": 0},
+          {"name": "Healing (Upgraded)", "scaling": "hp", "multiplier": 10, "levelCoef": 0, "constant": 0, "upgraded": true}
+        ]
+      },
+      {
+        "name": "Carnival Splash (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "cd": 100,
+        "energy": 90000,
+        "image": "assets/moves/quaquaval/carnival_splash.png",
+        "buffs": "30% Movement Speed, 30% CDR, 20% Max HP Shield for 6s",
+        "damages": [
+          {"name": "Damage - 3 hits", "multiplier": 130, "levelCoef": 0, "constant": 390, "dealDamage": true, "is_tick": true, "tick_count": 3, "notes": "Unstoppable while dancing in place. Third hit pulls in opposing Pokémon, stunning them for 1s (no effect on wild Pokémon)."},
+          {"name": "Damage - 3 hits (Shield variant)", "multiplier": 120, "levelCoef": 0, "constant": 360, "dealDamage": true, "is_tick": true, "tick_count": 3, "upgraded": true}
+        ],
+        "shields": [
+          {"name": "Shield - Bonus (per Pokémon pulled, up to 3)", "scaling": "atk", "multiplier": 39.99, "levelCoef": 0, "constant": 119, "is_tick": true, "tick_count": 3},
+           {"name": "Shield - Unite Move", "scaling": "hp", "multiplier": 20, "levelCoef": 0, "constant": 0}
+        ]
+      }
+    ]
+  },
+  {
     "pokemonId": "raichu",
     "dex": 26,
     "role": "attacker",

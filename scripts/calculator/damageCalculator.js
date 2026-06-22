@@ -103,6 +103,10 @@ function applyPokemonBuffs(pokemon, stats) {
     if (pokemon?.pokemonId === "mega-gyarados" && state.attackerMegaGyaradosEvolve) { atk += 100; hp += 1200; }
     if (pokemon?.pokemonId === "mewtwo_x" && state.attackerMewtwoForm === "mega") { hp = Math.floor(hp * 1.10); }
     if (pokemon?.pokemonId === "mewtwo_y" && state.attackerMewtwoYForm === "mega") { hp = Math.floor(hp * 1.10); }
+    if (pokemon?.pokemonId === "quaquaval") {
+      const vibeStacks = Math.min(3, state.attackerPassiveStacks || 0);
+      if (vibeStacks > 0) atk += Math.floor(stats.atk * 0.05 * vibeStacks);
+    }
   }
 
   // Buffs spécifiques au défenseur
@@ -181,6 +185,7 @@ function applyDebuffs(pokemon, stats) {
     if (state.defenderGlaceonTailWhip) { defMult *= 0.70; spDefMult *= 0.70; }
     if (state.defenderTsareenaBoosted) defMult *= 0.80;
     if (state.defenderUrshifuLiquidation) defMult *= 0.70;
+    if (state.defenderQuaquavalLiquidation) defMult *= 0.70;
     if (state.defenderWigglytuffSing) { defMult *= 0.75; spDefMult *= 0.75; }
     if (state.defenderUmbreonFakeTears) { defMult *= 0.80; spDefMult *= 0.80; }
     if (state.defenderMewtwoXUnite) defMult *= 0.80;

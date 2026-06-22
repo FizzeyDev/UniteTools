@@ -147,6 +147,7 @@ export const state = {
   defenderSylveonHyperVoice: false,
   defenderTsareenaBoosted: false,
   defenderUrshifuLiquidation: false,
+  defenderQuaquavalLiquidation: false,
   defenderVenusaurSludgeBomb: false,
   defenderWigglytuffSing: false,
   defenderUmbreonFakeTears: false,

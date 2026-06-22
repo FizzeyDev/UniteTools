@@ -208,6 +208,7 @@ function resetDefenderDebuffs() {
   state.defenderSylveonHyperVoice = false;
   state.defenderTsareenaBoosted = false;
   state.defenderUrshifuLiquidation = false;
+  state.defenderQuaquavalLiquidation = false;
   state.defenderVenusaurSludgeBomb = false;
   state.defenderWigglytuffSing = false;
   state.defenderUmbreonFakeTears = false;

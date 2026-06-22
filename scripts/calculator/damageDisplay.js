@@ -35,6 +35,7 @@ import {
   applyMoltresAttacker,
   applyTyphlosionAttacker,
   applySkeledirgAttacker,   // ← SKELEDIRGE
+  applyQuaquavalAttacker,   // ← QUAQUAVAL
 } from './passiveEffectsAtk.js';
 
 import {
@@ -201,6 +202,18 @@ export function updateDamages() {
   }
 
   document.getElementById('attackerCritChance').textContent = `${totalCritChance}%`;
+
+  let totalLifesteal = 0;
+  if (state.currentAttacker?.stats) {
+    totalLifesteal = state.currentAttacker.stats[state.attackerLevel - 1]?.lifesteal || 0;
+  }
+  state.attackerItems.forEach(item => {
+    if (item?.stats) {
+      const lsStat = item.stats.find(s => s.label === "Lifesteal" || s.label === "Life Steal");
+      if (lsStat?.percent && lsStat.value) totalLifesteal += lsStat.value;
+    }
+  });
+  document.getElementById('attackerLifesteal').textContent = `${totalLifesteal}%`;
 
   document.querySelectorAll('.global-bonus-line').forEach(el => el.remove());
 
@@ -649,6 +662,7 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
     moltres: applyMoltresAttacker,
     typhlosion: applyTyphlosionAttacker,
     skeledirge: applySkeledirgAttacker,   // ← SKELEDIRGE
+    quaquaval: applyQuaquavalAttacker,    // ← QUAQUAVAL
   };
   handlers[pokemonId]?.(atkStats, defStats, card);
 }

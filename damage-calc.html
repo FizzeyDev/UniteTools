@@ -69,10 +69,6 @@
   <button id="howToUseBtn" class="how-to-use-btn" title="How to use (?)">📖 How to use</button>
 
   <h1 data-lang="calc_h1">Pokémon UNITE Damage Calculator</h1>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       TABS PRINCIPAUX : Calculateur | Build Optimizer
-       ═══════════════════════════════════════════════════════════ -->
   <div class="main-tabs">
     <button class="main-tab-btn active" data-tab="calculator">🗡️ Damage Calculator</button>
     <button class="main-tab-btn" data-tab="optimizer">⚡ Build Optimizer [BETA]</button>
@@ -80,10 +76,6 @@
 
   <!-- ── PANNEAU : Calculateur ─────────────────────────────────── -->
   <div id="tab-calculator" class="main-tab-panel active">
-
-    <!-- ═══════════════════════════════════════════════════════════
-         LAYOUT : 3 colonnes full-height
-         ═══════════════════════════════════════════════════════════ -->
     <div class="app-layout">
 
       <!-- ── COLONNE GAUCHE : Attaquant ─────────────────────────── -->
@@ -141,9 +133,13 @@
               <span class="stat-inline-label" data-lang="calc_stat_spatk">Sp.Atk</span>
               <span class="stat-inline-value" id="attackerSpAtk">0</span>
             </div>
-            <div class="stat-inline-item full-width">
+            <div class="stat-inline-item">
               <span class="stat-inline-label" data-lang="calc_stat_crit">Crit Chance</span>
               <span class="stat-inline-value" id="attackerCritChance">0%</span>
+            </div>
+            <div class="stat-inline-item">
+              <span class="stat-inline-label" data-lang="calc_stat_lifesteal">Lifesteal</span>
+              <span class="stat-inline-value" id="attackerLifesteal">0%</span>
             </div>
           </div>
         </div>
@@ -481,6 +477,7 @@
                 <label class="buff-label"><input type="checkbox" id="sylveonHyperVoiceDebuffDefender">Sylveon: Hyper Voice (-20% Sp.Def x4 (-80% Sp.Def))</label>
                 <label class="buff-label"><input type="checkbox" id="tsareenaBoostedDebuffDefender">Tsareena: Boosted (-20% Def)</label>
                 <label class="buff-label"><input type="checkbox" id="urshifuLiquidationDebuffDefender">Urshifu: Liquidation (-30% Def)</label>
+                <label class="buff-label"><input type="checkbox" id="quaquavalLiquidationDebuffDefender">Quaquaval: Liquidation (-30% Def)</label>
                 <label class="buff-label"><input type="checkbox" id="venusaurSludgeBombDebuffDefender">Venusaur: Sludge Bomb (-40% Sp.Def)</label>
                 <label class="buff-label"><input type="checkbox" id="wigglytuffSingDebuffDefender">Wigglytuff: Sing (-25% Def / Sp.Def)</label>
                 <label class="buff-label"><input type="checkbox" id="umbreonFakeTearsDebuffDefender">Umbreon: Fake Tears (-20% Def / Sp.Def)</label>

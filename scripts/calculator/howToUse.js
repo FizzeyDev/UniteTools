@@ -3,8 +3,8 @@
  * Modal "How to Use" + raccourcis clavier globaux
  */
 
-// ── Contenu de la modal ────────────────────────────────────────────────────────
-const SECTIONS = [
+// ── Tab 1: Damage Calculator ──────────────────────────────────────────────────
+const DAMAGE_CALC_SECTIONS = [
   {
     icon: '⚔️',
     title: 'Attacker & Defender',
@@ -47,7 +47,7 @@ const SECTIONS = [
       'For multi-hit moves, click the <strong>×N</strong> badge to expand hit count controls.',
       '<strong>Hover a damage line name</strong> to see its raw formula (base + stat scaling + level coeff).',
       'Values in <span style="color:#ef5350;">red parentheses</span> are crit damage. Values in <span style="color:#4caf82;">green</span> are heals. <span style="color:#ffd740;">Yellow</span> are shields.',
-      '<strong>Click a move card</strong> to add it to the Combat Log below.',
+      '<strong>Click a move card</strong> to add it to the Combat Log.',
     ]
   },
   {
@@ -71,16 +71,86 @@ const SECTIONS = [
       'Click an ally\'s portrait to remove them.',
     ]
   },
+];
+
+// ── Tab 2: Build Optimizer ────────────────────────────────────────────────────
+const BUILD_OPTIMIZER_SECTIONS = [
   {
-    icon: '📋',
-    title: 'Combat Log',
+    icon: '🧩',
+    title: 'What it does',
     color: '#9f53ec',
     items: [
-      'Click any move card to open a line picker - select which damage/heal/shield values to log, choose crit or normal.',
-      'The Combat Log accumulates damage to track combos. Use <strong>Clear</strong> to reset.',
-      'For crittable moves, toggle between Normal and Crit per line before confirming.',
+      'The Build Optimizer automatically tests combinations of held items to find the <strong>best 3-item build</strong> for a chosen Pokémon.',
+      'Pick the Pokémon to optimize, then let it search through item combinations and rank them by score.',
+      'You can lock one or more item slots if you already know part of the build, and the optimizer will only search the remaining slots.',
+      'Use <strong>Exclude items</strong> to remove specific items from the search (e.g. items you don\'t own or never want to use).',
     ]
   },
+  {
+    icon: '🎯',
+    title: 'Optimization modes',
+    color: '#ff9d00',
+    items: [
+      '<strong>⚔️ Damage</strong> - scores builds by total damage dealt to the enemies you configure.',
+      '<strong>🛡️ Defense</strong> - scores builds by how much damage the attacker survives/mitigates instead of dealing.',
+      '<strong>💚 Heal (Self)</strong> - scores builds by self-healing output (lifesteal, recovery moves, etc.).',
+      '<strong>🤝 Heal (Ally)</strong> - scores builds for support Pokémon by healing/shielding provided to an ally.',
+    ]
+  },
+  {
+    icon: '👥',
+    title: 'Enemies & priority targets',
+    color: '#4caf82',
+    items: [
+      'Add one or more enemy Pokémon with their own level and items to simulate a real matchup.',
+      'Mark an enemy as a <strong>priority target</strong> to weigh it more heavily in the score (e.g. 2× points compared to normal enemies).',
+      'The optimizer re-runs the simulation for every tested build against all configured enemies.',
+    ]
+  },
+  {
+    icon: '🚀',
+    title: 'Running the search',
+    color: '#4fc3f7',
+    items: [
+      'Click <strong>Run</strong> to start the optimization - it runs in the background (Web Worker) so the rest of the app stays responsive.',
+      'The result list shows the top builds ranked by score, with the breakdown of damage/heal/shield per build.',
+      'This feature is marked <strong>[BETA]</strong> - results are a strong baseline but may not capture every bespoke passive interaction.',
+    ]
+  },
+];
+
+// ── Tab 3: Combat Log ─────────────────────────────────────────────────────────
+const COMBAT_LOG_SECTIONS = [
+  {
+    icon: '📋',
+    title: 'What it does',
+    color: '#9f53ec',
+    items: [
+      'The Combat Log lets you build a full <strong>5v5 + 1 target</strong> scenario instead of a single attacker vs. defender.',
+      'Fill the purple team and orange team slots with up to 5 Pokémon each, plus one shared Target to attack.',
+      'Each slot keeps its own level, items, and stacks - just like the main Calculator.',
+    ]
+  },
+  {
+    icon: '🖱️',
+    title: 'Logging moves',
+    color: '#ff9d00',
+    items: [
+      'Click any move card on a slot to open a line picker, then choose which damage/heal/shield lines to log.',
+      'For crittable lines, toggle between <strong>Normal</strong> and <strong>Crit</strong> before confirming.',
+      'Logged entries accumulate in the Combat Log so you can reconstruct combos and trades between multiple Pokémon.',
+    ]
+  },
+  {
+    icon: '🎯',
+    title: 'Target HP tracking',
+    color: '#4caf82',
+    items: [
+      'The shared <strong>Target</strong> slot tracks HP in real time as you log damage against it.',
+      'Use this to check whether a combo from one or several attackers is enough to secure a kill.',
+      'Click <strong>Clear</strong> to reset the log and the Target\'s HP.',
+    ]
+  }
 ];
 
 const SHORTCUTS = [
@@ -116,15 +186,47 @@ function buildModal() {
       </div>
 
       <div class="htu-tabs">
-        <button class="htu-tab active" data-tab="guide">Guide</button>
+        <button class="htu-tab active" data-tab="damage-calculator">Damage Calculator</button>
+        <button class="htu-tab" data-tab="build-optimizer">Build Optimizer</button>
+        <button class="htu-tab" data-tab="combat-log">Combat Log</button>
         <button class="htu-tab" data-tab="shortcuts">Keyboard Shortcuts</button>
       </div>
 
       <div class="htu-body">
 
-        <!-- GUIDE TAB -->
-        <div class="htu-pane active" id="htu-pane-guide">
-          ${SECTIONS.map(s => `
+        <!-- DAMAGE CALCULATOR TAB -->
+        <div class="htu-pane active" id="htu-pane-damage-calculator">
+          ${DAMAGE_CALC_SECTIONS.map(s => `
+            <div class="htu-section">
+              <div class="htu-section-header" style="--sec-color:${s.color}">
+                <span class="htu-section-icon">${s.icon}</span>
+                <span class="htu-section-title">${s.title}</span>
+              </div>
+              <ul class="htu-list">
+                ${s.items.map(i => `<li>${i}</li>`).join('')}
+              </ul>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- BUILD OPTIMIZER TAB -->
+        <div class="htu-pane" id="htu-pane-build-optimizer">
+          ${BUILD_OPTIMIZER_SECTIONS.map(s => `
+            <div class="htu-section">
+              <div class="htu-section-header" style="--sec-color:${s.color}">
+                <span class="htu-section-icon">${s.icon}</span>
+                <span class="htu-section-title">${s.title}</span>
+              </div>
+              <ul class="htu-list">
+                ${s.items.map(i => `<li>${i}</li>`).join('')}
+              </ul>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- COMBAT LOG TAB -->
+        <div class="htu-pane" id="htu-pane-combat-log">
+          ${COMBAT_LOG_SECTIONS.map(s => `
             <div class="htu-section">
               <div class="htu-section-header" style="--sec-color:${s.color}">
                 <span class="htu-section-icon">${s.icon}</span>
