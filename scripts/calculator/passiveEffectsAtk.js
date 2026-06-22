@@ -672,6 +672,27 @@ function applySkeledirgAttacker(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── QUAQUAVAL ─────────────────────────────────────────────────────────────────
+function applyQuaquavalAttacker(atkStats, defStats, card) {
+  const stacks = Math.min(3, state.attackerPassiveStacks || 0);
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/quaquaval/moxie.png')}
+    <div style="flex:1;">
+      ${passiveBadge('Moxie', null, PASSIVE_ATK)}
+      Vibes: <button class="stack-btn minus">-</button>
+      <strong style="color:${C};">${stacks}</strong>/3
+      <button class="stack-btn plus">+</button><br>
+      <span style="font-size:0.85rem;color:#ccc;">Attack bonus: <strong style="color:${C};">+${stacks * 5}%</strong></span><br>
+      <span style="font-size:0.8rem;color:#aaa;">At max vibes, the next auto-attack becomes Spinning Edge.</span>
+    </div>
+  `);
+  line.querySelector('.minus').onclick = () => { if (state.attackerPassiveStacks > 0) { state.attackerPassiveStacks--; updateDamages(); } };
+  line.querySelector('.plus').onclick  = () => { if (state.attackerPassiveStacks < 3) { state.attackerPassiveStacks++; updateDamages(); } };
+  card.appendChild(line);
+}
+
 export {
   applyBuzzwoleAttacker, applyCeruledgeAttacker, applyChandelureAttacker,
   applyDarkraiAttacker, applyDecidueyeAttacker, applyZardyAttacker,
@@ -681,5 +702,5 @@ export {
   applyMimikyuAttacker, applyRapidashAttacker, applySirfetchdAttacker,
   applySylveonAttacker, applyTinkatonAttacker, applyTyranitarAttacker,
   applyZeraoraAttacker, applyCrustleAttacker, applyMoltresAttacker,
-  applyTyphlosionAttacker, applySkeledirgAttacker
+  applyTyphlosionAttacker, applySkeledirgAttacker, applyQuaquavalAttacker
 };

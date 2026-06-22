@@ -7,10 +7,11 @@ import { setupBuffListeners, setupDebuffListeners, setupStackableDebuffs } from 
 import { updateDamages } from './damageDisplay.js';
 import { t } from './i18n.js';
 import { resetItems } from './itemManager.js';
-import { initCombatLog, initAllySelector } from './combatLog.js';
 import { initAllyManager } from './allyManager.js';
 import { initHowToUse } from './howToUse.js';
 import { enhanceBuffLabels } from './buff-visuals.js';
+import { initBuildOptimizer } from './buildOptimizer.js';
+import { initCombatLogTab } from './combatLogTab.js';
 
 document.querySelectorAll('.reset-items-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -31,6 +32,7 @@ async function initApp() {
 
   populateGrids();
   populateItemGrid();
+  initBuildOptimizer();
   setupItemSelection();
   setupItemSearch();
   setupSearch();
@@ -60,8 +62,7 @@ async function initApp() {
   else selectDefender('substitute-doll');
   updateDamages();
 
-  initCombatLog();
-  initAllySelector();
+  initCombatLogTab();
   initAllyManager();
   initHowToUse();
 }
