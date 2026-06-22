@@ -3,7 +3,6 @@ import { highlightGridSelection, updateDefenderSliderMode } from './uiManager.js
 import { resetItems, autoEquipSpecialItem, disableItemSlots, enableItemSlots } from './itemManager.js';
 import { updateDamages } from './damageDisplay.js';
 import { t } from './i18n.js';
-import { resetCombatLog } from './combatLog.js';
 import { resetAllies } from './allyManager.js';
 
 const pokemonGridAttacker = document.getElementById("pokemonGridAttacker");
@@ -69,7 +68,6 @@ export function selectAttacker(id) {
     container.querySelector('.stack-value').textContent = '0';
   });
 
-  resetCombatLog();
   resetAllies();
   updateDamages();
 }

@@ -7,7 +7,6 @@ import { setupBuffListeners, setupDebuffListeners, setupStackableDebuffs } from 
 import { updateDamages } from './damageDisplay.js';
 import { t } from './i18n.js';
 import { resetItems } from './itemManager.js';
-import { initAllySelector } from './combatLog.js';
 import { initAllyManager } from './allyManager.js';
 import { initHowToUse } from './howToUse.js';
 import { enhanceBuffLabels } from './buff-visuals.js';
@@ -64,7 +63,6 @@ async function initApp() {
   updateDamages();
 
   initCombatLogTab();
-  initAllySelector();
   initAllyManager();
   initHowToUse();
 }

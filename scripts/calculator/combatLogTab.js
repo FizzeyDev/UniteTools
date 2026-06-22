@@ -38,7 +38,7 @@ import { calculateHeal } from './healCalculator.js';
 import { calculateShield } from './shieldCalculator.js';
 import { applyPokemonStatMutations } from './statsManager.js';
 import { computeGlobalDamageMult, computeDefenderDamageMult } from './multiplierManager.js';
-import { stackableItems, specialHeldItems } from './constants.js';
+import { stackableItems, specialHeldItems, getMobHPAtTimer } from './constants.js';
 import { enhanceBuffLabels } from './buff-visuals.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -56,10 +56,17 @@ function freshSlot(id, team) {
     id, team,
     pokemon: null,
     level: 15,
+    timer: 130,
     items: [null, null, null],
     stacks: [0, 0, 0],
     activated: [false, false, false],
   };
+}
+
+function secsToTimer(secs) {
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
 }
 
 const clState = {
@@ -159,6 +166,9 @@ function buildMoveOptions(move, actorSlot, targetSlot) {
 
   const atkStats = getModifiedStats(actorSlot.pokemon, actorSlot.level, actorSlot.items, actorSlot.stacks, actorSlot.activated);
   const defStats = getModifiedStats(targetSlot.pokemon, targetSlot.level, targetSlot.items, targetSlot.stacks, targetSlot.activated);
+  if (targetSlot.pokemon.timerBased && targetSlot.pokemon.hpTable) {
+    defStats.hp = getMobHPAtTimer(targetSlot.pokemon.hpTable, targetSlot.timer);
+  }
   applyPokemonStatMutations(atkStats, defStats);
 
   const globalDamageMult = computeGlobalDamageMult();
@@ -239,156 +249,7 @@ function buildMoveOptions(move, actorSlot, targetSlot) {
   return { options, maxHP: defStats.hp };
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// INJECTION CSS
-// ─────────────────────────────────────────────────────────────────────────────
-
-function injectStyles() {
-  if (document.getElementById('clTabStyles')) return;
-  const style = document.createElement('style');
-  style.id = 'clTabStyles';
-  style.textContent = `
-#tab-combatlog.main-tab-panel { display:none; }
-#tab-combatlog.main-tab-panel.active {
-  display:flex; flex-direction:column; gap:1.2rem;
-  /* Le body est en overflow:hidden / height:100vh -> ce panel doit gérer son propre scroll */
-  overflow-y:auto; overflow-x:hidden; height:100%;
-  padding-right:4px;
-  scrollbar-width: thin; scrollbar-color: var(--border-md) transparent;
-}
-#tab-combatlog.main-tab-panel.active::-webkit-scrollbar { width: 6px; }
-#tab-combatlog.main-tab-panel.active::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: 3px; }
-#tab-combatlog.main-tab-panel.active::-webkit-scrollbar-track { background: transparent; }
-
-.clt-roster { display:flex; flex-wrap:wrap; gap:1.4rem; align-items:flex-start; justify-content:center; }
-.clt-team { display:flex; flex-direction:column; gap:0.5rem; min-width:220px; flex:1; order:1; }
-.clt-team.purple { order:0; }
-.clt-team.orange { order:2; }
-.clt-team-title { font-family:'Rajdhani',sans-serif; font-weight:700; letter-spacing:0.05em; font-size:0.95rem; }
-.clt-team.purple .clt-team-title { color: var(--violet); }
-.clt-team.orange .clt-team-title { color: var(--orange); }
-.clt-team-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(96px,1fr)); gap:0.5rem; }
-.clt-target-wrap { order:1; display:flex; flex-direction:column; align-items:center; gap:0.5rem; padding:0.8rem; background:var(--surface-2); border:1px solid var(--border-md); border-radius:var(--radius); min-width:240px; }
-.clt-target-wrap .clt-team-title { color: var(--blue); }
-.clt-target-filters { display:flex; gap:0.4rem; flex-wrap:wrap; justify-content:center; }
-.clt-target-filter-btn { background:var(--surface-3); border:1px solid var(--border-md); color:var(--text-mid); border-radius:6px; padding:0.25rem 0.6rem; font-size:0.72rem; cursor:pointer; transition:background .15s,color .15s,border-color .15s; }
-.clt-target-filter-btn:hover { border-color:var(--blue); color:var(--text); }
-.clt-target-filter-btn.active { background:var(--blue); color:#fff; border-color:var(--blue); }
-.clt-modal-filters { display:flex; gap:0.4rem; flex-wrap:wrap; }
-.clt-modal-filter-btn { background:var(--surface-3); border:1px solid var(--border-md); color:var(--text-mid); border-radius:6px; padding:0.3rem 0.7rem; font-size:0.75rem; cursor:pointer; }
-.clt-modal-filter-btn.active { background:var(--blue); color:#fff; border-color:var(--blue); }
-
-.clt-slot-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.5rem; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:0.3rem; transition:border-color .15s, transform .1s; text-align:center; }
-.clt-slot-card:hover { border-color:var(--border-md); transform:translateY(-1px); }
-.clt-slot-card.active { border-color:var(--blue); box-shadow:0 0 0 1px var(--blue-glow); }
-.clt-slot-card.empty { opacity:0.55; }
-.clt-slot-card img.clt-slot-img { width:48px; height:48px; object-fit:contain; border-radius:6px; background:var(--surface-3); }
-.clt-target-wrap .clt-slot-card img.clt-slot-img { width:64px; height:64px; }
-.clt-slot-name { font-size:0.72rem; color:var(--text); font-family:'Exo 2',sans-serif; line-height:1.1; }
-.clt-slot-items { display:flex; gap:2px; }
-.clt-slot-items img { width:14px; height:14px; border-radius:3px; opacity:0.85; }
-.clt-slot-lvl { font-size:0.65rem; color:var(--text-dim); }
-
-.clt-config-panel { background:var(--surface-2); border:1px solid var(--border-md); border-radius:var(--radius); padding:1rem; display:none; flex-direction:column; gap:0.8rem; }
-.clt-config-panel.open { display:flex; }
-.clt-config-header { display:flex; justify-content:space-between; align-items:center; }
-.clt-config-header h4 { margin:0; font-family:'Rajdhani',sans-serif; color:var(--text-bright); }
-.clt-close-btn { background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:1.1rem; }
-.clt-config-row { display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-start; }
-.clt-pick-pokemon-btn { display:flex; align-items:center; gap:0.6rem; background:var(--surface-3); border:1px solid var(--border-md); border-radius:var(--radius-sm); padding:0.5rem 0.8rem; cursor:pointer; color:var(--text); }
-.clt-pick-pokemon-btn img { width:36px; height:36px; object-fit:contain; }
-.clt-level-block { display:flex; flex-direction:column; gap:0.2rem; min-width:160px; }
-.clt-item-slots { display:flex; gap:0.5rem; }
-.clt-item-card { width:46px; height:46px; background:var(--surface-3); border:1px solid var(--border-md); border-radius:var(--radius-sm); position:relative; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-.clt-item-card img { width:32px; height:32px; object-fit:contain; }
-.clt-item-stack-ctrl { position:absolute; bottom:-8px; left:50%; transform:translateX(-50%); display:flex; gap:2px; background:var(--surface); border-radius:4px; padding:1px 3px; font-size:0.62rem; }
-.clt-item-stack-ctrl button { background:none; border:none; color:var(--blue); cursor:pointer; font-size:0.7rem; line-height:1; padding:0 2px; }
-.clt-item-toggle { position:absolute; top:-7px; right:-7px; width:16px; height:16px; border-radius:50%; border:1px solid var(--border-md); background:var(--surface); font-size:0.55rem; cursor:pointer; color:var(--text-dim); }
-.clt-item-toggle.active { background:var(--green); color:#000; border-color:var(--green); }
-
-.clt-moves-panel { display:none; flex-direction:column; gap:0.4rem; }
-.clt-moves-panel.open { display:flex; }
-.clt-moves-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:0.5rem; max-height:320px; overflow-y:auto; }
-.clt-move-card { background:var(--surface-3); border:1px solid var(--border-md); border-radius:var(--radius-sm); padding:0.5rem; cursor:pointer; display:flex; align-items:center; gap:0.5rem; }
-.clt-move-card:hover { border-color: var(--blue); }
-.clt-move-card img { width:28px; height:28px; border-radius:5px; }
-.clt-move-card span { font-size:0.8rem; color:var(--text); }
-
-.clt-picker { background:var(--surface); border:1px solid var(--blue); border-radius:var(--radius-sm); padding:0.7rem; display:flex; flex-direction:column; gap:0.4rem; }
-.clt-picker-row { display:flex; align-items:center; gap:0.5rem; font-size:0.82rem; padding:0.25rem 0; border-bottom:1px solid var(--border); flex-wrap:wrap; }
-.clt-picker-row .dmg-c { color: var(--red); } .clt-picker-row .heal-c { color: var(--green); } .clt-picker-row .shield-c { color: var(--blue); }
-.clt-picker-val { margin-left:auto; font-weight:700; }
-.clt-mini-btn { background:var(--surface-3); border:1px solid var(--border-md); color:var(--text); border-radius:5px; padding:1px 7px; cursor:pointer; font-size:0.72rem; }
-.clt-mini-btn.active { background:var(--blue); color:#021014; border-color:var(--blue); }
-.clt-picker-footer { display:flex; gap:0.5rem; justify-content:flex-end; }
-.clt-confirm-btn { background:var(--green); color:#021014; border:none; border-radius:6px; padding:0.4rem 1rem; font-weight:700; cursor:pointer; }
-.clt-cancel-btn { background:var(--surface-3); color:var(--text-dim); border:1px solid var(--border-md); border-radius:6px; padding:0.4rem 1rem; cursor:pointer; }
-
-.clt-hp-section { background:var(--surface-2); border:1px solid var(--border-md); border-radius:var(--radius); padding:1rem; display:flex; flex-direction:column; gap:0.6rem; }
-.clt-hp-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.6rem; }
-.clt-hp-values { font-family:'Rajdhani',sans-serif; font-size:1.1rem; color:var(--text-bright); }
-.clt-hp-percent { color:var(--text-mid); font-size:0.9rem; margin-left:0.4rem; }
-.clt-hp-bar-wrap { width:100%; height:14px; background:var(--surface-3); border-radius:7px; overflow:hidden; }
-.clt-hp-bar-fill { height:100%; background:linear-gradient(90deg, var(--green), var(--blue)); transition:width .2s; }
-.clt-hp-start-row { display:flex; gap:0.5rem; align-items:center; font-size:0.82rem; color:var(--text-mid); flex-wrap:wrap; }
-.clt-hp-start-row input[type=number] { width:90px; background:var(--surface-3); border:1px solid var(--border-md); color:var(--text); border-radius:5px; padding:3px 6px; }
-
-.clt-log-section { background:var(--surface-2); border:1px solid var(--border-md); border-radius:var(--radius); padding:1rem; display:flex; flex-direction:column; gap:0.6rem; }
-.clt-log-header { display:flex; justify-content:space-between; align-items:center; }
-.clt-chips { display:flex; flex-wrap:wrap; align-items:center; gap:0.3rem; }
-.clt-chip { display:flex; align-items:center; gap:0.3rem; background:var(--surface-3); border:1px solid var(--border-md); border-radius:20px; padding:0.25rem 0.5rem; font-size:0.74rem; }
-.clt-chip img { width:18px; height:18px; border-radius:4px; }
-.clt-chip-arrow { color:var(--text-dim); }
-.clt-chip-x { background:none; border:none; color:var(--red); cursor:pointer; font-size:0.85rem; }
-.clt-totals { display:flex; gap:1rem; flex-wrap:wrap; font-size:0.85rem; color:var(--text-mid); }
-.clt-totals b { color: var(--text-bright); }
-
-.clt-buffs-section { background:var(--surface-2); border:1px solid var(--border-md); border-radius:var(--radius); padding:1rem; display:flex; flex-direction:column; gap:0.8rem; }
-.clt-buffs-header { display:flex; align-items:center; justify-content:space-between; gap:0.5rem; font-family:'Rajdhani',sans-serif; font-weight:700; letter-spacing:0.04em; color:var(--text-bright); font-size:1rem; cursor:pointer; user-select:none; }
-.clt-buffs-header-title { display:flex; align-items:center; gap:0.5rem; }
-.clt-buffs-toggle { background:none; border:none; color:var(--text-dim); font-size:0.85rem; cursor:pointer; transition:transform 0.25s; padding:2px 4px; line-height:1; }
-.clt-buffs-section.collapsed .clt-buffs-toggle { transform:rotate(-90deg); }
-.clt-buffs-body { display:flex; flex-direction:column; gap:0.8rem; overflow:hidden; transition:max-height 0.3s ease, opacity 0.2s ease; max-height:2000px; opacity:1; }
-.clt-buffs-section.collapsed .clt-buffs-body { max-height:0; opacity:0; }
-.clt-buffs { display:flex; flex-wrap:wrap; gap:1rem; }
-.clt-buff-col { flex:1; min-width:240px; display:flex; flex-direction:column; gap:0.4rem; }
-.clt-buff-col h5 { margin:0; color:var(--text-dim); font-family:'Exo 2',sans-serif; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; }
-.clt-buff-col .buff-checkboxes { max-height:260px; }
-.clt-buff-col.clt-buff-col-atk .buff-label:has(input:checked) { border-left-color: var(--green); }
-.clt-buff-col.clt-buff-col-atk-debuff .buff-label:has(input:checked) { border-left-color: var(--red); }
-.clt-buff-col.clt-buff-col-def .buff-label:has(input:checked) { border-left-color: var(--green); }
-.clt-buff-col.clt-buff-col-def-debuff .buff-label:has(input:checked) { border-left-color: var(--red); }
-
-.clt-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; }
-.clt-modal.open { display:flex; }
-.clt-modal-inner { background:var(--surface); border:1px solid var(--border-md); border-radius:var(--radius); padding:1rem; width:min(640px,92vw); max-height:80vh; display:flex; flex-direction:column; gap:0.6rem; }
-.clt-modal-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(72px,1fr)); gap:0.4rem; overflow-y:auto; }
-.clt-modal-grid .clt-modal-item { display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; padding:4px; border-radius:6px; }
-.clt-modal-grid .clt-modal-item:hover { background:var(--surface-3); }
-.clt-modal-grid img { width:40px; height:40px; object-fit:contain; }
-.clt-modal-grid span { font-size:0.6rem; color:var(--text-mid); text-align:center; }
-.clt-modal-search { background:var(--surface-3); border:1px solid var(--border-md); color:var(--text); border-radius:6px; padding:0.4rem; }
-.clt-modal-close { align-self:flex-end; background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:1rem; }
-
-.clt-reset-btn { background:var(--surface-3); border:1px solid var(--border-md); color:var(--text-mid); border-radius:6px; padding:0.35rem 0.8rem; cursor:pointer; font-size:0.78rem; }
-.clt-clear-btn { background:var(--red-dim); border:1px solid var(--red); color:var(--red); border-radius:6px; padding:0.35rem 0.8rem; cursor:pointer; font-size:0.78rem; }
-
-.clt-chip { cursor:pointer; }
-.clt-chip.active { border-color:var(--blue) !important; box-shadow:0 0 0 1px var(--blue-glow); }
-.clt-entry-detail-host { margin-top:0.3rem; }
-.clt-detail-header { font-family:'Rajdhani',sans-serif; font-weight:700; color:var(--text-bright); margin-bottom:0.4rem; }
-.clt-detail-line { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem; padding:0.3rem 0; border-bottom:1px solid var(--border); font-size:0.82rem; }
-.clt-detail-line:last-of-type { border-bottom:none; }
-.clt-detail-line-val { font-weight:700; color:var(--text-bright); }
-.clt-detail-line-sub { flex-basis:100%; font-size:0.72rem; color:var(--text-dim); }
-.clt-detail-crit { color:var(--red); }
-.clt-detail-buffs { margin-top:0.5rem; font-size:0.78rem; color:var(--text-mid); background:var(--surface-3); border-radius:6px; padding:0.4rem 0.6rem; }
-.clt-detail-buffs-empty { color:var(--text-dim); font-style:italic; }
-.clt-detail-footer { margin-top:0.5rem; font-size:0.8rem; color:var(--text-mid); }
-.clt-entry-detail-host > div { background:var(--surface-2); border:1px solid var(--border-md); border-radius:var(--radius-sm); padding:0.7rem; }
-`;
-  document.head.appendChild(style);
-}
+// Styles now live in combatLog.css — imported via <link> in damage-calc.html
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SCAFFOLD HTML
@@ -413,6 +274,10 @@ function buildTabAndPanel() {
   panel.id = 'tab-combatlog';
   panel.className = 'main-tab-panel';
   panel.innerHTML = `
+    <div class="clt-header">
+      <div class="clt-title"><span class="clt-icon">⚔️</span> Combat Log</div>
+      <p class="clt-subtitle">Simulate multi-actor fights against a target</p>
+    </div>
     <div class="clt-roster" id="cltRoster"></div>
     <div class="clt-config-panel" id="cltConfigPanel"></div>
     <div class="clt-moves-panel" id="cltMovesPanel"></div>
@@ -486,8 +351,10 @@ function buildTargetWrap() {
   ];
   targetWrap.innerHTML = `
     <div class="clt-team-title">🎯 Target</div>
-    <div class="clt-target-filters" id="cltTargetFilters">
-      ${cats.map(([val, label]) => `<button class="clt-target-filter-btn${clState.targetCategoryFilter === val ? ' active' : ''}" data-cat="${val}">${label}</button>`).join('')}
+    <div class="clt-target-filters">
+      ${cats.map(([cat, label]) => `
+        <button type="button" class="clt-target-filter-btn${cat === clState.targetCategoryFilter ? ' active' : ''}" data-cat="${cat}">${label}</button>
+      `).join('')}
     </div>
   `;
   targetWrap.querySelectorAll('.clt-target-filter-btn').forEach(btn => {
@@ -531,7 +398,7 @@ function renderSlotCard(slot) {
   card.innerHTML = `
     <img class="clt-slot-img" src="${img}" onerror="this.src='assets/pokemon/missing.png'">
     <span class="clt-slot-name">${name}</span>
-    ${slot.pokemon ? `<span class="clt-slot-lvl">Lv.${slot.level}</span>
+    ${slot.pokemon ? `<span class="clt-slot-lvl">${slot.pokemon.timerBased ? secsToTimer(slot.timer) : `Lv.${slot.level}`}</span>
       <div class="clt-slot-items">${slot.items.map(it => it ? `<img src="${it.image}" onerror="this.src='assets/items/missing.png'">` : '').join('')}</div>` : ''}
   `;
 
@@ -556,6 +423,9 @@ function renderConfigPanel() {
   if (!slot) { panel.classList.remove('open'); return; }
   panel.classList.add('open');
 
+  const isWild = !!slot.pokemon?.timerBased;
+  const canHoldItems = slot.pokemon?.category === 'playable';
+
   panel.innerHTML = `
     <div class="clt-config-header">
       <h4>${teamLabel(slot.team)} — slot ${slot.id}</h4>
@@ -566,13 +436,19 @@ function renderConfigPanel() {
         <img src="${slot.pokemon ? slot.pokemon.image : 'assets/items/none.png'}" onerror="this.src='assets/pokemon/missing.png'">
         <span>${slot.pokemon ? slot.pokemon.displayName : 'Choose a Pokémon'}</span>
       </button>
+      ${isWild ? `
+      <div class="clt-level-block">
+        <label>Timer <span id="cltLevelVal">${secsToTimer(slot.timer)}</span></label>
+        <input type="range" id="cltLevelSlider" min="0" max="600" value="${slot.timer}" style="--value:${slot.timer}">
+      </div>` : `
       <div class="clt-level-block">
         <label>Level <span id="cltLevelVal">${slot.level}</span></label>
-        <input type="range" id="cltLevelSlider" min="1" max="15" value="${slot.level}">
-      </div>
+        <input type="range" id="cltLevelSlider" min="1" max="15" value="${slot.level}" style="--value:${slot.level}">
+      </div>`}
+      ${canHoldItems ? `
       <div class="clt-item-slots" id="cltItemSlots">
         ${[0, 1, 2].map(i => renderItemCardHTML(slot, i)).join('')}
-      </div>
+      </div>` : ''}
     </div>
   `;
 
@@ -586,8 +462,19 @@ function renderConfigPanel() {
   document.getElementById('cltPickPokemonBtn').addEventListener('click', () => openPokemonModal(slot.id));
 
   document.getElementById('cltLevelSlider').addEventListener('input', e => {
-    slot.level = parseInt(e.target.value);
-    document.getElementById('cltLevelVal').textContent = slot.level;
+    if (isWild) {
+      slot.timer = parseInt(e.target.value);
+      document.getElementById('cltLevelVal').textContent = secsToTimer(slot.timer);
+      e.target.style.setProperty('--value', slot.timer);
+      if (slot.team === 'target') {
+        // PV courant suit le max si pas encore engagé dans un combo
+        renderHpSection();
+      }
+    } else {
+      slot.level = parseInt(e.target.value);
+      document.getElementById('cltLevelVal').textContent = slot.level;
+      e.target.style.setProperty('--value', slot.level);
+    }
     renderRoster();
     renderMovesPanel();
   });
@@ -606,7 +493,7 @@ function renderItemCardHTML(slot, i) {
         <span>${slot.stacks[i] || 0}</span>
         <button class="clt-stack-plus" data-item-slot="${i}">+</button>
       </div>` : ''}
-      ${item && item.activable ? `<button class="clt-item-toggle ${slot.activated[i] ? 'active' : ''}" data-item-slot="${i}" title="Activer/désactiver">⚡</button>` : ''}
+      ${item && item.activable ? `<button class="clt-item-toggle ${slot.activated[i] ? 'active' : ''}" data-item-slot="${i}" title="Toggle on/off">⚡</button>` : ''}
     </div>
   `;
 }
@@ -673,15 +560,22 @@ function openPokemonModal(slotId) {
         slot.items = [null, null, null];
         slot.stacks = [0, 0, 0];
         slot.activated = [false, false, false];
+        if (poke.timerBased) slot.timer = 130;
         const specialName = specialHeldItems[poke.pokemonId];
         if (specialName) {
           const it = state.allItems.find(i => i.name === specialName);
           if (it) slot.items[0] = it;
         }
+        if (slotId === 'target') {
+          clState.target.hpCurrent = null;
+          clState.target.startMode = 'percent';
+          clState.target.startValue = 100;
+        }
         modal.classList.remove('open');
         renderRoster();
         renderConfigPanel();
         renderMovesPanel();
+        renderHpSection();
       });
       grid.appendChild(div);
     });
@@ -732,6 +626,8 @@ function openPokemonModal(slotId) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function openItemModal(slotId, itemSlot) {
+  const targetSlot = clState.slots[slotId];
+  if (targetSlot?.pokemon?.category !== 'playable') return; // les wilds/dummies ne portent pas d'items
   clState.itemModalTarget = { slotId, itemSlot };
   const modal = document.getElementById('cltItemModal');
   modal.classList.add('open');
@@ -943,6 +839,9 @@ function openPicker(actorSlot, move) {
 function getTargetMaxHP() {
   const slot = clState.slots['target'];
   if (!slot.pokemon) return 0;
+  if (slot.pokemon.timerBased && slot.pokemon.hpTable) {
+    return getMobHPAtTimer(slot.pokemon.hpTable, slot.timer);
+  }
   const stats = getModifiedStats(slot.pokemon, slot.level, slot.items, slot.stacks, slot.activated);
   return stats.hp;
 }
@@ -997,30 +896,24 @@ function renderHpSection() {
 
   root.innerHTML = `
     <div class="clt-hp-top">
-      <div class="clt-hp-values">${cur.toLocaleString()} / ${max.toLocaleString()} <span class="clt-hp-percent">${pct.toFixed(1)}%</span></div>
+      <div class="clt-hp-values">
+        <span id="cltHpEditable" title="Click to edit current HP">${cur.toLocaleString()}</span> / ${max.toLocaleString()}
+        <span class="clt-hp-percent">${pct.toFixed(1)}%</span>
+      </div>
       <div style="display:flex;gap:0.5rem;">
-        <button class="clt-reset-btn" id="cltHpResetBtn">↺ Reset HP</button>
+        <button class="clt-reset-btn" id="cltHpResetBtn">↺ Reset to Max</button>
         <button class="clt-clear-btn" id="cltLogClearBtn">🗑️ Clear log</button>
       </div>
     </div>
-    <div class="clt-hp-bar-wrap"><div class="clt-hp-bar-fill" style="width:${Math.max(0,Math.min(100,pct))}%"></div></div>
-    <div class="clt-hp-start-row">
-      <label>Starting HP:</label>
-      <select id="cltHpStartMode">
-        <option value="percent" ${clState.target.startMode === 'percent' ? 'selected' : ''}>%</option>
-        <option value="absolute" ${clState.target.startMode === 'absolute' ? 'selected' : ''}>Absolute value</option>
-      </select>
-      <input type="number" id="cltHpStartValue" value="${clState.target.startValue}">
-      <button class="clt-mini-btn" id="cltHpStartApply">Apply</button>
-    </div>
+    <input type="range" class="clt-hp-slider" id="cltHpSlider" min="0" max="100" step="0.1" value="${pct}" style="--value:${Math.max(0,Math.min(100,pct))}%;">
   `;
 
   document.getElementById('cltHpResetBtn').addEventListener('click', () => {
-    const m = getTargetMaxHP();
-    clState.target.hpCurrent = clState.target.startMode === 'absolute'
-      ? Math.min(clState.target.startValue, m)
-      : Math.floor(m * (clState.target.startValue / 100));
+    clState.target.startMode = 'percent';
+    clState.target.startValue = 100;
+    replayHPFromEntries();
     renderHpSection();
+    renderLogSection();
   });
 
   document.getElementById('cltLogClearBtn').addEventListener('click', () => {
@@ -1031,9 +924,46 @@ function renderHpSection() {
     renderLogSection();
   });
 
-  document.getElementById('cltHpStartApply').addEventListener('click', () => {
-    clState.target.startMode = document.getElementById('cltHpStartMode').value;
-    clState.target.startValue = parseFloat(document.getElementById('cltHpStartValue').value) || 0;
+  const applyManualHP = (val) => {
+    const m = getTargetMaxHP();
+    val = Math.max(0, Math.min(m, val));
+    clState.target.startMode = 'absolute';
+    clState.target.startValue = val;
+    replayHPFromEntries();
+    renderHpSection();
+    renderLogSection();
+  };
+
+  document.getElementById('cltHpEditable').addEventListener('click', (e) => {
+    const span = e.currentTarget;
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = 0;
+    input.max = max;
+    input.value = cur;
+    input.style.width = '90px';
+    input.style.padding = '0.2rem';
+    input.style.fontSize = '1rem';
+    input.style.textAlign = 'center';
+    span.replaceWith(input);
+    input.focus();
+    input.select();
+
+    const save = () => {
+      const val = parseInt(input.value) || 0;
+      applyManualHP(val);
+    };
+    input.addEventListener('blur', save);
+    input.addEventListener('keydown', ev => { if (ev.key === 'Enter') save(); });
+  });
+
+  document.getElementById('cltHpSlider').addEventListener('input', (e) => {
+    const p = parseFloat(e.target.value);
+    e.target.style.setProperty('--value', `${p}%`);
+    clState.target.startMode = 'percent';
+    clState.target.startValue = p;
+  });
+  document.getElementById('cltHpSlider').addEventListener('change', (e) => {
     replayHPFromEntries();
     renderHpSection();
     renderLogSection();
@@ -1128,22 +1058,22 @@ function renderLogSection() {
   }));
 
   root.innerHTML = `
-    <div class="clt-log-header"><strong style="color:var(--text-bright);">Séquence</strong> <span style="color:var(--text-dim);font-size:0.78rem;">(cliquez sur une étape pour voir le détail)</span></div>
+    <div class="clt-log-header"><strong style="color:var(--text-bright);">Sequence</strong> <span style="color:var(--text-dim);font-size:0.78rem;">(click a step to see details)</span></div>
     <div class="clt-chips" id="cltChips"></div>
     <div class="clt-entry-detail-host" id="cltEntryDetailHost"></div>
     <div class="clt-totals">
-      <span>💥 Dégâts total : <b>${totalDmg.toLocaleString()}</b></span>
-      <span>❤️ Soins (soi) : <b>${totalHealSelf.toLocaleString()}</b></span>
-      <span>❤️ Soins (allié) : <b>${totalHealAlly.toLocaleString()}</b></span>
-      <span>🛡️ Boucliers (soi) : <b>${totalShieldSelf.toLocaleString()}</b></span>
-      <span>🛡️ Boucliers (allié) : <b>${totalShieldAlly.toLocaleString()}</b></span>
+      <span>💥 Total Damage: <b>${totalDmg.toLocaleString()}</b></span>
+      <span>❤️ Heal (self): <b>${totalHealSelf.toLocaleString()}</b></span>
+      <span>❤️ Heal (ally): <b>${totalHealAlly.toLocaleString()}</b></span>
+      <span>🛡️ Shield (self): <b>${totalShieldSelf.toLocaleString()}</b></span>
+      <span>🛡️ Shield (ally): <b>${totalShieldAlly.toLocaleString()}</b></span>
     </div>
   `;
 
   const chipsHost = document.getElementById('cltChips');
   const detailHost = document.getElementById('cltEntryDetailHost');
   if (clState.entries.length === 0) {
-    chipsHost.innerHTML = `<span style="color:var(--text-dim);font-size:0.85rem;">Cliquez sur un move d'un Pokémon pour l'ajouter au combo...</span>`;
+    chipsHost.innerHTML = `<span style="color:var(--text-dim);font-size:0.85rem;">Click a Pokémon's move to add it to the combo...</span>`;
     return;
   }
 
@@ -1205,11 +1135,11 @@ const ATTACKER_BUFFS = [
 ];
 const DEFENDER_BUFFS = [
   ['defenderRegirockBuff', 'Regirock Buff (+30%/+25% Def)'],
-  ['defenderEldegossBuff', 'Eldegoss (−20% dmg reçus)'],
-  ['defenderNinetailsBuff', 'Ninetails (−35% dmg reçus)'],
-  ['defenderNinetailsPlusBuff', 'Ninetails+ (−40% dmg reçus)'],
-  ['defenderUmbreonBuff', 'Umbreon (−15% dmg reçus)'],
-  ['defenderUmbreonPlusBuff', 'Umbreon+ (−25% dmg reçus)'],
+  ['defenderEldegossBuff', 'Eldegoss (−20% dmg taken)'],
+  ['defenderNinetailsBuff', 'Ninetails (−35% dmg taken)'],
+  ['defenderNinetailsPlusBuff', 'Ninetails+ (−40% dmg taken)'],
+  ['defenderUmbreonBuff', 'Umbreon (−15% dmg taken)'],
+  ['defenderUmbreonPlusBuff', 'Umbreon+ (−25% dmg taken)'],
   ['defenderBlisseyRedirectionBuff', 'Blissey Redirection (−50%)'],
   ['defenderHoOhRedirectionBuff', 'Ho-Oh Redirection (−60%)'],
 ];
@@ -1264,7 +1194,7 @@ function buildBuffColumn(title, list, tag, extraClass) {
   col.className = `clt-buff-col ${extraClass}`;
   col.innerHTML = `
     <h5>${title}</h5>
-    <input type="text" class="buff-search" placeholder="Filtrer...">
+    <input type="text" class="buff-search" placeholder="Filter...">
     <div class="buff-checkboxes"></div>
   `;
 
@@ -1298,10 +1228,10 @@ function renderBuffsSection() {
   const root = document.getElementById('cltBuffs');
   if (!root || root.dataset.built) return; // construit une seule fois, lit le state au moment du clic
   root.dataset.built = '1';
-  root.appendChild(buildBuffColumn('Buffs Attaquant (global)', ATTACKER_BUFFS, 'AtkBuff', 'clt-buff-col-atk'));
-  root.appendChild(buildBuffColumn('Debuffs Attaquant (global)', ATTACKER_DEBUFFS, 'AtkDebuff', 'clt-buff-col-atk-debuff'));
-  root.appendChild(buildBuffColumn('Buffs Cible (global)', DEFENDER_BUFFS, 'DefBuff', 'clt-buff-col-def'));
-  root.appendChild(buildBuffColumn('Debuffs Cible (global)', DEFENDER_DEBUFFS, 'DefDebuff', 'clt-buff-col-def-debuff'));
+  root.appendChild(buildBuffColumn('Attacker Buffs (global)', ATTACKER_BUFFS, 'AtkBuff', 'clt-buff-col-atk'));
+  root.appendChild(buildBuffColumn('Attacker Debuffs (global)', ATTACKER_DEBUFFS, 'AtkDebuff', 'clt-buff-col-atk-debuff'));
+  root.appendChild(buildBuffColumn('Target Buffs (global)', DEFENDER_BUFFS, 'DefBuff', 'clt-buff-col-def'));
+  root.appendChild(buildBuffColumn('Target Debuffs (global)', DEFENDER_DEBUFFS, 'DefDebuff', 'clt-buff-col-def-debuff'));
   enhanceBuffLabels(state.allPokemon);
 }
 
@@ -1310,7 +1240,6 @@ function renderBuffsSection() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function initCombatLogTab() {
-  injectStyles();
   buildTabAndPanel();
   renderRoster();
   renderHpSection();

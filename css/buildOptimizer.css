@@ -44,35 +44,38 @@
 }
 
 /* ── Header ───────────────────────────────────────────────────────────────── */
+/* Aligné sur le h1 global de damage-calc.css : glow bleu dominant + barre
+   centrée sous le titre, plutôt qu'un accent violet/bord asymétrique. */
 .bopt-header {
   background: linear-gradient(135deg, var(--bopt-surface3) 0%, var(--bopt-surface) 100%);
-  border-bottom: 2px solid var(--bopt-violet);
+  border-bottom: 1px solid var(--bopt-border);
   padding: 24px 28px 18px;
   margin-bottom: 20px;
   position: relative;
+  text-align: center;
 }
 
 .bopt-header::after {
   content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 28px;
-  width: 60px;
+  display: block;
+  width: 80px;
   height: 2px;
-  background: var(--bopt-accent);
-  border-radius: 1px;
+  margin: 6px auto 0;
+  background: linear-gradient(90deg, transparent, var(--bopt-accent2), transparent);
+  border-radius: 2px;
 }
 
 .bopt-title {
   font-family: 'Exo 2', 'Rajdhani', sans-serif;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 900;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-bright, #e8f4f6);
-  text-shadow: 0 0 40px rgba(159,83,236,0.4), 0 0 80px rgba(79,195,247,0.15);
+  text-shadow: 0 0 60px rgba(79,195,247,0.3), 0 0 120px rgba(159,83,236,0.15);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
 }
 
@@ -376,6 +379,15 @@
   transition: border-color 0.15s, color 0.15s;
 }
 .bopt-add-enemy:hover { border-color: var(--bopt-green); color: var(--bopt-green); }
+
+.bopt-enemies-list {
+  max-height: 320px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bopt-surface3) transparent;
+}
+.bopt-enemies-list::-webkit-scrollbar { width: 4px; }
+.bopt-enemies-list::-webkit-scrollbar-thumb { background: var(--bopt-surface3); border-radius: 2px; }
 
 .bopt-empty-enemies {
   color: var(--bopt-muted);

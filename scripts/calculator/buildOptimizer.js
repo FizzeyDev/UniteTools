@@ -41,7 +41,7 @@ function buildOptimizerUI() {
       <div class="bopt-header">
         <div class="bopt-title">
           <span class="bopt-icon">⚡</span>
-          Build Optimizer
+          Build Optimizer [BETA]
         </div>
         <p class="bopt-subtitle">Automatically find the best 3-item build for your Pokémon</p>
       </div>
