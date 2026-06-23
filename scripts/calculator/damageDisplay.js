@@ -31,7 +31,6 @@ import {
   applyTinkatonAttacker,
   applyTyranitarAttacker,
   applyZeraoraAttacker,
-  applyCrustleAttacker,
   applyMoltresAttacker,
   applyTyphlosionAttacker,
   applySkeledirgAttacker,   // ← SKELEDIRGE
@@ -160,10 +159,12 @@ export function updateDamages() {
     const rate = level >= 11 ? 0.50 : 0.40;
     const atkBonus   = Math.floor(baseStats.def    * rate);
     const spAtkBonus = Math.floor(baseStats.sp_def * rate);
+    const totalAtk   = atkStats.atk    + atkBonus;
+    const totalSpAtk = atkStats.sp_atk + spAtkBonus;
     document.getElementById('attackerAtk').innerHTML =
-      `${atkStats.atk.toLocaleString()} <span style="color:#bb86fc;font-size:0.85em;">(+${atkBonus})</span>`;
+      `${totalAtk.toLocaleString()} <span style="color:#bb86fc;font-size:0.85em;">(+${atkBonus})</span>`;
     document.getElementById('attackerSpAtk').innerHTML =
-      `${atkStats.sp_atk.toLocaleString()} <span style="color:#bb86fc;font-size:0.85em;">(+${spAtkBonus})</span>`;
+      `${totalSpAtk.toLocaleString()} <span style="color:#bb86fc;font-size:0.85em;">(+${spAtkBonus})</span>`;
   } else {
     document.getElementById('attackerAtk').textContent   = atkStats.atk.toLocaleString();
     document.getElementById('attackerSpAtk').textContent = atkStats.sp_atk.toLocaleString();
@@ -236,6 +237,13 @@ export function updateDamages() {
 
   const defenderDamageMult = computeDefenderDamageMult();
 
+  // ── CLEFABLE — Block (Unite) : −25% dégâts reçus pendant le mur ───────────
+  const clefableBlockReduc = (
+    state.currentDefender?.pokemonId === "clefable" &&
+    (state.defenderClefableBlockDmgReduc ?? false)
+  ) ? 0.25 : 0;
+  const finalDefenderDamageMult = defenderDamageMult * (1 - clefableBlockReduc);
+
   // ── SKELEDIRGE — Blaze : 35% Sp. Def Pierce sur le prochain move ─────────
   const skeledirgeBlazeIgnore = (
     state.currentAttacker?.pokemonId === "skeledirge" &&
@@ -251,7 +259,7 @@ export function updateDamages() {
     moldBreakerDefPen: state.currentAttacker?.pokemonId === "mega-gyarados" && state.attackerMoldBreakerActive
       ? state.currentAttacker.passive.bonusDefPen / 100 : 0,
     skeledirgeBlazeIgnore,   // ← SKELEDIRGE
-    defenderDamageMult
+    defenderDamageMult: finalDefenderDamageMult   // ← includes CLEFABLE Block −25%
   };
 
   if (state.currentDefender?.pokemonId === "garchomp") {
@@ -658,7 +666,7 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
     rapidash: applyRapidashAttacker, sirfetchd: applySirfetchdAttacker,
     sylveon: applySylveonAttacker, tinkaton: applyTinkatonAttacker,
     tyranitar: applyTyranitarAttacker, zeraora: applyZeraoraAttacker,
-    crustle: applyCrustleAttacker,
+    
     moltres: applyMoltresAttacker,
     typhlosion: applyTyphlosionAttacker,
     skeledirge: applySkeledirgAttacker,   // ← SKELEDIRGE
@@ -879,6 +887,16 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       let normal = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0,           effectiveGlobalMult, defStats.hp, currentDefHP);
       let crit   = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, true,  state.currentAttacker.pokemonId, scopeCritBonus, effectiveGlobalMult, defStats.hp, currentDefHP);
 
+      // ── CRUSTLE — Fury Cutter : +20%/marque (max 40%), arrondi vers le haut ──
+      if (state.currentAttacker?.pokemonId === "crustle" && move.name === "Fury Cutter" && dmg.name === "Damage") {
+        const fcStacks = state.attackerCrustleFuryCutterStacks ?? 0;
+        const fcPct    = Math.min(fcStacks * 0.20, 0.40);
+        if (fcPct > 0) {
+          normal = Math.ceil(normal * (1 + fcPct));
+          crit   = Math.ceil(crit   * (1 + fcPct));
+        }
+      }
+
       const muscleMult = getBuzzwoleMuscleMultiplier(move.name, dmg.name);
       normal = Math.floor(normal * muscleMult);
       crit   = Math.floor(crit   * muscleMult);
@@ -1046,6 +1064,30 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           <div class="dmg-values">
             <span class="dmg-heal">${healNormal.toLocaleString()}</span>
             <span class="dmg-heal" style="opacity:0.75;">(${healCrit.toLocaleString()})</span>
+          </div>
+        `;
+        card.appendChild(healLine);
+      }
+
+      // ── CINDERACE — Feint+ (lvl 13) : heal 30% sur le Basic hit, no crit ───
+      if (
+        state.currentAttacker?.pokemonId === "cinderace" &&
+        state.attackerCinderaceFeintHealActive &&
+        move.name === "Auto-attack" &&
+        dmg.name === "Basic"
+      ) {
+        const healPct    = 0.30;
+        const healNormal = Math.floor(displayedNormal * healPct);
+
+        const healLine = document.createElement("div");
+        healLine.className = "damage-line";
+        healLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;">
+            Heal (Feint+)
+            <br><i style="font-size:0.8em;color:#4caf8299;">30% of Basic hit damage · next 3 auto attacks, cannot crit</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${healNormal.toLocaleString()}</span>
           </div>
         `;
         card.appendChild(healLine);

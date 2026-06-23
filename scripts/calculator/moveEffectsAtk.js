@@ -377,6 +377,99 @@ export function applyBuzzwoleLungeStatBuff(pokemon, atkStats, level) {
   atkStats.atk += Math.floor(atkStats.atk * 0.10 * stacks);
 }
 
+// ── CINDERACE — Feint ────────────────────────────────────────────────────────
+function applyCinderaceFeint(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const isActive = state.attackerCinderaceFeintHealActive ?? false;
+  const bonusPct = 30;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/cinderace/feint.png')}
+    <div style="flex:1;">
+      ${moveBadge('Feint+', 13)}
+      Dodge → next 3 auto attacks heal <strong style="color:#fff;">${bonusPct}% of damage dealt</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">These 3 auto attacks cannot critically hit</span><br>
+      <button class="cinderace-feint-heal-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.cinderace-feint-heal-toggle').onclick = () => {
+    state.attackerCinderaceFeintHealActive = !state.attackerCinderaceFeintHealActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── CRUSTLE — Shell Smash ─────────────────────────────────────────────────────
+function applyCrustleShellSmash(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 4) return; // Shell Smash learned at level 4
+
+  const baseStats      = state.currentAttacker.stats[level - 1];
+  const conversionRate = level >= 11 ? 0.50 : 0.40;
+  const atkBonus   = Math.floor(baseStats.def    * conversionRate);
+  const spAtkBonus = Math.floor(baseStats.sp_def * conversionRate);
+  if (state.attackerShellSmashActive) {
+    atkStats.atk    += atkBonus;
+    atkStats.sp_atk += spAtkBonus;
+  }
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/crustle/shell_smash.png')}
+    <div style="flex:1;">
+      ${moveBadge('Shell Smash', 4)}
+      ${level >= 11
+        ? `<span style="font-size:0.75rem;color:#ffd740;margin-left:6px;">⬆️ Upgraded (50%)</span>`
+        : `<span style="font-size:0.75rem;color:#aaa;margin-left:6px;">(40% · upgrades at lvl 11)</span>`}<br>
+      <span style="font-size:0.85rem;color:#ccc;">Def/SpDef → 0 · Atk +${atkBonus} · SpAtk +${spAtkBonus}</span><br>
+      <button class="shell-smash-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${state.attackerShellSmashActive ? C : '#0d2428'};
+        color:${state.attackerShellSmashActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${state.attackerShellSmashActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.shell-smash-toggle').onclick = () => { state.attackerShellSmashActive = !state.attackerShellSmashActive; updateDamages(); };
+  card.appendChild(line);
+}
+
+// ── CRUSTLE — Fury Cutter ─────────────────────────────────────────────────────
+function applyCrustleFuryCutter(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level >= 6) return;
+  const stacks    = state.attackerCrustleFuryCutterStacks ?? 0;
+  const maxStacks = 3;
+  const bonusPct  = Math.min(stacks * 20, 40);
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/crustle/fury_cutter.png')}
+    <div style="flex:1;">
+      ${moveBadge('Fury Cutter', 1)}
+      Marks on target: <button class="stack-btn minus fc-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus fc-plus">+</button><br>
+      → Damage <strong style="color:${bonusPct > 0 ? '#88ff88' : '#888'};">+${bonusPct}%</strong>
+      ${bonusPct >= 40 ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ MAX</span>' : ''}<br>
+      <span style="font-size:0.8rem;color:${C}99;">Stacking damage is always rounded up</span>
+    </div>
+  `);
+  line.querySelector('.fc-minus').onclick = () => { if ((state.attackerCrustleFuryCutterStacks ?? 0) > 0)        { state.attackerCrustleFuryCutterStacks = (state.attackerCrustleFuryCutterStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.fc-plus').onclick  = () => { if ((state.attackerCrustleFuryCutterStacks ?? 0) < maxStacks) { state.attackerCrustleFuryCutterStacks = (state.attackerCrustleFuryCutterStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -391,6 +484,8 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     charizard: [applyCharizardSeismicSlam],
     "mega-charizard-x": [applyCharizardSeismicSlam],
     "mega-charizard-y": [applyCharizardSeismicSlam],
+    cinderace: [applyCinderaceFeint],
+    crustle:   [applyCrustleShellSmash, applyCrustleFuryCutter],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }
