@@ -3,6 +3,10 @@ import { getUsageMap } from './usage.js';
 import { loadTabs, loadTierList } from './tierlist.js';
 import { loadGallery } from './gallery.js';
 
+function triggerSave() {
+    window.triggerAutoSave?.();
+}
+
 export function addTab() {
     const maxId = state.drafts.reduce((m, d) => Math.max(m, d.id), 0);
     const newId = maxId + 1;
@@ -22,6 +26,7 @@ export function addTab() {
     loadTabs();
     loadTierList(newId);
     loadGallery(state.currentCategory);
+    triggerSave();
 }
 
 export function duplicateDraft(sourceDraftId) {
@@ -47,6 +52,7 @@ export function duplicateDraft(sourceDraftId) {
     loadTabs();
     loadTierList(newId);
     loadGallery(state.currentCategory);
+    triggerSave();
 }
 
 export function renameDraft(draftId, newLabel) {
@@ -54,6 +60,7 @@ export function renameDraft(draftId, newLabel) {
     if (!draft) return;
     draft.label = newLabel.trim() || `Tierlist ${draftId}`;
     loadTabs();
+    triggerSave();
 }
 
 export function addTier(draftId) {
@@ -61,6 +68,7 @@ export function addTier(draftId) {
     if (!draft) return;
     draft.tiers.push({ name: `Tier ${draft.tiers.length + 1}`, color: '#95a5a6', items: [] });
     loadTierList(draftId);
+    triggerSave();
 }
 
 export function duplicateTier(draftId, tierIndex) {
@@ -77,6 +85,7 @@ export function duplicateTier(draftId, tierIndex) {
     };
     draft.tiers.splice(tierIndex + 1, 0, clone);
     loadTierList(draftId);
+    triggerSave();
 }
 
 export function deleteTier(draftId, tierIndex) {
@@ -91,6 +100,7 @@ export function deleteTier(draftId, tierIndex) {
     draft.tiers.splice(tierIndex, 1);
     loadTierList(draftId);
     loadGallery(state.currentCategory);
+    triggerSave();
 }
 
 export function clearDraft(draftId) {
@@ -105,6 +115,7 @@ export function clearDraft(draftId) {
     });
     loadTierList(draftId);
     loadGallery(state.currentCategory);
+    triggerSave();
 }
 
 /**
@@ -121,6 +132,7 @@ export function removeItemByUid(draftId, uid) {
             map.set(removed.name, Math.max((map.get(removed.name) || 1) - 1, 0));
             loadTierList(draftId);
             loadGallery(state.currentCategory);
+            triggerSave();
             return;
         }
     }
@@ -139,4 +151,5 @@ export function reorderItemInTier(draftId, tierIndex, fromIndex, toIndex) {
     const [item] = tier.items.splice(fromIndex, 1);
     tier.items.splice(toIndex, 0, item);
     loadTierList(draftId);
+    triggerSave();
 }

@@ -4,9 +4,18 @@ import { loadTabs, loadTierList } from './tierlist.js';
 import { loadGallery } from './gallery.js';
 import { setupDragDrop } from './dragdrop.js';
 import { hideMoveModal, hideTierModal, onMoveSave, onTierSave, onTierDelete } from './modals.js';
+import { loadFromLocalStorage, saveToLocalStorage, setupAutoSave } from './storage.js';
+import { exportTierlistsAsJSON, exportCurrentTierlist, importTierlistsFromJSON, copyToClipboard } from './importexport.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     await loadData();
+
+    // Load saved tierlists from localStorage (if they exist)
+    const hasLoadedData = loadFromLocalStorage();
+    if (!hasLoadedData) {
+        // Save initial state if no data was loaded
+        saveToLocalStorage();
+    }
 
     loadTabs();
     loadTierList(state.currentDraft);
@@ -17,6 +26,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupKeyboardShortcuts();
     setupHowToPanel();
     setupToastContainer();
+    
+    // Enable auto-save (save on any state change)
+    setupAutoSave();
 
     // Re-run after any DOM mutation that adds tier rows
     new MutationObserver(adaptTierHeaders)
@@ -58,6 +70,23 @@ function setupStaticListeners() {
     document.getElementById('tier-save')  ?.addEventListener('click', onTierSave);
     document.getElementById('tier-delete')?.addEventListener('click', onTierDelete);
     document.getElementById('tier-cancel')?.addEventListener('click', hideTierModal);
+
+    // Import/Export buttons
+    document.getElementById('export-all')?.addEventListener('click', () => {
+        exportTierlistsAsJSON();
+    });
+
+    document.getElementById('export-current')?.addEventListener('click', () => {
+        exportCurrentTierlist();
+    });
+
+    document.getElementById('import-btn')?.addEventListener('click', () => {
+        importTierlistsFromJSON();
+    });
+
+    document.getElementById('copy-current')?.addEventListener('click', () => {
+        copyToClipboard(state.currentDraft);
+    });
 
     // Close modals on backdrop click or Escape
     document.addEventListener('keydown', e => {
@@ -116,6 +145,7 @@ function setupKeyboardShortcuts() {
                 if (e.ctrlKey || e.metaKey) {
                     e.preventDefault();
                     import('./actions.js').then(m => m.addTab());
+                    window.triggerAutoSave?.();
                     window.showToast('New tierlist added', 'success');
                 }
                 break;
@@ -126,7 +156,17 @@ function setupKeyboardShortcuts() {
                 if ((e.ctrlKey || e.metaKey) && e.shiftKey) {
                     e.preventDefault();
                     import('./actions.js').then(m => m.addTier(state.currentDraft));
+                    window.triggerAutoSave?.();
                     window.showToast('New tier added', 'success');
+                }
+                break;
+
+            // E = export current
+            case 'e':
+            case 'E':
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey) {
+                    e.preventDefault();
+                    exportCurrentTierlist();
                 }
                 break;
 
@@ -146,6 +186,7 @@ function setupKeyboardShortcuts() {
             if (confirm('Clear the current tierlist?')) {
                 import('./actions.js').then(m => {
                     m.clearDraft(state.currentDraft);
+                    window.triggerAutoSave?.();
                     window.showToast('Tierlist cleared', 'info');
                 });
             }
@@ -201,6 +242,7 @@ function setupHowToPanel() {
             <div class="howto-row"><kbd>B</kbd><span>Show Battle Items gallery</span></div>
             <div class="howto-row"><kbd>Ctrl</kbd><kbd>M</kbd><span>Add a new tierlist tab</span></div>
             <div class="howto-row"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>A</kbd><span>Add a new tier row</span></div>
+            <div class="howto-row"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd><span>Export current tierlist</span></div>
             <div class="howto-row"><kbd>Ctrl</kbd><kbd>Del</kbd><span>Clear current tierlist</span></div>
             <div class="howto-row"><kbd>?</kbd><span>Toggle this panel</span></div>
         </div>
@@ -212,6 +254,16 @@ function setupHowToPanel() {
             <div class="howto-row"><span class="howto-icon">⚔️</span><span><strong>Move Combo</strong> — select moves for slot 1 & 2</span></div>
             <div class="howto-row"><span class="howto-icon">✨</span><span><strong>Unite Move</strong> — select the Unite Move</span></div>
             <div class="howto-row"><span class="howto-icon">🔮</span><span><strong>Passif</strong> — select the passive ability</span></div>
+        </div>
+
+        <div class="howto-divider"></div>
+
+        <div class="howto-section">
+            <div class="howto-section-title">Import/Export</div>
+            <div class="howto-row"><span class="howto-icon">💾</span><span><strong>Auto-save</strong> — Your tierlists are saved automatically</span></div>
+            <div class="howto-row"><span class="howto-icon">📥</span><span><strong>Import</strong> — Load tierlists from a JSON file</span></div>
+            <div class="howto-row"><span class="howto-icon">📤</span><span><strong>Export</strong> — Download your tierlists as JSON</span></div>
+            <div class="howto-row"><span class="howto-icon">📋</span><span><strong>Copy as text</strong> — Share tierlists as formatted text</span></div>
         </div>
     `;
     document.body.appendChild(panel);
