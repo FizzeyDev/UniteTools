@@ -1450,6 +1450,33 @@ body.is-dragging * { cursor: grabbing !important; }
   border-color: rgba(255,157,0,0.6);
   color: var(--orange);
 }
+.mode-bar__action-btn--reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 10px 18px;
+    border: 2px solid #8b2e2e;
+    border-radius: 10px;
+
+    background: transparent !important;
+    color: #b84444 !important;
+
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.mode-bar__action-btn--reset:hover {
+    background: rgba(139, 46, 46, 0.15) !important;
+    border-color: #a33a3a;
+    color: #d05a5a !important;
+}
+
+.mode-bar__action-btn--reset span {
+    color: inherit;
+}
 
 /* ══ Toasts ══════════════════════════════════════════════════════════ */
 .toast-container {

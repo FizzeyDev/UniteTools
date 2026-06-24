@@ -263,6 +263,7 @@ export function onMoveSave() {
                 it.move2      = m2.val;  it.move2Img   = m2.img;
                 it.passive    = pa.val;  it.passiveImg  = pa.img;
                 it.unite      = un.val;  it.uniteImg    = un.img;
+                it._configured = true; // mark as explicitly configured by the user
                 break;
             }
         }
@@ -279,6 +280,7 @@ export function onMoveSave() {
             name:       pokemonName,
             category:   'pokemon',
             file,
+            _configured: true, // explicitly set by user via modal
             move1:      m1.val, move1Img:   m1.img,
             move2:      m2.val, move2Img:   m2.img,
             passive:    pa.val, passiveImg: pa.img,
