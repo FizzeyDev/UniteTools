@@ -77,6 +77,14 @@ function setupStaticListeners() {
     document.getElementById('export-current')?.addEventListener('click', () => exportCurrentTierlist());
     document.getElementById('import-btn')    ?.addEventListener('click', () => importTierlistsFromJSON());
     document.getElementById('copy-current')  ?.addEventListener('click', () => copyToClipboard(state.currentDraft));
+    document.getElementById('reset-all-btn') ?.addEventListener('click', () => {
+        if (!confirm('Reset everything? This will delete ALL tierlists and cannot be undone.')) return;
+        import('./storage.js').then(m => {
+            m.clearLocalStorage();
+            window.showToast?.('All data cleared — reloading…', 'info');
+            setTimeout(() => location.reload(), 800);
+        });
+    });
 
     // Close modals on backdrop click or Escape
     document.addEventListener('keydown', e => {
@@ -228,6 +236,7 @@ function setupHowToPanel() {
             <div class="howto-row"><span class="howto-icon">📥</span><span><strong>Import</strong> — Load tierlists from a JSON file</span></div>
             <div class="howto-row"><span class="howto-icon">📤</span><span><strong>Export</strong> — Download your tierlists as JSON</span></div>
             <div class="howto-row"><span class="howto-icon">📋</span><span><strong>Copy as text</strong> — Share tierlists as formatted text</span></div>
+            <div class="howto-row"><span class="howto-icon">🗑️</span><span><strong>Reset All</strong> — Delete all data and start fresh</span></div>
         </div>
     `;
     document.body.appendChild(panel);

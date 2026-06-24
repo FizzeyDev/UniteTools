@@ -165,6 +165,14 @@ export function loadTierList(draftId) {
     clearBtn.innerHTML   = '<span>✕</span> Clear';
     modeBar.appendChild(clearBtn);
 
+    const resetBtn       = document.createElement('button');
+    resetBtn.className   = 'mode-bar__action-btn mode-bar__action-btn--reset';
+    resetBtn.id          = 'reset-all-btn';
+    resetBtn.title       = 'Reset everything to factory defaults';
+    resetBtn.innerHTML   = '<span>🗑️</span> Reset All';
+
+    modeBar.appendChild(resetBtn);
+
     container.appendChild(modeBar);
 
     // ── Tier rows ─────────────────────────────────────────────────────────
@@ -286,15 +294,26 @@ export function createTierItemElement(item, basePath, draftId) {
     const move1Img   = item.move1Img   || findMoveImg(item.move1,   moveData.move1);
     const move2Img   = item.move2Img   || findMoveImg(item.move2,   moveData.move2);
 
+    // neverSet: true only when the field was never explicitly configured by the user.
+    // An empty string '' means "user chose No move" — do NOT auto-fill in that case.
+    // We use a sentinel key '_configured' saved alongside move fields to detect this.
     const neverSet = v => v === undefined || v === null;
-    const resolvedPassive    = neverSet(item.passive) ? (moveData.passive?.[0]?.name  || null) : (item.passive  || null);
-    const resolvedPassiveImg = neverSet(item.passive) ? (moveData.passive?.[0]?.image || null) : (passiveImg    || null);
-    const resolvedUnite      = neverSet(item.unite)   ? (moveData.unite?.[0]?.name    || null) : (item.unite    || null);
-    const resolvedUniteImg   = neverSet(item.unite)   ? (moveData.unite?.[0]?.image   || null) : (uniteImg      || null);
-    const resolvedMove1      = neverSet(item.move1)   ? (moveData.move1?.[0]?.name    || null) : (item.move1    || null);
-    const resolvedMove1Img   = neverSet(item.move1)   ? (moveData.move1?.[0]?.image   || null) : (move1Img      || null);
-    const resolvedMove2      = neverSet(item.move2)   ? (moveData.move2?.[0]?.name    || null) : (item.move2    || null);
-    const resolvedMove2Img   = neverSet(item.move2)   ? (moveData.move2?.[0]?.image   || null) : (move2Img      || null);
+    const wasConfigured = item._configured === true;
+
+    // If the item has been through the move modal (wasConfigured) or any move field is
+    // explicitly an empty string, treat every field as intentionally set.
+    const hasExplicitEmpty = item.move1 === '' || item.move2 === '' ||
+                             item.passive === '' || item.unite === '';
+    const autoFill = !wasConfigured && !hasExplicitEmpty;
+
+    const resolvedPassive    = (autoFill && neverSet(item.passive)) ? (moveData.passive?.[0]?.name  || null) : (item.passive  || null);
+    const resolvedPassiveImg = (autoFill && neverSet(item.passive)) ? (moveData.passive?.[0]?.image || null) : (passiveImg    || null);
+    const resolvedUnite      = (autoFill && neverSet(item.unite))   ? (moveData.unite?.[0]?.name    || null) : (item.unite    || null);
+    const resolvedUniteImg   = (autoFill && neverSet(item.unite))   ? (moveData.unite?.[0]?.image   || null) : (uniteImg      || null);
+    const resolvedMove1      = (autoFill && neverSet(item.move1))   ? (moveData.move1?.[0]?.name    || null) : (item.move1    || null);
+    const resolvedMove1Img   = (autoFill && neverSet(item.move1))   ? (moveData.move1?.[0]?.image   || null) : (move1Img      || null);
+    const resolvedMove2      = (autoFill && neverSet(item.move2))   ? (moveData.move2?.[0]?.name    || null) : (item.move2    || null);
+    const resolvedMove2Img   = (autoFill && neverSet(item.move2))   ? (moveData.move2?.[0]?.image   || null) : (move2Img      || null);
 
     const hasPassive = resolvedPassive !== null;
     const hasUnite   = resolvedUnite   !== null;

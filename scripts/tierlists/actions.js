@@ -142,7 +142,7 @@ export function removeItemByUid(draftId, uid) {
  * Reorder an item within a tier (drag & drop intra-tier).
  * Moves the item at fromIndex to toIndex within the same tier.
  */
-export function reorderItemInTier(draftId, tierIndex, fromIndex, toIndex) {
+export function reorderItemInTier(drRaftId, tierIndex, fromIndex, toIndex) {
     const draft = state.drafts.find(d => d.id === draftId);
     if (!draft) return;
     const tier = draft.tiers[tierIndex];

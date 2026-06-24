@@ -57,8 +57,7 @@ export function loadFromLocalStorage() {
         }
 
         // Rebuild usage maps from ALL drafts
-        // recalcUsage only handles one draft at a time and clears all maps each call,
-        // so we accumulate manually across all drafts.
+        // recalcUsage clears all maps each call, so we accumulate manually here.
         state.pokemonUsage.clear();
         state.itemUsage.clear();
         state.drafts.forEach(draft => {

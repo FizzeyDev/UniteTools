@@ -100,19 +100,28 @@ export function importTierlistsFromJSON() {
                         name: tier.name || 'Tier',
                         color: tier.color || '#95a5a6',
                         items: (tier.items || []).map(item => ({
-                            uid:        state.nextUid(), // fresh UID
-                            name:       item.name,
-                            category:   item.category,
-                            file:       item.file,
-                            // preserve move selections
-                            move1:      item.move1      ?? undefined,
-                            move1Img:   item.move1Img   ?? undefined,
-                            move2:      item.move2      ?? undefined,
-                            move2Img:   item.move2Img   ?? undefined,
-                            passive:    item.passive    ?? undefined,
-                            passiveImg: item.passiveImg ?? undefined,
-                            unite:      item.unite      ?? undefined,
-                            uniteImg:   item.uniteImg   ?? undefined,
+                            uid:          state.nextUid(), // fresh UID
+                            name:         item.name,
+                            category:     item.category,
+                            file:         item.file,
+                            // If the original item was configured, preserve that and all move fields
+                            ...(item._configured ? {
+                                _configured: true,
+                                move1:      item.move1      ?? '',
+                                move1Img:   item.move1Img   ?? '',
+                                move2:      item.move2      ?? '',
+                                move2Img:   item.move2Img   ?? '',
+                                passive:    item.passive    ?? '',
+                                passiveImg: item.passiveImg ?? '',
+                                unite:      item.unite      ?? '',
+                                uniteImg:   item.uniteImg   ?? '',
+                            } : {
+                                // Not configured — leave move fields undefined so auto-fill still applies
+                                ...(item.move1      !== undefined ? { move1:      item.move1,      move1Img:   item.move1Img   ?? '' } : {}),
+                                ...(item.move2      !== undefined ? { move2:      item.move2,      move2Img:   item.move2Img   ?? '' } : {}),
+                                ...(item.passive    !== undefined ? { passive:    item.passive,    passiveImg: item.passiveImg ?? '' } : {}),
+                                ...(item.unite      !== undefined ? { unite:      item.unite,      uniteImg:   item.uniteImg   ?? '' } : {}),
+                            }),
                         })),
                     })),
                 };
