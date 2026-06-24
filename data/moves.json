@@ -19,7 +19,7 @@
   },
   "armarouge": {
     "move1": [ "incinerate.png", "fire_spin.png", "armor_cannon.png" ],
-    "move2": [ "will_o_wisp.png", "flame_charge.png", "psychock.png" ],
+    "move2": [ "will_o_wisp.png", "flame_charge.png", "psyshock.png" ],
     "passive": [ "flash_fire.png" ],
     "unite": [ "psykaboom.png" ]
   },
@@ -186,8 +186,8 @@
     "unite": [ "psychic_solare.png" ]
   },
   "falinks": {
-    "move1": [ "leafage.png", "razor_leaf.png", "spirit_shackle.png" ],
-    "move2": [ "astonish.png", "leaf_storm.png", "shadow_sneak.png" ],
+    "move1": [ "tackle.png", "megahorn.png", "iron_head.png" ],
+    "move2": [ "bulk_up.png", "no_retreat.png", "beat_up.png" ],
     "passive": [ "battle_armor.png" ],
     "unite": [ "dust_devil_formation.png" ]
   },
@@ -211,7 +211,7 @@
   },
   "gengar": {
     "move1": [ "will_o_wisp.png", "shadow_ball.png", "sludge_bomb.png" ],
-    "move2": [ "tail_whip.png", "dream_eater.png", "hex.png" ],
+    "move2": [ "lick.png", "dream_eater.png", "hex.png" ],
     "passive": [ "levitate.png" ],
     "unite": [ "phantom_ambush.png" ]
   },
@@ -362,7 +362,7 @@
   },
   "miraidon": {
     "move1": [ "thunder_shock.png", "charge_beam.png", "electro_drift.png" ],
-    "move2": [ "thunder_wave.png", "thunder.png", "parobalic_charge.png" ],
+    "move2": [ "thunder_wave.png", "thunder.png", "parabolic_charge.png" ],
     "passive": [ "hadron_engine.png" ],
     "unite": [ "bright_future_meteor_storm.png" ]
   },

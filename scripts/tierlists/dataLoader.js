@@ -140,6 +140,7 @@ const FOLDER_OVERRIDES = {
     'lucario-mega':  'mega_lucario',
     'mewtwo-x':      'mega_mewtwo_x',
     'mewtwo-y':      'mega_mewtwo_y',
+    'ho-oh': 'hooh'
 };
 
 function keyToFolder(pokemonKey) {
