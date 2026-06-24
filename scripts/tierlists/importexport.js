@@ -99,11 +99,20 @@ export function importTierlistsFromJSON() {
                     tiers: (draft.tiers || []).map(tier => ({
                         name: tier.name || 'Tier',
                         color: tier.color || '#95a5a6',
-                        items: (tier.items || []).map((item, itemIdx) => ({
-                            uid: state.nextUid(), // Generate new UIDs
-                            name: item.name,
-                            category: item.category,
-                            file: item.file,
+                        items: (tier.items || []).map(item => ({
+                            uid:        state.nextUid(), // fresh UID
+                            name:       item.name,
+                            category:   item.category,
+                            file:       item.file,
+                            // preserve move selections
+                            move1:      item.move1      ?? undefined,
+                            move1Img:   item.move1Img   ?? undefined,
+                            move2:      item.move2      ?? undefined,
+                            move2Img:   item.move2Img   ?? undefined,
+                            passive:    item.passive    ?? undefined,
+                            passiveImg: item.passiveImg ?? undefined,
+                            unite:      item.unite      ?? undefined,
+                            uniteImg:   item.uniteImg   ?? undefined,
                         })),
                     })),
                 };
@@ -116,6 +125,9 @@ export function importTierlistsFromJSON() {
 
             // Recalculate usage for all drafts
             state.drafts.forEach(draft => recalcUsage(draft.id));
+
+            // Persist the imported state
+            window.triggerAutoSave?.();
 
             // Refresh UI
             loadTabs();

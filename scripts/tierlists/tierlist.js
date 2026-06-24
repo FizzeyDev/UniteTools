@@ -121,6 +121,7 @@ function deleteDraft(draftId) {
     }
     loadTabs();
     loadGallery(state.currentCategory);
+    window.triggerAutoSave?.();
     window.showToast?.('Tierlist deleted', 'info');
 }
 
@@ -529,6 +530,8 @@ function setupIntraTierDragDrop(container, draftId) {
             [...zone.children]
                 .filter(el => el.classList.contains('tier-item-group') || el.classList.contains('tier-item'))
                 .forEach((el, i) => { el.dataset.itemIndex = i; });
+
+            window.triggerAutoSave?.();
         }
     }, true);
 }
@@ -606,6 +609,7 @@ function setupTierListeners(draftId) {
             }
             dragSrcIndex = null;
             loadTierList(draftId);
+            window.triggerAutoSave?.();
         });
     });
 
