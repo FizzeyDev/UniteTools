@@ -6,6 +6,10 @@ import { showMoveModal } from './modals.js';
 
 let dragPayload = null;
 
+function triggerSave() {
+    window.triggerAutoSave?.();
+}
+
 export function setupDragDrop() {
 
     // ── dragstart ──────────────────────────────────────────────────────────
@@ -158,6 +162,7 @@ export function setupDragDrop() {
                     targetTier.items.push({ ...item });
                     loadTierList(state.currentDraft);
                     loadGallery(state.currentCategory);
+                    triggerSave();
                 }
                 dragPayload = null;
                 return;
@@ -186,6 +191,7 @@ export function setupDragDrop() {
                     category: dragPayload.category,
                     file,
                 });
+                triggerSave();
             }
 
             dragPayload = null;
@@ -201,6 +207,7 @@ export function setupDragDrop() {
                 origin.items = origin.items.filter(i => i.uid !== dragPayload.uid);
                 const map = getUsageMap(dragPayload.category);
                 map.set(dragPayload.name, Math.max((map.get(dragPayload.name) || 1) - 1, 0));
+                triggerSave();
             }
             dragPayload = null;
             loadTierList(state.currentDraft);
@@ -240,6 +247,7 @@ export function setupDragDrop() {
             const src  = category === 'items' ? state.itemData : state.battleItemData;
             const file = src.find(i => i.name === name)?.file;
             targetTier.items.push({ uid: state.nextUid(), name, category, file });
+            triggerSave();
         }
 
         loadTierList(state.currentDraft);

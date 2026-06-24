@@ -300,7 +300,13 @@ export function calculateDamage(
 
   // ── % HP MAX du défenseur ───────────────────────────────────────────────────
   if (dmg.max_hp_percent != null && defenderMaxHP != null) {
-    let raw = Math.floor(defenderMaxHP * dmg.max_hp_percent / 100);
+    // ── CINDERACE — Flare (Additional) : 0.7% Enemy Max HP × (Level-1) + 25 ──
+    // Unique à Cinderace : les autres mons utilisant max_hp_percent (ticks…)
+    // n'ont pas de scaling par niveau ni de constante sur ce champ.
+    const isCinderaceFlare = pokemonId === "cinderace";
+    const levelScaling = isCinderaceFlare ? (level - 1) * (dmg.levelCoef || 0) : 0;
+    const constantPart = isCinderaceFlare ? (dmg.constant || 0) : 0;
+    let raw = Math.floor(defenderMaxHP * dmg.max_hp_percent / 100) + levelScaling + constantPart;
     if (dmg.max_hp_cap != null) raw = Math.min(raw, dmg.max_hp_cap);
     if (isWild && dmg.wild_cap != null) raw = Math.min(raw, dmg.wild_cap);
     let final = Math.floor(raw * globalDamageMult);

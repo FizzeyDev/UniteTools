@@ -31,7 +31,6 @@ import {
   applyTinkatonAttacker,
   applyTyranitarAttacker,
   applyZeraoraAttacker,
-  applyCrustleAttacker,
   applyMoltresAttacker,
   applyTyphlosionAttacker,
   applySkeledirgAttacker,   // ← SKELEDIRGE
@@ -69,7 +68,7 @@ import {
 
 import { applyDefenderMoveEffects } from './moveEffectsDef.js';
 import { applyPokemonStatMutations } from './statsManager.js';
-import { computeGlobalDamageMult, computeDefenderDamageMult } from './multiplierManager.js';
+import { computeGlobalDamageMult, computeDefenderDamageMult, computeHealReductionMult } from './multiplierManager.js';
 
 
 const movesGrid = document.getElementById("movesGrid");
@@ -160,10 +159,12 @@ export function updateDamages() {
     const rate = level >= 11 ? 0.50 : 0.40;
     const atkBonus   = Math.floor(baseStats.def    * rate);
     const spAtkBonus = Math.floor(baseStats.sp_def * rate);
+    const totalAtk   = atkStats.atk    + atkBonus;
+    const totalSpAtk = atkStats.sp_atk + spAtkBonus;
     document.getElementById('attackerAtk').innerHTML =
-      `${atkStats.atk.toLocaleString()} <span style="color:#bb86fc;font-size:0.85em;">(+${atkBonus})</span>`;
+      `${totalAtk.toLocaleString()} <span style="color:#bb86fc;font-size:0.85em;">(+${atkBonus})</span>`;
     document.getElementById('attackerSpAtk').innerHTML =
-      `${atkStats.sp_atk.toLocaleString()} <span style="color:#bb86fc;font-size:0.85em;">(+${spAtkBonus})</span>`;
+      `${totalSpAtk.toLocaleString()} <span style="color:#bb86fc;font-size:0.85em;">(+${spAtkBonus})</span>`;
   } else {
     document.getElementById('attackerAtk').textContent   = atkStats.atk.toLocaleString();
     document.getElementById('attackerSpAtk').textContent = atkStats.sp_atk.toLocaleString();
@@ -236,6 +237,13 @@ export function updateDamages() {
 
   const defenderDamageMult = computeDefenderDamageMult();
 
+  // ── CLEFABLE — Block (Unite) : −25% dégâts reçus pendant le mur ───────────
+  const clefableBlockReduc = (
+    state.currentDefender?.pokemonId === "clefable" &&
+    (state.defenderClefableBlockDmgReduc ?? false)
+  ) ? 0.25 : 0;
+  const finalDefenderDamageMult = defenderDamageMult * (1 - clefableBlockReduc);
+
   // ── SKELEDIRGE — Blaze : 35% Sp. Def Pierce sur le prochain move ─────────
   const skeledirgeBlazeIgnore = (
     state.currentAttacker?.pokemonId === "skeledirge" &&
@@ -251,7 +259,7 @@ export function updateDamages() {
     moldBreakerDefPen: state.currentAttacker?.pokemonId === "mega-gyarados" && state.attackerMoldBreakerActive
       ? state.currentAttacker.passive.bonusDefPen / 100 : 0,
     skeledirgeBlazeIgnore,   // ← SKELEDIRGE
-    defenderDamageMult
+    defenderDamageMult: finalDefenderDamageMult   // ← includes CLEFABLE Block −25%
   };
 
   if (state.currentDefender?.pokemonId === "garchomp") {
@@ -658,7 +666,7 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
     rapidash: applyRapidashAttacker, sirfetchd: applySirfetchdAttacker,
     sylveon: applySylveonAttacker, tinkaton: applyTinkatonAttacker,
     tyranitar: applyTyranitarAttacker, zeraora: applyZeraoraAttacker,
-    crustle: applyCrustleAttacker,
+    
     moltres: applyMoltresAttacker,
     typhlosion: applyTyphlosionAttacker,
     skeledirge: applySkeledirgAttacker,   // ← SKELEDIRGE
@@ -830,8 +838,16 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
     visibleDamages?.forEach(dmg => {
       if (!dmg.dealDamage) return;
 
+      // ── Skip placeholder entries gérées inline (HP% dynamique) ────────────
+      // Decidueye : Enhanced+ Additional (Razor Leaf) et Large Quill Bonus (Nock Nock)
+      // ont multiplier=0/constant=0 — calculés et affichés séparément ci-dessous.
+      if (
+        state.currentAttacker?.pokemonId === "decidueye" &&
+        dmg.multiplier === 0 && (dmg.constant === 0 || dmg.constant == null) &&
+        dmg.max_hp_percent == null && dmg.current_hp_percent == null && dmg.missing_hp_percent == null
+      ) return;
       let relevantAtk = state.currentAttacker.style === "special" ? atkStats.sp_atk : atkStats.atk;
-      let relevantDef = state.currentAttacker.style === "special" ? defStats.sp_def  : defStats.def;
+      let relevantDef = state.currentAttacker.style === "special" ? defStats.sp_def : defStats.def;
       if (dmg.scaling === "physical") { relevantAtk = atkStats.atk;    relevantDef = defStats.def;    }
       if (dmg.scaling === "special")  { relevantAtk = atkStats.sp_atk; relevantDef = defStats.sp_def; }
 
@@ -874,10 +890,51 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         flamethrowerPlusMult = 1.20;
       }
 
-      const effectiveGlobalMult = globalDamageMult * moltresBurnMult * lavaPlumeMult * flamethrowerPlusMult;
+      // ── Delphox : Fire Spin+ → +15% sur tous les dégâts (lvl 13+) ──────────
+      let fireSpinPlusMult = 1.0;
+      if (state.currentAttacker?.pokemonId === "delphox" && state.attackerDelphoxFireSpinPlusActive) {
+        fireSpinPlusMult = 1.15;
+      }
+
+      const effectiveGlobalMult = globalDamageMult * moltresBurnMult * lavaPlumeMult * flamethrowerPlusMult * fireSpinPlusMult;
 
       let normal = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0,           effectiveGlobalMult, defStats.hp, currentDefHP);
       let crit   = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, true,  state.currentAttacker.pokemonId, scopeCritBonus, effectiveGlobalMult, defStats.hp, currentDefHP);
+
+      // ── CRUSTLE — Fury Cutter : +20%/marque (max 40%), arrondi vers le haut ──
+      if (state.currentAttacker?.pokemonId === "crustle" && move.name === "Fury Cutter" && dmg.name === "Damage") {
+        const fcStacks = state.attackerCrustleFuryCutterStacks ?? 0;
+        const fcPct    = Math.min(fcStacks * 0.20, 0.40);
+        if (fcPct > 0) {
+          normal = Math.ceil(normal * (1 + fcPct));
+          crit   = Math.ceil(crit   * (1 + fcPct));
+        }
+      }
+
+      // ── DECIDUEYE — Spirit Shackle+ (lvl 11) : +15% si cible < 50% HP ──────
+      if (
+        state.currentAttacker?.pokemonId === "decidueye" &&
+        upgraded &&
+        move.name === "Spirit Shackle" &&
+        dmg.name !== "Enhanced+ Bonus" &&
+        currentDefHP != null && defStats.hp > 0 &&
+        currentDefHP / defStats.hp < 0.50
+      ) {
+        normal = Math.floor(normal * 1.15);
+        crit   = Math.floor(crit   * 1.15);
+      }
+
+      // ── DECIDUEYE — Nock Nock (Unite) : +30% sur Large Quill si < 50% HP ───
+      if (
+        state.currentAttacker?.pokemonId === "decidueye" &&
+        move.name === "Nock Nock (Unite)" &&
+        dmg.name === "Damage - Large Quill" &&
+        currentDefHP != null && defStats.hp > 0 &&
+        currentDefHP / defStats.hp < 0.50
+      ) {
+        normal = Math.floor(normal * 1.30);
+        crit   = Math.floor(crit   * 1.30);
+      }
 
       const muscleMult = getBuzzwoleMuscleMultiplier(move.name, dmg.name);
       normal = Math.floor(normal * muscleMult);
@@ -983,9 +1040,34 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
 
       addFormulaTooltip(line, dmg, relevantAtk, state.currentAttacker, level);
 
-      // ── LIFESTEAL — % de vol de vie sur les auto-attacks (physical only) ───
+      // ── DECIDUEYE — Razor Leaf Enhanced+ (lvl 11) : 2%/1% HP restants ──────
+      if (
+        state.currentAttacker?.pokemonId === "decidueye" &&
+        upgraded &&
+        move.name === "Razor Leaf" &&
+        (dmg.name === "Basic - Main Target" || dmg.name === "Basic - Secondary Target") &&
+        currentDefHP != null
+      ) {
+        const isMain      = dmg.name === "Basic - Main Target";
+        const hpPct       = isMain ? 2 : 1;
+        const cap         = isMain ? 240 : 120;
+        const cappedHpDmg = Math.min(Math.floor(currentDefHP * hpPct / 100), cap);
+        const hpLine      = document.createElement("div");
+        hpLine.className  = "damage-line";
+        hpLine.innerHTML  = `
+          <span class="dmg-name">${isMain ? 'Enhanced+ Additional (Main)' : 'Enhanced+ Additional (Secondary)'}
+            <br><i style="font-size:0.8em;color:#aaa;">${hpPct}% remaining HP — cap ${cap.toLocaleString()}</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-normal">${cappedHpDmg.toLocaleString()}</span>
+          </div>
+        `;
+        card.appendChild(hpLine);
+      }
       // Stat "lifesteal" du JSON, par entrée de damages[] sauf {"lifesteal": false}.
-      if (move.name === "Auto-attack" && dmg.lifesteal !== false) {
+      // Applique lifesteal si: dmg.lifesteal === true OU (Auto-attack ET dmg.lifesteal !== false)
+      const shouldApplyLifesteal = dmg.lifesteal === true || (move.name === "Auto-attack" && dmg.lifesteal !== false);
+      if (shouldApplyLifesteal) {
         const lifestealPct = (state.currentAttacker?.stats?.[state.attackerLevel - 1]?.lifesteal ?? 0) / 100;
         if (lifestealPct > 0) {
           const lsComputeTotal = (base, scaling, n) => {
@@ -997,8 +1079,9 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           const lsNormalTotal = isTick ? lsComputeTotal(displayedNormal, effectiveTickScaling, tickCount) : displayedNormal;
           const lsCritTotal   = isTick ? lsComputeTotal(displayedCrit,   effectiveTickScaling, tickCount) : displayedCrit;
 
-          const lsHealNormal = Math.floor(lsNormalTotal * lifestealPct);
-          const lsHealCrit   = Math.floor(lsCritTotal   * lifestealPct);
+          const healReductionMult = computeHealReductionMult();
+          const lsHealNormal = Math.floor(lsNormalTotal * lifestealPct * healReductionMult);
+          const lsHealCrit   = Math.floor(lsCritTotal   * lifestealPct * healReductionMult);
 
           const lsLine = document.createElement("div");
           lsLine.className = "damage-line";
@@ -1046,6 +1129,30 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           <div class="dmg-values">
             <span class="dmg-heal">${healNormal.toLocaleString()}</span>
             <span class="dmg-heal" style="opacity:0.75;">(${healCrit.toLocaleString()})</span>
+          </div>
+        `;
+        card.appendChild(healLine);
+      }
+
+      // ── CINDERACE — Feint+ (lvl 13) : heal 30% sur le Basic hit, no crit ───
+      if (
+        state.currentAttacker?.pokemonId === "cinderace" &&
+        state.attackerCinderaceFeintHealActive &&
+        move.name === "Auto-attack" &&
+        dmg.name === "Basic"
+      ) {
+        const healPct    = 0.30;
+        const healNormal = Math.floor(displayedNormal * healPct);
+
+        const healLine = document.createElement("div");
+        healLine.className = "damage-line";
+        healLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;">
+            Heal (Feint+)
+            <br><i style="font-size:0.8em;color:#4caf8299;">30% of Basic hit damage · next 3 auto attacks, cannot crit</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${healNormal.toLocaleString()}</span>
           </div>
         `;
         card.appendChild(healLine);
@@ -1172,6 +1279,11 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       const cidi = state.defenderItems.findIndex(i => i?.name === "Curse Incense");
       if (cbdi !== -1 && state.defenderItemActivated[cbdi]) curseMult *= 1 - parseFloat(state.defenderItems[cbdi].level20.replace('%', '')) / 100;
       if (cidi !== -1 && state.defenderItemActivated[cidi]) curseMult *= 1 - parseFloat(state.defenderItems[cidi].level20.replace('%', '')) / 100;
+
+      // ── DELPHOX — Fanciful Fireworks (Unite) : −50% HP recovery on attacker ─
+      if (state.currentDefender?.pokemonId === "delphox" && state.defenderLevel >= 9 && state.defenderDelphoxFancifulFireworksAntiHeal) {
+        curseMult *= 0.50;
+      }
 
       visibleHeals.forEach(heal => {
         const line = document.createElement("div");

@@ -67,8 +67,8 @@
 		    "can_crit": "true",
         "image": "assets/moves/absol/pursuit.png",
         "damages": [
-          {"name": "Normal", "multiplier": 143, "levelCoef": 14, "constant": 173, "dealDamage": true},
-          {"name": "Backstab", "multiplier": 214, "levelCoef": 21, "constant": 259, "dealDamage": true}
+          {"name": "Normal", "multiplier": 143, "levelCoef": 14, "constant": 173, "dealDamage": true, "lifesteal": true},
+          {"name": "Backstab", "multiplier": 214, "levelCoef": 21, "constant": 259, "dealDamage": true, "lifesteal": true}
         ]
       },
       {
@@ -762,10 +762,10 @@
         "can_crit": "true",
         "image": "assets/moves/azumarill/aqua_tail.png",
         "damages": [
-          {"name": "Basic (Close Range)", "multiplier": 68, "levelCoef": 2, "constant": 50, "dealDamage": true },
-          {"name": "Boosted (Close Range)", "multiplier": 136, "levelCoef": 4, "constant": 100, "dealDamage": true },
-          {"name": "Basic (Long Range)", "multiplier": 122.4, "levelCoef": 3, "constant": 90, "dealDamage": true },
-          {"name": "Boosted (Long Range)", "multiplier": 244.8, "levelCoef": 6, "constant": 180, "dealDamage": true }
+          {"name": "Basic (Close Range)", "multiplier": 68, "levelCoef": 2, "constant": 50, "dealDamage": true, "lifesteal": true },
+          {"name": "Boosted (Close Range)", "multiplier": 136, "levelCoef": 4, "constant": 100, "dealDamage": true, "lifesteal": true },
+          {"name": "Basic (Long Range)", "multiplier": 122.4, "levelCoef": 3, "constant": 90, "dealDamage": true, "lifesteal": true },
+          {"name": "Boosted (Long Range)", "multiplier": 244.8, "levelCoef": 6, "constant": 180, "dealDamage": true, "lifesteal": true }
         ],
         "heals": [
           { "name": "Heal", "scaling": "atk", "multiplier": 110, "levelCoef": 0, "constant": 220 }
@@ -2076,21 +2076,21 @@
     "role": "attacker",
     "style": "physical",
     "stats": [
-        {"level": 1, "hp": 3000, "atk": 135, "def": 50, "sp_atk": 20, "sp_def": 30, "crit": 0},
-        {"level": 2, "hp": 3043, "atk": 140, "def": 53, "sp_atk": 21, "sp_def": 33, "crit": 0},
-        {"level": 3, "hp": 3095, "atk": 145, "def": 57, "sp_atk": 23, "sp_def": 36, "crit": 0},
-        {"level": 4, "hp": 3157, "atk": 151, "def": 62, "sp_atk": 25, "sp_def": 40, "crit": 0},
-        {"level": 5, "hp": 3382, "atk": 174, "def": 78, "sp_atk": 32, "sp_def": 55, "crit": 15},
-        {"level": 6, "hp": 3471, "atk": 183, "def": 84, "sp_atk": 35, "sp_def": 61, "crit": 15},
-        {"level": 7, "hp": 3878, "atk": 221, "def": 114, "sp_atk": 49, "sp_def": 88, "crit": 15},
-        {"level": 8, "hp": 4007, "atk": 233, "def": 123, "sp_atk": 53, "sp_def": 97, "crit": 15},
-        {"level": 9, "hp": 4161, "atk": 247, "def": 134, "sp_atk": 58, "sp_def": 107, "crit": 30},
-        {"level": 10, "hp": 4346, "atk": 264, "def": 147, "sp_atk": 64, "sp_def": 119, "crit": 30},
-        {"level": 11, "hp": 4568, "atk": 284, "def": 163, "sp_atk": 71, "sp_def": 134, "crit": 30},
-        {"level": 12, "hp": 4835, "atk": 309, "def": 182, "sp_atk": 80, "sp_def": 152, "crit": 30},
-        {"level": 13, "hp": 5155, "atk": 339, "def": 206, "sp_atk": 91, "sp_def": 175, "crit": 30},
-        {"level": 14, "hp": 5539, "atk": 375, "def": 235, "sp_atk": 104, "sp_def": 201, "crit": 30},
-        {"level": 15, "hp": 6000, "atk": 418, "def": 268, "sp_atk": 119, "sp_def": 232, "crit": 30}
+        {"level": 1, "hp": 3000, "atk": 135, "def": 50, "sp_atk": 20, "sp_def": 30, "crit": 0, "lifesteal": 0},
+        {"level": 2, "hp": 3043, "atk": 140, "def": 53, "sp_atk": 21, "sp_def": 33, "crit": 0, "lifesteal": 0},
+        {"level": 3, "hp": 3095, "atk": 145, "def": 57, "sp_atk": 23, "sp_def": 36, "crit": 0, "lifesteal": 0},
+        {"level": 4, "hp": 3157, "atk": 151, "def": 62, "sp_atk": 25, "sp_def": 40, "crit": 0, "lifesteal": 0},
+        {"level": 5, "hp": 3382, "atk": 174, "def": 78, "sp_atk": 32, "sp_def": 55, "crit": 15, "lifesteal": 5},
+        {"level": 6, "hp": 3471, "atk": 183, "def": 84, "sp_atk": 35, "sp_def": 61, "crit": 15, "lifesteal": 5},
+        {"level": 7, "hp": 3878, "atk": 221, "def": 114, "sp_atk": 49, "sp_def": 88, "crit": 15, "lifesteal": 5},
+        {"level": 8, "hp": 4007, "atk": 233, "def": 123, "sp_atk": 53, "sp_def": 97, "crit": 15, "lifesteal": 5},
+        {"level": 9, "hp": 4161, "atk": 247, "def": 134, "sp_atk": 58, "sp_def": 107, "crit": 30, "lifesteal": 10},
+        {"level": 10, "hp": 4346, "atk": 264, "def": 147, "sp_atk": 64, "sp_def": 119, "crit": 30, "lifesteal": 10},
+        {"level": 11, "hp": 4568, "atk": 284, "def": 163, "sp_atk": 71, "sp_def": 134, "crit": 30, "lifesteal": 10},
+        {"level": 12, "hp": 4835, "atk": 309, "def": 182, "sp_atk": 80, "sp_def": 152, "crit": 30, "lifesteal": 10},
+        {"level": 13, "hp": 5155, "atk": 339, "def": 206, "sp_atk": 91, "sp_def": 175, "crit": 30, "lifesteal": 15},
+        {"level": 14, "hp": 5539, "atk": 375, "def": 235, "sp_atk": 104, "sp_def": 201, "crit": 30, "lifesteal": 15},
+        {"level": 15, "hp": 6000, "atk": 418, "def": 268, "sp_atk": 119, "sp_def": 232, "crit": 30, "lifesteal": 15}
     ],
     "passive": {
       "name": "Blaze",
@@ -2105,8 +2105,8 @@
         "can_crit": "true",
         "image": "assets/moves/basic_attack.png",
         "damages": [
-          {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Boosted", "multiplier": 140, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true, "wild_cap": 1000},
+          {"name": "Boosted", "multiplier": 140, "levelCoef": 0, "constant": 0, "dealDamage": true, "wild_cap": 1300}
         ]
       },
       {
@@ -2114,7 +2114,8 @@
         "can_crit": "false",
         "image": "assets/moves/cinderace/blaze.png",
         "damages": [
-          {"name": "Flare Damage", "multiplier": 90, "levelCoef": 0, "constant": 25, "dealDamage": true, "notes": "90% Atk + 0.7% Enemy Max HP x (Level - 1) + 25"}
+          {"name": "Flare Damage", "multiplier": 90, "levelCoef": 0, "constant": 25, "dealDamage": true},
+          {"name": "Flare Damage (Additional)", "max_hp_percent": 0.7, "levelCoef": 1, "constant": 25, "dealDamage": true, "notes": "90% Atk + 0.7% Enemy Max HP x (Level - 1) + 25"}
         ]
       },
       {
@@ -3055,8 +3056,8 @@
         "can_crit": "false",
         "image": "assets/moves/darkrai/nasty_plot.png",
         "damages": [
-          {"name": "Damage - Additional (Per Counter)", "multiplier": 126, "levelCoef": 9, "constant": 334, "dealDamage": true},
-          {"name": "Damage - Boosted & Additional (Per Counter)", "multiplier": 100, "levelCoef": 6, "constant": 256, "dealDamage": true}
+          {"name": "Damage - Additional (Per Counter)", "multiplier": 126, "levelCoef": 9, "constant": 334, "dealDamage": true, "is_tick": true, "tick_count": 2},
+          {"name": "Damage - Boosted & Additional (Per Counter)", "multiplier": 100, "levelCoef": 6, "constant": 256, "dealDamage": true, "is_tick": true, "tick_count": 2}
         ]
       },
       {
@@ -3114,21 +3115,21 @@
     "role": "attacker",
     "style": "physical",
     "stats": [
-      {"level": 1, "hp": 3200, "atk": 125, "def": 50, "sp_atk": 20, "sp_def": 76, "crit": 0},
-      {"level": 2, "hp": 3240, "atk": 130, "def": 53, "sp_atk": 22, "sp_def": 80, "crit": 0},
-      {"level": 3, "hp": 3288, "atk": 135, "def": 57, "sp_atk": 24, "sp_def": 84, "crit": 0},
-      {"level": 4, "hp": 3346, "atk": 142, "def": 62, "sp_atk": 27, "sp_def": 89, "crit": 0},
-      {"level": 5, "hp": 3556, "atk": 166, "def": 78, "sp_atk": 37, "sp_def": 108, "crit": 15},
-      {"level": 6, "hp": 3639, "atk": 176, "def": 85, "sp_atk": 40, "sp_def": 116, "crit": 15},
-      {"level": 7, "hp": 4019, "atk": 220, "def": 114, "sp_atk": 58, "sp_def": 150, "crit": 15},
-      {"level": 8, "hp": 4139, "atk": 234, "def": 124, "sp_atk": 64, "sp_def": 161, "crit": 15},
-      {"level": 9, "hp": 4283, "atk": 251, "def": 135, "sp_atk": 70, "sp_def": 174, "crit": 30},
-      {"level": 10, "hp": 4456, "atk": 271, "def": 149, "sp_atk": 78, "sp_def": 190, "crit": 30},
-      {"level": 11, "hp": 4664, "atk": 295, "def": 165, "sp_atk": 88, "sp_def": 209, "crit": 30},
-      {"level": 12, "hp": 4913, "atk": 324, "def": 185, "sp_atk": 100, "sp_def": 231, "crit": 30},
-      {"level": 13, "hp": 5211, "atk": 358, "def": 208, "sp_atk": 113, "sp_def": 258, "crit": 30},
-      {"level": 14, "hp": 5570, "atk": 400, "def": 236, "sp_atk": 130, "sp_def": 291, "crit": 30},
-      {"level": 15, "hp": 6000, "atk": 450, "def": 270, "sp_atk": 150, "sp_def": 330, "crit": 30}
+      {"level": 1, "hp": 3200, "atk": 125, "def": 50, "sp_atk": 20, "sp_def": 76, "crit": 0, "lifesteal": 0},
+      {"level": 2, "hp": 3240, "atk": 130, "def": 53, "sp_atk": 22, "sp_def": 80, "crit": 0, "lifesteal": 0},
+      {"level": 3, "hp": 3288, "atk": 135, "def": 57, "sp_atk": 24, "sp_def": 84, "crit": 0, "lifesteal": 0},
+      {"level": 4, "hp": 3346, "atk": 142, "def": 62, "sp_atk": 27, "sp_def": 89, "crit": 0, "lifesteal": 0},
+      {"level": 5, "hp": 3556, "atk": 166, "def": 78, "sp_atk": 37, "sp_def": 108, "crit": 15, "lifesteal": 5},
+      {"level": 6, "hp": 3639, "atk": 176, "def": 85, "sp_atk": 40, "sp_def": 116, "crit": 15, "lifesteal": 5},
+      {"level": 7, "hp": 4019, "atk": 220, "def": 114, "sp_atk": 58, "sp_def": 150, "crit": 15, "lifesteal": 10},
+      {"level": 8, "hp": 4139, "atk": 234, "def": 124, "sp_atk": 64, "sp_def": 161, "crit": 15, "lifesteal": 10},
+      {"level": 9, "hp": 4283, "atk": 251, "def": 135, "sp_atk": 70, "sp_def": 174, "crit": 30, "lifesteal": 15},
+      {"level": 10, "hp": 4456, "atk": 271, "def": 149, "sp_atk": 78, "sp_def": 190, "crit": 30, "lifesteal": 15},
+      {"level": 11, "hp": 4664, "atk": 295, "def": 165, "sp_atk": 88, "sp_def": 209, "crit": 30, "lifesteal": 20},
+      {"level": 12, "hp": 4913, "atk": 324, "def": 185, "sp_atk": 100, "sp_def": 231, "crit": 30, "lifesteal": 20},
+      {"level": 13, "hp": 5211, "atk": 358, "def": 208, "sp_atk": 113, "sp_def": 258, "crit": 30, "lifesteal": 25},
+      {"level": 14, "hp": 5570, "atk": 400, "def": 236, "sp_atk": 130, "sp_def": 291, "crit": 30, "lifesteal": 25},
+      {"level": 15, "hp": 6000, "atk": 450, "def": 270, "sp_atk": 150, "sp_def": 330, "crit": 30, "lifesteal": 25}
     ],
     "passive": {
       "name": "Long Reach",
@@ -3176,10 +3177,10 @@
         "can_crit": "true",
         "image": "assets/moves/decidueye/razor_leaf.png",
         "damages": [
-          {"name": "Basic - Main Target", "multiplier": 80, "levelCoef": 3, "constant": 120, "dealDamage": true},
-          {"name": "Basic - Secondary Target", "multiplier": 36, "levelCoef": 1, "constant": 54, "dealDamage": true},
-          {"name": "Boosted - Main Target (per quill, 3 quills)", "multiplier": 30.4, "levelCoef": 1, "constant": 46, "dealDamage": true, "is_tick": true, "tick_count": 3},
-          {"name": "Boosted - Secondary Target (per quill, 3 quills)", "multiplier": 13.68, "levelCoef": 1, "constant": 21, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Basic - Main Target", "multiplier": 80, "levelCoef": 3, "constant": 120, "dealDamage": true, "lifesteal": true},
+          {"name": "Basic - Secondary Target", "multiplier": 36, "levelCoef": 1, "constant": 54, "dealDamage": true, "lifesteal": true},
+          {"name": "Boosted - Main Target (per quill, 3 quills)", "multiplier": 30.4, "levelCoef": 1, "constant": 46, "dealDamage": true, "is_tick": true, "tick_count": 3, "lifesteal": true},
+          {"name": "Boosted - Secondary Target (per quill, 3 quills)", "multiplier": 13.68, "levelCoef": 1, "constant": 21, "dealDamage": true, "is_tick": true, "tick_count": 3, "lifesteal": true},
           {"name": "Enhanced+ Additional (Main Target)", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "2% of target's remaining HP (capped at 240)"},
           {"name": "Enhanced+ Additional (Secondary Target)", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "1% of target's remaining HP (capped at 120)"}
         ]
