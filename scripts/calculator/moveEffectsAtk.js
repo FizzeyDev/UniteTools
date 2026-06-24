@@ -470,22 +470,165 @@ function applyCrustleFuryCutter(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── DECIDUEYE — Leafage (+10% ATK for 3s) ────────────────────────────────────
+function applyDecidueyeLeafage(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level >= 7) return;
+
+  const isActive = state.attackerDecidueyeLeafageAtkBuff ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/decidueye/leafage.png')}
+    <div style="flex:1;">
+      ${moveBadge('Leafage', 1)}
+      Move used → <strong style="color:#fff;">+10% ATK</strong> & <strong style="color:#fff;">+25% attack speed</strong> for 3s<br>
+      <span style="font-size:0.8rem;color:${C}99;">ATK boost also applies to Leafage itself</span><br>
+      <button class="decidueye-leafage-atk-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.decidueye-leafage-atk-toggle').onclick = () => {
+    state.attackerDecidueyeLeafageAtkBuff = !state.attackerDecidueyeLeafageAtkBuff;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyDecidueyeLeafageStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'decidueye') return;
+  if (level >= 7) return;
+  if (!state.attackerDecidueyeLeafageAtkBuff) return;
+  atkStats.atk = Math.floor(atkStats.atk * 1.10);
+}
+
+// ── DECIDUEYE — Razor Leaf (+10% ATK while active) ───────────────────────────
+function applyDecidueyeRazorLeaf(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 7) return;
+
+  const isActive = state.attackerDecidueyeRazorLeafAtkBuff ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/decidueye/razor_leaf.png')}
+    <div style="flex:1;">
+      ${moveBadge('Razor Leaf', 7)}
+      While active → <strong style="color:#fff;">+10% ATK</strong> & enhanced auto attacks for 5.5s<br>
+      <button class="decidueye-razor-leaf-atk-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.decidueye-razor-leaf-atk-toggle').onclick = () => {
+    state.attackerDecidueyeRazorLeafAtkBuff = !state.attackerDecidueyeRazorLeafAtkBuff;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyDecidueyeRazorLeafStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'decidueye') return;
+  if (level < 7) return;
+  if (!state.attackerDecidueyeRazorLeafAtkBuff) return;
+  atkStats.atk = Math.floor(atkStats.atk * 1.10);
+}
+
+// ── DARKRAI — Calm Mind ───────────────────────────────────────────────────────
+function applyDarkraiCalmMind(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level >= 7) return;
+
+  const isActive = state.attackerDarkraiCalmMindActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/darkrai/calm_mind.png')}
+    <div style="flex:1;">
+      ${moveBadge('Calm Mind', 1)}
+      Move used → <strong style="color:#fff;">+30% Sp. Atk & +30% Sp. Def</strong> for 3s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Sp. Def not used in damage calc — only Sp. Atk applied here</span><br>
+      <button class="darkrai-calm-mind-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.darkrai-calm-mind-toggle').onclick = () => {
+    state.attackerDarkraiCalmMindActive = !state.attackerDarkraiCalmMindActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyDarkraiCalmMindStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'darkrai') return;
+  if (level >= 7) return;
+  if (!state.attackerDarkraiCalmMindActive) return;
+  atkStats.sp_atk = Math.floor(atkStats.sp_atk * 1.30);
+}
+
+// ── DELPHOX — Fire Spin+ (lvl 13) ────────────────────────────────────────────
+function applyDelphoxFireSpinPlus(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const isActive = state.attackerDelphoxFireSpinPlusActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/delphox/fire_spin.png')}
+    <div style="flex:1;">
+      ${moveBadge('Fire Spin+', 13)}
+      Trap activation → <strong style="color:#fff;">+15% all damage from Delphox</strong> for 3s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Does not re-apply on subsequent trap ticks</span><br>
+      <button class="delphox-fire-spin-plus-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.delphox-fire-spin-plus-toggle').onclick = () => {
+    state.attackerDelphoxFireSpinPlusActive = !state.attackerDelphoxFireSpinPlusActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
-    greninja:  [applyGreninjaSmokescreenAttacker],
-    dragonite: [applyDragoniteDragonDance],
-    aegislash: [applyAegislashSacredSword, applyAegislashIronHead],
-    azumarill: [applyAzumarillBellyBash],
-    blaziken:  [applyBlazikenSpinningFlameKick],
-    buzzwole:  [applyBuzzwoleLunge],
-    ceruledge: [applyCeruledgeLavaPlume],
+    greninja:   [applyGreninjaSmokescreenAttacker],
+    dragonite:  [applyDragoniteDragonDance],
+    aegislash:  [applyAegislashSacredSword, applyAegislashIronHead],
+    azumarill:  [applyAzumarillBellyBash],
+    blaziken:   [applyBlazikenSpinningFlameKick],
+    buzzwole:   [applyBuzzwoleLunge],
+    ceruledge:  [applyCeruledgeLavaPlume],
     chandelure: [applyChandelureFlamethrowerPlus],
-    charizard: [applyCharizardSeismicSlam],
+    charizard:  [applyCharizardSeismicSlam],
     "mega-charizard-x": [applyCharizardSeismicSlam],
     "mega-charizard-y": [applyCharizardSeismicSlam],
-    cinderace: [applyCinderaceFeint],
-    crustle:   [applyCrustleShellSmash, applyCrustleFuryCutter],
+    cinderace:  [applyCinderaceFeint],
+    crustle:    [applyCrustleShellSmash, applyCrustleFuryCutter],
+    darkrai:    [applyDarkraiCalmMind],
+    decidueye:  [applyDecidueyeLeafage, applyDecidueyeRazorLeaf],
+    delphox:    [applyDelphoxFireSpinPlus],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

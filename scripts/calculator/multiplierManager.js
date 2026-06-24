@@ -66,3 +66,13 @@ export function computeGlobalDamageMult() {
 
   return globalDamageMult;
 }
+
+export function computeHealReductionMult() {
+  let healReductionMult = 1.0;
+
+  if (state.currentDefender?.pokemonId === 'delphox' && state.defenderLevel >= 9 && state.defenderDelphoxFancifulFireworksAntiHeal) {
+    healReductionMult *= 0.50;
+  }
+
+  return healReductionMult;
+}

@@ -260,6 +260,35 @@ function applyCrustleShellSmash(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── DELPHOX — Fanciful Fireworks (Unite) ─────────────────────────────────────
+function applyDelphoxFancifulFireworks(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 9) return; // Unite unlocks at level 9
+
+  const isActive = state.defenderDelphoxFancifulFireworksAntiHeal ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/delphox/fanciful_fireworks.png')}
+    <div style="flex:1;">
+      ${moveBadge('Fanciful Fireworks (Unite)', 9)}
+      Inside zone → <strong style="color:#fff;">−50% HP recovery</strong> on attacker (1.75s linger after exit)<br>
+      <button class="delphox-fireworks-antiheal-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.delphox-fireworks-antiheal-toggle').onclick = () => {
+    state.defenderDelphoxFancifulFireworksAntiHeal = !state.defenderDelphoxFancifulFireworksAntiHeal;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -269,6 +298,7 @@ export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
     ceruledge: [applyCeruledgeRevenantRend],
     clefable:  [applyClefableFollowMe, applyClefableBlock],
     crustle:   [applyCrustleShellSmash],
+    delphox:   [applyDelphoxFancifulFireworks],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

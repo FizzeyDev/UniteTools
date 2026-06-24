@@ -12,6 +12,9 @@ import {
   applyAzumarillBellyBashStatBuff,
   applyBlazikenSpinningFlameKickStatBuff,
   applyBuzzwoleLungeStatBuff,
+  applyDarkraiCalmMindStatBuff,
+  applyDecidueyeLeafageStatBuff,
+  applyDecidueyeRazorLeafStatBuff,
 } from './moveEffectsAtk.js';
 
 export function applyPokemonStatMutations(atkStats, defStats) {
@@ -125,6 +128,9 @@ export function applyPokemonStatMutations(atkStats, defStats) {
   applyAzumarillBellyBashStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyBlazikenSpinningFlameKickStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyBuzzwoleLungeStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyDarkraiCalmMindStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyDecidueyeLeafageStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyDecidueyeRazorLeafStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
 
   // ── Armarouge — Armor Cannon cooldown def debuff ───────────────────────────
   if (state.currentDefender?.pokemonId === 'armarouge' && state.defenderLevel >= 5 && state.defenderArmarougeArmorCannonDebuff) {
