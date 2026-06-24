@@ -482,7 +482,7 @@
   },
   "tsareena": {
     "move1": [ "razor_leaf.png", "triple_axel.png", "stomp.png" ],
-    "move2": [ "rapid_spin.png", "trop_kick.png", "grassy_slide.png" ],
+    "move2": [ "rapid_spin.png", "trop_kick.png", "grassy_glide.png" ],
     "passive": [ "oblivious.png", "queenly_majesty.png" ],
     "unite": [ "queen_ascendant.png" ]
   },
