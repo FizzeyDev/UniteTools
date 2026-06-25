@@ -77,7 +77,15 @@ function setupStaticListeners() {
     document.getElementById('export-current')?.addEventListener('click', () => exportCurrentTierlist());
     document.getElementById('import-btn')    ?.addEventListener('click', () => importTierlistsFromJSON());
     document.getElementById('copy-current')  ?.addEventListener('click', () => copyToClipboard(state.currentDraft));
-    document.getElementById('reset-all-btn') ?.addEventListener('click', () => {
+
+    // Delegated listener: the reset button lives inside the tierlist container,
+    // which is re-rendered (new DOM node) every time loadTierList() runs
+    // (tab switch, add/remove tier, etc). Binding directly via getElementById
+    // only attaches to the node that existed at page load, so the listener
+    // gets silently lost after the first re-render. Delegating from document
+    // keeps it working no matter how many times the button gets recreated.
+    document.addEventListener('click', e => {
+        if (!e.target.closest('#reset-all-btn')) return;
         if (!confirm('Reset everything? This will delete ALL tierlists and cannot be undone.')) return;
         import('./storage.js').then(m => {
             m.clearLocalStorage();
