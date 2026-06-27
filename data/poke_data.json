@@ -8077,7 +8077,7 @@
         "damages": [
           {"name": "Damage - No Light Screen", "multiplier": 114, "levelCoef": 12, "constant": 260, "dealDamage": true},
           {"name": "Samage - Light Screen Boost", "multiplier": 149, "levelCoef": 15, "constant": 340, "dealDamage": true},
-          {"name": "Execute Bonus", "missing_hp_percent": 9.5, "missing_hp_cap": 1200, "dealDamage": true, "notes": "+18% missing HP (capped 1200 vs wild)"}
+          {"name": "Execute Bonus", "missing_hp_percent": 9.5, "missing_hp_cap": 1200, "dealDamage": true, "notes": "9.5% missing HP (capped 1200 vs wild)"}
         ]
       },
       {
