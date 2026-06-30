@@ -15,6 +15,9 @@ import {
   applyDarkraiCalmMindStatBuff,
   applyDecidueyeLeafageStatBuff,
   applyDecidueyeRazorLeafStatBuff,
+  applyDodrioTripleTrampleStatBuff,
+  applyDragapultPhantomForceStatBuff,
+  applyDuraludonRevolvingRuinStatBuff,
 } from './moveEffectsAtk.js';
 
 export function applyPokemonStatMutations(atkStats, defStats) {
@@ -131,6 +134,9 @@ export function applyPokemonStatMutations(atkStats, defStats) {
   applyDarkraiCalmMindStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyDecidueyeLeafageStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyDecidueyeRazorLeafStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyDodrioTripleTrampleStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyDragapultPhantomForceStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyDuraludonRevolvingRuinStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
 
   // ── Armarouge — Armor Cannon cooldown def debuff ───────────────────────────
   if (state.currentDefender?.pokemonId === 'armarouge' && state.defenderLevel >= 5 && state.defenderArmarougeArmorCannonDebuff) {

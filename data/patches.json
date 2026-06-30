@@ -1,6 +1,17 @@
 {
   "patches": [
     {
+      "version": "1.22.1.12",
+      "name": "Quaquaval Emergency Buff",
+      "date": "2026-06-24",
+      "buffs": [
+        "Quaquaval"
+      ],
+      "nerfs": [],
+      "tweaks": [],
+      "notes": "Character buff"
+    },
+    {
       "version": "1.22.1.11",
       "name": "Enduring Patch",
       "date": "2026-06-17",

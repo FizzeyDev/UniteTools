@@ -289,6 +289,96 @@ function applyDelphoxFancifulFireworks(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── DODRIO — Drill Peck (Dash) ─────────────────────────────────────────────────
+function applyDodrioDrillPeckDash(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 5) return; // Drill Peck learned at level 5
+
+  const isActive = state.defenderDodrioDrillPeckDash ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/dodrio/drill_peck.png')}
+    <div style="flex:1;">
+      ${moveBadge('Drill Peck (Dash)', 5)}
+      Full-gauge dash → <strong style="color:#fff;">−20% damage received</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Active only during the dash</span><br>
+      <button class="dodrio-drill-peck-dash-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.dodrio-drill-peck-dash-toggle').onclick = () => {
+    state.defenderDodrioDrillPeckDash = !state.defenderDodrioDrillPeckDash;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── DRAGONITE — Hyper Beam (charging) ──────────────────────────────────────────
+function applyDragoniteHyperBeamCharge(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const isActive = state.defenderDragoniteHyperBeamCharging ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/dragonite/hyper_beam.png')}
+    <div style="flex:1;">
+      ${moveBadge('Hyper Beam+', 13)}
+      Charging the beam → <strong style="color:#fff;">−50% damage received</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Active only while channeling Hyper Beam</span><br>
+      <button class="dragonite-hyper-beam-charge-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.dragonite-hyper-beam-charge-toggle').onclick = () => {
+    state.defenderDragoniteHyperBeamCharging = !state.defenderDragoniteHyperBeamCharging;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── DURALUDON — Laser Focus ────────────────────────────────────────────────────
+function applyDuraludonLaserFocus(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 1) return; // Laser Focus learned at level 1
+
+  const isActive = state.defenderDuraludonLaserFocusActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/duraludon/laser_focus.png')}
+    <div style="flex:1;">
+      ${moveBadge('Laser Focus', 1)}
+      On activation → <strong style="color:#fff;">−20% damage received</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Active only for the first 0.6s</span><br>
+      <button class="duraludon-laser-focus-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.duraludon-laser-focus-toggle').onclick = () => {
+    state.defenderDuraludonLaserFocusActive = !state.defenderDuraludonLaserFocusActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -299,6 +389,9 @@ export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
     clefable:  [applyClefableFollowMe, applyClefableBlock],
     crustle:   [applyCrustleShellSmash],
     delphox:   [applyDelphoxFancifulFireworks],
+    dodrio:    [applyDodrioDrillPeckDash],
+    dragonite: [applyDragoniteHyperBeamCharge],
+    duraludon: [applyDuraludonLaserFocus],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

@@ -896,7 +896,13 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         fireSpinPlusMult = 1.15;
       }
 
-      const effectiveGlobalMult = globalDamageMult * moltresBurnMult * lavaPlumeMult * flamethrowerPlusMult * fireSpinPlusMult;
+      // ── Dragapult : Dragon Dance → -10% sur les auto attacks pendant le vol ──
+      let dragonDanceFlightMult = 1.0;
+      if (state.currentAttacker?.pokemonId === "dragapult" && move.name === "Dragon Dance" && dmg.name?.includes("during flight")) {
+        dragonDanceFlightMult = 0.90;
+      }
+
+      const effectiveGlobalMult = globalDamageMult * moltresBurnMult * lavaPlumeMult * flamethrowerPlusMult * fireSpinPlusMult * dragonDanceFlightMult;
 
       let normal = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0,           effectiveGlobalMult, defStats.hp, currentDefHP);
       let crit   = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, true,  state.currentAttacker.pokemonId, scopeCritBonus, effectiveGlobalMult, defStats.hp, currentDefHP);
@@ -1153,6 +1159,33 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           </span>
           <div class="dmg-values">
             <span class="dmg-heal">${healNormal.toLocaleString()}</span>
+          </div>
+        `;
+        card.appendChild(healLine);
+      }
+
+      // ── DRAGAPULT — Dragon Dance+ (lvl 11) : heal 25% sur les hits pendant le vol ──
+      if (
+        state.currentAttacker?.pokemonId === "dragapult" &&
+        state.attackerLevel >= 11 &&
+        state.attackerDragapultDragonDanceHealActive &&
+        move.name === "Dragon Dance" &&
+        dmg.name?.includes("during flight")
+      ) {
+        const healPct    = 0.25;
+        const healNormal = Math.floor(displayedNormal * healPct);
+        const healCrit    = Math.floor(displayedCrit   * healPct);
+
+        const healLine = document.createElement("div");
+        healLine.className = "damage-line";
+        healLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;">
+            Heal (Dragon Dance+)
+            <br><i style="font-size:0.8em;color:#4caf8299;">25% of damage dealt while flying</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${healNormal.toLocaleString()}</span>
+            ${canCrit ? `<span class="dmg-heal" style="opacity:0.75;">(${healCrit.toLocaleString()})</span>` : ""}
           </div>
         `;
         card.appendChild(healLine);

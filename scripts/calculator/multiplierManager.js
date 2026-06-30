@@ -19,6 +19,9 @@ export function computeDefenderDamageMult() {
   if (state.defenderDhelmiseAnchorShotPlus) defenderDamageMult *= 1.50;
   if (state.currentDefender?.pokemonId === "dragonite" && state.defenderMultiscaleActive) defenderDamageMult *= 0.70;
   if (state.defenderMimeActive)             defenderDamageMult *= 0.90;
+  if (state.currentDefender?.pokemonId === "dodrio" && state.defenderDodrioDrillPeckDash) defenderDamageMult *= 0.80;
+  if (state.currentDefender?.pokemonId === "dragonite" && state.defenderDragoniteHyperBeamCharging) defenderDamageMult *= 0.50;
+  if (state.currentDefender?.pokemonId === "duraludon" && state.defenderDuraludonLaserFocusActive) defenderDamageMult *= 0.80;
 
   // Snow Cloak (Articuno)
   if (state.currentDefender?.pokemonId === "articuno") {

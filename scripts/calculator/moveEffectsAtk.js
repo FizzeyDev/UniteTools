@@ -610,6 +610,144 @@ function applyDelphoxFireSpinPlus(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── DODRIO — Triple Trample (Unite) ──────────────────────────────────────────
+function applyDodrioTripleTrample(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 9) return; // Unite unlocks at level 9
+
+  const isActive = state.attackerDodrioTripleTrampleBuff ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/dodrio/triple_trample.png')}
+    <div style="flex:1;">
+      ${moveBadge('Triple Trample (Unite)', 9)}
+      Arrival at destination → <strong style="color:#fff;">+25% ATK</strong> & <strong style="color:#fff;">−5% Sp. Atk</strong> for 3s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Also grants a 10% Max HP shield (not modeled here)</span><br>
+      <button class="dodrio-triple-trample-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.dodrio-triple-trample-toggle').onclick = () => {
+    state.attackerDodrioTripleTrampleBuff = !state.attackerDodrioTripleTrampleBuff;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyDodrioTripleTrampleStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'dodrio') return;
+  if (level < 9) return;
+  if (!state.attackerDodrioTripleTrampleBuff) return;
+  atkStats.atk    = Math.floor(atkStats.atk    * 1.25);
+  atkStats.sp_atk = Math.floor(atkStats.sp_atk * 0.95);
+}
+
+// ── DRAGAPULT — Dragon Dance+ (lvl 11) ───────────────────────────────────────
+function applyDragapultDragonDanceHeal(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 11) return; // Upgrade at level 11
+
+  const isActive = state.attackerDragapultDragonDanceHealActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/dragapult/dragon_dance.png')}
+    <div style="flex:1;">
+      ${moveBadge('Dragon Dance+', 11)}
+      While flying → auto attacks heal <strong style="color:#fff;">25% of damage dealt</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Flying auto attacks also deal 10% reduced damage</span><br>
+      <button class="dragapult-dragon-dance-heal-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.dragapult-dragon-dance-heal-toggle').onclick = () => {
+    state.attackerDragapultDragonDanceHealActive = !state.attackerDragapultDragonDanceHealActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── DRAGAPULT — Phantom Force (KO stacks) ────────────────────────────────────
+function applyDragapultPhantomForce(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Phantom Force learned at level 5
+
+  const stacks    = state.attackerDragapultPhantomForceStacks ?? 0;
+  const maxStacks = 10;
+  const bonusAtk  = stacks * 8;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/dragapult/phantom_force.png')}
+    <div style="flex:1;">
+      ${moveBadge('Phantom Force', 5)}
+      KOs: <button class="stack-btn minus pf-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus pf-plus">+</button><br>
+      → ATK <strong style="color:${bonusAtk > 0 ? '#88ff88' : '#888'};">+${bonusAtk}</strong> (permanent for the battle)
+      ${stacks >= maxStacks ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ MAX</span>' : ''}<br>
+      <span style="font-size:0.8rem;color:${C}99;">+8 ATK per KO, up to 10 times (max +80)</span>
+    </div>
+  `);
+  line.querySelector('.pf-minus').onclick = () => { if ((state.attackerDragapultPhantomForceStacks ?? 0) > 0)        { state.attackerDragapultPhantomForceStacks = (state.attackerDragapultPhantomForceStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.pf-plus').onclick  = () => { if ((state.attackerDragapultPhantomForceStacks ?? 0) < maxStacks) { state.attackerDragapultPhantomForceStacks = (state.attackerDragapultPhantomForceStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
+export function applyDragapultPhantomForceStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'dragapult') return;
+  if (level < 5) return;
+  const stacks = state.attackerDragapultPhantomForceStacks ?? 0;
+  if (stacks <= 0) return;
+  atkStats.atk += stacks * 8;
+}
+
+// ── DURALUDON — Revolving Ruin (Unite) ───────────────────────────────────────
+function applyDuraludonRevolvingRuin(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 9) return; // Unite unlocks at level 9
+
+  const stacks    = state.attackerDuraludonRevolvingRuinStacks ?? 0;
+  const maxStacks = 5;
+  const bonusPct  = stacks * 8;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/duraludon/revolving_ruin.png')}
+    <div style="flex:1;">
+      ${moveBadge('Revolving Ruin (Unite)', 9)}
+      Enemies hit: <button class="stack-btn minus rr-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus rr-plus">+</button><br>
+      → <strong style="color:${bonusPct > 0 ? '#88ff88' : '#888'};">+${bonusPct}% ATK</strong> for 8s
+      ${stacks >= maxStacks ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ MAX</span>' : ''}<br>
+      <span style="font-size:0.8rem;color:${C}99;">+8% ATK per enemy hit, up to 5 stacks (max +40%)</span>
+    </div>
+  `);
+  line.querySelector('.rr-minus').onclick = () => { if ((state.attackerDuraludonRevolvingRuinStacks ?? 0) > 0)        { state.attackerDuraludonRevolvingRuinStacks = (state.attackerDuraludonRevolvingRuinStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.rr-plus').onclick  = () => { if ((state.attackerDuraludonRevolvingRuinStacks ?? 0) < maxStacks) { state.attackerDuraludonRevolvingRuinStacks = (state.attackerDuraludonRevolvingRuinStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
+export function applyDuraludonRevolvingRuinStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'duraludon') return;
+  if (level < 9) return;
+  const stacks = state.attackerDuraludonRevolvingRuinStacks ?? 0;
+  if (stacks <= 0) return;
+  atkStats.atk = Math.floor(atkStats.atk * (1 + stacks * 0.08));
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -629,6 +767,9 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     darkrai:    [applyDarkraiCalmMind],
     decidueye:  [applyDecidueyeLeafage, applyDecidueyeRazorLeaf],
     delphox:    [applyDelphoxFireSpinPlus],
+    dodrio:     [applyDodrioTripleTrample],
+    dragapult:  [applyDragapultDragonDanceHeal, applyDragapultPhantomForce],
+    duraludon:  [applyDuraludonRevolvingRuin],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }
