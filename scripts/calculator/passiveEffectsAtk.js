@@ -655,6 +655,53 @@ function applyQuaquavalAttacker(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── YVELTAL ───────────────────────────────────────────────────────────────────
+function applyYveltalAttacker(atkStats, defStats, card) {
+  const marks       = Math.min(5, state.attackerPassiveStacks || 0);
+  const dmgBonusPct = marks * 3;
+  const executeReady = marks === 5 && (state.attackerYveltalExecuteReady ?? false);
+
+  // Heal on KO (Dark Aura - Healing): 140% Sp. Atk + 0×(Level-1) + 420
+  const healOnKO = Math.floor(atkStats.sp_atk * 1.40) + 420;
+
+  // True damage on execute: 40% Max HP, boosted by the same mark multiplier (→ 46% at 5 marks)
+  const trueDamage = defStats?.hp != null
+    ? Math.floor(defStats.hp * 0.40 * (1 + dmgBonusPct / 100))
+    : null;
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/yveltal/dark_aura.png')}
+    <div style="flex:1;">
+      ${passiveBadge('Dark Aura', null, PASSIVE_ATK)}
+      Marks of Destruction: <button class="stack-btn minus">-</button>
+      <strong style="color:${C};">${marks}</strong>/5
+      <button class="stack-btn plus">+</button>
+      <br>→ Damage vs marked target: <strong style="color:${C};">+${dmgBonusPct}%</strong>
+      ${marks === 5 ? `
+        <br><span style="font-size:0.85rem;color:#ccc;">Target ≤10% Max HP:</span>
+        <button class="execute-toggle" style="margin-top:6px;padding:6px 14px;background:${executeReady ? '#27ae60' : '#7f8c8d'};color:white;border:none;border-radius:6px;cursor:pointer;">
+          ${executeReady ? 'Ready' : 'Not ready'}
+        </button>
+        ${executeReady ? `
+          <div style="margin-top:8px;font-size:0.85rem;color:#e74c3c;">
+            True damage (execute): <strong>${trueDamage !== null ? trueDamage.toLocaleString() : '—'}</strong>
+            <span style="color:#e74c3c99;">(46% Max HP)</span>
+          </div>
+        ` : ''}
+      ` : ''}
+    </div>
+  `);
+  line.querySelector('.minus').onclick = () => { if (state.attackerPassiveStacks > 0) { state.attackerPassiveStacks--; updateDamages(); } };
+  line.querySelector('.plus').onclick  = () => { if (state.attackerPassiveStacks < 5) { state.attackerPassiveStacks++; updateDamages(); } };
+  const executeBtn = line.querySelector('.execute-toggle');
+  if (executeBtn) {
+    executeBtn.onclick = () => { state.attackerYveltalExecuteReady = !executeReady; updateDamages(); };
+  }
+  card.appendChild(line);
+}
+
 export {
   applyBuzzwoleAttacker, applyCeruledgeAttacker, applyChandelureAttacker,
   applyDarkraiAttacker, applyDecidueyeAttacker, applyZardyAttacker,
@@ -664,5 +711,6 @@ export {
   applyMimikyuAttacker, applyRapidashAttacker, applySirfetchdAttacker,
   applySylveonAttacker, applyTinkatonAttacker, applyTyranitarAttacker,
   applyZeraoraAttacker, applyMoltresAttacker,
-  applyTyphlosionAttacker, applySkeledirgAttacker, applyQuaquavalAttacker
+  applyTyphlosionAttacker, applySkeledirgAttacker, applyQuaquavalAttacker,
+  applyYveltalAttacker,
 };

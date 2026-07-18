@@ -1,6 +1,28 @@
 {
   "patches": [
     {
+      "version": "1.22.1.13",
+      "name": "Enduring Formation Part 2",
+      "date": "2026-07-16",
+      "buffs": [
+        "Aegislash",
+        "Gyarados",
+        "Clefable",
+        "Umbreon",
+        "Skeledirge",
+        "Quaquaval"
+      ],
+      "nerfs": [
+        "Sylveon",
+        "Typhlosion",
+        "Feraligatr",
+        "Sirfetchd",
+        "Suicune"
+      ],
+      "tweaks": [],
+      "notes": "Move selection UI adjustments, Held Item adjustments (Rescue Hood, Choice Scarf, Rocky Helmet), Shop update, Event update, Bug fixes, Text fixes"
+    },
+    {
       "version": "1.22.1.12",
       "name": "Quaquaval Emergency Buff",
       "date": "2026-06-24",
@@ -1804,6 +1826,62 @@
       "type": "melee",
       "releaseVersion": "1.7.1.9",
       "releaseDate": "2023-02-16"
+    },
+    {
+      "name": "Skeledirge",
+      "role": "Attacker",
+      "type": "ranged",
+      "releaseVersion": null,
+      "releaseDate": "2026-06-04"
+    },
+    {
+      "name": "Feraligatr",
+      "role": "All-Rounder",
+      "type": "melee",
+      "releaseVersion": null,
+      "releaseDate": "2026-05-08"
+    },
+    {
+      "name": "Articuno",
+      "role": "Defender",
+      "type": "ranged",
+      "releaseVersion": null,
+      "releaseDate": "2026-04-10"
+    },
+    {
+      "name": "Typhlosion",
+      "role": "Attacker",
+      "type": "ranged",
+      "releaseVersion": null,
+      "releaseDate": "2026-04-24"
+    },
+    {
+      "name": "Meganium",
+      "role": "Supporter",
+      "type": "melee",
+      "releaseVersion": null,
+      "releaseDate": "2026-05-22"
+    },
+    {
+      "name": "Quaquaval",
+      "role": "All-Rounder",
+      "type": "melee",
+      "releaseVersion": null,
+      "releaseDate": "2026-06-19"
+    },
+    {
+      "name": "Palkia",
+      "role": "All-Rounder",
+      "type": null,
+      "releaseVersion": null,
+      "releaseDate": "2026-07-17"
+    },
+    {
+      "name": "Yveltal",
+      "role": "Attacker",
+      "type": "ranged",
+      "releaseVersion": null,
+      "releaseDate": "2026-07-03"
     }
   ]
 }

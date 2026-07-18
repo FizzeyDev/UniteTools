@@ -269,7 +269,7 @@
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": 100,
+    "unite_move_cost": 112,
     "evolution_levels": null
   },
   {
@@ -1017,7 +1017,7 @@
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
-    "unite_move_cost": 112,
+    "unite_move_cost": 100,
     "evolution_levels": [
       4
     ]
@@ -1289,7 +1289,7 @@
     "stade": "2ème évo",
     "evo_niveaux": "5/7",
     "mega": false,
-    "unite_move_cost": 89,
+    "unite_move_cost": 100,
     "evolution_levels": [
       5,
       7
@@ -1829,5 +1829,41 @@
       5,
       7
     ]
+  },
+  {
+    "name": "Palkia",
+    "name_fr": "Palkia",
+    "name_es": "Palkia",
+    "name_de": "Palkia",
+    "name_it": "Palkia",
+    "file": "palkia_all.png",
+    "role": "all",
+    "dex": 484,
+    "portee": null,
+    "difficulte": null,
+    "annee": 2026,
+    "stade": null,
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": null,
+    "evolution_levels": null
+  },
+  {
+    "name": "Yveltal",
+    "name_fr": "Yveltal",
+    "name_es": "Yveltal",
+    "name_de": "Yveltal",
+    "name_it": "Yveltal",
+    "file": "yveltal_atk.png",
+    "role": "atk",
+    "dex": 717,
+    "portee": "Ranged",
+    "difficulte": "Novice",
+    "annee": 2026,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 100,
+    "evolution_levels": null
   }
 ]

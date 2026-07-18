@@ -44,6 +44,7 @@ window.UNITE_SKINS = [
 
   // ── Espeon ──
   { pokemon: "Espeon",             skinName: "Komorebi",           file: "espeon_komorebi.jpg" },
+  { pokemon: "Espeon",             skinName: "Dryad",              file: "espeon_dryad.jpg" },
 
   // ── Galarian Rapidash ──
   { pokemon: "Rapidash",           skinName: "Fairy-Tale",         file: "galarian-rapidash_fairy-tale.jpg" },
@@ -71,12 +72,14 @@ window.UNITE_SKINS = [
 
   // ── Mewtwo ──
   { pokemon: "Mewtwo",             skinName: "Fairy-Tale",         file: "mewtwo_fairy-tale.jpg" },
+  { pokemon: "Mewtwo",             skinName: "Neo Street",         file: "mewtwo_neo_street.jpg" },
 
   // ── Mimikyu ──
   { pokemon: "Mimikyu",            skinName: "Concert",            file: "mimikyu_concert.jpg" },
 
   // ── Pikachu ──
   { pokemon: "Pikachu",            skinName: "Stage",              file: "pikachu_stage.jpg" },
+  { pokemon: "Pikachu",            skinName: "Regal",              file: "pikachu_regal.jpg" },
 
   // ── Psyduck ──
   { pokemon: "Psyduck",            skinName: "Super Suit",         file: "psyduck_super_suit.jpg" },

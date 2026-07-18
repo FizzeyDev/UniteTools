@@ -12,8 +12,8 @@ export function computeDefenderDamageMult() {
   if (state.defenderEldegossBuff)           defenderDamageMult *= 0.80;
   if (state.defenderNinetailsBuff)          defenderDamageMult *= 0.65;
   if (state.defenderNinetailsPlusBuff)      defenderDamageMult *= 0.60;
-  if (state.defenderUmbreonBuff)            defenderDamageMult *= 0.85;
-  if (state.defenderUmbreonPlusBuff)        defenderDamageMult *= 0.75;
+  if (state.defenderUmbreonBuff)            defenderDamageMult *= 0.80;
+  if (state.defenderUmbreonPlusBuff)        defenderDamageMult *= 0.70;
   if (state.defenderBlisseyRedirectionBuff) defenderDamageMult *= 0.50;
   if (state.defenderHoOhRedirectionBuff)    defenderDamageMult *= 0.40;
   if (state.defenderDhelmiseAnchorShotPlus) defenderDamageMult *= 1.50;
@@ -46,6 +46,12 @@ export function computeGlobalDamageMult() {
     globalDamageMult *= state.currentAttacker?.pokemonId === "miraidon" ? 1.30 : 1.10;
   }
   if (state.currentAttacker?.pokemonId === "mega-charizard-y" && state.attackerDroughtActive) globalDamageMult *= 1.10;
+
+  // ── YVELTAL — Dark Aura: +3% dmg per Mark of Destruction (max 5, vs marked target) ──
+  if (state.currentAttacker?.pokemonId === "yveltal") {
+    const marks = Math.min(5, state.attackerPassiveStacks || 0);
+    if (marks > 0) globalDamageMult *= (1 + marks * 0.03);
+  }
 
   if (state.debuffGoodraMuddyWater)         globalDamageMult *= 0.85;
   if (state.debuffMimePowerSwap)            globalDamageMult *= 0.85;

@@ -396,8 +396,8 @@
       { "label": "Defense", "percent": false, "float": 0, "value": 35 },
       { "label": "Sp. Defense", "percent": false, "float": 0, "value": 35 }
     ],
-    "description1": "Increases HP recovery and shield effects granted to allies by 11/14/17%.",
-    "level20": "17%",
+    "description1": "Increases HP recovery and shield effects granted to allies by 17/20/23%.",
+    "level20": "23%",
     "activable": false,
     "activation_effect": null
   },
@@ -429,7 +429,7 @@
       { "label": "Defense", "percent": false, "float": 1, "value": 59.5 }
     ],
     "description1": "When receiving big damage: deals % max HP damage to nearby opponents.",
-    "level20": "1.8%",
+    "level20": "2.5%",
     "activable": false,
     "activation_effect": null
   },

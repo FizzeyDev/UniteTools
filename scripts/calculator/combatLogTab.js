@@ -1138,8 +1138,8 @@ const DEFENDER_BUFFS = [
   ['defenderEldegossBuff', 'Eldegoss (−20% dmg taken)'],
   ['defenderNinetailsBuff', 'Ninetails (−35% dmg taken)'],
   ['defenderNinetailsPlusBuff', 'Ninetails+ (−40% dmg taken)'],
-  ['defenderUmbreonBuff', 'Umbreon (−15% dmg taken)'],
-  ['defenderUmbreonPlusBuff', 'Umbreon+ (−25% dmg taken)'],
+  ['defenderUmbreonBuff', 'Umbreon (−20% dmg taken)'],
+  ['defenderUmbreonPlusBuff', 'Umbreon+ (−30% dmg taken)'],
   ['defenderBlisseyRedirectionBuff', 'Blissey Redirection (−50%)'],
   ['defenderHoOhRedirectionBuff', 'Ho-Oh Redirection (−60%)'],
 ];

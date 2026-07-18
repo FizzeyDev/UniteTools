@@ -35,6 +35,7 @@ import {
   applyTyphlosionAttacker,
   applySkeledirgAttacker,   // ← SKELEDIRGE
   applyQuaquavalAttacker,   // ← QUAQUAVAL
+  applyYveltalAttacker,     // ← YVELTAL
 } from './passiveEffectsAtk.js';
 
 import {
@@ -671,6 +672,7 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
     typhlosion: applyTyphlosionAttacker,
     skeledirge: applySkeledirgAttacker,   // ← SKELEDIRGE
     quaquaval: applyQuaquavalAttacker,    // ← QUAQUAVAL
+    yveltal: applyYveltalAttacker,        // ← YVELTAL
   };
   handlers[pokemonId]?.(atkStats, defStats, card);
 }
@@ -1103,6 +1105,67 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           `;
           card.appendChild(lsLine);
         }
+      }
+
+      // ── YVELTAL — Oblivion Wing : heal = 21% of damage dealt (7% vs wild) ──
+      if (state.currentAttacker?.pokemonId === "yveltal" && move.name === "Oblivion Wing") {
+        const isWildTarget = state.currentDefender?.category === 'mob';
+        const healPct = isWildTarget ? 0.07 : 0.21;
+        const healReductionMult = computeHealReductionMult();
+        const owHealNormal = Math.floor(displayedNormal * healPct * healReductionMult);
+        const owHealCrit   = Math.floor(displayedCrit   * healPct * healReductionMult);
+
+        const owHealLine = document.createElement("div");
+        owHealLine.className = "damage-line";
+        owHealLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;font-size:0.85em;">
+            Heal (Oblivion Wing)
+            <br><i style="font-size:0.85em;color:#4caf8299;">${Math.round(healPct * 100)}% of damage dealt${isWildTarget ? ' (vs wild Pokémon)' : ''} — overheal above Max HP → 2s shield at 50% (stacks ×10, refreshes duration, capacity = latest application)</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${owHealNormal.toLocaleString()}</span>
+            ${canCrit ? `<span class="dmg-heal" style="opacity:0.75;">(${owHealCrit.toLocaleString()})</span>` : ""}
+          </div>
+        `;
+        card.appendChild(owHealLine);
+      }
+
+      // ── YVELTAL — Dark Aura Execute : true dmg + heal on KO (moves & boosted attacks only) ──
+      if (
+        state.currentAttacker?.pokemonId === "yveltal" &&
+        Math.min(5, state.attackerPassiveStacks || 0) === 5 &&
+        (state.attackerYveltalExecuteReady ?? false) &&
+        !(move.name === "Auto-attack" && dmg.name === "Basic")
+      ) {
+        const marks       = 5;
+        const trueDamage  = defStats?.hp != null ? Math.floor(defStats.hp * 0.40 * (1 + marks * 0.03)) : null;
+        const healOnKO    = Math.floor(atkStats.sp_atk * 1.40) + 420;
+
+        const execLine = document.createElement("div");
+        execLine.className = "damage-line";
+        execLine.innerHTML = `
+          <span class="dmg-name" style="color:#e74c3c;font-size:0.85em;">
+            Dark Aura — Execute
+            <br><i style="font-size:0.85em;color:#e74c3c99;">5 marks + target ≤10% Max HP → +46% Max HP true damage</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-normal" style="color:#e74c3c;">${trueDamage !== null ? trueDamage.toLocaleString() : '—'}</span>
+          </div>
+        `;
+        card.appendChild(execLine);
+
+        const healLine = document.createElement("div");
+        healLine.className = "damage-line";
+        healLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;font-size:0.85em;">
+            Heal on KO (Dark Aura)
+            <br><i style="font-size:0.85em;color:#4caf8299;">140% Sp. Atk + 420 — overheal above Max HP → 3s shield at 50% conversion</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${healOnKO.toLocaleString()}</span>
+          </div>
+        `;
+        card.appendChild(healLine);
       }
 
       // ── CHARIZARD — Seismic Slam (Unite) : heal 60% sur le Basic hit only ──
