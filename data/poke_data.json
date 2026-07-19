@@ -9067,6 +9067,115 @@
     ]
   },
   {
+    "pokemonId": "palkia",
+    "dex": 484,
+    "role": "all-rounder",
+    "style": "special",
+    "stats": [
+      {"level": 1, "hp": 3480, "atk": 20, "def": 96, "sp_atk": 118, "sp_def": 84, "crit": 0, "lifesteal": 0},
+      {"level": 2, "hp": 3652, "atk": 23, "def": 110, "sp_atk": 139, "sp_def": 95, "crit": 0, "lifesteal": 0},
+      {"level": 3, "hp": 3842, "atk": 27, "def": 126, "sp_atk": 162, "sp_def": 108, "crit": 0, "lifesteal": 0},
+      {"level": 4, "hp": 4050, "atk": 31, "def": 144, "sp_atk": 187, "sp_def": 121, "crit": 0, "lifesteal": 0},
+      {"level": 5, "hp": 4279, "atk": 36, "def": 163, "sp_atk": 214, "sp_def": 136, "crit": 10, "lifesteal": 5},
+      {"level": 6, "hp": 4531, "atk": 41, "def": 184, "sp_atk": 245, "sp_def": 153, "crit": 10, "lifesteal": 5},
+      {"level": 7, "hp": 4809, "atk": 46, "def": 207, "sp_atk": 278, "sp_def": 171, "crit": 10, "lifesteal": 5},
+      {"level": 8, "hp": 5114, "atk": 53, "def": 233, "sp_atk": 315, "sp_def": 191, "crit": 10, "lifesteal": 5},
+      {"level": 9, "hp": 5450, "atk": 59, "def": 261, "sp_atk": 356, "sp_def": 213, "crit": 20, "lifesteal": 10},
+      {"level": 10, "hp": 5819, "atk": 67, "def": 292, "sp_atk": 400, "sp_def": 237, "crit": 20, "lifesteal": 10},
+      {"level": 11, "hp": 6225, "atk": 75, "def": 326, "sp_atk": 449, "sp_def": 264, "crit": 20, "lifesteal": 10},
+      {"level": 12, "hp": 6672, "atk": 84, "def": 364, "sp_atk": 503, "sp_def": 293, "crit": 20, "lifesteal": 10},
+      {"level": 13, "hp": 7164, "atk": 93, "def": 405, "sp_atk": 563, "sp_def": 326, "crit": 20, "lifesteal": 15},
+      {"level": 14, "hp": 7705, "atk": 104, "def": 450, "sp_atk": 628, "sp_def": 361, "crit": 20, "lifesteal": 15},
+      {"level": 15, "hp": 8300, "atk": 116, "def": 500, "sp_atk": 700, "sp_def": 400, "crit": 20, "lifesteal": 15}
+    ],
+    "passive": {
+      "name": "Pressure",
+      "image": "assets/moves/palkia/pressure.png",
+      "description": "When this Pokémon deals damage with moves, gain a Pressure stack for 5s, up to a maximum of 3. The next auto attack consumes all stacks, dealing additional damage and healing the user, per stack consumed.",
+      "maxStacks": 3,
+      "stackDuration": "5s",
+      "damageRatio": 24,
+      "damageConstant": 72,
+      "healRatio": 35,
+      "healConstant": 105
+    },
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "true",
+        "image": "assets/moves/basic_attack.png",
+        "damages": [
+          {"name": "Basic", "multiplier": 60, "levelCoef": 0, "constant": 100, "dealDamage": true},
+          {"name": "Boosted", "multiplier": 84, "levelCoef": 0, "constant": 140, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Aqua Ring",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/palkia/aqua_ring.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 100, "levelCoef": 0, "constant": 300, "dealDamage": true}
+        ],
+        "heals": [
+          {"name": "Healing (4x, on hit)", "scaling": "sp_atk", "multiplier": 27, "levelCoef": 0, "constant": 81, "is_tick": true, "tick_count": 4}
+        ]
+      },
+      {
+        "name": "Aura Sphere",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/palkia/aura_sphere.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 96, "levelCoef": 0, "constant": 288, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Slash",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/palkia/slash.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 72, "levelCoef": 0, "constant": 216, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Dragon Claw",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/palkia/dragon_claw.png",
+        "damages": [
+          {"name": "First Hit", "multiplier": 70, "levelCoef": 0, "constant": 210, "dealDamage": true},
+          {"name": "Second Hit (recast within 4s)", "multiplier": 168, "levelCoef": 0, "constant": 504, "dealDamage": true},
+          {"name": "Second Hit — Missing HP Bonus", "missing_hp_percent": 6.4, "missing_hp_cap": 500, "wild_cap": 500, "dealDamage": true, "notes": "Only on the Second Hit; capped at 500 vs wild Pokémon"}
+        ]
+      },
+      {
+        "name": "Multi Dimensional Rend (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/palkia/multi_dimensional_rend.png",
+        "damages": [
+          {"name": "Damage - Flurry (per hit, 7 hits with full stacks)", "multiplier": 21.6, "levelCoef": 0, "constant": 65, "dealDamage": true, "is_tick": true, "tick_count": 7},
+          {"name": "Damage - Final Hit", "multiplier": 86.4, "levelCoef": 0, "constant": 260, "dealDamage": true}
+        ],
+        "shields": [
+          {"name": "Shield", "scaling": "hp", "multiplier": 10, "levelCoef": 0, "constant": 0}
+        ]
+      }
+    ]
+  },
+  {
     "pokemonId": "pawmot",
     "dex": 1001,
     "role": "allrounder",

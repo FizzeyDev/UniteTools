@@ -33,9 +33,10 @@ import {
   applyZeraoraAttacker,
   applyMoltresAttacker,
   applyTyphlosionAttacker,
-  applySkeledirgAttacker,   // ← SKELEDIRGE
-  applyQuaquavalAttacker,   // ← QUAQUAVAL
-  applyYveltalAttacker,     // ← YVELTAL
+  applySkeledirgAttacker, 
+  applyQuaquavalAttacker,
+  applyYveltalAttacker,
+  applyPalkiaAttacker,
 } from './passiveEffectsAtk.js';
 
 import {
@@ -172,8 +173,8 @@ export function updateDamages() {
   }
 
   const isCustom = state.currentDefender?.pokemonId === "custom-doll";
+  document.getElementById('defenderMaxHP').textContent = defStats.hp.toLocaleString();
   if (isCustom) {
-    document.getElementById('defenderMaxHP').textContent      = defStats.hp.toLocaleString();
     document.getElementById('defenderDefCustom').textContent  = defStats.def.toLocaleString();
     document.getElementById('defenderSpDefCustom').textContent = defStats.sp_def.toLocaleString();
   } else {
@@ -283,6 +284,7 @@ export function updateDamages() {
 
 function updateDefenderStatsUI(defStats) {
   const isCustom = state.currentDefender?.pokemonId === "custom-doll";
+  document.getElementById('defenderMaxHP').textContent = defStats.hp.toLocaleString();
   if (isCustom) {
     document.getElementById('defenderDefCustom').textContent   = defStats.def.toLocaleString();
     document.getElementById('defenderSpDefCustom').textContent = defStats.sp_def.toLocaleString();
@@ -673,6 +675,7 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
     skeledirge: applySkeledirgAttacker,   // ← SKELEDIRGE
     quaquaval: applyQuaquavalAttacker,    // ← QUAQUAVAL
     yveltal: applyYveltalAttacker,        // ← YVELTAL
+    palkia: applyPalkiaAttacker,           // ← PALKIA
   };
   handlers[pokemonId]?.(atkStats, defStats, card);
 }
@@ -1128,6 +1131,56 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           </div>
         `;
         card.appendChild(owHealLine);
+      }
+
+      // ── PALKIA — Pressure : consumed by the next Auto-attack ──────────────
+      if (
+        state.currentAttacker?.pokemonId === "palkia" &&
+        move.name === "Auto-attack" &&
+        dmg.dealDamage &&
+        Math.min(3, state.attackerPassiveStacks || 0) > 0
+      ) {
+        const stacks = Math.min(3, state.attackerPassiveStacks || 0);
+        const pressureDmg  = stacks * (Math.floor(atkStats.sp_atk * 0.24) + 72);
+        const pressureHeal = stacks * (Math.floor(atkStats.sp_atk * 0.35) + 105);
+
+        const pressureLine = document.createElement("div");
+        pressureLine.className = "damage-line";
+        pressureLine.innerHTML = `
+          <span class="dmg-name" style="color:#fff;font-size:0.85em;">
+            Pressure — consumed (${stacks} stack${stacks > 1 ? "s" : ""})
+            <br><i style="font-size:0.85em;color:#ffffff99;">24% Sp. Atk + 72 dmg & 35% Sp. Atk + 105 heal, per stack</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-normal">${pressureDmg.toLocaleString()}</span>
+            <span class="dmg-heal" style="margin-left:8px;color:#4caf82;">+${pressureHeal.toLocaleString()} heal</span>
+          </div>
+        `;
+        card.appendChild(pressureLine);
+      }
+
+      // ── PALKIA — Aura Sphere mark : bonus damage + heal, consumes the mark ──
+      if (
+        state.currentAttacker?.pokemonId === "palkia" &&
+        (state.attackerPalkiaAuraSphereMarked ?? false) &&
+        dmg.dealDamage
+      ) {
+        const markDmg  = Math.floor(atkStats.sp_atk * 0.64) + 192;
+        const markHeal = Math.floor(atkStats.sp_atk * 0.65) + 195;
+
+        const markLine = document.createElement("div");
+        markLine.className = "damage-line";
+        markLine.innerHTML = `
+          <span class="dmg-name" style="color:#e0b0ff;font-size:0.85em;">
+            Aura Sphere — Mark consumed
+            <br><i style="font-size:0.85em;color:#e0b0ff99;">64% Sp. Atk + 192 bonus damage & 65% Sp. Atk + 195 heal</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-normal" style="color:#e0b0ff;">${markDmg.toLocaleString()}</span>
+            <span class="dmg-heal" style="margin-left:8px;color:#4caf82;">+${markHeal.toLocaleString()} heal</span>
+          </div>
+        `;
+        card.appendChild(markLine);
       }
 
       // ── YVELTAL — Dark Aura Execute : true dmg + heal on KO (moves & boosted attacks only) ──

@@ -379,6 +379,39 @@ function applyDuraludonLaserFocus(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── PALKIA — Dragon Claw+ (Def/SpDef stacks on hit, self-buff) ───────────────
+function applyPalkiaDragonClawDefStacks(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 13) return; // Enhanced effect unlocks at level 13
+
+  const stacks    = state.defenderPalkiaDragonClawStacks ?? 0;
+  const maxStacks = 3;
+  const bonusPct  = stacks * 10;
+
+  if (stacks > 0) {
+    defStats.def    = Math.floor(defStats.def    * (1 + bonusPct / 100));
+    defStats.sp_def = Math.floor(defStats.sp_def * (1 + bonusPct / 100));
+  }
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/palkia/dragon_claw.png')}
+    <div style="flex:1;">
+      ${moveBadge('Dragon Claw+', 13)}
+      First Hit connects: <button class="stack-btn minus pk-dc-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus pk-dc-plus">+</button><br>
+      → <strong style="color:${bonusPct > 0 ? '#88ff88' : '#888'};">+${bonusPct}% Def & Sp. Def</strong> for 5s
+      ${stacks >= maxStacks ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ MAX</span>' : ''}<br>
+      <span style="font-size:0.8rem;color:${C}99;">+10% per target hit with the First Hit, up to 3 stacks</span>
+    </div>
+  `);
+  line.querySelector('.pk-dc-minus').onclick = () => { if ((state.defenderPalkiaDragonClawStacks ?? 0) > 0)        { state.defenderPalkiaDragonClawStacks = (state.defenderPalkiaDragonClawStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.pk-dc-plus').onclick  = () => { if ((state.defenderPalkiaDragonClawStacks ?? 0) < maxStacks) { state.defenderPalkiaDragonClawStacks = (state.defenderPalkiaDragonClawStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -392,6 +425,7 @@ export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
     dodrio:    [applyDodrioDrillPeckDash],
     dragonite: [applyDragoniteHyperBeamCharge],
     duraludon: [applyDuraludonLaserFocus],
+    palkia:    [applyPalkiaDragonClawDefStacks], // ← PALKIA
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

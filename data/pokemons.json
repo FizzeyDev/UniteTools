@@ -1839,13 +1839,13 @@
     "file": "palkia_all.png",
     "role": "all",
     "dex": 484,
-    "portee": null,
-    "difficulte": null,
+    "portee": "Mêlée",
+    "difficulte": "Intermédiaire",
     "annee": 2026,
-    "stade": null,
+    "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
-    "unite_move_cost": null,
+    "unite_move_cost": 38,
     "evolution_levels": null
   },
   {

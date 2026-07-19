@@ -36,6 +36,20 @@
 .clt-icon { font-size: 1.4rem; filter: drop-shadow(0 0 8px rgba(255,215,64,0.6)); }
 .clt-subtitle { color: var(--text-dim); font-size: 0.88rem; margin-top: 4px; }
 
+.clt-howto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.6rem;
+  margin-top: 10px;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.72rem;
+  color: var(--text-mid);
+}
+.clt-howto b { color: var(--blue); }
+.clt-howto-sep { color: var(--text-dim); opacity: 0.6; }
+
 /* ── Tab panel ────────────────────────────────────────────────────────────── */
 
 #tab-combatlog.main-tab-panel { display: none; }
@@ -99,7 +113,9 @@
   border-color: var(--orange-dim);
 }
 
-.clt-team-grid { display: flex; flex-wrap: nowrap; gap: 0.4rem; }
+.clt-team-grid { display: flex; flex-wrap: wrap; gap: 0.4rem; max-width: 340px; }
+.clt-team.purple .clt-team-grid { justify-content: flex-start; }
+.clt-team.orange .clt-team-grid { justify-content: flex-end; }
 
 /* ── Target center ──────────────────────────────────────────────────────────*/
 
@@ -359,7 +375,7 @@
 
 /* ── Item slots ─────────────────────────────────────────────────────────────*/
 
-.clt-item-slots { display: flex; gap: 0.6rem; }
+.clt-item-slots { display: flex; gap: 0.7rem; padding-bottom: 10px; }
 .clt-item-card {
   width: 48px;
   height: 48px;
@@ -571,8 +587,69 @@
 .clt-cancel-btn:hover { border-color: var(--border-md); color: var(--text); }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   HP SECTION
+   PICKER PANEL (persistant — survit au changement de slot actif)
    ═══════════════════════════════════════════════════════════════════════════ */
+
+.clt-picker-panel {
+  transition: box-shadow 0.15s ease;
+  border-radius: var(--radius-sm);
+}
+.clt-picker-panel.clt-flash {
+  animation: clt-picker-flash 0.5s ease;
+}
+@keyframes clt-picker-flash {
+  0%   { box-shadow: 0 0 0 2px var(--blue-glow), 0 0 18px rgba(79,195,247,0.35); }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.clt-picker-placeholder {
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  font-style: italic;
+  text-align: center;
+  padding: 1rem;
+  border: 1px dashed var(--border-md);
+  border-radius: var(--radius-sm);
+}
+
+.clt-picker-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.7rem;
+  background: var(--surface-3);
+  border: 1px solid var(--border-md);
+  border-bottom: none;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.8rem;
+  color: var(--text);
+}
+.clt-picker-title img { width: 24px; height: 24px; object-fit: contain; border-radius: 4px; }
+.clt-picker-title i { color: var(--text-dim); font-style: normal; font-size: 0.72rem; }
+.clt-picker-title-move {
+  margin-left: auto;
+  color: var(--yellow);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.74rem;
+}
+.clt-picker-title + .clt-picker { border-radius: 0 0 var(--radius-sm) var(--radius-sm); }
+
+/* Move card actuellement affiché dans le picker panel */
+.clt-move-card.active {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 1px var(--blue-glow), 0 0 14px rgba(79,195,247,0.15);
+}
+
+.clt-mini-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.clt-mini-btn:disabled:hover { border-color: var(--border-md); color: var(--text-mid); }
+
+
 
 .clt-hp-section {
   background: var(--surface-2);

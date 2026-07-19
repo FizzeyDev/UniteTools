@@ -702,6 +702,38 @@ function applyYveltalAttacker(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── PALKIA ────────────────────────────────────────────────────────────────────
+function applyPalkiaAttacker(atkStats, defStats, card) {
+  const stacks    = Math.min(3, state.attackerPassiveStacks || 0);
+  const maxStacks = 3;
+
+  // Per-stack values (Pressure): Damage 24% SpAtk + 72 · Heal 35% SpAtk + 105
+  const bonusDamage = stacks * (Math.floor(atkStats.sp_atk * 0.24) + 72);
+  const bonusHeal   = stacks * (Math.floor(atkStats.sp_atk * 0.35) + 105);
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/palkia/pressure.png')}
+    <div style="flex:1;">
+      ${passiveBadge('Pressure', null, PASSIVE_ATK)}
+      Pressure stacks (5s each): <button class="stack-btn minus">-</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus">+</button>
+      <br><span style="font-size:0.8rem;color:${C}99;">Gained by dealing damage with moves — next auto attack consumes all stacks</span>
+      ${stacks > 0 ? `
+        <div style="margin-top:8px;font-size:0.85rem;">
+          <span style="color:#fff;">Next auto attack bonus damage: <strong>${bonusDamage.toLocaleString()}</strong></span>
+          <br><span style="color:#4caf82;">Heal on consume: <strong>${bonusHeal.toLocaleString()}</strong></span>
+        </div>
+      ` : ''}
+    </div>
+  `);
+  line.querySelector('.minus').onclick = () => { if (state.attackerPassiveStacks > 0) { state.attackerPassiveStacks--; updateDamages(); } };
+  line.querySelector('.plus').onclick  = () => { if (state.attackerPassiveStacks < maxStacks) { state.attackerPassiveStacks++; updateDamages(); } };
+  card.appendChild(line);
+}
+
 export {
   applyBuzzwoleAttacker, applyCeruledgeAttacker, applyChandelureAttacker,
   applyDarkraiAttacker, applyDecidueyeAttacker, applyZardyAttacker,
@@ -713,4 +745,5 @@ export {
   applyZeraoraAttacker, applyMoltresAttacker,
   applyTyphlosionAttacker, applySkeledirgAttacker, applyQuaquavalAttacker,
   applyYveltalAttacker,
+  applyPalkiaAttacker,    // ← PALKIA
 };

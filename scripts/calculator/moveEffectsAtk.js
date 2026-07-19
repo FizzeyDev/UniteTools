@@ -748,6 +748,38 @@ export function applyDuraludonRevolvingRuinStatBuff(pokemon, atkStats, level) {
   atkStats.atk = Math.floor(atkStats.atk * (1 + stacks * 0.08));
 }
 
+// ── PALKIA — Aura Sphere (mark) ──────────────────────────────────────────────
+function applyPalkiaAuraSphereMark(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Aura Sphere replaces Aqua Ring at level 5
+
+  const isActive = state.attackerPalkiaAuraSphereMarked ?? false;
+  const bonusDamage = Math.floor(atkStats.sp_atk * 0.64) + 192;
+  const bonusHeal   = Math.floor(atkStats.sp_atk * 0.65) + 195;
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/palkia/aura_sphere.png')}
+    <div style="flex:1;">
+      ${moveBadge('Aura Sphere', 5)}
+      Target marked for 4s → next damage dealt are true damage</strong> & <strong style="color:#4caf82;">heal </strong>, mark consumed<br>
+      <button class="aura-sphere-mark-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Target marked' : 'Mark target'}</button>
+    </div>
+  `);
+  line.querySelector('.aura-sphere-mark-toggle').onclick = () => {
+    state.attackerPalkiaAuraSphereMarked = !state.attackerPalkiaAuraSphereMarked;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -770,6 +802,7 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     dodrio:     [applyDodrioTripleTrample],
     dragapult:  [applyDragapultDragonDanceHeal, applyDragapultPhantomForce],
     duraludon:  [applyDuraludonRevolvingRuin],
+    palkia:     [applyPalkiaAuraSphereMark], // ← PALKIA (Dragon Claw+ moved to moveEffectsDef.js; Unite move is data-only)
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

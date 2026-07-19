@@ -16,14 +16,30 @@
  * Cela correspond exactement à la contrainte UX de la spec (§1.3) : "un seul panneau
  * de moves actif à la fois" — il n'y a donc jamais besoin de deux contextes simultanés.
  *
- * LIMITES CONNUES DE CETTE V1 (cf. réponse texte donnée à l'utilisateur) :
- * - Les multiplicateurs de move/passif "bespoke" calculés dans la grosse fonction privée
- *   `applyItemsAndGlobalEffects()` de damageDisplay.js (Slick Club, Infiltrator stacks,
- *   Skeledirge Blaze pierce, Moltres burn stacks, Ceruledge Lava Plume, Mold Breaker def-pen,
- *   Big Root/Rescue Hood sur les heals, etc.) ne sont PAS répliqués ici car cette fonction
- *   n'est pas exportée. Tout le reste (stats de base, items flat/%, buffs/debuffs globaux,
- *   def_ignore/sp_def_ignore, crit, multi-hit/tick, % HP cibles, mutations de stats par
- *   pokémon via statsManager.js) est bien recalculé via le vrai moteur.
+ * TOUJOURS PAS RÉPLIQUÉ — découvert en creusant displayMoves() en profondeur pour la
+ * passe ci-dessus, scope bien plus large que prévu initialement. Il s'agit de "lignes
+ * bonus" affichées séparément dans le Calculator classique (procs, heals-on-hit, caps),
+ * pas de simples multiplicateurs — porter ça veut dire dupliquer chaque bloc, pas
+ * juste une formule :
+ *   • Lifesteal affiché en ligne dédiée sous chaque dégât
+ *   • Yveltal — Oblivion Wing (heal), Dark Aura Execute (true dmg + heal on KO)
+ *   • Charizard/Mega-X/Mega-Y — heal Seismic Slam (Unite)
+ *   • Cinderace — heal Feint+
+ *   • Dragapult — heal Dragon Dance+ (vol)
+ *   • Palkia — Pressure (bonus prochaine AA)
+ *   • Absol — second hit Night Slash+
+ *   • Falinks — cap multi-hit (110%)
+ *   • Decidueye — Razor Leaf Enhanced+, Spirit Shackle+, Nock Nock Large Quill (bonus % HP cible)
+ *   • Buzzwole — getBuzzwoleMuscleMultiplier() (Fell Stinger/Superpower/Leech Life tick scaling)
+ *   • getAttackerWoundMultiplier() — Ceruledge (6 stacks), Darkrai (sleep), Decidueye (distant),
+ *     Meowscarada, Mimikyu, Venusaur (<30% HP), Rapidash (stacks) : multiplicateur "état" global
+ *   • Armarouge — bonus AA fixe pendant Flash Fire
+ * → à traiter dans une prochaine passe dédiée si besoin, ce n'est plus un "petit ajout".
+ * - Mold Breaker def-pen (Mega-Gyarados attaquant) : PAS un manque du Combat Log, bug
+ *   préexistant du Calculator classique (calculé dans damageDisplay.js mais jamais consommé).
+ * - Tout le reste (stats de base, items flat/%, buffs/debuffs globaux, def_ignore/sp_def_ignore,
+ *   crit, multi-hit/tick, % HP cibles, mutations de stats par pokémon via statsManager.js) est
+ *   bien recalculé via le vrai moteur.
  * - Les toggles d'habilité très spécifiques à un pokémon (Mold Breaker, Lucario forms,
  *   Aegislash stance, etc.) sont GLOBAUX et partagés entre les 11 slots (pas un jeu de
  *   toggles par slot), idem pour les buffs/debuffs universels — cohérent avec le point
@@ -77,6 +93,7 @@ const clState = {
   entries: [],         // log figé
   entrySeq: 1,
   expandedEntryId: null, // id de l'entrée dont le détail est ouvert dans la séquence
+  activePicker: null,  // { actorSlotId, move } — picker actuellement affiché (persiste même si on change de slot actif)
   target: {
     hpCurrent: null,    // PV courants (absolu), null = pas encore initialisé
     startMode: 'percent', // 'percent' | 'absolute'
@@ -154,6 +171,45 @@ function getScopeCritBonus(items) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// EFFETS GLOBAUX "bespoke" (repris de applyItemsAndGlobalEffects() / displayMoves()
+// dans damageDisplay.js — cette fonction n'y est pas exportée, donc on ré-implémente
+// ici uniquement la partie qui influe réellement sur les valeurs de dégâts affichées :
+// Slick Spoon (attaquant), Infiltrator (Chandelure), Flash Fire (Armarouge défenseur),
+// Blaze Sp.Def pierce (Skeledirge). Les blocs UI "info card" de applyItemsAndGlobalEffects
+// (Rocky Helmet, Assault Vest, Shell Bell, etc.) sont purement informatifs et n'affectent
+// pas les dégâts des moves eux-mêmes, donc ils ne sont pas nécessaires ici.
+//
+// NB : moldBreakerDefPen (Mega-Gyarados attaquant) est calculé dans damageDisplay.js
+// mais n'y est jamais consommé (mort dans le code source d'origine) — non répliqué ici
+// pour rester cohérent avec le comportement réel du Calculator.
+// ─────────────────────────────────────────────────────────────────────────────
+function getGlobalIgnoreEffects(actorSlot) {
+  let slickIgnore = 0;
+  (actorSlot.items || []).forEach((item, i) => {
+    if (item && item.name === 'Slick Spoon' && actorSlot.activated[i]) {
+      slickIgnore = parseFloat(item.level20.replace('%', '').trim()) / 100 || 0;
+    }
+  });
+
+  const infiltratorIgnore = actorSlot.pokemon?.pokemonId === 'chandelure'
+    ? Math.min((state.attackerPassiveStacks || 0) * 0.025, 0.20)
+    : 0;
+
+  const skeledirgeBlazeIgnore = actorSlot.pokemon?.pokemonId === 'skeledirge' &&
+    (state.attackerSkeledirgeBlazeActive ?? false)
+    ? 0.35
+    : 0;
+
+  return { slickIgnore, infiltratorIgnore, skeledirgeBlazeIgnore };
+}
+
+function getDefenderFlashFireReduction(targetSlot) {
+  return targetSlot.pokemon?.pokemonId === 'armarouge' && (state.defenderFlashFireActive ?? false)
+    ? 0.20
+    : 0;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // CALCUL DES OPTIONS D'UN MOVE (dans le contexte acteur/cible déjà swappé)
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -174,12 +230,37 @@ function buildMoveOptions(move, actorSlot, targetSlot) {
   const globalDamageMult = computeGlobalDamageMult();
   const defenderDamageMult = computeDefenderDamageMult();
   const scopeCritBonus = getScopeCritBonus(actorSlot.items);
+  const { slickIgnore, infiltratorIgnore, skeledirgeBlazeIgnore } = getGlobalIgnoreEffects(actorSlot);
+  const defenderFlashFireReduction = getDefenderFlashFireReduction(targetSlot);
 
   const currentDefHP = clState.target.hpCurrent != null
     ? clState.target.hpCurrent
     : defStats.hp;
 
   const options = []; // { kind:'damage'|'heal'|'shield', name, target, canCrit, isTick, tickCount, value, critValue }
+
+  // ── Multiplicateurs par-move (repris de displayMoves() dans damageDisplay.js) ──
+  // Note : les toggles (attackerLavaPlumeActive, attackerFlamethrowerPlusActive, etc.)
+  // sont GLOBAUX (cf. §8.1) — pas un jeu de toggles par slot.
+  let moltresBurnMult = 1.0;
+  if (actorSlot.pokemon?.pokemonId === 'moltres' && (state.attackerPassiveStacks || 0) > 0) {
+    if (['Incinerate', 'Heat Wave'].includes(move.name)) {
+      moltresBurnMult = 1 + 0.10 * state.attackerPassiveStacks;
+    }
+  }
+  let lavaPlumeMult = 1.0;
+  if (actorSlot.pokemon?.pokemonId === 'ceruledge' && (state.attackerLavaPlumeActive ?? false) && move.name === 'Auto-attack') {
+    lavaPlumeMult = 1.15;
+  }
+  let flamethrowerPlusMult = 1.0;
+  if (actorSlot.pokemon?.pokemonId === 'chandelure' && (state.attackerFlamethrowerPlusActive ?? false)) {
+    flamethrowerPlusMult = 1.20;
+  }
+  let fireSpinPlusMult = 1.0;
+  if (actorSlot.pokemon?.pokemonId === 'delphox' && (state.attackerDelphoxFireSpinPlusActive ?? false)) {
+    fireSpinPlusMult = 1.15;
+  }
+  const bespokeMoveMult = moltresBurnMult * lavaPlumeMult * flamethrowerPlusMult * fireSpinPlusMult;
 
   visibleDamages?.forEach(dmg => {
     if (!dmg.dealDamage) return;
@@ -190,6 +271,10 @@ function buildMoveOptions(move, actorSlot, targetSlot) {
     if (dmg.scaling === 'special') { relevantAtk = atkStats.sp_atk; relevantDef = defStats.sp_def; }
 
     let effectiveDef = relevantDef;
+    if (slickIgnore > 0)                effectiveDef = Math.floor(effectiveDef * (1 - slickIgnore));
+    if (infiltratorIgnore > 0)          effectiveDef = Math.floor(effectiveDef * (1 - infiltratorIgnore));
+    if (defenderFlashFireReduction > 0) effectiveDef = Math.floor(effectiveDef / (1 - defenderFlashFireReduction));
+
     if (dmg.def_ignore != null && relevantDef === defStats.def) {
       effectiveDef = Math.floor(effectiveDef * (1 - dmg.def_ignore));
     }
@@ -197,8 +282,31 @@ function buildMoveOptions(move, actorSlot, targetSlot) {
       effectiveDef = Math.floor(effectiveDef * (1 - dmg.sp_def_ignore));
     }
 
-    const normal = calculateDamage(dmg, relevantAtk, effectiveDef, level, false, actorSlot.pokemon.pokemonId, 1.0, globalDamageMult, defStats.hp, currentDefHP);
-    const crit = calculateDamage(dmg, relevantAtk, effectiveDef, level, true, actorSlot.pokemon.pokemonId, scopeCritBonus, globalDamageMult, defStats.hp, currentDefHP);
+    // ── SKELEDIRGE — Blaze : 35% Sp. Def Pierce sur le move suivant ──────────
+    if (skeledirgeBlazeIgnore > 0 && relevantDef === defStats.sp_def) {
+      effectiveDef = Math.floor(effectiveDef * (1 - skeledirgeBlazeIgnore));
+    }
+
+    // ── DRAGAPULT — Dragon Dance → -10% sur les auto attacks pendant le vol ──
+    let dragonDanceFlightMult = 1.0;
+    if (actorSlot.pokemon?.pokemonId === 'dragapult' && move.name === 'Dragon Dance' && dmg.name?.includes('during flight')) {
+      dragonDanceFlightMult = 0.90;
+    }
+
+    const effectiveGlobalMult = globalDamageMult * bespokeMoveMult * dragonDanceFlightMult;
+
+    let normal = calculateDamage(dmg, relevantAtk, effectiveDef, level, false, actorSlot.pokemon.pokemonId, 1.0, effectiveGlobalMult, defStats.hp, currentDefHP);
+    let crit = calculateDamage(dmg, relevantAtk, effectiveDef, level, true, actorSlot.pokemon.pokemonId, scopeCritBonus, effectiveGlobalMult, defStats.hp, currentDefHP);
+
+    // ── CRUSTLE — Fury Cutter : +20%/marque (max 40%), arrondi vers le haut ──
+    if (actorSlot.pokemon?.pokemonId === 'crustle' && move.name === 'Fury Cutter' && dmg.name === 'Damage') {
+      const fcStacks = state.attackerCrustleFuryCutterStacks ?? 0;
+      const fcPct = Math.min(fcStacks * 0.20, 0.40);
+      if (fcPct > 0) {
+        normal = Math.ceil(normal * (1 + fcPct));
+        crit = Math.ceil(crit * (1 + fcPct));
+      }
+    }
 
     const finalNormal = Math.floor(normal * defenderDamageMult);
     const finalCrit = Math.floor(crit * defenderDamageMult);
@@ -214,19 +322,41 @@ function buildMoveOptions(move, actorSlot, targetSlot) {
     });
   });
 
+  // ── Big Root / Rescue Hood / Curse Bangle-Incense sur les heals de move ────
+  // (repris du bloc HEALS de displayMoves() dans damageDisplay.js)
+  const bigRootIdx = actorSlot.items.findIndex(i => i?.name === 'Big Root');
+  const bigRootMult = bigRootIdx !== -1 ? 1 + parseFloat(actorSlot.items[bigRootIdx].level20.replace('%', '')) / 100 : 1.0;
+  const rescueIdx = actorSlot.items.findIndex(i => i?.name === 'Rescue Hood');
+  const rescueMult = rescueIdx !== -1 ? 1 + parseFloat(actorSlot.items[rescueIdx].level20.replace('%', '')) / 100 : 1.0;
+
+  let curseMult = 1.0;
+  const cbdi = targetSlot.items.findIndex(i => i?.name === 'Curse Bangle');
+  const cidi = targetSlot.items.findIndex(i => i?.name === 'Curse Incense');
+  if (cbdi !== -1 && targetSlot.activated[cbdi]) curseMult *= 1 - parseFloat(targetSlot.items[cbdi].level20.replace('%', '')) / 100;
+  if (cidi !== -1 && targetSlot.activated[cidi]) curseMult *= 1 - parseFloat(targetSlot.items[cidi].level20.replace('%', '')) / 100;
+
+  // ── DELPHOX — Fanciful Fireworks (Unite) : −50% HP recovery on attacker ────
+  // (toggle global défenseur, cf §8.1)
+  if (targetSlot.pokemon?.pokemonId === 'delphox' && targetSlot.level >= 9 && (state.defenderDelphoxFancifulFireworksAntiHeal ?? false)) {
+    curseMult *= 0.50;
+  }
+
   visibleHeals?.forEach(heal => {
     const base = calculateHeal(heal, atkStats, level, null);
     const tgt = heal.target || 'both';
     const isTick = !!heal.is_tick;
     const tickCount = heal.tick_count || 1;
     if (tgt === 'self' || tgt === 'both') {
-      options.push({ kind: 'heal', name: heal.name || 'Heal', target: 'self', canCrit: false, isTick, tickCount, value: base, critValue: base });
+      const selfVal = Math.floor(base * bigRootMult * curseMult);
+      options.push({ kind: 'heal', name: heal.name || 'Heal', target: 'self', canCrit: false, isTick, tickCount, value: selfVal, critValue: selfVal });
     }
     if (tgt === 'ally' || tgt === 'both') {
-      options.push({ kind: 'heal', name: heal.name || 'Heal', target: 'ally', canCrit: false, isTick, tickCount, value: base, critValue: base });
+      const allyVal = Math.floor(base * rescueMult * curseMult);
+      options.push({ kind: 'heal', name: heal.name || 'Heal', target: 'ally', canCrit: false, isTick, tickCount, value: allyVal, critValue: allyVal });
     }
   });
 
+  // ── Rescue Hood sur les shields de move (que sur la part "ally") ───────────
   visibleShields?.forEach(shield => {
     const base = calculateShield(shield, atkStats, level);
     const tgt = shield.target || 'both';
@@ -236,7 +366,8 @@ function buildMoveOptions(move, actorSlot, targetSlot) {
       options.push({ kind: 'shield', name: shield.name || 'Shield', target: 'self', canCrit: false, isTick, tickCount, value: base, critValue: base });
     }
     if (tgt === 'ally' || tgt === 'both') {
-      options.push({ kind: 'shield', name: shield.name || 'Shield', target: 'ally', canCrit: false, isTick, tickCount, value: base, critValue: base });
+      const allyVal = Math.floor(base * rescueMult);
+      options.push({ kind: 'shield', name: shield.name || 'Shield', target: 'ally', canCrit: false, isTick, tickCount, value: allyVal, critValue: allyVal });
     }
   });
 
@@ -277,10 +408,18 @@ function buildTabAndPanel() {
     <div class="clt-header">
       <div class="clt-title"><span class="clt-icon">⚔️</span> Combat Log</div>
       <p class="clt-subtitle">Simulate multi-actor fights against a target</p>
+      <div class="clt-howto">
+        <span><b>1.</b> Pick a Pokémon for each slot &amp; the Target</span>
+        <span class="clt-howto-sep">→</span>
+        <span><b>2.</b> Click a move to preview it</span>
+        <span class="clt-howto-sep">→</span>
+        <span><b>3.</b> Add it to the log</span>
+      </div>
     </div>
     <div class="clt-roster" id="cltRoster"></div>
     <div class="clt-config-panel" id="cltConfigPanel"></div>
     <div class="clt-moves-panel" id="cltMovesPanel"></div>
+    <div class="clt-picker-panel" id="cltPickerPanel"></div>
     <div class="clt-hp-section" id="cltHpSection"></div>
     <div class="clt-buffs-section" id="cltBuffsSection">
       <div class="clt-buffs-header" id="cltBuffsToggle">
@@ -328,6 +467,8 @@ function buildTabAndPanel() {
   document.getElementById('cltBuffsToggle').addEventListener('click', () => {
     document.getElementById('cltBuffsSection').classList.toggle('collapsed');
   });
+
+  clearPickerPanel();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -402,7 +543,10 @@ function renderSlotCard(slot) {
       <div class="clt-slot-items">${slot.items.map(it => it ? `<img src="${it.image}" onerror="this.src='assets/items/missing.png'">` : '').join('')}</div>` : ''}
   `;
 
-  card.addEventListener('click', () => openSlotConfig(slot.id));
+  card.addEventListener('click', () => {
+    if (clState.activeSlotId === slot.id) closeSlotConfig();
+    else openSlotConfig(slot.id);
+  });
   return card;
 }
 
@@ -415,6 +559,14 @@ function openSlotConfig(slotId) {
   renderRoster();
   renderConfigPanel();
   renderMovesPanel();
+  document.getElementById('cltConfigPanel')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closeSlotConfig() {
+  clState.activeSlotId = null;
+  renderRoster();
+  document.getElementById('cltConfigPanel')?.classList.remove('open');
+  document.getElementById('cltMovesPanel')?.classList.remove('open');
 }
 
 function renderConfigPanel() {
@@ -452,12 +604,7 @@ function renderConfigPanel() {
     </div>
   `;
 
-  document.getElementById('cltConfigCloseBtn').addEventListener('click', () => {
-    clState.activeSlotId = null;
-    renderRoster();
-    document.getElementById('cltConfigPanel').classList.remove('open');
-    document.getElementById('cltMovesPanel').classList.remove('open');
-  });
+  document.getElementById('cltConfigCloseBtn').addEventListener('click', closeSlotConfig);
 
   document.getElementById('cltPickPokemonBtn').addEventListener('click', () => openPokemonModal(slot.id));
 
@@ -466,17 +613,21 @@ function renderConfigPanel() {
       slot.timer = parseInt(e.target.value);
       document.getElementById('cltLevelVal').textContent = secsToTimer(slot.timer);
       e.target.style.setProperty('--value', slot.timer);
-      if (slot.team === 'target') {
-        // PV courant suit le max si pas encore engagé dans un combo
-        renderHpSection();
-      }
     } else {
       slot.level = parseInt(e.target.value);
       document.getElementById('cltLevelVal').textContent = slot.level;
       e.target.style.setProperty('--value', slot.level);
     }
+    if (slot.team === 'target') {
+      // Le niveau/timer change les PV max -> il faut recalculer les PV courants
+      // (et rejouer le log pour garder les hpAfter cohérents avec le nouveau max)
+      replayHPFromEntries();
+      renderHpSection();
+      renderLogSection();
+    }
     renderRoster();
     renderMovesPanel();
+    refreshPickerIfOpen();
   });
 
   bindItemSlotEvents(slot);
@@ -513,24 +664,33 @@ function bindItemSlotEvents(slot) {
       openItemModal(slot.id, i);
     });
   });
-  document.querySelectorAll('.clt-stack-minus').forEach(btn => btn.addEventListener('click', e => {
+  document.querySelectorAll('#cltItemSlots .clt-stack-minus').forEach(btn => btn.addEventListener('click', e => {
     e.stopPropagation();
     const i = parseInt(btn.dataset.itemSlot);
     slot.stacks[i] = Math.max(0, (slot.stacks[i] || 0) - 1);
+    if (slot.team === 'target') { replayHPFromEntries(); renderLogSection(); }
     renderConfigPanel();
+    if (slot.team === 'target') renderHpSection();
+    refreshPickerIfOpen();
   }));
-  document.querySelectorAll('.clt-stack-plus').forEach(btn => btn.addEventListener('click', e => {
+  document.querySelectorAll('#cltItemSlots .clt-stack-plus').forEach(btn => btn.addEventListener('click', e => {
     e.stopPropagation();
     const i = parseInt(btn.dataset.itemSlot);
     const max = maxStacksFor(slot.items[i]?.name || '');
     slot.stacks[i] = Math.min(max, (slot.stacks[i] || 0) + 1);
+    if (slot.team === 'target') { replayHPFromEntries(); renderLogSection(); }
     renderConfigPanel();
+    if (slot.team === 'target') renderHpSection();
+    refreshPickerIfOpen();
   }));
-  document.querySelectorAll('.clt-item-toggle').forEach(btn => btn.addEventListener('click', e => {
+  document.querySelectorAll('#cltItemSlots .clt-item-toggle').forEach(btn => btn.addEventListener('click', e => {
     e.stopPropagation();
     const i = parseInt(btn.dataset.itemSlot);
     slot.activated[i] = !slot.activated[i];
+    if (slot.team === 'target') { replayHPFromEntries(); renderLogSection(); }
     renderConfigPanel();
+    if (slot.team === 'target') renderHpSection();
+    refreshPickerIfOpen();
   }));
 }
 
@@ -576,6 +736,7 @@ function openPokemonModal(slotId) {
         renderConfigPanel();
         renderMovesPanel();
         renderHpSection();
+        refreshPickerIfOpen();
       });
       grid.appendChild(div);
     });
@@ -652,6 +813,12 @@ function openItemModal(slotId, itemSlot) {
       renderRoster();
       renderConfigPanel();
       renderMovesPanel();
+      if (slotId === 'target') {
+        replayHPFromEntries();
+        renderHpSection();
+        renderLogSection();
+      }
+      refreshPickerIfOpen();
     });
     grid.appendChild(div);
   });
@@ -686,13 +853,13 @@ function renderMovesPanel() {
   panel.innerHTML = `
     <h4 style="margin:0;color:var(--text-bright);font-family:'Rajdhani',sans-serif;">${slot.pokemon.displayName}'s Moves</h4>
     <div class="clt-moves-grid" id="cltMovesGrid"></div>
-    <div id="cltPickerHost"></div>
   `;
 
   const grid = document.getElementById('cltMovesGrid');
   moves.forEach(move => {
     const card = document.createElement('div');
-    card.className = 'clt-move-card';
+    const isActivePicker = clState.activePicker?.actorSlotId === slot.id && clState.activePicker?.move === move;
+    card.className = 'clt-move-card' + (isActivePicker ? ' active' : '');
     card.innerHTML = `<img src="${move.image || 'assets/moves/basic_attack.png'}" onerror="this.src='assets/moves/missing.png'"><span>${move.name}</span>`;
     card.addEventListener('click', () => openPicker(slot, move));
     grid.appendChild(card);
@@ -704,19 +871,58 @@ function renderMovesPanel() {
 // du picker existant (cl-crit-controls), reconstruite ici car non-exportée ailleurs
 // ─────────────────────────────────────────────────────────────────────────────
 
+function clearPickerPanel() {
+  clState.activePicker = null;
+  const host = document.getElementById('cltPickerPanel');
+  if (host) {
+    host.innerHTML = `<div class="clt-picker-placeholder">Click a Pokémon's move above to preview its damage / heal / shield here.</div>`;
+  }
+}
+
+// Recalcule et ré-affiche le picker actuellement ouvert (si il y en a un) — appelé
+// après toute mutation d'état susceptible de changer ses valeurs (items, niveau,
+// buffs/debuffs, PV de la Cible, changement de Pokémon...). C'est ce qui corrige
+// le bug "les chiffres du picker ne se mettent pas à jour au bon moment".
+function refreshPickerIfOpen() {
+  const ap = clState.activePicker;
+  if (!ap) return;
+  const actorSlot = clState.slots[ap.actorSlotId];
+  const targetSlot = clState.slots['target'];
+  const stillValid = actorSlot?.pokemon && targetSlot?.pokemon &&
+    (actorSlot.pokemon.moves || []).includes(ap.move) &&
+    isMoveVisible(ap.move, actorSlot.level);
+  if (!stillValid) { clearPickerPanel(); return; }
+  openPicker(actorSlot, ap.move);
+}
+
 function openPicker(actorSlot, move) {
   const targetSlot = clState.slots['target'];
   if (!targetSlot.pokemon) { alert('Please choose a Pokémon for the Target first.'); return; }
   ensureTargetHPInit();
 
+  clState.activePicker = { actorSlotId: actorSlot.id, move };
+
   const { options } = withActorTargetContext(actorSlot, targetSlot, () => buildMoveOptions(move, actorSlot, targetSlot));
 
-  const host = document.getElementById('cltPickerHost');
+  const host = document.getElementById('cltPickerPanel');
   if (!host) return;
   host.innerHTML = '';
 
+  const titleRow = document.createElement('div');
+  titleRow.className = 'clt-picker-title';
+  titleRow.innerHTML = `
+    <img src="${actorSlot.pokemon.image}" onerror="this.src='assets/pokemon/missing.png'">
+    <span>${actorSlot.pokemon.displayName} <i>(Lv.${actorSlot.pokemon.timerBased ? secsToTimer(actorSlot.timer) : actorSlot.level})</i></span>
+    <span class="clt-picker-title-move">${move.name}</span>
+  `;
+  host.appendChild(titleRow);
+
   if (options.length === 0) {
-    host.innerHTML = `<div class="clt-picker">This move has no loggable effect.</div>`;
+    const empty = document.createElement('div');
+    empty.className = 'clt-picker';
+    empty.textContent = 'This move has no loggable effect.';
+    host.appendChild(empty);
+    renderMovesPanel();
     return;
   }
 
@@ -763,16 +969,25 @@ function openPicker(actorSlot, move) {
     if (opt.isTick && opt.tickCount > 1) {
       const ctrl = document.createElement('span');
       ctrl.innerHTML = `<button class="clt-mini-btn" data-act="minus">−</button> <b class="clt-hitcount">${opt.tickCount}</b>/${opt.tickCount} hits <button class="clt-mini-btn" data-act="plus">+</button>`;
-      ctrl.querySelector('[data-act=minus]').addEventListener('click', () => {
+      const minusBtn = ctrl.querySelector('[data-act=minus]');
+      const plusBtn = ctrl.querySelector('[data-act=plus]');
+      const updateBounds = () => {
+        minusBtn.disabled = rowState[idx].hitCount <= 0;
+        plusBtn.disabled = rowState[idx].hitCount >= opt.tickCount;
+      };
+      minusBtn.addEventListener('click', () => {
         rowState[idx].hitCount = Math.max(0, rowState[idx].hitCount - 1);
         ctrl.querySelector('.clt-hitcount').textContent = rowState[idx].hitCount;
+        updateBounds();
         refreshVal();
       });
-      ctrl.querySelector('[data-act=plus]').addEventListener('click', () => {
+      plusBtn.addEventListener('click', () => {
         rowState[idx].hitCount = Math.min(opt.tickCount, rowState[idx].hitCount + 1);
         ctrl.querySelector('.clt-hitcount').textContent = rowState[idx].hitCount;
+        updateBounds();
         refreshVal();
       });
+      updateBounds();
       row.appendChild(ctrl);
     } else if (opt.canCrit) {
       const normalBtn = document.createElement('button');
@@ -797,7 +1012,7 @@ function openPicker(actorSlot, move) {
   const cancelBtn = document.createElement('button');
   cancelBtn.className = 'clt-cancel-btn';
   cancelBtn.textContent = 'Cancel';
-  cancelBtn.addEventListener('click', () => { host.innerHTML = ''; });
+  cancelBtn.addEventListener('click', () => { clearPickerPanel(); renderMovesPanel(); });
 
   const confirmBtn = document.createElement('button');
   confirmBtn.className = 'clt-confirm-btn';
@@ -823,13 +1038,20 @@ function openPicker(actorSlot, move) {
       .filter(Boolean);
 
     addLogEntry(actorSlot, move, lines);
-    host.innerHTML = '';
+    clearPickerPanel();
+    renderMovesPanel();
   });
 
   footer.appendChild(cancelBtn);
   footer.appendChild(confirmBtn);
   picker.appendChild(footer);
   host.appendChild(picker);
+  renderMovesPanel();
+
+  // Petit flash visuel pour confirmer que le picker vient d'être (re)calculé
+  host.classList.remove('clt-flash');
+  void host.offsetWidth; // force reflow pour redémarrer l'animation
+  host.classList.add('clt-flash');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -914,6 +1136,7 @@ function renderHpSection() {
     replayHPFromEntries();
     renderHpSection();
     renderLogSection();
+    refreshPickerIfOpen();
   });
 
   document.getElementById('cltLogClearBtn').addEventListener('click', () => {
@@ -922,6 +1145,7 @@ function renderHpSection() {
     clState.target.hpCurrent = null;
     renderHpSection();
     renderLogSection();
+    refreshPickerIfOpen();
   });
 
   const applyManualHP = (val) => {
@@ -932,6 +1156,7 @@ function renderHpSection() {
     replayHPFromEntries();
     renderHpSection();
     renderLogSection();
+    refreshPickerIfOpen();
   };
 
   document.getElementById('cltHpEditable').addEventListener('click', (e) => {
@@ -949,12 +1174,17 @@ function renderHpSection() {
     input.focus();
     input.select();
 
+    let saved = false;
     const save = () => {
+      if (saved) return; // évite le double-déclenchement Enter (keydown) + blur
+      saved = true;
       const val = parseInt(input.value) || 0;
       applyManualHP(val);
     };
     input.addEventListener('blur', save);
-    input.addEventListener('keydown', ev => { if (ev.key === 'Enter') save(); });
+    input.addEventListener('keydown', ev => {
+      if (ev.key === 'Enter') { ev.preventDefault(); save(); }
+    });
   });
 
   document.getElementById('cltHpSlider').addEventListener('input', (e) => {
@@ -962,11 +1192,19 @@ function renderHpSection() {
     e.target.style.setProperty('--value', `${p}%`);
     clState.target.startMode = 'percent';
     clState.target.startValue = p;
+
+    // Met à jour l'affichage numérique EN DIRECT pendant le drag (au lieu d'attendre le relâchement)
+    const liveVal = Math.floor(max * (p / 100));
+    const hpValEl = document.getElementById('cltHpEditable');
+    if (hpValEl) hpValEl.textContent = liveVal.toLocaleString();
+    const pctEl = root.querySelector('.clt-hp-percent');
+    if (pctEl) pctEl.textContent = `${p.toFixed(1)}%`;
   });
   document.getElementById('cltHpSlider').addEventListener('change', (e) => {
     replayHPFromEntries();
     renderHpSection();
     renderLogSection();
+    refreshPickerIfOpen();
   });
 }
 
@@ -1206,7 +1444,7 @@ function buildBuffColumn(title, list, tag, extraClass) {
     cb.type = 'checkbox';
     cb.id = deriveIconId(key, tag);
     cb.checked = !!state[key];
-    cb.addEventListener('change', () => { state[key] = cb.checked; });
+    cb.addEventListener('change', () => { state[key] = cb.checked; refreshPickerIfOpen(); });
     lbl.appendChild(cb);
     lbl.append(label);
     listEl.appendChild(lbl);
