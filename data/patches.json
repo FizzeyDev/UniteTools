@@ -1,6 +1,16 @@
 {
   "patches": [
     {
+      "version": "1.22.1.14",
+      "name": "Palkia Emergency Buff",
+      "date": "2026-07-20",
+      "buffs": [
+        "Palkia"
+      ],
+      "tweaks": [],
+      "notes": "Palkia Buff"
+    },
+    {
       "version": "1.22.1.13",
       "name": "Enduring Formation Part 2",
       "date": "2026-07-16",

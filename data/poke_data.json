@@ -9166,8 +9166,8 @@
         "can_crit": "false",
         "image": "assets/moves/palkia/multi_dimensional_rend.png",
         "damages": [
-          {"name": "Damage - Flurry (per hit, 7 hits with full stacks)", "multiplier": 21.6, "levelCoef": 0, "constant": 65, "dealDamage": true, "is_tick": true, "tick_count": 7},
-          {"name": "Damage - Final Hit", "multiplier": 86.4, "levelCoef": 0, "constant": 260, "dealDamage": true}
+          {"name": "Damage - Flurry (per hit, 7 hits with full stacks)", "multiplier": 27, "levelCoef": 0, "constant": 81, "dealDamage": true, "is_tick": true, "tick_count": 7},
+          {"name": "Damage - Final Hit", "multiplier": 108, "levelCoef": 0, "constant": 325, "dealDamage": true}
         ],
         "shields": [
           {"name": "Shield", "scaling": "hp", "multiplier": 10, "levelCoef": 0, "constant": 0}
