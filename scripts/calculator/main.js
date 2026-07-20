@@ -12,6 +12,7 @@ import { initHowToUse } from './howToUse.js';
 import { enhanceBuffLabels } from './buff-visuals.js';
 import { initBuildOptimizer } from './buildOptimizer.js';
 import { initCombatLogTab } from './combatLogTab.js';
+import { initComparePatchTab } from './comparePatchTab.js';
 
 document.querySelectorAll('.reset-items-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -63,6 +64,7 @@ async function initApp() {
   updateDamages();
 
   initCombatLogTab();
+  initComparePatchTab();
   initAllyManager();
   initHowToUse();
 }

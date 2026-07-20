@@ -10,7 +10,7 @@ export async function loadData() {
             fetch('data/pokemons.json'),
             fetch('data/items.json'),
             fetch('data/battle_items.json'),
-            fetch('data/poke_data.json'),
+            fetch('data/poke_data/poke_data.json'),
             fetch('data/moves.json').catch(() => null),   // optional – may not exist yet
         ]);
 
