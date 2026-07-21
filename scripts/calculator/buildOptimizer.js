@@ -17,6 +17,7 @@ const optState = {
   enemies: [],              // [{ pokemon, level, items, stacks, activated, priority }]
   worker: null,
   running: false,
+  stackPercent: 50,         // % du max appliqué par défaut aux items empilables
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -39,6 +40,7 @@ function buildOptimizerUI() {
 
       <!-- HEADER -->
       <div class="bopt-header">
+        <button class="bopt-settings-btn" id="boptStackSettingsBtn" title="Stack settings">⚙️</button>
         <div class="bopt-title">
           <span class="bopt-icon">⚡</span>
           Build Optimizer [BETA]
@@ -183,6 +185,30 @@ function buildOptimizerUI() {
         <div class="bopt-modal-grid" id="boptEnemyItemGrid"></div>
       </div>
     </div>
+
+    <!-- MODAL stack % settings -->
+    <div class="bopt-modal" id="boptStackSettingsModal" style="display:none">
+      <div class="bopt-modal-inner bopt-modal-sm">
+        <div class="bopt-modal-header">
+          <span>⚙️ Default stack level</span>
+          <button class="bopt-modal-close" id="boptStackSettingsClose">✕</button>
+        </div>
+        <p class="bopt-stack-settings-desc">
+          Sets the default stack level used for stackable items (Scope Lens, Drive Lens, Score Shield stacks, etc.) — both for the builds tested by the optimizer and for items you equip on enemies. Handy for testing different in-game conditions.
+        </p>
+        <div class="bopt-stack-slider-row">
+          <div class="bopt-stack-slider-label">
+            <span>Stack level</span>
+            <span class="bopt-stack-slider-val" id="boptStackPercentVal">50%</span>
+          </div>
+          <input type="range" id="boptStackPercentSlider" class="bopt-slider bopt-slider-pct" min="0" max="100" step="5" value="50" style="--pct:50%">
+        </div>
+        <div class="bopt-stack-preview" id="boptStackPreview"></div>
+        <div class="bopt-stack-apply-row">
+          <button class="bopt-stack-apply-btn" id="boptStackApplyEnemies">Apply to enemies already added</button>
+        </div>
+      </div>
+    </div>
   `;
 }
 
@@ -250,6 +276,25 @@ function bindOptimizerEvents() {
   });
   document.getElementById('boptEnemyItemClose')?.addEventListener('click', () => {
     document.getElementById('boptEnemyItemModal').style.display = 'none';
+  });
+
+  // Réglages du % de stacks par défaut
+  document.getElementById('boptStackSettingsBtn')?.addEventListener('click', () => {
+    updateStackPreview();
+    document.getElementById('boptStackSettingsModal').style.display = 'flex';
+  });
+  document.getElementById('boptStackSettingsClose')?.addEventListener('click', () => {
+    document.getElementById('boptStackSettingsModal').style.display = 'none';
+  });
+  document.getElementById('boptStackPercentSlider')?.addEventListener('input', e => {
+    optState.stackPercent = parseInt(e.target.value, 10);
+    document.getElementById('boptStackPercentVal').textContent = `${optState.stackPercent}%`;
+    e.target.style.setProperty('--pct', `${optState.stackPercent}%`);
+    updateStackPreview();
+  });
+  document.getElementById('boptStackApplyEnemies')?.addEventListener('click', () => {
+    applyStackPercentToEnemies();
+    document.getElementById('boptStackSettingsModal').style.display = 'none';
   });
 
   // Recherche dans modals
@@ -404,6 +449,34 @@ const ENEMY_STACKABLE_MAX = {
   'Weakness Policy':   4,
 };
 
+// Calcule un nombre de stacks à partir d'un max et d'un pourcentage (0-100),
+// arrondi et borné entre 0 et max.
+function stacksForPercent(max, percent) {
+  return Math.max(0, Math.min(max, Math.round(max * percent / 100)));
+}
+
+// Met à jour l'aperçu chiffré (X / max) affiché dans la modale de réglage.
+function updateStackPreview() {
+  const box = document.getElementById('boptStackPreview');
+  if (!box) return;
+  box.innerHTML = Object.entries(ENEMY_STACKABLE_MAX).map(([name, max]) => `
+    <span class="bopt-stack-preview-item">${name}</span>
+    <span class="bopt-stack-preview-val">${stacksForPercent(max, optState.stackPercent)} / ${max}</span>
+  `).join('');
+}
+
+// Recalcule les stacks de tous les items empilables déjà posés sur les
+// ennemis, avec le % actuellement choisi.
+function applyStackPercentToEnemies() {
+  optState.enemies.forEach(enemy => {
+    enemy.items.forEach((item, slot) => {
+      const max = item ? ENEMY_STACKABLE_MAX[item.name] : 0;
+      if (max) enemy.stacks[slot] = stacksForPercent(max, optState.stackPercent);
+    });
+  });
+  renderEnemiesList();
+}
+
 function populateBoptEnemyItemGrid() {
   const grid = document.getElementById('boptEnemyItemGrid');
   if (!grid) return;
@@ -441,7 +514,9 @@ function setEnemyItem(idx, slot, item) {
   const enemy = optState.enemies[idx];
   if (!enemy) return;
   enemy.items[slot] = item;
-  enemy.stacks[slot] = ENEMY_STACKABLE_MAX[item.name] ? Math.floor(ENEMY_STACKABLE_MAX[item.name] / 2) : 0;
+  enemy.stacks[slot] = ENEMY_STACKABLE_MAX[item.name]
+    ? stacksForPercent(ENEMY_STACKABLE_MAX[item.name], optState.stackPercent)
+    : 0;
   enemy.activated[slot] = item.activable ? true : false;
   renderEnemiesList();
   updateComboCount();
@@ -691,8 +766,15 @@ function refreshEnemyMoveLists() {
 const MODE_DESCS = {
   damage:    'Score = Σ damage on normal enemies × 1 + priority targets × 2',
   defense:   'Score = Σ damage received from enemies (priority only, or all if none marked)',
-  heal_self: 'Score = total healing of the Pokémon (self + all targets)',
-  heal_ally: 'Score = total healing targeting allies only',
+  heal_self: 'Score = total real healing received by the Pokémon itself (shields shown separately, not included)',
+  heal_ally: 'Score = total real healing received by an ally (shields shown separately, not included; self-only item effects like Focus Band are excluded)',
+};
+
+const SCORE_LABELS = {
+  damage:    'Total score',
+  defense:   'Damage received (↓ lower = better)',
+  heal_self: 'Total healing (self)',
+  heal_ally: 'Total healing (to ally)',
 };
 
 function updateModeDesc() {
@@ -804,6 +886,7 @@ function runOptimizer() {
     fixedItems:  optState.fixedItems.map(i => i ? serializeItem(i) : null),
     enemies,
     enabledMovesByEnemy,
+    stackPercent: optState.stackPercent,
   };
 
   // UI feedback
@@ -859,7 +942,8 @@ function renderResults(results) {
   }
 
   const isDefense = optState.mode === 'defense';
-  const scoreLabel = isDefense ? 'Damage received (↓ lower = better)' : 'Total score';
+  const isHeal = optState.mode === 'heal_self' || optState.mode === 'heal_ally';
+  const scoreLabel = SCORE_LABELS[optState.mode] || 'Total score';
 
   container.innerHTML = `
     <div class="bopt-results-header">
@@ -873,30 +957,60 @@ function renderResults(results) {
         return state.allItems.find(i => i.name === ri.name) || ri;
       });
 
+      const healDetails   = (result.details || []).filter(d => d.category === 'heal');
+      const shieldDetails = (result.details || []).filter(d => d.category === 'shield');
+      const otherDetails  = (result.details || []).filter(d => !d.category);
+      const shieldTotal   = shieldDetails.reduce((sum, d) => sum + d.value, 0);
+
       return `
         <div class="bopt-result-card ${rank === 0 ? 'bopt-result-best' : ''}">
-          <div class="bopt-result-rank">${rank === 0 ? '🥇' : rank === 1 ? '🥈' : rank === 2 ? '🥉' : `#${rank + 1}`}</div>
-          <div class="bopt-result-items">
-            ${buildItems.map(item => item ? `
-              <div class="bopt-result-item" title="${item.display_name || item.name}">
-                <img src="${item.image || 'assets/items/none.png'}" onerror="this.src='assets/items/none.png'">
-                <span>${item.display_name || item.name}</span>
-              </div>
-            ` : `<div class="bopt-result-item bopt-result-empty">—</div>`).join('')}
+          <div class="bopt-result-top">
+            <div class="bopt-result-rank">${rank === 0 ? '🥇' : rank === 1 ? '🥈' : rank === 2 ? '🥉' : `#${rank + 1}`}</div>
+            <div class="bopt-result-items">
+              ${buildItems.map(item => item ? `
+                <div class="bopt-result-item" title="${item.display_name || item.name}">
+                  <img src="${item.image || 'assets/items/none.png'}" onerror="this.src='assets/items/none.png'">
+                  <span>${item.display_name || item.name}</span>
+                </div>
+              ` : `<div class="bopt-result-item bopt-result-empty">—</div>`).join('')}
+            </div>
           </div>
           <div class="bopt-result-score">
             <div class="bopt-score-label">${scoreLabel}</div>
             <div class="bopt-score-val ${isDefense ? 'is-defense' : ''}">${result.score.toLocaleString()}</div>
           </div>
-          ${result.details && result.details.length > 1 ? `
+          ${isHeal ? `
+            ${healDetails.length ? `
+              <div class="bopt-result-details">
+                <span class="bopt-detail-caption">Where this healing comes from:</span>
+                ${healDetails.map(d => `
+                  <span class="bopt-detail-chip ${d.isBonus ? 'is-bonus' : ''}">
+                    ${d.label}: <strong>${d.value.toLocaleString()}</strong>
+                  </span>
+                `).join('')}
+              </div>
+            ` : ''}
+            ${shieldDetails.length ? `
+              <div class="bopt-result-details bopt-result-shield-block">
+                <span class="bopt-detail-caption">
+                  🛡️ Shield (temporary HP — not counted in the score above, since it's not equivalent to permanent healing): <strong>${shieldTotal.toLocaleString()}</strong>
+                </span>
+                ${shieldDetails.map(d => `
+                  <span class="bopt-detail-chip is-shield ${d.isBonus ? 'is-bonus' : ''}">
+                    ${d.label}: <strong>${d.value.toLocaleString()}</strong>
+                  </span>
+                `).join('')}
+              </div>
+            ` : ''}
+          ` : (otherDetails.length > 1 ? `
             <div class="bopt-result-details">
-              ${result.details.map(d => `
+              ${otherDetails.map(d => `
                 <span class="bopt-detail-chip ${d.priority ? 'is-priority' : ''}">
                   ${d.label}: <strong>${d.value.toLocaleString()}</strong>${d.weight > 1 ? ' ×2' : ''}
                 </span>
               `).join('')}
             </div>
-          ` : ''}
+          ` : '')}
           <button class="bopt-apply-btn" data-rank="${rank}" title="Apply this build to the main calculator">
             ✓ Apply
           </button>

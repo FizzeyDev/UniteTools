@@ -9,12 +9,28 @@
  *  - Tous les bonus de stats plats/% (stats[]), y compris les stacks (Attack
  *    Weight, Sp. Atk Specs, Aeos Cookie, Drive Lens, Accel Bracer, Weakness
  *    Policy) et le bonus conditionnel de Wise Glasses.
- *  - Les effets activables génériques (activation_effect.stats), ex: Tenacity
- *    Belt, Buddy Barrier, Focus Band, Leftovers, Score Shield, Energy
- *    Amplifier — appliqués comme bonus de stats lorsque la case "activé" est
- *    cochée pour ce build.
+ *  - Les bonus de stats "dures" des effets activables (Tenacity Belt) —
+ *    appliqués comme bonus de stats lorsque la case "activé" est cochée.
+ *  - Les effets de heal/shield d'objets activables (Focus Band, Leftovers,
+ *    Score Shield, Buddy Barrier, Resonant Guard) — traités à part par
+ *    scoreHeal() avec une portée explicite (voir ITEM_HEAL_SHIELD_SCOPE
+ *    ci-dessous) : Focus Band/Leftovers/Score Shield ne soignent QUE le
+ *    porteur et ne comptent donc jamais dans le mode "Heal (Ally)" ; Buddy
+ *    Barrier/Resonant Guard soignent le porteur ET un allié et comptent dans
+ *    les deux modes. Heal et Shield sont en plus comptés SÉPARÉMENT (voir
+ *    ci-dessous) : le classement des builds ne se base que sur le heal réel.
+ *  - Rescue Hood (+17/20/23% de soin/bouclier donné aux alliés) : appliqué
+ *    en mode "Heal (Ally)" aux moves qui touchent un allié ainsi qu'à la
+ *    portion "allié" de Buddy Barrier/Resonant Guard — jamais aux soins de
+ *    soi-même.
  *  - Choice Specs (bonus de dégâts ponctuel, une fois par combat simulé).
  *  - Slick Spoon, lorsqu'activé (pénétration de Sp. Def).
+ *
+ * Heal vs Shield : un bouclier (Shield) est du HP temporaire qui disparaît
+ * en absorbant des dégâts ou en expirant — ce n'est pas équivalent à du
+ * heal permanent. scoreHeal() les calcule donc séparément (healTotal /
+ * shieldTotal) ; SEUL healTotal sert de score de classement, shieldTotal
+ * n'est qu'informatif dans l'UI.
  *
  * Volontairement non modélisés (le moteur n'a pas de notion de temps/CD/PA) :
  *  - Vitesse d'attaque (Choice Scarf, Rapid-Fire Scarf, Muscle Band) : leur
@@ -23,12 +39,25 @@
  *    base n'existe dans les données Pokémon, on ne peut donc pas calculer une
  *    espérance fiable.
  *  - Lifesteal / heal-on-hit hors mouvements (Drain Crown, Shell Bell,
- *    Big Root, Rescue Hood) : n'affectent pas un score de dégâts/défense.
+ *    Big Root) : n'affectent pas un score de dégâts/défense.
  *  - Rocky Helmet (riposte de dégâts) et Curse Bangle/Incense (réduction de
  *    soin adverse) : effets de zone/debuff sans cible mesurable ici.
  * Ces items restent sélectionnables (leurs stats plates comptent toujours),
  * seul leur effet spécial n'est pas ajouté au score.
  */
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PORTÉE DES EFFETS DE HEAL/SHIELD D'OBJETS ACTIVABLES
+// 'self'  → ne soigne/protège QUE le porteur (ne doit jamais compter en Heal Ally)
+// 'both'  → soigne/protège le porteur ET un allié (compte dans les deux modes)
+// ─────────────────────────────────────────────────────────────────────────────
+const ITEM_HEAL_SHIELD_SCOPE = {
+  'Focus Band':    'self',  // recovers missing HP of the holder only
+  'Leftovers':     'self',  // recovers max HP of the holder only
+  'Score Shield':  'self',  // shields the holder only, while scoring
+  'Buddy Barrier': 'both',  // shields the holder AND 1 nearby ally
+  'Resonant Guard':'both',  // shields the holder AND the lowest-HP ally
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STACKABLE ITEMS (copié depuis constants.js)
@@ -91,22 +120,32 @@ function applyItemStatsPure(pokemon, stats, items, stacksArray, activatedArray) 
       else if (item.name === 'Aeos Cookie')    hp     += Math.floor(bonus);
     }
 
+    // NOTE — les effets de heal/shield (HP Recovery, Shield) des objets
+    // activables (Focus Band, Leftovers, Score Shield, Buddy Barrier,
+    // Resonant Guard) ne sont PAS traités ici : ce ne sont pas des bonus
+    // permanents de stat HP, mais des soins/boucliers ponctuels, dont la
+    // portée (soi-même uniquement, ou soi-même + un allié) diffère selon
+    // l'objet. Ils sont calculés séparément dans scoreHeal() via
+    // ITEM_HEAL_SHIELD_SCOPE, pour ne compter dans "Heal (Ally)" que les
+    // objets qui soignent réellement un allié. Les traiter ici comme une
+    // hausse de stat HP les aurait fait compter à tort dans tous les modes
+    // (y compris dégâts/défense) et sans distinction self/ally.
     if (item.activable && activatedArray[index] && item.activation_effect) {
       item.activation_effect.stats.forEach(stat => {
+        const lbl = stat.label.toLowerCase();
+        if (lbl.includes('hp') || lbl.includes('shield')) return; // géré dans scoreHeal
         const value = stat.value;
         if (!stat.percent) {
-          if (stat.label.includes('HP') || stat.label.includes('Shield')) hp += value;
-          else if (stat.label.includes('Attack')) atk += value;
+          if (stat.label.includes('Attack')) atk += value;
         } else {
-          const base = stat.label.includes('HP') ? stats.hp
-            : stat.label.includes('Attack') && !stat.label.includes('Sp') ? stats.atk
-            : stat.label.includes('Sp. Attack') ? stats.sp_atk
-            : stat.label.includes('Defense') ? stats.def
-            : stats.sp_def;
+          const base = lbl.includes('attack') && !lbl.includes('sp') ? stats.atk
+            : lbl.includes('sp.') && lbl.includes('attack') ? stats.sp_atk
+            : lbl.includes('defense') && !lbl.includes('sp') ? stats.def
+            : lbl.includes('sp.') && lbl.includes('defense') ? stats.sp_def
+            : null;
+          if (base == null) return; // ex: Energy Amplifier "Damage %" — pas une stat
           const bonus = Math.floor(base * value / 100);
-          const lbl = stat.label.toLowerCase();
-          if (lbl.includes('hp') || lbl.includes('shield')) hp += bonus;
-          else if (lbl.includes('attack') && !lbl.includes('sp')) atk += bonus;
+          if (lbl.includes('attack') && !lbl.includes('sp')) atk += bonus;
           else if (lbl.includes('sp.') && lbl.includes('attack')) sp_atk += bonus;
           else if (lbl.includes('defense') && !lbl.includes('sp')) def += bonus;
           else if (lbl.includes('sp.') && lbl.includes('defense')) sp_def += bonus;
@@ -196,45 +235,130 @@ function calculateHealPure(heal, atkStats, level) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// RESCUE HOOD — "Increases HP recovery and shield effects granted to allies
+// by 17/20/23%". Ne boost QUE la portion reçue par un allié : jamais le soin
+// que le porteur s'applique à lui-même.
+// ─────────────────────────────────────────────────────────────────────────────
+function getRescueHoodMultiplier(items) {
+  const rescueHood = items.find(it => it && it.name === 'Rescue Hood');
+  if (!rescueHood || !rescueHood.level20) return 0;
+  return (parseFloat(rescueHood.level20.replace('%', '').trim()) || 0) / 100;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // SCORE HEAL
+// Retourne { healTotal, shieldTotal, healBreakdown, shieldBreakdown }.
+//
+// Heal et Shield sont volontairement séparés : un bouclier est du HP
+// temporaire qui disparaît dès qu'il absorbe des dégâts (ou expire), alors
+// qu'un heal restaure du HP de façon permanente. Les additionner dans un
+// seul score fausserait le classement — un build "Buddy Barrier" ne
+// soigne pas réellement plus qu'un build "Aromatherapy" juste parce que le
+// nombre affiché est plus gros. Seul healTotal sert donc à classer les
+// builds ; shieldTotal est affiché à part, à titre informatif.
 // ─────────────────────────────────────────────────────────────────────────────
 function scoreHeal(pokemon, level, items, stacksArray, activatedArray, mode) {
   const atkStats = getModifiedStatsPure(pokemon, level, items, stacksArray, activatedArray);
-  let total = 0;
+  const rescueHoodMult = mode === 'heal_ally' ? getRescueHoodMultiplier(items) : 0;
+
+  let healTotal = 0;
+  let shieldTotal = 0;
+  let rescueHoodHealBonus = 0;
+  let rescueHoodShieldBonus = 0;
+  const healContrib = {};
+  const shieldContrib = {};
+
+  const addContribution = (bucket, label, value) => {
+    if (value <= 0) return;
+    bucket[label] = (bucket[label] || 0) + value;
+  };
+
+  // Les heals de move/passif sont toujours du vrai soin (aucun flag "shield"
+  // dans ce schéma de données — le bouclier vient uniquement des objets).
+  const accumulateHeal = (heal, label) => {
+    const target = heal.target || 'both';
+    const counts = mode === 'heal_ally'
+      ? (target === 'ally' || target === 'both')
+      : (target === 'self' || target === 'both');
+    if (!counts) return;
+
+    const ticks = heal.is_tick ? (heal.tick_count || 1) : 1;
+    let amount = calculateHealPure(heal, atkStats, level) * ticks;
+
+    // Rescue Hood ne boost que le soin effectivement reçu par un allié.
+    if (mode === 'heal_ally' && rescueHoodMult > 0) {
+      const boosted = Math.floor(amount * (1 + rescueHoodMult));
+      rescueHoodHealBonus += boosted - amount;
+      amount = boosted;
+    }
+
+    healTotal += amount;
+    addContribution(healContrib, label, amount);
+  };
 
   for (const move of (pokemon.moves || [])) {
     // Vérifier que le move est disponible à ce niveau
     if (move.learnLevel != null && move.learnLevel > level) continue;
     if (move.unlearn != null && level >= move.unlearn) continue;
 
-    for (const heal of (move.heals || [])) {
-      const target = heal.target || 'both';
-      const counts = mode === 'heal_ally'
-        ? (target === 'ally' || target === 'both')
-        : (target === 'self' || target === 'both');
-      if (!counts) continue;
-
-      const amount = calculateHealPure(heal, atkStats, level);
-      const ticks = heal.is_tick ? (heal.tick_count || 1) : 1;
-      total += amount * ticks;
-    }
-
-    // Heal du passif (passive.heals[])
+    for (const heal of (move.heals || [])) accumulateHeal(heal, move.name || 'Move');
   }
 
   // Passive heals
   for (const heal of (pokemon.passive?.heals || [])) {
-    const target = heal.target || 'both';
-    const counts = mode === 'heal_ally'
-      ? (target === 'ally' || target === 'both')
-      : (target === 'self' || target === 'both');
-    if (!counts) continue;
-    const amount = calculateHealPure(heal, atkStats, level);
-    const ticks = heal.is_tick ? (heal.tick_count || 1) : 1;
-    total += amount * ticks;
+    accumulateHeal(heal, pokemon.passive?.name ? `${pokemon.passive.name} (passive)` : 'Passive');
   }
 
-  return total;
+  // Heal/shield des objets activables (portée self vs ally — voir
+  // ITEM_HEAL_SHIELD_SCOPE), avec le même bonus Rescue Hood sur la portion
+  // "allié" de Buddy Barrier / Resonant Guard. Chaque stat est classée
+  // heal ou shield selon son label ("HP Recovery" vs "Shield").
+  items.forEach((item, index) => {
+    if (!item || !item.activable || !activatedArray[index] || !item.activation_effect) return;
+    const scope = ITEM_HEAL_SHIELD_SCOPE[item.name];
+    if (!scope) return;
+
+    const appliesToMode = mode === 'heal_self'
+      ? (scope === 'self' || scope === 'both')
+      : (scope === 'both');
+    if (!appliesToMode) return;
+
+    item.activation_effect.stats.forEach(stat => {
+      const lbl = stat.label.toLowerCase();
+      const isShield = lbl.includes('shield');
+      if (!isShield && !lbl.includes('hp')) return;
+
+      let amount = stat.percent ? Math.floor(atkStats.hp * stat.value / 100) : stat.value;
+      if (mode === 'heal_ally' && scope === 'both' && rescueHoodMult > 0) {
+        const boosted = Math.floor(amount * (1 + rescueHoodMult));
+        if (isShield) rescueHoodShieldBonus += boosted - amount;
+        else rescueHoodHealBonus += boosted - amount;
+        amount = boosted;
+      }
+
+      if (isShield) {
+        shieldTotal += amount;
+        addContribution(shieldContrib, item.display_name || item.name, amount);
+      } else {
+        healTotal += amount;
+        addContribution(healContrib, item.display_name || item.name, amount);
+      }
+    });
+  });
+
+  if (rescueHoodHealBonus > 0) addContribution(healContrib, 'Rescue Hood bonus', rescueHoodHealBonus);
+  if (rescueHoodShieldBonus > 0) addContribution(shieldContrib, 'Rescue Hood bonus', rescueHoodShieldBonus);
+
+  const toSortedArray = obj => Object.entries(obj)
+    .map(([label, value]) => ({ label, value }))
+    .sort((a, b) => b.value - a.value);
+
+  return {
+    healTotal,
+    shieldTotal,
+    healBreakdown: toSortedArray(healContrib),
+    shieldBreakdown: toSortedArray(shieldContrib),
+  };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -312,12 +436,13 @@ function scoreDamageVsEnemy(attacker, atkLevel, atkItems, atkStacks, atkActivate
 // ─────────────────────────────────────────────────────────────────────────────
 // STACKS PAR DÉFAUT POUR L'OPTIMIZER
 // ─────────────────────────────────────────────────────────────────────────────
-function defaultStacksForItem(item) {
+function defaultStacksForItem(item, stackPercent = 50) {
   if (!STACKABLE_ITEMS.includes(item.name)) return 0;
   const max = item.name === 'Weakness Policy' ? 4
     : (item.name.includes('Accel') || item.name.includes('Drive')) ? 20
     : 6;
-  return Math.floor(max / 2);
+  const raw = Math.round(max * stackPercent / 100);
+  return Math.max(0, Math.min(max, raw));
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -338,7 +463,10 @@ function* combinations3(arr) {
 // MESSAGE HANDLER
 // ─────────────────────────────────────────────────────────────────────────────
 self.onmessage = function(e) {
-  const { mode, attacker, level, availableItems, fixedItems, enemies, enabledMovesByEnemy } = e.data;
+  const { mode, attacker, level, availableItems, fixedItems, enemies, enabledMovesByEnemy, stackPercent } = e.data;
+  // % par défaut appliqué aux stacks des items testés par l'optimizer
+  // (50% = comportement historique, conservé si l'appelant n'envoie rien).
+  const defaultPct = (typeof stackPercent === 'number' && !isNaN(stackPercent)) ? stackPercent : 50;
 
   // Construire la liste d'items candidats (en retirant les fixés)
   const fixedNames = new Set(fixedItems.filter(Boolean).map(i => i.name));
@@ -376,15 +504,31 @@ self.onmessage = function(e) {
     while (buildItems.length < 3) buildItems.push(null);
 
     // Stacks et activations
-    const buildStacks    = buildItems.map(it => it ? defaultStacksForItem(it) : 0);
+    const buildStacks    = buildItems.map(it => it ? defaultStacksForItem(it, defaultPct) : 0);
     const buildActivated = buildItems.map(it => it?.activable ? true : false);
 
     let score = 0;
     const details = [];
 
     if (mode === 'heal_self' || mode === 'heal_ally') {
-      score = scoreHeal(attacker, level, buildItems, buildStacks, buildActivated, mode);
-      details.push({ label: 'Total Heal', value: score });
+      const healResult = scoreHeal(attacker, level, buildItems, buildStacks, buildActivated, mode);
+      // Le classement ne se base que sur le vrai heal : un bouclier est du
+      // HP temporaire (consommé par les dégâts, pas cumulable avec du soin
+      // permanent), donc le mélanger au score fausserait la comparaison
+      // entre builds.
+      score = healResult.healTotal;
+      healResult.healBreakdown.forEach(b => details.push({
+        label: b.label,
+        value: b.value,
+        category: 'heal',
+        isBonus: b.label === 'Rescue Hood bonus',
+      }));
+      healResult.shieldBreakdown.forEach(b => details.push({
+        label: b.label,
+        value: b.value,
+        category: 'shield',
+        isBonus: b.label === 'Rescue Hood bonus',
+      }));
 
     } else if (mode === 'damage') {
       for (let ei = 0; ei < enemies.length; ei++) {
