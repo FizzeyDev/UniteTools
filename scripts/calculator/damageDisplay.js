@@ -1075,6 +1075,45 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         `;
         card.appendChild(hpLine);
       }
+
+      // ── EMPOLEON — Whirlpool : heal proportionnel aux dégâts infligés ────────────────────
+      if (
+        state.currentAttacker?.pokemonId === "empoleon" &&
+        move.name === "Whirlpool" &&
+        dmg.dealDamage
+      ) {
+        // Reconstruit le total (incluant les ticks) de cette entrée de dégâts,
+        // même logique que le bloc d'affichage isTick ci-dessus.
+        const computeWhirlpoolTotal = (base, scaling, n) => {
+          if (!isTick) return base;
+          if (!scaling) return base * n;
+          let sum = 0;
+          for (let i = 0; i < n; i++) sum += Math.floor(base * (scaling[i] ?? scaling[scaling.length - 1]));
+          return sum;
+        };
+        const whirlpoolDmgTotal = computeWhirlpoolTotal(displayedNormal, effectiveTickScaling, tickCount);
+
+        // 50% des dégâts infligés (60% à partir du niveau 13 / upgrade), moitié contre les Pokémon sauvages
+        const whirlpoolHealPct = upgraded ? 0.60 : 0.50;
+        const isWildWhirlpool  = state.currentDefender?.category === 'mob';
+        const whirlpoolHeal = isWildWhirlpool
+          ? Math.floor(whirlpoolDmgTotal * whirlpoolHealPct * 0.5)
+          : Math.floor(whirlpoolDmgTotal * whirlpoolHealPct);
+
+        const whirlpoolHealLine = document.createElement("div");
+        whirlpoolHealLine.className = "damage-line";
+        whirlpoolHealLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;">
+            Heal
+            <br><i style="font-size:0.8em;color:#4caf8299;">${Math.round(whirlpoolHealPct * 100)}% of damage dealt${isWildWhirlpool ? " (half vs wild)" : ""}</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${whirlpoolHeal.toLocaleString()}</span>
+          </div>
+        `;
+        card.appendChild(whirlpoolHealLine);
+      }
+
       // Stat "lifesteal" du JSON, par entrée de damages[] sauf {"lifesteal": false}.
       // Applique lifesteal si: dmg.lifesteal === true OU (Auto-attack ET dmg.lifesteal !== false)
       const shouldApplyLifesteal = dmg.lifesteal === true || (move.name === "Auto-attack" && dmg.lifesteal !== false);

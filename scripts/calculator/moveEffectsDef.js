@@ -412,6 +412,42 @@ function applyPalkiaDragonClawDefStacks(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── ELDEGOSS — Cotton Spore+ (Def/SpDef +50%) ─────────────────────────────────
+function applyEldegossCottonSporePlus(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 12) return; // Upgrade at level 12
+
+  const isActive = state.defenderEldegossCottonSporePlusBuff ?? false;
+  const bonusPct = 50;
+
+  if (isActive) {
+    defStats.def    = Math.floor(defStats.def    * (1 + bonusPct / 100));
+    defStats.sp_def = Math.floor(defStats.sp_def * (1 + bonusPct / 100));
+  }
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/eldegoss/cotton_spore.png')}
+    <div style="flex:1;">
+      ${moveBadge('Cotton Spore+', 12)}
+      Spores burst → <strong style="color:#fff;">+${bonusPct}% Def & Sp. Def</strong> for 2s<br>
+      <button class="cotton-spore-statbuff-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.cotton-spore-statbuff-toggle').onclick = () => {
+    state.defenderEldegossCottonSporePlusBuff = !state.defenderEldegossCottonSporePlusBuff;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -425,7 +461,8 @@ export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
     dodrio:    [applyDodrioDrillPeckDash],
     dragonite: [applyDragoniteHyperBeamCharge],
     duraludon: [applyDuraludonLaserFocus],
-    palkia:    [applyPalkiaDragonClawDefStacks], // ← PALKIA
+    eldegoss:  [applyEldegossCottonSporePlus],
+    palkia:    [applyPalkiaDragonClawDefStacks],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }
