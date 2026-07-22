@@ -207,24 +207,34 @@ export function setupDebuffListeners() {
 
 export function setupStackableDebuffs() {
   const attackerStackable = {
-    'umbreonSnarlDebuffAttacker':       { max: 6, stateKey: 'umbreonSnarlStacks' },
-    'sylveonMysticalFireDebuffAttacker': { max: 4, stateKey: 'sylveonMysticalFireStacks' }
+    'umbreonSnarlDebuffAttacker':       { max: 6, stateKey: 'umbreonSnarlStacks', maxStateKey: 'umbreonSnarlStacksMax',
+      compute: n => `-${Math.round((1 - Math.pow(0.97, n)) * 100)}% Atk & Sp. Atk` },
+    'sylveonMysticalFireDebuffAttacker': { max: 4, stateKey: 'sylveonMysticalFireStacks', maxStateKey: 'sylveonMysticalFireStacksMax',
+      compute: n => `-${Math.round((1 - Math.pow(0.85, n)) * 100)}% Sp. Atk` }
   };
 
   const defenderStackable = {
-    'gardevoirPsychicDebuffDefender':         { max: 3,  stateKey: 'gardevoirPsychicStacks' },
-    'mimePsychicDebuffDefender':              { max: 8,  stateKey: 'mimePsychicStacks' },
-    'slowbroObliviousDebuffDefender':         { max: 5,  stateKey: 'slowbroObliviousStacks' },
-    'sylveonHyperVoiceDebuffDefender':        { max: 4,  stateKey: 'sylveonHypervoiceStacks' },
-    'alolanRaichuStoredPowerPlusDebuffDefender': { max: 3, stateKey: 'raichuStoredpowerStacks' }
+    'gardevoirPsychicDebuffDefender':         { max: 3,  stateKey: 'gardevoirPsychicStacks',    maxStateKey: 'gardevoirPsychicStacksMax',
+      compute: n => `-${Math.round((1 - Math.pow(0.73, n)) * 100)}% Sp. Def` },
+    'mimePsychicDebuffDefender':              { max: 8,  stateKey: 'mimePsychicStacks',         maxStateKey: 'mimePsychicStacksMax',
+      compute: n => `-${Math.round((1 - Math.pow(0.95, n)) * 100)}% Sp. Def` },
+    'slowbroObliviousDebuffDefender':         { max: 5,  stateKey: 'slowbroObliviousStacks',    maxStateKey: 'slowbroObliviousStacksMax',
+      compute: n => `-${Math.round((1 - Math.pow(0.96, n)) * 100)}% Sp. Def` },
+    'sylveonHyperVoiceDebuffDefender':        { max: 4,  stateKey: 'sylveonHypervoiceStacks',   maxStateKey: 'sylveonHypervoiceStacksMax',
+      compute: n => `-${Math.round((1 - Math.pow(0.80, n)) * 100)}% Sp. Def` },
+    'alolanRaichuStoredPowerPlusDebuffDefender': { max: 3, stateKey: 'raichuStoredpowerStacks', maxStateKey: 'raichuStoredpowerStacksMax',
+      compute: n => `-${Math.round((1 - Math.pow(0.95, n)) * 100)}% Sp. Def` }
   };
 
   // ── Débuffs dont la magnitude dépend du NIVEAU du Pokémon qui inflige le debuff ──
   // (et non du niveau du Pokémon défenseur qui le subit)
   const defenderCasterLevel = {
-    'ceruledgePsychoCutDebuffDefender':     { type: 'level', min: 1, max: 15, default: 15, stateKey: 'defenderCeruledgePsychoCutCasterLevel' },
-    'ceruledgePsychoCutPlusDebuffDefender': { type: 'level', min: 1, max: 15, default: 15, stateKey: 'defenderCeruledgePsychoCutPlusCasterLevel' },
-    'gengarShadowBallDebuffDefender':       { type: 'level', min: 1, max: 15, default: 15, stateKey: 'defenderGengarShadowBallCasterLevel' },
+    'ceruledgePsychoCutDebuffDefender':     { type: 'level', min: 1, max: 15, default: 15, stateKey: 'defenderCeruledgePsychoCutCasterLevel',
+      compute: lvl => `-${10 + 2 * (lvl - 1)} Def` },
+    'ceruledgePsychoCutPlusDebuffDefender': { type: 'level', min: 1, max: 15, default: 15, stateKey: 'defenderCeruledgePsychoCutPlusCasterLevel',
+      compute: lvl => `-${15 + 3 * (lvl - 1)} Def` },
+    'gengarShadowBallDebuffDefender':       { type: 'level', min: 1, max: 15, default: 15, stateKey: 'defenderGengarShadowBallCasterLevel',
+      compute: lvl => `-${80 + 5 * (lvl - 1)} Sp. Def` },
   };
 
   const allStackable = { ...attackerStackable, ...defenderStackable, ...defenderCasterLevel };
@@ -235,7 +245,7 @@ export function setupStackableDebuffs() {
 
     const isLevelType = config.type === 'level';
     const min = config.min ?? 0;
-    const max = config.max;
+    let max = isLevelType ? config.max : (state[config.maxStateKey] ?? config.max);
     const initial = isLevelType ? (config.default ?? 15) : 0;
 
     const label = checkbox.parentElement;
@@ -252,22 +262,30 @@ export function setupStackableDebuffs() {
         <button class="stack-btn minus">-</button>
         <span class="stack-value">${initial}</span>
         <button class="stack-btn plus">+</button>
+        <span class="stack-computed" style="margin-left:10px;font-size:0.85em;color:#8fd6ff;"></span>
       </div>
     ` : `
       <div class="ability-stack-control">
         <button class="stack-btn minus">-</button>
         <span class="stack-value">0</span>
         <button class="stack-btn plus">+</button>
-        <span class="stack-max">/${config.max}</span>
+        /<span class="stack-max" title="Cliquer pour changer le nombre de stacks max" style="cursor:pointer;text-decoration:underline dotted;">${max}</span>
+        <span class="stack-computed" style="margin-left:10px;font-size:0.85em;color:#8fd6ff;"></span>
       </div>
     `;
 
     label.appendChild(stacksContainer);
 
     let currentValue = initial;
+    const computedEl = stacksContainer.querySelector('.stack-computed');
+
+    const refreshComputed = () => {
+      if (config.compute) computedEl.textContent = `→ ${config.compute(currentValue)}`;
+    };
 
     const updateValue = () => {
       state[config.stateKey] = currentValue;
+      refreshComputed();
       updateDamages();
     };
 
@@ -284,6 +302,7 @@ export function setupStackableDebuffs() {
     });
 
     stacksContainer.querySelector('.minus').addEventListener('click', (e) => {
+      e.preventDefault();
       e.stopPropagation();
       if (currentValue > min) {
         currentValue--;
@@ -293,6 +312,7 @@ export function setupStackableDebuffs() {
     });
 
     stacksContainer.querySelector('.plus').addEventListener('click', (e) => {
+      e.preventDefault();
       e.stopPropagation();
       if (currentValue < max) {
         currentValue++;
@@ -300,5 +320,51 @@ export function setupStackableDebuffs() {
         updateValue();
       }
     });
+
+    // ── Max de stacks configurable (clic sur le nombre pour l'éditer) ──
+    if (!isLevelType) {
+      const attachMaxEditHandler = (el) => {
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const input = document.createElement('input');
+          input.type = 'number';
+          input.min = 1;
+          input.value = max;
+          input.style.width = '42px';
+          input.style.fontSize = '0.9em';
+          el.replaceWith(input);
+          input.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); });
+          input.addEventListener('mousedown', e => e.stopPropagation());
+          input.focus();
+          input.select();
+
+          const save = () => {
+            const newMax = Math.max(1, parseInt(input.value) || max);
+            max = newMax;
+            state[config.maxStateKey] = newMax;
+            if (currentValue > max) {
+              currentValue = max;
+              stacksContainer.querySelector('.stack-value').textContent = currentValue;
+            }
+            const newMaxEl = document.createElement('span');
+            newMaxEl.className = 'stack-max';
+            newMaxEl.title = 'Cliquer pour changer le nombre de stacks max';
+            newMaxEl.style.cursor = 'pointer';
+            newMaxEl.style.textDecoration = 'underline dotted';
+            newMaxEl.textContent = max;
+            input.replaceWith(newMaxEl);
+            attachMaxEditHandler(newMaxEl);
+            updateValue();
+          };
+
+          input.addEventListener('blur', save);
+          input.addEventListener('keydown', ev => { if (ev.key === 'Enter') save(); });
+        });
+      };
+      attachMaxEditHandler(stacksContainer.querySelector('.stack-max'));
+    }
+
+    refreshComputed();
   });
 }

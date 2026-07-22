@@ -45,8 +45,8 @@ async function initApp() {
 
   setupBuffListeners();
   setupDebuffListeners();
-  setupStackableDebuffs();
   enhanceBuffLabels(state.allPokemon);
+  setupStackableDebuffs();
 
   makeHPValueEditable('hpValueAttacker', 'hpSliderAttacker');
   makeHPValueEditable('hpValueDefender', 'hpSliderDefender');
