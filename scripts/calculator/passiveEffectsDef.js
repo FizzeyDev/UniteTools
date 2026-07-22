@@ -400,8 +400,8 @@ function applyGarchompDefender(atkStats, defStats, card) {
     ${icon('assets/moves/garchomp/rough_skin.png')}
     <div style="flex:1;">
       ${passiveBadge('Rough Skin', null, PASSIVE_DEF)}
-      Melee hit: reflects <strong style="color:${C};">30%</strong> of damage received<br>
-      <span style="font-size:0.85em;color:#aaa;">(Attack-based · 2s CD · Melee only)</span>
+      Melee hit: reflects <strong style="color:${C};">12.5%</strong> of damage received<br>
+      <span style="font-size:0.85em;color:#aaa;">(Attack-based · Melee only, from nearby opposing Pokémon)</span>
     </div>
   `);
   card.appendChild(line);

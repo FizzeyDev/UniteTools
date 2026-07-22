@@ -147,7 +147,7 @@ function applyDebuffs(pokemon, stats) {
       { flag: state.debuffBuzzwoleLunge, atk:0.70 }, { flag: state.debuffCharizardBurn, atk:0.95 },
       { flag: state.debuffCinderaceBurn, atk:0.95, sp:0.95 }, { flag: state.debuffCramorantFeatherDance, atk:0.70 },
       { flag: state.debuffDodrioTriAttackFlame, atk:0.92 }, { flag: state.debuffDodrioTriAttackFlameSprint, atk:0.88 },
-      { flag: state.debuffGengarWillOWisp, atk:0.90, sp:0.95 },
+      { flag: state.debuffGengarWillOWisp, atk:0.90, sp:0.90 },
       { flag: state.debuffSlowbroScald, atk:0.40 }, { flag: state.debuffSylveonBabyDollEyes, atk:0.85 },
       { flag: state.debuffTrevenantWillOWisp, atk:0.90, sp:0.95 }, { flag: state.debuffTsareenaTropKick, atk:0.75 },
       { flag: state.debuffInteleonTearfulLook, atk:0.80, sp:0.80 }, { flag: state.debuffHoohFlamethrower, atk:0.80, sp:0.80 },
@@ -207,9 +207,9 @@ function applyDebuffs(pokemon, stats) {
     if (state.defenderLatiasDragonBreath) spDefMult *= 0.70;
     if (state.defenderEmpoleonAquaJetTorrent) spDefMult *= 0.40;
 
-    if (state.defenderCeruledgePsychoCut) defFlat += 10 + 2 * (level - 1);
-    if (state.defenderCeruledgePsychoCutPlus) defFlat += 15 + 3 * (level - 1);
-    if (state.defenderGengarShadowBall) spDefFlat += 80 + 5 * (level - 1);
+    if (state.defenderCeruledgePsychoCut) defFlat += 10 + 2 * ((state.defenderCeruledgePsychoCutCasterLevel || level) - 1);
+    if (state.defenderCeruledgePsychoCutPlus) defFlat += 15 + 3 * ((state.defenderCeruledgePsychoCutPlusCasterLevel || level) - 1);
+    if (state.defenderGengarShadowBall) spDefFlat += 80 + 5 * ((state.defenderGengarShadowBallCasterLevel || level) - 1);
 
     def = Math.max(0, Math.floor(def * defMult) - defFlat);
     sp_def = Math.max(0, Math.floor(sp_def * spDefMult) - spDefFlat);

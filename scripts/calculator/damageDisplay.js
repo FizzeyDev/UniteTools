@@ -947,6 +947,16 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         crit   = Math.floor(crit   * 1.30);
       }
 
+      // ── ESPEON — Future Sight+ (lvl 12) : +15% dmg sur cible verrouillée ────
+      if (
+        state.currentAttacker?.pokemonId === "espeon" &&
+        upgraded &&
+        move.name === "Future Sight"
+      ) {
+        normal = Math.floor(normal * 1.15);
+        crit   = Math.floor(crit   * 1.15);
+      }
+
       const muscleMult = getBuzzwoleMuscleMultiplier(move.name, dmg.name);
       normal = Math.floor(normal * muscleMult);
       crit   = Math.floor(crit   * muscleMult);
@@ -1076,6 +1086,30 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         card.appendChild(hpLine);
       }
 
+      // ── GARCHOMP — Boosted Auto-attack : +10% HP restants (cap 350 vs sauvage) ──
+      if (
+        state.currentAttacker?.pokemonId === "garchomp" &&
+        move.name === "Auto-attack" &&
+        dmg.name === "Boosted" &&
+        (state.attackerPassiveStacks || 0) >= 5 &&
+        currentDefHP != null
+      ) {
+        const isWildGarchomp = state.currentDefender?.category === 'mob';
+        let hpDmg = Math.floor(currentDefHP * 0.10);
+        if (isWildGarchomp) hpDmg = Math.min(hpDmg, 350);
+        const hpLine = document.createElement("div");
+        hpLine.className = "damage-line";
+        hpLine.innerHTML = `
+          <span class="dmg-name">Boosted Additional
+            <br><i style="font-size:0.8em;color:#aaa;">10% remaining HP${isWildGarchomp ? ' — cap 350 vs wild' : ''}</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-normal">${hpDmg.toLocaleString()}</span>
+          </div>
+        `;
+        card.appendChild(hpLine);
+      }
+
       // ── EMPOLEON — Whirlpool : heal proportionnel aux dégâts infligés ────────────────────
       if (
         state.currentAttacker?.pokemonId === "empoleon" &&
@@ -1118,7 +1152,11 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       // Applique lifesteal si: dmg.lifesteal === true OU (Auto-attack ET dmg.lifesteal !== false)
       const shouldApplyLifesteal = dmg.lifesteal === true || (move.name === "Auto-attack" && dmg.lifesteal !== false);
       if (shouldApplyLifesteal) {
-        const lifestealPct = (state.currentAttacker?.stats?.[state.attackerLevel - 1]?.lifesteal ?? 0) / 100;
+        let lifestealPct = (state.currentAttacker?.stats?.[state.attackerLevel - 1]?.lifesteal ?? 0) / 100;
+        // Garchomp — boosted auto attack (5 stacks) grants an additional +30% lifesteal
+        if (state.currentAttacker?.pokemonId === "garchomp" && dmg.name === "Boosted" && (state.attackerPassiveStacks || 0) >= 5) {
+          lifestealPct += 0.30;
+        }
         if (lifestealPct > 0) {
           const lsComputeTotal = (base, scaling, n) => {
             if (!scaling) return base * n;

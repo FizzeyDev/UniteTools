@@ -219,11 +219,24 @@ export function setupStackableDebuffs() {
     'alolanRaichuStoredPowerPlusDebuffDefender': { max: 3, stateKey: 'raichuStoredpowerStacks' }
   };
 
-  const allStackable = { ...attackerStackable, ...defenderStackable };
+  // ── Débuffs dont la magnitude dépend du NIVEAU du Pokémon qui inflige le debuff ──
+  // (et non du niveau du Pokémon défenseur qui le subit)
+  const defenderCasterLevel = {
+    'ceruledgePsychoCutDebuffDefender':     { type: 'level', min: 1, max: 15, default: 15, stateKey: 'defenderCeruledgePsychoCutCasterLevel' },
+    'ceruledgePsychoCutPlusDebuffDefender': { type: 'level', min: 1, max: 15, default: 15, stateKey: 'defenderCeruledgePsychoCutPlusCasterLevel' },
+    'gengarShadowBallDebuffDefender':       { type: 'level', min: 1, max: 15, default: 15, stateKey: 'defenderGengarShadowBallCasterLevel' },
+  };
+
+  const allStackable = { ...attackerStackable, ...defenderStackable, ...defenderCasterLevel };
 
   Object.entries(allStackable).forEach(([id, config]) => {
     const checkbox = document.getElementById(id);
     if (!checkbox) return;
+
+    const isLevelType = config.type === 'level';
+    const min = config.min ?? 0;
+    const max = config.max;
+    const initial = isLevelType ? (config.default ?? 15) : 0;
 
     const label = checkbox.parentElement;
 
@@ -233,7 +246,14 @@ export function setupStackableDebuffs() {
     stacksContainer.style.marginTop = '6px';
     stacksContainer.style.display = 'none';
 
-    stacksContainer.innerHTML = `
+    stacksContainer.innerHTML = isLevelType ? `
+      <div class="ability-stack-control">
+        <span style="margin-right:6px;font-size:0.85em;color:#aaa;">Niveau du lanceur :</span>
+        <button class="stack-btn minus">-</button>
+        <span class="stack-value">${initial}</span>
+        <button class="stack-btn plus">+</button>
+      </div>
+    ` : `
       <div class="ability-stack-control">
         <button class="stack-btn minus">-</button>
         <span class="stack-value">0</span>
@@ -244,37 +264,40 @@ export function setupStackableDebuffs() {
 
     label.appendChild(stacksContainer);
 
-    let currentStacks = 0;
+    let currentValue = initial;
 
-    const updateStacks = () => {
-      state[config.stateKey] = currentStacks;
+    const updateValue = () => {
+      state[config.stateKey] = currentValue;
       updateDamages();
     };
 
     checkbox.addEventListener('change', () => {
       stacksContainer.style.display = checkbox.checked ? 'block' : 'none';
-      if (!checkbox.checked) {
-        currentStacks = 0;
+      if (checkbox.checked) {
+        // S'assure que la valeur par défaut (ex: niveau 15) est bien poussée dans le state dès l'activation
+        updateValue();
+      } else if (!isLevelType) {
+        currentValue = 0;
         stacksContainer.querySelector('.stack-value').textContent = '0';
-        updateStacks();
+        updateValue();
       }
     });
 
     stacksContainer.querySelector('.minus').addEventListener('click', (e) => {
       e.stopPropagation();
-      if (currentStacks > 0) {
-        currentStacks--;
-        stacksContainer.querySelector('.stack-value').textContent = currentStacks;
-        updateStacks();
+      if (currentValue > min) {
+        currentValue--;
+        stacksContainer.querySelector('.stack-value').textContent = currentValue;
+        updateValue();
       }
     });
 
     stacksContainer.querySelector('.plus').addEventListener('click', (e) => {
       e.stopPropagation();
-      if (currentStacks < config.max) {
-        currentStacks++;
-        stacksContainer.querySelector('.stack-value').textContent = currentStacks;
-        updateStacks();
+      if (currentValue < max) {
+        currentValue++;
+        stacksContainer.querySelector('.stack-value').textContent = currentValue;
+        updateValue();
       }
     });
   });

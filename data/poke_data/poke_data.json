@@ -4394,7 +4394,7 @@
         "image": "assets/moves/espeon/swift.png",
         "damages": [
           {"name": "First Hit", "multiplier": 70, "levelCoef": 19, "constant": 360, "dealDamage": true},
-          {"name": "Subsequent Hits", "multiplier": 21, "levelCoef": 6, "constant": 108, "dealDamage": true, "notes": "70% reduced on same target"}
+          {"name": "Subsequent Hits", "multiplier": 21, "levelCoef": 6, "constant": 108, "dealDamage": true, "is_tick": true, "tick_count": 2, "notes": "70% reduced on same target"}
         ]
       },
       {
@@ -4406,7 +4406,7 @@
         "image": "assets/moves/espeon/psyshock.png",
         "damages": [
           {"name": "First Hit", "multiplier": 72.6, "levelCoef": 14, "constant": 374, "dealDamage": true},
-          {"name": "Subsequent Hits", "multiplier": 22, "levelCoef": 4, "constant": 112, "dealDamage": true, "notes": "70% reduced on same target"}
+          {"name": "Subsequent Hits", "multiplier": 22, "levelCoef": 4, "constant": 112, "dealDamage": true, "is_tick": true, "tick_count": 4, "notes": "70% reduced on same target"}
         ]
       },
       {
@@ -4418,7 +4418,12 @@
         "image": "assets/moves/espeon/stored_power.png",
         "damages": [
           {"name": "First Hit", "multiplier": 60, "levelCoef": 9, "constant": 300, "dealDamage": true},
-          {"name": "Subsequent Hits", "multiplier": 19.6, "levelCoef": 2, "constant": 90, "dealDamage": true, "notes": "70% reduced on same target"}
+          {"name": "Subsequent Hits", "multiplier": 19.6, "levelCoef": 2, "constant": 90, "dealDamage": true, "is_tick": true, "tick_count": 4, "notes": "70% reduced on same target"},
+          {"name": "Subsequent Hits (Boosted bu Future Sight reset)", "multiplier": 19.6, "levelCoef": 2, "constant": 90, "dealDamage": true, "is_tick": true, "tick_count": 7, "notes": "70% reduced on same target"},
+          {"name": "Additional (below 50% max HP)", "multiplier": 26, "levelCoef": 5, "constant": 135, "dealDamage": true, "notes": "Level 10 move upgrade"}
+        ],
+        "heals": [
+          { "name": "Heal", "scaling": "hp", "multiplier": 0, "levelCoef": 0, "constant": 150, "notes": "Blast, Enhanced by Future Sight reset"}
         ]
       },
       {
@@ -4442,7 +4447,7 @@
         "damages": [
           {"name": "Initial Hit", "multiplier": 100, "levelCoef": 14, "constant": 591, "dealDamage": true},
           {"name": "Max HP Bonus", "max_hp_percent": 6, "wild_cap": 1000, "dealDamage": true, "notes": "+6% of first target's max HP (cap 1000 wild / 2000 player)"},
-          {"name": "Bonus vs Unable to Act", "max_hp_percent": 5, "dealDamage": true, "notes": "+5% max HP if initial target unable to act (enhanced)"}
+          {"name": "Bonus vs Unable to Act", "max_hp_percent": 5, "wild_cap": 1000, "dealDamage": true, "notes": "+5% max HP if initial target unable to act (enhanced)"}
         ]
       },
       {
@@ -4454,8 +4459,7 @@
         "image": "assets/moves/espeon/future_sight.png",
         "damages": [
           {"name": "Base Damage", "multiplier": 57.6, "levelCoef": 9, "constant": 338, "dealDamage": true},
-          {"name": "Missing HP Bonus (cap 1800 on wild)", "missing_hp_percent": 12, "wild_cap": 1800, "dealDamage": true, "notes": "+10% of target's missing HP (cap 1800 wild)"},
-          {"name": "Bonus Damage to Target", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+15% damage from Espeon to locked target (enhanced)"}
+          {"name": "Missing HP Bonus (cap 1800 on wild)", "missing_hp_percent": 12, "wild_cap": 1800, "dealDamage": true, "notes": "+10% of target's missing HP (cap 1800 wild)"}
         ]
       },
       {
@@ -4486,21 +4490,21 @@
     "role": "fighter",
     "style": "physical",
     "stats": [
-      {"level": 1, "hp": 3200, "atk": 150, "def": 90, "sp_atk": 20, "sp_def": 70, "crit": 0},
-      {"level": 2, "hp": 3371, "atk": 160, "def": 103, "sp_atk": 23, "sp_def": 80, "crit": 0},
-      {"level": 3, "hp": 3559, "atk": 171, "def": 118, "sp_atk": 27, "sp_def": 91, "crit": 0},
-      {"level": 4, "hp": 3766, "atk": 183, "def": 134, "sp_atk": 31, "sp_def": 103, "crit": 0},
-      {"level": 5, "hp": 3993, "atk": 196, "def": 152, "sp_atk": 35, "sp_def": 117, "crit": 10},
-      {"level": 6, "hp": 4243, "atk": 211, "def": 171, "sp_atk": 40, "sp_def": 132, "crit": 10},
-      {"level": 7, "hp": 4518, "atk": 227, "def": 192, "sp_atk": 45, "sp_def": 149, "crit": 10},
-      {"level": 8, "hp": 4821, "atk": 245, "def": 215, "sp_atk": 51, "sp_def": 167, "crit": 10},
-      {"level": 9, "hp": 5155, "atk": 264, "def": 241, "sp_atk": 58, "sp_def": 187, "crit": 20},
-      {"level": 10, "hp": 5523, "atk": 285, "def": 269, "sp_atk": 65, "sp_def": 209, "crit": 20},
-      {"level": 11, "hp": 5928, "atk": 309, "def": 300, "sp_atk": 73, "sp_def": 234, "crit": 20},
-      {"level": 12, "hp": 6374, "atk": 335, "def": 334, "sp_atk": 82, "sp_def": 261, "crit": 20},
-      {"level": 13, "hp": 6865, "atk": 364, "def": 372, "sp_atk": 92, "sp_def": 291, "crit": 20},
-      {"level": 14, "hp": 7405, "atk": 395, "def": 414, "sp_atk": 103, "sp_def": 324, "crit": 20},
-      {"level": 15, "hp": 8000, "atk": 430, "def": 460, "sp_atk": 115, "sp_def": 360, "crit": 20}
+      {"level": 1, "hp": 3200, "atk": 150, "def": 90, "sp_atk": 20, "sp_def": 70, "crit": 0, "lifesteal": 0},
+      {"level": 2, "hp": 3371, "atk": 160, "def": 103, "sp_atk": 23, "sp_def": 80, "crit": 0, "lifesteal": 0},
+      {"level": 3, "hp": 3559, "atk": 171, "def": 118, "sp_atk": 27, "sp_def": 91, "crit": 0, "lifesteal": 0},
+      {"level": 4, "hp": 3766, "atk": 183, "def": 134, "sp_atk": 31, "sp_def": 103, "crit": 0, "lifesteal": 0},
+      {"level": 5, "hp": 3993, "atk": 196, "def": 152, "sp_atk": 35, "sp_def": 117, "crit": 10, "lifesteal": 5},
+      {"level": 6, "hp": 4243, "atk": 211, "def": 171, "sp_atk": 40, "sp_def": 132, "crit": 10, "lifesteal": 5},
+      {"level": 7, "hp": 4518, "atk": 227, "def": 192, "sp_atk": 45, "sp_def": 149, "crit": 10, "lifesteal": 5},
+      {"level": 8, "hp": 4821, "atk": 245, "def": 215, "sp_atk": 51, "sp_def": 167, "crit": 10, "lifesteal": 5},
+      {"level": 9, "hp": 5155, "atk": 264, "def": 241, "sp_atk": 58, "sp_def": 187, "crit": 20, "lifesteal": 10},
+      {"level": 10, "hp": 5523, "atk": 285, "def": 269, "sp_atk": 65, "sp_def": 209, "crit": 20, "lifesteal": 10},
+      {"level": 11, "hp": 5928, "atk": 309, "def": 300, "sp_atk": 73, "sp_def": 234, "crit": 20, "lifesteal": 10},
+      {"level": 12, "hp": 6374, "atk": 335, "def": 334, "sp_atk": 82, "sp_def": 261, "crit": 20, "lifesteal": 10},
+      {"level": 13, "hp": 6865, "atk": 364, "def": 372, "sp_atk": 92, "sp_def": 291, "crit": 20, "lifesteal": 15},
+      {"level": 14, "hp": 7405, "atk": 395, "def": 414, "sp_atk": 103, "sp_def": 324, "crit": 20, "lifesteal": 15},
+      {"level": 15, "hp": 8000, "atk": 430, "def": 460, "sp_atk": 115, "sp_def": 360, "crit": 20, "lifesteal": 15}
     ],
     "moves": [
       {
@@ -4537,36 +4541,10 @@
           {"name": "Damage (Dispatch formation Trooper)", "multiplier": 59.5, "levelCoef": 4, "constant": 95, "dealDamage": true}
         ],
         "shields": [
-          {
-            "name": "Shield",
-            "scaling": "atk",
-            "multiplier": 40,
-            "levelCoef": 0,
-            "constant": 200
-          },
-          {
-            "name": "Shield +",
-            "scaling": "atk",
-            "multiplier": 80,
-            "levelCoef": 0,
-            "constant": 400,
-            "upgraded": true
-          },
-          {
-            "name": "Shield - Max HP Bonus",
-            "scaling": "hp",
-            "multiplier": 6,
-            "levelCoef": 0,
-            "constant": 0
-          },
-          {
-            "name": "Shield - Max HP Bonus +",
-            "scaling": "hp",
-            "multiplier": 12,
-            "levelCoef": 0,
-            "constant": 0,
-            "upgraded": true
-          }
+          {"name": "Shield", "scaling": "atk", "multiplier": 40, "levelCoef": 0, "constant": 200},
+          {"name": "Shield +", "scaling": "atk", "multiplier": 80, "levelCoef": 0, "constant": 400, "upgraded": true},
+          {"name": "Shield - Max HP Bonus", "scaling": "hp", "multiplier": 6, "levelCoef": 0, "constant": 0},
+          {"name": "Shield - Max HP Bonus +", "scaling": "hp", "multiplier": 12, "levelCoef": 0, "constant": 0, "upgraded": true}
         ]
       },
       {
@@ -4578,23 +4556,12 @@
         "image": "assets/moves/falinks/iron_head.png",
         "damages": [
           {"name": "Damage", "multiplier": 150, "levelCoef": 8, "constant": 150, "dealDamage": true},
-          {"name": "Damage (Dispatch formation per Trooper)", "multiplier": 90, "levelCoef": 2, "constant": 100, "shield": true}
+          {"name": "Damage (Dispatch formation per Trooper)", "multiplier": 90, "levelCoef": 2, "constant": 100, "shield": true},
+          {"name": "Damage (Additional, Troopers returning)", "max_hp_percent": 2, "dealDamage": true, "notes":"Upgraded, Capped at 200"}
         ],
         "shields": [
-          {
-            "name": "Shield",
-            "scaling": "atk",
-            "multiplier": 60,
-            "levelCoef": 10,
-            "constant": 250
-          },
-          {
-            "name": "Shield - Max HP Bonus",
-            "scaling": "hp",
-            "multiplier": 10,
-            "levelCoef": 0,
-            "constant": 0
-          }
+          {"name": "Shield", "scaling": "atk", "multiplier": 60, "levelCoef": 10, "constant": 250},
+          {"name": "Shield - Max HP Bonus", "scaling": "hp", "multiplier": 10, "levelCoef": 0, "constant": 0}
         ]
       },
       {
@@ -4650,21 +4617,21 @@
     "role": "allrounder",
     "style": "physical",
     "stats": [
-      {"level": 1,  "hp": 3460, "atk": 156, "def": 98,  "sp_atk": 20,  "sp_def": 94,  "crit": 0,  "lifesteal": 0,  "attack_speed": 10,    "move_speed": 3700},
-      {"level": 2,  "hp": 3528, "atk": 161, "def": 104, "sp_atk": 21,  "sp_def": 100, "crit": 0,  "lifesteal": 0,  "attack_speed": 10.43, "move_speed": 3700},
-      {"level": 3,  "hp": 3610, "atk": 167, "def": 111, "sp_atk": 23,  "sp_def": 106, "crit": 0,  "lifesteal": 0,  "attack_speed": 10.95, "move_speed": 3700},
-      {"level": 4,  "hp": 3708, "atk": 174, "def": 120, "sp_atk": 25,  "sp_def": 114, "crit": 0,  "lifesteal": 0,  "attack_speed": 11.57, "move_speed": 3700},
-      {"level": 5,  "hp": 4062, "atk": 200, "def": 152, "sp_atk": 32,  "sp_def": 144, "crit": 10, "lifesteal": 5,  "attack_speed": 13.81, "move_speed": 3850},
-      {"level": 6,  "hp": 4203, "atk": 211, "def": 164, "sp_atk": 35,  "sp_def": 155, "crit": 10, "lifesteal": 5,  "attack_speed": 14.71, "move_speed": 3850},
-      {"level": 7,  "hp": 4847, "atk": 258, "def": 221, "sp_atk": 48,  "sp_def": 208, "crit": 10, "lifesteal": 5,  "attack_speed": 18.78, "move_speed": 4000},
-      {"level": 8,  "hp": 5050, "atk": 273, "def": 240, "sp_atk": 52,  "sp_def": 225, "crit": 10, "lifesteal": 5,  "attack_speed": 20.06, "move_speed": 4000},
-      {"level": 9,  "hp": 5294, "atk": 291, "def": 261, "sp_atk": 57,  "sp_def": 245, "crit": 20, "lifesteal": 10, "attack_speed": 21.61, "move_speed": 4150},
-      {"level": 10, "hp": 5587, "atk": 313, "def": 287, "sp_atk": 63,  "sp_def": 269, "crit": 20, "lifesteal": 10, "attack_speed": 23.46, "move_speed": 4150},
-      {"level": 11, "hp": 5938, "atk": 338, "def": 319, "sp_atk": 70,  "sp_def": 298, "crit": 20, "lifesteal": 10, "attack_speed": 25.68, "move_speed": 4300},
-      {"level": 12, "hp": 6359, "atk": 369, "def": 356, "sp_atk": 79,  "sp_def": 333, "crit": 20, "lifesteal": 10, "attack_speed": 28.35, "move_speed": 4300},
-      {"level": 13, "hp": 6865, "atk": 407, "def": 401, "sp_atk": 89,  "sp_def": 375, "crit": 20, "lifesteal": 15, "attack_speed": 31.55, "move_speed": 4300},
-      {"level": 14, "hp": 7472, "atk": 451, "def": 455, "sp_atk": 101, "sp_def": 425, "crit": 20, "lifesteal": 15, "attack_speed": 35.39, "move_speed": 4300},
-      {"level": 15, "hp": 8200, "atk": 505, "def": 520, "sp_atk": 116, "sp_def": 485, "crit": 20, "lifesteal": 15, "attack_speed": 40,    "move_speed": 4300}
+      {"level": 1,  "hp": 3460, "atk": 156, "def": 98,  "sp_atk": 20,  "sp_def": 94,  "crit": 0,  "lifesteal": 0},
+      {"level": 2,  "hp": 3528, "atk": 161, "def": 104, "sp_atk": 21,  "sp_def": 100, "crit": 0,  "lifesteal": 0},
+      {"level": 3,  "hp": 3610, "atk": 167, "def": 111, "sp_atk": 23,  "sp_def": 106, "crit": 0,  "lifesteal": 0},
+      {"level": 4,  "hp": 3708, "atk": 174, "def": 120, "sp_atk": 25,  "sp_def": 114, "crit": 0,  "lifesteal": 0},
+      {"level": 5,  "hp": 4062, "atk": 200, "def": 152, "sp_atk": 32,  "sp_def": 144, "crit": 10, "lifesteal": 5},
+      {"level": 6,  "hp": 4203, "atk": 211, "def": 164, "sp_atk": 35,  "sp_def": 155, "crit": 10, "lifesteal": 5},
+      {"level": 7,  "hp": 4847, "atk": 258, "def": 221, "sp_atk": 48,  "sp_def": 208, "crit": 10, "lifesteal": 5},
+      {"level": 8,  "hp": 5050, "atk": 273, "def": 240, "sp_atk": 52,  "sp_def": 225, "crit": 10, "lifesteal": 5},
+      {"level": 9,  "hp": 5294, "atk": 291, "def": 261, "sp_atk": 57,  "sp_def": 245, "crit": 20, "lifesteal": 10},
+      {"level": 10, "hp": 5587, "atk": 313, "def": 287, "sp_atk": 63,  "sp_def": 269, "crit": 20, "lifesteal": 10},
+      {"level": 11, "hp": 5938, "atk": 338, "def": 319, "sp_atk": 70,  "sp_def": 298, "crit": 20, "lifesteal": 10},
+      {"level": 12, "hp": 6359, "atk": 369, "def": 356, "sp_atk": 79,  "sp_def": 333, "crit": 20, "lifesteal": 10},
+      {"level": 13, "hp": 6865, "atk": 407, "def": 401, "sp_atk": 89,  "sp_def": 375, "crit": 20, "lifesteal": 15},
+      {"level": 14, "hp": 7472, "atk": 451, "def": 455, "sp_atk": 101, "sp_def": 425, "crit": 20, "lifesteal": 15},
+      {"level": 15, "hp": 8200, "atk": 505, "def": 520, "sp_atk": 116, "sp_def": 485, "crit": 20, "lifesteal": 15}
     ],
     "moves": [
       {
@@ -4751,21 +4718,21 @@
     "role": "fighter",
     "style": "physical",
     "stats": [
-      {"level": 1, "hp": 3300, "atk": 165, "def": 98, "sp_atk": 20, "sp_def": 86, "crit": 0},
-      {"level": 2, "hp": 3370, "atk": 170, "def": 104, "sp_atk": 21, "sp_def": 91, "crit": 0},
-      {"level": 3, "hp": 3453, "atk": 176, "def": 111, "sp_atk": 23, "sp_def": 96, "crit": 0},
-      {"level": 4, "hp": 3554, "atk": 183, "def": 120, "sp_atk": 25, "sp_def": 103, "crit": 0},
-      {"level": 5, "hp": 3916, "atk": 210, "def": 152, "sp_atk": 32, "sp_def": 127, "crit": 7.5},
-      {"level": 6, "hp": 4061, "atk": 220, "def": 164, "sp_atk": 35, "sp_def": 137, "crit": 7.5},
-      {"level": 7, "hp": 4234, "atk": 233, "def": 179, "sp_atk": 38, "sp_def": 148, "crit": 7.5},
-      {"level": 8, "hp": 4442, "atk": 248, "def": 197, "sp_atk": 42, "sp_def": 162, "crit": 7.5},
-      {"level": 9, "hp": 5177, "atk": 301, "def": 261, "sp_atk": 56, "sp_def": 211, "crit": 15},
-      {"level": 10, "hp": 5476, "atk": 322, "def": 287, "sp_atk": 62, "sp_def": 231, "crit": 15},
-      {"level": 11, "hp": 5835, "atk": 348, "def": 319, "sp_atk": 69, "sp_def": 255, "crit": 15},
-      {"level": 12, "hp": 6266, "atk": 380, "def": 356, "sp_atk": 77, "sp_def": 284, "crit": 15},
-      {"level": 13, "hp": 6784, "atk": 417, "def": 401, "sp_atk": 88, "sp_def": 319, "crit": 15},
-      {"level": 14, "hp": 7405, "atk": 462, "def": 455, "sp_atk": 100, "sp_def": 360, "crit": 15},
-      {"level": 15, "hp": 8150, "atk": 516, "def": 520, "sp_atk": 114, "sp_def": 410, "crit": 15}
+      {"level": 1, "hp": 3300, "atk": 165, "def": 98, "sp_atk": 20, "sp_def": 86, "crit": 0, "lifesteal": 0},
+      {"level": 2, "hp": 3370, "atk": 170, "def": 104, "sp_atk": 21, "sp_def": 91, "crit": 0, "lifesteal": 0},
+      {"level": 3, "hp": 3453, "atk": 176, "def": 111, "sp_atk": 23, "sp_def": 96, "crit": 0, "lifesteal": 0},
+      {"level": 4, "hp": 3554, "atk": 183, "def": 120, "sp_atk": 25, "sp_def": 103, "crit": 0, "lifesteal": 0},
+      {"level": 5, "hp": 3916, "atk": 210, "def": 152, "sp_atk": 32, "sp_def": 127, "crit": 7.5, "lifesteal": 5},
+      {"level": 6, "hp": 4061, "atk": 220, "def": 164, "sp_atk": 35, "sp_def": 137, "crit": 7.5, "lifesteal": 5},
+      {"level": 7, "hp": 4234, "atk": 233, "def": 179, "sp_atk": 38, "sp_def": 148, "crit": 7.5, "lifesteal": 5},
+      {"level": 8, "hp": 4442, "atk": 248, "def": 197, "sp_atk": 42, "sp_def": 162, "crit": 7.5, "lifesteal": 5},
+      {"level": 9, "hp": 5177, "atk": 301, "def": 261, "sp_atk": 56, "sp_def": 211, "crit": 15, "lifesteal": 10},
+      {"level": 10, "hp": 5476, "atk": 322, "def": 287, "sp_atk": 62, "sp_def": 231, "crit": 15, "lifesteal": 10},
+      {"level": 11, "hp": 5835, "atk": 348, "def": 319, "sp_atk": 69, "sp_def": 255, "crit": 15, "lifesteal": 10},
+      {"level": 12, "hp": 6266, "atk": 380, "def": 356, "sp_atk": 77, "sp_def": 284, "crit": 15, "lifesteal": 10},
+      {"level": 13, "hp": 6784, "atk": 417, "def": 401, "sp_atk": 88, "sp_def": 319, "crit": 15, "lifesteal": 15},
+      {"level": 14, "hp": 7405, "atk": 462, "def": 455, "sp_atk": 100, "sp_def": 360, "crit": 15, "lifesteal": 15},
+      {"level": 15, "hp": 8150, "atk": 516, "def": 520, "sp_atk": 114, "sp_def": 410, "crit": 15, "lifesteal": 15}
     ],
     "moves": [
       {
@@ -4775,14 +4742,6 @@
         "damages": [
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
           {"name": "Boosted", "multiplier": 120, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "+10% of target's remaining HP (cap 350 wild)"}
-        ]
-      },
-      {
-        "name": "Rough Skin (Passive)",
-        "can_crit": "false",
-        "image": "assets/moves/garchomp/rough_skin.png",
-        "damages": [
-          {"name": "Reflected Damage", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "30% of melee damage received"}
         ]
       },
       {

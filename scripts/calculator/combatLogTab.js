@@ -1385,7 +1385,7 @@ const ATTACKER_DEBUFFS = [
   ['debuffBuzzwoleLunge', 'Buzzwole: Lunge (-30% Atk)'], ['debuffCharizardBurn', 'Charizard: Burn (-5% Atk)'],
   ['debuffCinderaceBurn', 'Cinderace: Burn (-5% Atk / Sp.Atk)'], ['debuffCramorantFeatherDance', 'Cramorant: Feather Dance (-30% Atk)'],
   ['debuffDodrioTriAttackFlame', 'Dodrio: Tri Attack Flame (-8% Atk)'], ['debuffDodrioTriAttackFlameSprint', 'Dodrio: Tri Attack Flame Sprint (-12% Atk)'],
-  ['debuffGengarWillOWisp', 'Gengar: Will-o-Wisp (-10% Atk / -5% Sp.Atk)'], ['debuffSlowbroScald', 'Slowbro: Scald (-60% Atk)'],
+  ['debuffGengarWillOWisp', 'Gengar: Will-o-Wisp (-10% Atk / Sp.Atk)'], ['debuffSlowbroScald', 'Slowbro: Scald (-60% Atk)'],
   ['debuffSylveonBabyDollEyes', 'Sylveon: Baby-Doll Eyes (-15% Atk)'], ['debuffTrevenantWillOWisp', 'Trevenant: Will-o-Wisp (-10% Atk / -5% Sp.Atk)'],
   ['debuffTsareenaTropKick', 'Tsareena: Trop Kick (-25% Atk)'], ['debuffGoodraMuddyWater', 'Goodra: Muddy Water (-15% Damage)'],
   ['debuffMimePowerSwap', 'Mr. Mime: Power Swap (-15% Damage)'], ['debuffMimePowerSwapPlus', 'Mr. Mime: Power Swap + (-20% Damage)'],
