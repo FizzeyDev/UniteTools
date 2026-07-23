@@ -90,14 +90,23 @@ function isMoveUpgraded(move, level) {
 }
 
 // ── filterByUpgrade — gère aussi blaze_only (Typhlosion) ─────────────────────
+// upgraded      : REMPLACE les entrées normales par celles-ci une fois le move upgradé
+//                 (ex: Typhlosion Blaze — la formule change entièrement).
+// upgrade_bonus : S'AJOUTE aux entrées déjà affichées une fois le move upgradé,
+//                 sans rien retirer (ex: Glaceon Icy Wind/Icicle Spear — le dégât
+//                 de base reste, un dégât "% HP restants" vient s'ajouter en plus).
 function filterByUpgrade(items, upgraded) {
   if (!items?.length) return items || [];
 
   const blazeActive = state.attackerTyphlosionBlazeActive ?? false;
 
-  const hasUpgradedEntries = items.some(i => i.upgraded === true);
-  const normalItems = items.filter(i => !i.blaze_only);
-  const blazeItems  = items.filter(i =>  i.blaze_only);
+  // Entrées "bonus" : à part, jamais concernées par le filtre remplace/blaze ci-dessous
+  const bonusUpgradeItems = items.filter(i => i.upgrade_bonus === true);
+  const baseItems         = items.filter(i => i.upgrade_bonus !== true);
+
+  const hasUpgradedEntries = baseItems.some(i => i.upgraded === true);
+  const normalItems = baseItems.filter(i => !i.blaze_only);
+  const blazeItems  = baseItems.filter(i =>  i.blaze_only);
 
   // Filtrer les normales selon upgrade
   let filtered;
@@ -114,6 +123,11 @@ function filterByUpgrade(items, upgraded) {
     filtered = upgraded
       ? blazeItems.filter(i => i.upgraded === true)
       : blazeItems.filter(i => !i.upgraded);
+  }
+
+  // Ajouter les entrées "bonus" uniquement si le move est upgradé (sans rien retirer)
+  if (upgraded && bonusUpgradeItems.length > 0) {
+    filtered = [...filtered, ...bonusUpgradeItems];
   }
 
   return filtered;

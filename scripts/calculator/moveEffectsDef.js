@@ -670,6 +670,41 @@ function applyFalinksDustDevilFormation(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── GOODRA — Muddy Water (Def/Sp. Def stacks) ─────────────────────────────────
+function applyGoodraMuddyWaterDefStacks(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 5) return; // Muddy Water appris au niveau 5
+
+  const upgraded  = level >= 11;
+  const stacks    = state.defenderGoodraMuddyWaterStacks ?? 0;
+  const maxStacks = 4;
+  const perStack  = upgraded ? (10 * (level - 1) + 108) : (6 * (level - 1) + 72);
+  const total     = stacks * perStack;
+
+  if (stacks > 0) {
+    defStats.def    += total;
+    defStats.sp_def += total;
+  }
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/goodra/muddy_water.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Muddy Water+' : 'Muddy Water', upgraded ? 11 : 5)}
+      Hits an enemy: <button class="stack-btn minus goodra-mw-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus goodra-mw-plus">+</button><br>
+      → <strong style="color:${total > 0 ? '#88ff88' : '#888'};">+${total} Def & Sp. Def</strong> for 2s
+      ${stacks >= maxStacks ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ MAX</span>' : ''}<br>
+      <span style="font-size:0.8rem;color:${C}99;">+${perStack} per stack · re-using Muddy Water within 6s increases the stack intensity, up to 4 stacks</span>
+    </div>
+  `);
+  line.querySelector('.goodra-mw-minus').onclick = () => { if ((state.defenderGoodraMuddyWaterStacks ?? 0) > 0)        { state.defenderGoodraMuddyWaterStacks = (state.defenderGoodraMuddyWaterStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.goodra-mw-plus').onclick  = () => { if ((state.defenderGoodraMuddyWaterStacks ?? 0) < maxStacks) { state.defenderGoodraMuddyWaterStacks = (state.defenderGoodraMuddyWaterStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -686,6 +721,7 @@ export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
     eldegoss:  [applyEldegossCottonSporePlus],
     falinks:   [applyFalinksBulkUp, applyFalinksNoRetreat, applyFalinksDustDevilFormation],
     garchomp:  [applyGarchompDig, applyGarchompDragonRush, applyGarchompLividOutrage],
+    goodra:    [applyGoodraMuddyWaterDefStacks],
     palkia:    [applyPalkiaDragonClawDefStacks],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));

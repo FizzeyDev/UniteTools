@@ -20,6 +20,7 @@ import {
   applyDuraludonRevolvingRuinStatBuff,
   applyFalinksBulkUpStatBuff,
   applyFalinksNoRetreatStatBuff,
+  applyGlaceonFreezeDryStatBuff,
 } from './moveEffectsAtk.js';
 
 export function applyPokemonStatMutations(atkStats, defStats) {
@@ -141,6 +142,7 @@ export function applyPokemonStatMutations(atkStats, defStats) {
   applyDuraludonRevolvingRuinStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyFalinksBulkUpStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyFalinksNoRetreatStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyGlaceonFreezeDryStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
 
   // ── Armarouge — Armor Cannon cooldown def debuff ───────────────────────────
   if (state.currentDefender?.pokemonId === 'armarouge' && state.defenderLevel >= 5 && state.defenderArmarougeArmorCannonDebuff) {

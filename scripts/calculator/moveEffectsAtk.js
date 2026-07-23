@@ -780,6 +780,42 @@ function applyPalkiaAuraSphereMark(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── GLACEON — Freeze Dry ─────────────────────────────────────────────────────
+function applyGlaceonFreezeDry(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 6) return; // Freeze Dry appris au niveau 6
+
+  const isActive = state.attackerGlaceonFreezeDryBuff ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/glaceon/freeze_dry.png')}
+    <div style="flex:1;">
+      ${moveBadge('Freeze Dry', 6)}
+      Explosion hits an enemy → <strong style="color:#fff;">+50% Sp. Atk</strong><br>
+      <button class="glaceon-freeze-dry-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.glaceon-freeze-dry-toggle').onclick = () => {
+    state.attackerGlaceonFreezeDryBuff = !state.attackerGlaceonFreezeDryBuff;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyGlaceonFreezeDryStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'glaceon') return;
+  if (level < 6) return;
+  if (!state.attackerGlaceonFreezeDryBuff) return;
+  atkStats.sp_atk = Math.floor(atkStats.sp_atk * 1.50);
+}
+
 // ── FALINKS — Bulk Up ─────────────────────────────────────────────────────────
 function applyFalinksBulkUp(atkStats, defStats, card) {
   const level = state.attackerLevel;
@@ -944,6 +980,7 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     palkia:     [applyPalkiaAuraSphereMark],
     feraligatr: [applyFeraligatrDestructiveFangs],
     garchomp:   [applyGarchompAutoAttack],
+    glaceon:    [applyGlaceonFreezeDry],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

@@ -5001,6 +5001,7 @@
         "image": "assets/moves/gengar/will_o_wisp.png",
         "damages": [
           {"name": "First Flame", "multiplier": 84, "levelCoef": 5, "constant": 100, "dealDamage": true},
+          {"name": "Subsequent Flames", "multiplier": 42, "levelCoef": 2.5, "constant": 50, "dealDamage": true},
           {"name": "Burn DoT (3 ticks)", "multiplier": 28, "levelCoef": 2, "constant": 40, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
@@ -5026,7 +5027,8 @@
         "image": "assets/moves/gengar/sludge_bomb.png",
         "damages": [
           {"name": "Initial Damage", "multiplier": 106, "levelCoef": 6, "constant": 230, "dealDamage": true},
-          {"name": "Poison DoT (10 ticks)", "max_hp_percent": 1, "dealDamage": true, "is_tick": true, "tick_count": 10, "notes": "1% max HP per 0.5s (cap 120/tick wild)"}
+          {"name": "Poison DoT (10 ticks)", "max_hp_percent": 1, "dealDamage": true, "is_tick": true, "tick_count": 10, "notes": "1% max HP (cap 120/tick wild)"},
+          {"name": "Poison DoT + (12 ticks)", "max_hp_percent": 1, "dealDamage": true, "is_tick": true, "tick_count": 12, "upgraded": true, "notes": "1% max HP (cap 120/tick wild)"}
         ]
       },
       {
@@ -5148,7 +5150,8 @@
         "can_crit": "false",
         "image": "assets/moves/glaceon/icicle_spear.png",
         "damages": [
-          {"name": "Damage per Crystal", "multiplier": 37, "levelCoef": 4, "constant": 98, "dealDamage": true, "is_tick": true, "tick_count": 12, "notes": "+5% per repeat hit (max +35%, not implemented)"}
+          {"name": "Damage per Crystal", "multiplier": 37, "levelCoef": 4, "constant": 98, "dealDamage": true, "is_tick": true, "tick_count": 12, "tick_scaling": [1.00, 1.05, 1.10, 1.15, 1.20, 1.25, 1.30, 1.35], "notes": "+5% per repeat hit (max +35%)"},
+          {"name": "Additional +", "current_hp_percent": 0.5, "wild_cap": 300, "dealDamage": true, "is_tick": true, "tick_count": 12, "can_crit": "false", "upgrade_bonus": true, "notes": "0.5% remaining HP as additional"}
         ]
       },
       {
@@ -5159,7 +5162,8 @@
         "can_crit": "true",
         "image": "assets/moves/glaceon/icy_wind.png",
         "damages": [
-          {"name": "Ice Chunk Damage", "multiplier": 20, "levelCoef": 2, "constant": 35, "dealDamage": true, "is_tick": true, "tick_count": 8}
+          {"name": "Ice Chunk Damage", "multiplier": 20, "levelCoef": 2, "constant": 35, "dealDamage": true, "is_tick": true, "tick_count": 8},
+          {"name": "Additional +", "current_hp_percent": 1.5, "wild_cap": 300, "dealDamage": true, "is_tick": true, "tick_count": 8, "can_crit": "false", "upgrade_bonus": true, "notes": "1.5% remaining HP as additional"}
         ]
       },
       {
