@@ -3341,8 +3341,7 @@
         "can_crit": "false",
         "image": "assets/moves/delphox/fire_spin.png",
         "damages": [
-          {"name": "Damage - per Tick (searching)", "multiplier": 16, "levelCoef": 2, "constant": 90, "dealDamage": true, "is_tick": true, "tick_count": 9},
-          {"name": "Enhanced+ Bonus", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "15% increased damage from Delphox for 3s on trap"}
+          {"name": "Damage - per Tick (searching)", "multiplier": 16, "levelCoef": 2, "constant": 90, "dealDamage": true, "is_tick": true, "tick_count": 9}
         ]
       },
       {
@@ -3602,7 +3601,7 @@
         ],
         "heals": [
           { "name": "Heal - Next Basic", "scaling": "hp", "multiplier": 7, "levelCoef": 0, "constant": 0 },
-          { "name": "Heal - Next Basic (Level 11)", "scaling": "hp", "multiplier": 10, "levelCoef": 0, "constant": 0 }
+          { "name": "Heal - Next Basic", "scaling": "hp", "multiplier": 10, "levelCoef": 0, "constant": 0, "upgrade_bonus": true }
         ]
       },
       {
@@ -3615,8 +3614,7 @@
         "damages": [
           {"name": "Damage - 3 Hits (No Gauge)", "multiplier": 78.8, "levelCoef": 2, "constant": 72, "dealDamage": true, "is_tick": true, "tick_count": 3},
           {"name": "Damage - 5 Hits (Full Gauge)", "multiplier": 78.8, "levelCoef": 2, "constant": 72, "dealDamage": true, "is_tick": true, "tick_count": 5},
-          {"name": "Damage - Bonus (Full Gauge)", "max_hp_percent": 3, "dealDamage": true, "is_tick": true, "tick_count": 3},
-          {"name": "Lifesteal (Enhanced+)", "multiplier": 0, "levelCoef": 0, "constant": 0, "heal": true, "notes": "30% of flat damage dealt"}
+          {"name": "Damage - Bonus (Full Gauge)", "max_hp_percent": 3, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
     {
@@ -3763,8 +3761,7 @@
         "image": "assets/moves/dragapult/dragon_dance.png",
         "damages": [
           {"name": "Damage (Basic during flight)", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Damage (Boosted during flight)", "multiplier": 125, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Healing (Enhanced+)", "multiplier": 0, "levelCoef": 0, "constant": 0, "heal": true, "notes": "25% of damage dealt during flight"}
+          {"name": "Damage (Boosted during flight)", "multiplier": 125, "levelCoef": 0, "constant": 0, "dealDamage": true}
         ]
       },
       {
