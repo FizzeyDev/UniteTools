@@ -23,6 +23,9 @@ export function computeDefenderDamageMult() {
   if (state.currentDefender?.pokemonId === "dragonite" && state.defenderDragoniteHyperBeamCharging) defenderDamageMult *= 0.50;
   if (state.currentDefender?.pokemonId === "duraludon" && state.defenderDuraludonLaserFocusActive) defenderDamageMult *= 0.80;
 
+  if (state.currentDefender?.pokemonId === "garchomp" && state.defenderGarchompDragonRushDmgReduc)   defenderDamageMult *= 0.55;
+  if (state.currentDefender?.pokemonId === "garchomp" && state.defenderGarchompLividOutrageActive)   defenderDamageMult *= 0.70;
+
   // Snow Cloak (Articuno)
   if (state.currentDefender?.pokemonId === "articuno") {
     const snowCloakState = state.defenderSnowCloakState || "none";

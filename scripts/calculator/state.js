@@ -130,7 +130,9 @@ export const state = {
   debuffLatiasMistBall: false,
 
   umbreonSnarlStacks: 0,
+  umbreonSnarlStacksMax: 6,
   sylveonMysticalFireStacks: 0,
+  sylveonMysticalFireStacksMax: 4,
 
   // Debuffs défenseur
   defenderAbsolBoosted: false,
@@ -155,6 +157,9 @@ export const state = {
   defenderMewtwoYUnite: false,
   defenderCeruledgePsychoCut: false,
   defenderCeruledgePsychoCutPlus: false,
+  defenderCeruledgePsychoCutCasterLevel: 15,
+  defenderCeruledgePsychoCutPlusCasterLevel: 15,
+  defenderGengarShadowBallCasterLevel: 15,
   defenderTinkatonThief: false,
   defenderTinkatonThiefPlus: false,
   defenderPsyduckTailWhip: false,
@@ -164,6 +169,19 @@ export const state = {
   defenderLatiasDragonBreath: false,
   defenderEmpoleonAquaJetTorrent: false,
   defenderDhelmiseAnchorShotPlus: false,
+
+  // Stacks des debuffs multi-hit (défenseur) + cap configurable pour chacun
+  gardevoirPsychicStacks: 0,
+  gardevoirPsychicStacksMax: 3,
+  mimePsychicStacks: 0,
+  mimePsychicStacksMax: 8,
+  slowbroObliviousStacks: 0,
+  slowbroObliviousStacksMax: 5,
+  sylveonHypervoiceStacks: 0,
+  sylveonHypervoiceStacksMax: 4,
+  raichuStoredpowerStacks: 0,
+  raichuStoredpowerStacksMax: 3,
+
 
   currentSlotTarget: null
 };

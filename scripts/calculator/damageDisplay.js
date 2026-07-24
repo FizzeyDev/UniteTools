@@ -90,14 +90,23 @@ function isMoveUpgraded(move, level) {
 }
 
 // ── filterByUpgrade — gère aussi blaze_only (Typhlosion) ─────────────────────
+// upgraded      : REMPLACE les entrées normales par celles-ci une fois le move upgradé
+//                 (ex: Typhlosion Blaze — la formule change entièrement).
+// upgrade_bonus : S'AJOUTE aux entrées déjà affichées une fois le move upgradé,
+//                 sans rien retirer (ex: Glaceon Icy Wind/Icicle Spear — le dégât
+//                 de base reste, un dégât "% HP restants" vient s'ajouter en plus).
 function filterByUpgrade(items, upgraded) {
   if (!items?.length) return items || [];
 
   const blazeActive = state.attackerTyphlosionBlazeActive ?? false;
 
-  const hasUpgradedEntries = items.some(i => i.upgraded === true);
-  const normalItems = items.filter(i => !i.blaze_only);
-  const blazeItems  = items.filter(i =>  i.blaze_only);
+  // Entrées "bonus" : à part, jamais concernées par le filtre remplace/blaze ci-dessous
+  const bonusUpgradeItems = items.filter(i => i.upgrade_bonus === true);
+  const baseItems         = items.filter(i => i.upgrade_bonus !== true);
+
+  const hasUpgradedEntries = baseItems.some(i => i.upgraded === true);
+  const normalItems = baseItems.filter(i => !i.blaze_only);
+  const blazeItems  = baseItems.filter(i =>  i.blaze_only);
 
   // Filtrer les normales selon upgrade
   let filtered;
@@ -114,6 +123,11 @@ function filterByUpgrade(items, upgraded) {
     filtered = upgraded
       ? blazeItems.filter(i => i.upgraded === true)
       : blazeItems.filter(i => !i.upgraded);
+  }
+
+  // Ajouter les entrées "bonus" uniquement si le move est upgradé (sans rien retirer)
+  if (upgraded && bonusUpgradeItems.length > 0) {
+    filtered = [...filtered, ...bonusUpgradeItems];
   }
 
   return filtered;
@@ -947,6 +961,16 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         crit   = Math.floor(crit   * 1.30);
       }
 
+      // ── ESPEON — Future Sight+ (lvl 12) : +15% dmg sur cible verrouillée ────
+      if (
+        state.currentAttacker?.pokemonId === "espeon" &&
+        upgraded &&
+        move.name === "Future Sight"
+      ) {
+        normal = Math.floor(normal * 1.15);
+        crit   = Math.floor(crit   * 1.15);
+      }
+
       const muscleMult = getBuzzwoleMuscleMultiplier(move.name, dmg.name);
       normal = Math.floor(normal * muscleMult);
       crit   = Math.floor(crit   * muscleMult);
@@ -1075,11 +1099,78 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         `;
         card.appendChild(hpLine);
       }
+
+      // ── GARCHOMP — Boosted Auto-attack : +10% HP restants (cap 350 vs sauvage) ──
+      if (
+        state.currentAttacker?.pokemonId === "garchomp" &&
+        move.name === "Auto-attack" &&
+        dmg.name === "Boosted" &&
+        (state.attackerPassiveStacks || 0) >= 5 &&
+        currentDefHP != null
+      ) {
+        const isWildGarchomp = state.currentDefender?.category === 'mob';
+        let hpDmg = Math.floor(currentDefHP * 0.10);
+        if (isWildGarchomp) hpDmg = Math.min(hpDmg, 350);
+        const hpLine = document.createElement("div");
+        hpLine.className = "damage-line";
+        hpLine.innerHTML = `
+          <span class="dmg-name">Boosted Additional
+            <br><i style="font-size:0.8em;color:#aaa;">10% remaining HP${isWildGarchomp ? ' — cap 350 vs wild' : ''}</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-normal">${hpDmg.toLocaleString()}</span>
+          </div>
+        `;
+        card.appendChild(hpLine);
+      }
+
+      // ── EMPOLEON — Whirlpool : heal proportionnel aux dégâts infligés ────────────────────
+      if (
+        state.currentAttacker?.pokemonId === "empoleon" &&
+        move.name === "Whirlpool" &&
+        dmg.dealDamage
+      ) {
+        // Reconstruit le total (incluant les ticks) de cette entrée de dégâts,
+        // même logique que le bloc d'affichage isTick ci-dessus.
+        const computeWhirlpoolTotal = (base, scaling, n) => {
+          if (!isTick) return base;
+          if (!scaling) return base * n;
+          let sum = 0;
+          for (let i = 0; i < n; i++) sum += Math.floor(base * (scaling[i] ?? scaling[scaling.length - 1]));
+          return sum;
+        };
+        const whirlpoolDmgTotal = computeWhirlpoolTotal(displayedNormal, effectiveTickScaling, tickCount);
+
+        // 50% des dégâts infligés (60% à partir du niveau 13 / upgrade), moitié contre les Pokémon sauvages
+        const whirlpoolHealPct = upgraded ? 0.60 : 0.50;
+        const isWildWhirlpool  = state.currentDefender?.category === 'mob';
+        const whirlpoolHeal = isWildWhirlpool
+          ? Math.floor(whirlpoolDmgTotal * whirlpoolHealPct * 0.5)
+          : Math.floor(whirlpoolDmgTotal * whirlpoolHealPct);
+
+        const whirlpoolHealLine = document.createElement("div");
+        whirlpoolHealLine.className = "damage-line";
+        whirlpoolHealLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;">
+            Heal
+            <br><i style="font-size:0.8em;color:#4caf8299;">${Math.round(whirlpoolHealPct * 100)}% of damage dealt${isWildWhirlpool ? " (half vs wild)" : ""}</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${whirlpoolHeal.toLocaleString()}</span>
+          </div>
+        `;
+        card.appendChild(whirlpoolHealLine);
+      }
+
       // Stat "lifesteal" du JSON, par entrée de damages[] sauf {"lifesteal": false}.
       // Applique lifesteal si: dmg.lifesteal === true OU (Auto-attack ET dmg.lifesteal !== false)
       const shouldApplyLifesteal = dmg.lifesteal === true || (move.name === "Auto-attack" && dmg.lifesteal !== false);
       if (shouldApplyLifesteal) {
-        const lifestealPct = (state.currentAttacker?.stats?.[state.attackerLevel - 1]?.lifesteal ?? 0) / 100;
+        let lifestealPct = (state.currentAttacker?.stats?.[state.attackerLevel - 1]?.lifesteal ?? 0) / 100;
+        // Garchomp — boosted auto attack (5 stacks) grants an additional +30% lifesteal
+        if (state.currentAttacker?.pokemonId === "garchomp" && dmg.name === "Boosted" && (state.attackerPassiveStacks || 0) >= 5) {
+          lifestealPct += 0.30;
+        }
         if (lifestealPct > 0) {
           const lsComputeTotal = (base, scaling, n) => {
             if (!scaling) return base * n;

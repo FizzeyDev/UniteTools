@@ -780,6 +780,180 @@ function applyPalkiaAuraSphereMark(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── GLACEON — Freeze Dry ─────────────────────────────────────────────────────
+function applyGlaceonFreezeDry(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 6) return; // Freeze Dry appris au niveau 6
+
+  const isActive = state.attackerGlaceonFreezeDryBuff ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/glaceon/freeze_dry.png')}
+    <div style="flex:1;">
+      ${moveBadge('Freeze Dry', 6)}
+      Explosion hits an enemy → <strong style="color:#fff;">+50% Sp. Atk</strong><br>
+      <button class="glaceon-freeze-dry-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.glaceon-freeze-dry-toggle').onclick = () => {
+    state.attackerGlaceonFreezeDryBuff = !state.attackerGlaceonFreezeDryBuff;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyGlaceonFreezeDryStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'glaceon') return;
+  if (level < 6) return;
+  if (!state.attackerGlaceonFreezeDryBuff) return;
+  atkStats.sp_atk = Math.floor(atkStats.sp_atk * 1.50);
+}
+
+// ── FALINKS — Bulk Up ─────────────────────────────────────────────────────────
+function applyFalinksBulkUp(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 1) return; // Bulk Up disponible dès le niveau 1 (ou 3 selon le choix de move 2)
+
+  const isActive = state.attackerFalinksBulkUpActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/falinks/bulk_up.png')}
+    <div style="flex:1;">
+      ${moveBadge('Bulk Up', 1)}
+      Active → <strong style="color:#fff;">+30% ATK</strong> for 3s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Also grants +25% Def/Sp. Def & Attack Speed (see defender panel for the Def/Sp. Def buff)</span><br>
+      <button class="falinks-bulkup-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.falinks-bulkup-toggle').onclick = () => {
+    state.attackerFalinksBulkUpActive = !state.attackerFalinksBulkUpActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyFalinksBulkUpStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'falinks') return;
+  if (!state.attackerFalinksBulkUpActive) return;
+  atkStats.atk = Math.floor(atkStats.atk * 1.30);
+}
+
+// ── FALINKS — No Retreat (formation) ───────────────────────────────────────────
+function applyFalinksNoRetreat(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 6) return; // No Retreat appris au niveau 6
+
+  const upgraded = level >= 12;
+  const atkBonusPct   = upgraded ? 40 : 25;
+  const frontReducPct = upgraded ? 35 : 30;
+  const isActive = state.attackerFalinksNoRetreatActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/falinks/no_retreat.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'No Retreat+' : 'No Retreat', upgraded ? 12 : 6)}
+      In No Retreat formation → <strong style="color:#fff;">+${atkBonusPct}% ATK</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Also reduces damage taken from the front by ${frontReducPct}% (movement speed backward −10%) — see defender panel</span><br>
+      <button class="falinks-noretreat-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ In formation' : 'Switch to No Retreat'}</button>
+    </div>
+  `);
+  line.querySelector('.falinks-noretreat-toggle').onclick = () => {
+    state.attackerFalinksNoRetreatActive = !state.attackerFalinksNoRetreatActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyFalinksNoRetreatStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'falinks') return;
+  if (level < 6) return;
+  if (!state.attackerFalinksNoRetreatActive) return;
+  const bonus = level >= 12 ? 0.40 : 0.25;
+  atkStats.atk = Math.floor(atkStats.atk * (1 + bonus));
+}
+
+// ── GARCHOMP — Auto-attack (stacks → Boosted) ───────────────────────────────────
+function applyGarchompAutoAttack(atkStats, defStats, card) {
+  const level    = state.attackerLevel || 1;
+  const stacks   = Math.min(5, state.attackerPassiveStacks || 0);
+  const boosted  = stacks >= 5;
+  const atkSpeedBonus = 3 * (level - 1) + 28; // % Attack Speed at max stacks
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/basic_attack.png')}
+    <div style="flex:1;">
+      ${moveBadge('Auto-attack', 1)}
+      Stacks: <button class="stack-btn minus">-</button>
+      <strong style="color:${C};">${stacks}</strong>/5
+      <button class="stack-btn plus">+</button>
+      <br><span style="font-size:0.8rem;color:${C}99;">Gained on hitting an auto attack or move</span>
+      <div style="margin-top:8px;font-size:0.85rem;">
+        Status: <strong style="color:${boosted ? '#88ff88' : '#ff6666'};">${boosted ? 'Boosted attacks active' : 'Normal attacks'}</strong><br>
+        ${boosted ? `
+          <span style="color:#fff;">+${atkSpeedBonus}% Attack Speed · +30% Lifesteal on boosted hits</span><br>
+          <span style="color:${C}99;">+10% target's remaining HP as bonus damage (capped 350 vs wild)</span>
+        ` : ''}
+      </div>
+    </div>
+  `);
+  line.querySelector('.minus').onclick = () => { if (state.attackerPassiveStacks > 0) { state.attackerPassiveStacks--; updateDamages(); } };
+  line.querySelector('.plus').onclick  = () => { if (state.attackerPassiveStacks < 5) { state.attackerPassiveStacks++; updateDamages(); } };
+  card.appendChild(line);
+}
+
+// ── FERALIGATR — Crunch : Destructive Fangs (−30% Def cible) ───────────────────
+function applyFeraligatrDestructiveFangs(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Crunch appris au niveau 5
+
+  const isActive = state.attackerFeraligatrDestructiveFangsActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/feraligatr/crunch.png')}
+    <div style="flex:1;">
+      ${moveBadge('Crunch — Destructive Fangs', 5)}
+      Empowered basic attack lands → <strong style="color:#fff;">−30% target's Defense</strong> for 5s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Only the Yellow Fang (Destructive) applies this; Red (Gluttonous) heals, Purple (Clamping) slows instead</span><br>
+      <button class="feraligatr-destructive-fangs-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.feraligatr-destructive-fangs-toggle').onclick = () => {
+    state.attackerFeraligatrDestructiveFangsActive = !state.attackerFeraligatrDestructiveFangsActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -802,7 +976,11 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     dodrio:     [applyDodrioTripleTrample],
     dragapult:  [applyDragapultDragonDanceHeal, applyDragapultPhantomForce],
     duraludon:  [applyDuraludonRevolvingRuin],
-    palkia:     [applyPalkiaAuraSphereMark], // ← PALKIA (Dragon Claw+ moved to moveEffectsDef.js; Unite move is data-only)
+    falinks:    [applyFalinksBulkUp, applyFalinksNoRetreat],
+    palkia:     [applyPalkiaAuraSphereMark],
+    feraligatr: [applyFeraligatrDestructiveFangs],
+    garchomp:   [applyGarchompAutoAttack],
+    glaceon:    [applyGlaceonFreezeDry],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

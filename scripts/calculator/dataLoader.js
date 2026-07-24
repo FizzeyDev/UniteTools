@@ -16,10 +16,71 @@ export function getPokemonCategory(id) {
   return 'playable';
 }
 
+/**
+ * Construit la map { pokemonId -> { image, displayName } } à partir de
+ * data/pokemons.json. Extrait de loadData() pour être réutilisable ailleurs
+ * (ex: comparePatchTab.js a besoin de la même logique pour mapper les
+ * patchs archivés).
+ */
+export function buildMonsMap(monsData) {
+  const monsMap = {};
+
+  monsData.forEach(mon => {
+    let key = mon.name
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+
+    if (mon.name.startsWith("Mega-")) {
+      key = "m" + key.replace("mega-", "");
+    }
+
+    if (mon.name === "Ho-Oh") key = "hooh";
+    if (mon.name === "Mr. Mime") key = "mr_mime";
+    if (mon.name === "Mewtwo X") key = "mewtwo_x";
+    if (mon.name === "Mewtwo Y") key = "mewtwo_y";
+    if (mon.name.startsWith("Mega-Lucario")) key = "mega-lucario";
+    if (mon.name.startsWith("Mega-Charizard X")) key = "mega-charizard-x";
+    if (mon.name.startsWith("Mega-Charizard Y")) key = "mega-charizard-y";
+    if (mon.name.startsWith("Mega-Gyarados")) key = "mega-gyarados";
+
+    monsMap[key] = {
+      image: `assets/pokemon/${mon.file}`,
+      displayName: mon.name
+    };
+  });
+
+  return monsMap;
+}
+
+/**
+ * Mappe un tableau brut de poke_data.json (n'importe quel patch) avec la
+ * monsMap (image/displayName) + la catégorie. Extrait de loadData() pour
+ * être réutilisable par l'onglet Compare Patch, qui doit faire exactement
+ * le même mapping sur des fichiers de patchs archivés.
+ */
+export function mapPokeDataWithMons(pokeData, monsMap) {
+  return pokeData.map(poke => {
+    const monInfo = monsMap[poke.pokemonId] || {
+      image: 'assets/pokemon/missing.png',
+      displayName: poke.pokemonId.replace(/-/g, ' ').toUpperCase()
+    };
+    return {
+      ...poke,
+      image: monInfo.image,
+      displayName: monInfo.displayName,
+      category: getPokemonCategory(poke.pokemonId)
+    };
+  });
+}
+
 export async function loadData() {
   try {
     const [pokeRes, itemRes, itemDataRes, monsRes] = await Promise.all([
-      fetch('data/poke_data.json'),
+      fetch('data/poke_data/poke_data.json'),
       fetch('data/items.json'),
       fetch('data/items_data.json'),
       fetch('data/pokemons.json')
@@ -30,47 +91,9 @@ export async function loadData() {
     const itemStats = await itemDataRes.json();
     const monsData = await monsRes.json();
 
-    const monsMap = {};
-    monsData.forEach(mon => {
-      let key = mon.name
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]/g, "-")
-        .replace(/-+/g, "-")
-        .replace(/^-|-$/g, "");
+    const monsMap = buildMonsMap(monsData);
 
-      if (mon.name.startsWith("Mega-")) {
-        key = "m" + key.replace("mega-", "");
-      }
-
-      if (mon.name === "Ho-Oh") key = "hooh";
-      if (mon.name === "Mr. Mime") key = "mr_mime";
-      if (mon.name === "Mewtwo X") key = "mewtwo_x";
-      if (mon.name === "Mewtwo Y") key = "mewtwo_y";
-      if (mon.name.startsWith("Mega-Lucario")) key = "mega-lucario";
-      if (mon.name.startsWith("Mega-Charizard X")) key = "mega-charizard-x";
-      if (mon.name.startsWith("Mega-Charizard Y")) key = "mega-charizard-y";
-      if (mon.name.startsWith("Mega-Gyarados")) key = "mega-gyarados";
-
-      monsMap[key] = {
-        image: `assets/pokemon/${mon.file}`,
-        displayName: mon.name
-      };
-    });
-
-    state.allPokemon = pokeData.map(poke => {
-      const monInfo = monsMap[poke.pokemonId] || {
-        image: 'assets/pokemon/missing.png',
-        displayName: poke.pokemonId.replace(/-/g, ' ').toUpperCase()
-      };
-      return {
-        ...poke,
-        image: monInfo.image,
-        displayName: monInfo.displayName,
-        category: getPokemonCategory(poke.pokemonId)
-      };
-    });
+    state.allPokemon = mapPokeDataWithMons(pokeData, monsMap);
 
     state.allPokemon.push(substituteDoll);
     state.allPokemon.push(customDoll);

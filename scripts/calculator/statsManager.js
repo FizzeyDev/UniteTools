@@ -18,6 +18,9 @@ import {
   applyDodrioTripleTrampleStatBuff,
   applyDragapultPhantomForceStatBuff,
   applyDuraludonRevolvingRuinStatBuff,
+  applyFalinksBulkUpStatBuff,
+  applyFalinksNoRetreatStatBuff,
+  applyGlaceonFreezeDryStatBuff,
 } from './moveEffectsAtk.js';
 
 export function applyPokemonStatMutations(atkStats, defStats) {
@@ -137,6 +140,9 @@ export function applyPokemonStatMutations(atkStats, defStats) {
   applyDodrioTripleTrampleStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyDragapultPhantomForceStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyDuraludonRevolvingRuinStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyFalinksBulkUpStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyFalinksNoRetreatStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyGlaceonFreezeDryStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
 
   // ── Armarouge — Armor Cannon cooldown def debuff ───────────────────────────
   if (state.currentDefender?.pokemonId === 'armarouge' && state.defenderLevel >= 5 && state.defenderArmarougeArmorCannonDebuff) {
@@ -151,8 +157,20 @@ export function applyPokemonStatMutations(atkStats, defStats) {
     defStats.sp_def += defBonus;
   }
 
+  // ── Garchomp — Dig (Def/Sp. Def buff on emerging) ───────────────────────────
+  if (state.currentDefender?.pokemonId === 'garchomp' && state.defenderLevel >= 5 && state.defenderGarchompDigDefBuff) {
+    const defBonus = 25 * (state.defenderLevel - 1) + 25;
+    defStats.def    += defBonus;
+    defStats.sp_def += defBonus;
+  }
+
   // ── Aegislash — Sacred Sword def penetration ───────────────────────────────
   if (state.currentAttacker?.pokemonId === 'aegislash' && state.attackerLevel >= 5 && state.attackerAegislashSacredSwordDefPen) {
     defStats.def = Math.floor(defStats.def * 0.75);
+  }
+
+  // ── Feraligatr — Crunch : Destructive Fangs (−30% Def cible) ────────────────
+  if (state.currentAttacker?.pokemonId === 'feraligatr' && state.attackerLevel >= 5 && state.attackerFeraligatrDestructiveFangsActive) {
+    defStats.def = Math.floor(defStats.def * 0.70);
   }
 }

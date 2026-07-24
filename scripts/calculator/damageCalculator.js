@@ -158,8 +158,8 @@ function applyDebuffs(pokemon, stats) {
 
     atkDebuffs.forEach(d => { if(d.flag){ atkMult*=d.atk; if(d.sp) spMult*=d.sp;} });
 
-    if(state.debuffUmbreonSnarl) { atkMult*=Math.pow(0.97,state.umbreonSnarlStacks); spMult*=Math.pow(0.97,state.umbreonSnarlStacks); }
-    if(state.debuffSylveonMysticalFire) spMult*=Math.pow(0.85,state.sylveonMysticalFireStacks);
+    if(state.debuffUmbreonSnarl) { const s=Math.min(state.umbreonSnarlStacks||0, state.umbreonSnarlStacksMax ?? 6); atkMult*=Math.pow(0.97,s); spMult*=Math.pow(0.97,s); }
+    if(state.debuffSylveonMysticalFire) spMult*=Math.pow(0.85, Math.min(state.sylveonMysticalFireStacks||0, state.sylveonMysticalFireStacksMax ?? 4));
 
     atk = Math.floor(atk*atkMult);
     sp_atk = Math.floor(sp_atk*spMult);
@@ -193,23 +193,23 @@ function applyDebuffs(pokemon, stats) {
     if (state.defenderTinkatonThiefPlus) { defMult *= 0.75; spDefMult *= 0.75; }
 
     if (state.defenderGardevoirBoosted) spDefMult *= 0.90;
-    if (state.defenderGardevoirPsychic) spDefMult *= Math.pow(0.73, Math.min(state.gardevoirPsychicStacks || 3, 3));
+    if (state.defenderGardevoirPsychic) spDefMult *= Math.pow(0.73, Math.min(state.gardevoirPsychicStacks || 0, state.gardevoirPsychicStacksMax ?? 3));
     if (state.defenderHoopaShadowBall) spDefMult *= 0.70;
-    if (state.defenderMimePsychic) spDefMult *= Math.pow(0.95, Math.min(state.mimePsychicStacks, 8));
-    if (state.defenderSlowbroOblivious) spDefMult *= Math.pow(0.96, Math.min(state.slowbroObliviousStacks, 5));
-    if (state.defenderSylveonHyperVoice) spDefMult *= Math.pow(0.80, Math.min(state.sylveonHypervoiceStacks, 4));
+    if (state.defenderMimePsychic) spDefMult *= Math.pow(0.95, Math.min(state.mimePsychicStacks || 0, state.mimePsychicStacksMax ?? 8));
+    if (state.defenderSlowbroOblivious) spDefMult *= Math.pow(0.96, Math.min(state.slowbroObliviousStacks || 0, state.slowbroObliviousStacksMax ?? 5));
+    if (state.defenderSylveonHyperVoice) spDefMult *= Math.pow(0.80, Math.min(state.sylveonHypervoiceStacks || 0, state.sylveonHypervoiceStacksMax ?? 4));
     if (state.defenderVenusaurSludgeBomb) spDefMult *= 0.50;
     if (state.defenderMewtwoYUnite) spDefMult *= 0.85;
     if (state.defenderPsyduckTailWhip) spDefMult *= 0.80;
     if (state.defenderPsyduckTailWhipMysterious) spDefMult *= 0.70;
     if (state.defenderPsyduckPsychicPlus) spDefMult *= 0.75;
-    if (state.defenderAlolanRaichuStoredPowerPlus) spDefMult *= Math.pow(0.95, Math.min(state.raichuStoredpowerStacks, 3));
+    if (state.defenderAlolanRaichuStoredPowerPlus) spDefMult *= Math.pow(0.95, Math.min(state.raichuStoredpowerStacks || 0, state.raichuStoredpowerStacksMax ?? 3));
     if (state.defenderLatiasDragonBreath) spDefMult *= 0.70;
     if (state.defenderEmpoleonAquaJetTorrent) spDefMult *= 0.40;
 
-    if (state.defenderCeruledgePsychoCut) defFlat += 10 + 2 * (level - 1);
-    if (state.defenderCeruledgePsychoCutPlus) defFlat += 15 + 3 * (level - 1);
-    if (state.defenderGengarShadowBall) spDefFlat += 80 + 5 * (level - 1);
+    if (state.defenderCeruledgePsychoCut) defFlat += 10 + 2 * ((state.defenderCeruledgePsychoCutCasterLevel || level) - 1);
+    if (state.defenderCeruledgePsychoCutPlus) defFlat += 15 + 3 * ((state.defenderCeruledgePsychoCutPlusCasterLevel || level) - 1);
+    if (state.defenderGengarShadowBall) spDefFlat += 80 + 5 * ((state.defenderGengarShadowBallCasterLevel || level) - 1);
 
     def = Math.max(0, Math.floor(def * defMult) - defFlat);
     sp_def = Math.max(0, Math.floor(sp_def * spDefMult) - spDefFlat);

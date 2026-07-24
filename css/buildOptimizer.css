@@ -16,7 +16,11 @@
 #tab-optimizer::-webkit-scrollbar-thumb { background: #243839; border-radius: 2px; }
 
 /* ── Root container ───────────────────────────────────────────────────────── */
-.bopt-root {
+/* Ces variables sont aussi redéfinies sur .bopt-modal ci-dessous : les modals
+   sont injectées comme SIBLINGS de .bopt-root (pas des enfants) dans le DOM,
+   donc elles n'héritent de rien si on ne les déclare que sur .bopt-root. */
+.bopt-root,
+.bopt-modal {
   /* Inherit damage-calc tokens */
   --bopt-bg:        var(--bg,          #090f10);
   --bopt-surface:   var(--surface,     #101a1b);
@@ -36,12 +40,19 @@
   --bopt-radius:    var(--radius,      12px);
   --bopt-radius-sm: var(--radius-sm,   8px);
   --bopt-radius-xs: var(--radius-xs,   5px);
+}
 
+.bopt-root {
   font-family: 'Rajdhani', 'Segoe UI', sans-serif;
   color: var(--bopt-text);
   background: var(--bopt-bg);
   padding: 0 0 60px;
 }
+
+.bopt-modal {
+  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+}
+
 
 /* ── Header ───────────────────────────────────────────────────────────────── */
 /* Aligné sur le h1 global de damage-calc.css : glow bleu dominant + barre
@@ -88,6 +99,35 @@
   color: var(--bopt-muted);
   font-size: 0.88rem;
   margin-top: 4px;
+}
+
+/* ── Bouton réglages (% de stacks) ────────────────────────────────────────── */
+.bopt-settings-btn {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bopt-surface2);
+  border: 1px solid var(--bopt-border-md);
+  border-radius: 50%;
+  color: var(--bopt-text-mid);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, transform 0.25s;
+}
+
+.bopt-settings-btn:hover {
+  color: var(--bopt-accent2);
+  border-color: var(--bopt-accent2);
+  transform: rotate(45deg);
+}
+
+@media (max-width: 600px) {
+  .bopt-settings-btn { top: 12px; right: 12px; width: 28px; height: 28px; font-size: 0.85rem; }
 }
 
 /* ── Layout deux colonnes ─────────────────────────────────────────────────── */
@@ -290,6 +330,7 @@
 /* ── Slider ───────────────────────────────────────────────────────────────── */
 .bopt-slider {
   -webkit-appearance: none;
+  -moz-appearance: none;
   width: 100%;
   height: 5px;
   border-radius: 3px;
@@ -305,6 +346,16 @@
 
 .bopt-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bopt-accent2);
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(79,195,247,0.5);
+  border: 2px solid var(--bopt-surface);
+}
+
+.bopt-slider::-moz-range-thumb {
   width: 14px;
   height: 14px;
   border-radius: 50%;
@@ -853,6 +904,11 @@
   box-shadow: 0 0 16px rgba(159,83,236,0.1);
 }
 
+/* Wrapper autour de rank+items, purement structurel sur desktop (les deux
+   enfants restent des cellules directes de la grille du result-card) ; le
+   media query mobile le transforme en vraie rangée flex. */
+.bopt-result-top { display: contents; }
+
 .bopt-result-rank {
   font-size: 1.3rem;
   text-align: center;
@@ -972,6 +1028,35 @@
   color: var(--bopt-orange);
   background: rgba(255,157,0,0.07);
 }
+.bopt-detail-chip.is-bonus {
+  border-color: rgba(76,175,130,0.45);
+  color: var(--bopt-green);
+  background: rgba(76,175,130,0.09);
+}
+.bopt-detail-chip.is-shield {
+  border-color: rgba(79,195,247,0.4);
+  color: var(--bopt-accent2);
+  background: rgba(79,195,247,0.07);
+}
+
+.bopt-detail-caption {
+  width: 100%;
+  font-size: 0.68rem;
+  color: var(--bopt-muted);
+  font-style: italic;
+  margin-bottom: 2px;
+}
+
+.bopt-result-shield-block {
+  margin-top: 2px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--bopt-border-md);
+}
+.bopt-result-shield-block .bopt-detail-caption {
+  color: var(--bopt-accent2);
+  font-style: normal;
+}
+.bopt-result-shield-block .bopt-detail-caption strong { color: var(--bopt-accent2); }
 
 .bopt-empty-results,
 .bopt-error {
@@ -1046,6 +1131,112 @@
 .bopt-modal-grid::-webkit-scrollbar { width: 4px; }
 .bopt-modal-grid::-webkit-scrollbar-thumb { background: var(--bopt-surface3); border-radius: 2px; }
 
+/* ── Modal réglage du % de stacks ─────────────────────────────────────────── */
+.bopt-modal-inner.bopt-modal-sm { max-width: 420px; }
+
+.bopt-stack-settings-desc {
+  font-size: 0.78rem;
+  color: var(--bopt-muted);
+  line-height: 1.5;
+}
+
+.bopt-stack-slider-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bopt-stack-slider-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: 'Exo 2', 'Rajdhani', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bopt-accent2);
+}
+
+.bopt-stack-slider-val {
+  font-family: 'Exo 2', 'Rajdhani', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--bopt-accent);
+}
+
+.bopt-slider.bopt-slider-pct {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bopt-surface3);
+  border: 1px solid var(--bopt-border-md);
+}
+
+/* Chrome / Edge / Safari : le fond direct sur <input> est ignoré une fois
+   -webkit-appearance:none posé, il faut le mettre sur la piste elle-même. */
+.bopt-slider.bopt-slider-pct::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right,
+    var(--bopt-accent) 0%,
+    var(--bopt-accent) var(--pct, 50%),
+    var(--bopt-surface3) var(--pct, 50%)
+  );
+}
+
+.bopt-slider.bopt-slider-pct::-webkit-slider-thumb {
+  margin-top: -4px; /* centre le thumb (14px) sur la piste (6px) */
+}
+
+/* Firefox */
+.bopt-slider.bopt-slider-pct::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bopt-surface3);
+}
+
+.bopt-slider.bopt-slider-pct::-moz-range-progress {
+  height: 6px;
+  border-radius: 3px 0 0 3px;
+  background: var(--bopt-accent);
+}
+
+.bopt-stack-preview {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 5px 10px;
+  background: var(--bopt-surface);
+  border: 1px solid var(--bopt-border);
+  border-radius: var(--bopt-radius-sm);
+  padding: 10px 12px;
+  font-size: 0.76rem;
+}
+
+.bopt-stack-preview-item { color: var(--bopt-text-mid); }
+.bopt-stack-preview-val  { color: var(--bopt-text); font-weight: 700; text-align: right; }
+
+.bopt-stack-apply-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bopt-stack-apply-btn {
+  background: var(--bopt-surface3);
+  border: 1px solid var(--bopt-border-md);
+  color: var(--bopt-text);
+  padding: 8px 14px;
+  border-radius: var(--bopt-radius-sm);
+  font-family: 'Exo 2', 'Rajdhani', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.bopt-stack-apply-btn:hover { border-color: var(--bopt-accent2); color: var(--bopt-accent2); }
+
 .bopt-grid-item {
   display: flex;
   flex-direction: column;
@@ -1085,6 +1276,101 @@
   opacity: 0;
   transition: opacity 0.3s, transform 0.3s;
   box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 20px rgba(76,175,130,0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE — écrans ≤ 600px (téléphones)
+   L'objectif n'est pas juste de rétrécir, mais de réorganiser ce qui casse
+   en layout de grille figée : les result-cards, la barre de run et les
+   modals passent en flex vertical avec des cibles tactiles plus grandes.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+
+  .bopt-root { padding-bottom: 40px; }
+
+  .bopt-header { padding: 16px 14px 14px; margin-bottom: 12px; }
+  .bopt-title { font-size: 1.15rem; gap: 8px; }
+  .bopt-subtitle { font-size: 0.78rem; }
+
+  .bopt-config { padding: 0 10px; gap: 10px; }
+  .bopt-section { padding: 11px; }
+
+  /* Onglets de mode : 2 par ligne, pleine largeur, plus faciles à toucher */
+  .bopt-mode-tabs { gap: 6px; }
+  .bopt-mode-btn {
+    flex: 1 1 calc(50% - 6px);
+    padding: 9px 8px;
+    text-align: center;
+    font-size: 0.78rem;
+  }
+
+  .bopt-fixed-slots { gap: 6px; }
+  .bopt-fixed-icon { width: 32px; height: 32px; }
+
+  .bopt-enemy-items-slots { flex-wrap: wrap; }
+
+  /* Run row : bouton pleine largeur au-dessus du compteur de combos */
+  .bopt-run-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px 14px;
+  }
+  .bopt-run-btn { justify-content: center; padding: 13px 20px; }
+  .bopt-combo-count { text-align: center; }
+
+  .bopt-progress-wrap { padding: 0 14px 14px; }
+
+  .bopt-results { padding: 0 10px; }
+  .bopt-results-header { flex-direction: column; align-items: flex-start; gap: 2px; }
+
+  /* Result cards : la grille 4 colonnes fixe ("36px 1fr auto auto") ne
+     laisse pas assez de place au score + bouton sur un petit écran — on
+     repasse en empilement vertical clair. */
+  .bopt-result-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .bopt-result-card > * { grid-row: unset !important; }
+
+  .bopt-result-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .bopt-result-rank { font-size: 1.1rem; flex-shrink: 0; }
+  .bopt-result-items { flex: 1; gap: 6px; }
+  .bopt-result-item { width: 48px; }
+  .bopt-result-item img { width: 36px; height: 36px; }
+  .bopt-result-item span { font-size: 0.56rem; }
+
+  .bopt-result-score {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    text-align: left;
+    background: var(--bopt-surface3);
+    border-radius: var(--bopt-radius-sm);
+    padding: 8px 12px;
+  }
+  .bopt-score-val { font-size: 1.15rem; }
+
+  .bopt-result-details { grid-column: unset !important; }
+
+  .bopt-apply-btn { width: 100%; justify-content: center; padding: 11px 14px; }
+
+  /* Modals : occuper l'écran plutôt qu'une boîte flottante étroite */
+  .bopt-modal-inner {
+    width: 96%;
+    max-height: 88vh;
+    padding: 14px;
+  }
+  .bopt-modal-grid { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); }
 }
 
 .bopt-toast.visible {
