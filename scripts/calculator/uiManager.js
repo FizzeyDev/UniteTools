@@ -3,6 +3,8 @@ import { selectAttacker, selectDefender } from './pokemonManager.js';
 import { updateDamages } from './damageDisplay.js';
 import { getModifiedStats } from './damageCalculator.js';
 import { getMobHPAtTimer } from './constants.js';
+import { applyPokemonStatMutations } from './statsManager.js';
+import { applyDefenderMoveEffects } from './moveEffectsDef.js';
 
 const levelSliderAttacker = document.getElementById("levelSliderAttacker");
 const levelSliderDefender = document.getElementById("levelSliderDefender");
@@ -124,6 +126,21 @@ export function updateHPDisplays() {
 
   if (state.currentDefender?.timerBased && state.currentDefender.hpTable) {
     defStats.hp = getMobHPAtTimer(state.currentDefender.hpTable, state.defenderTimer);
+  }
+
+  // ── Garder les PV en phase avec updateDamages() ───────────────────────────
+  // applyPokemonStatMutations couvre les buffs "purs" (ATK/HP...) déclenchés
+  // depuis moveEffectsAtk.js (ex: Ho-Oh Sacred Fire, Hoopa Unbound côté attaquant).
+  applyPokemonStatMutations(atkStats, defStats);
+
+  // applyDefenderMoveEffects contient aussi des mutations de stats (ex: Hoopa
+  // Unbound +40% Max HP, Goodra Muddy Water...) mais nécessite un élément DOM
+  // pour y injecter les boutons. On lui passe un conteneur détaché (jamais
+  // affiché) uniquement pour récupérer l'effet sur les stats, sans dupliquer
+  // les blocs déjà rendus par updateDamages().
+  if (state.currentDefender) {
+    const detachedCard = document.createElement('div');
+    applyDefenderMoveEffects(state.currentDefender.pokemonId, atkStats, defStats, detachedCard);
   }
 
   // Update level badges

@@ -26,6 +26,9 @@ export function computeDefenderDamageMult() {
   if (state.currentDefender?.pokemonId === "garchomp" && state.defenderGarchompDragonRushDmgReduc)   defenderDamageMult *= 0.55;
   if (state.currentDefender?.pokemonId === "garchomp" && state.defenderGarchompLividOutrageActive)   defenderDamageMult *= 0.70;
 
+  if (state.currentDefender?.pokemonId === "hooh" && state.defenderHoohSafeguardActive)  defenderDamageMult *= 0.50;
+  if (state.currentDefender?.pokemonId === "hooh" && state.defenderHoohSkyAttackActive)  defenderDamageMult *= 0.70;
+
   // Snow Cloak (Articuno)
   if (state.currentDefender?.pokemonId === "articuno") {
     const snowCloakState = state.defenderSnowCloakState || "none";
@@ -49,6 +52,8 @@ export function computeGlobalDamageMult() {
     globalDamageMult *= state.currentAttacker?.pokemonId === "miraidon" ? 1.30 : 1.10;
   }
   if (state.currentAttacker?.pokemonId === "mega-charizard-y" && state.attackerDroughtActive) globalDamageMult *= 1.10;
+
+  if (state.currentAttacker?.pokemonId === "inteleon" && state.attackerInteleonLiquidationStacked) globalDamageMult *= 1.20;
 
   // ── YVELTAL — Dark Aura: +3% dmg per Mark of Destruction (max 5, vs marked target) ──
   if (state.currentAttacker?.pokemonId === "yveltal") {

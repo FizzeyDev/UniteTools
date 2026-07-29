@@ -217,6 +217,10 @@ export function updateDamages() {
   if (state.currentAttacker?.pokemonId === "sirfetchd") {
     totalCritChance += state.attackerPassiveStacks * 5;
   }
+  if (state.currentAttacker?.pokemonId === "inteleon" && state.attackerInteleonAzureSpyVisionActive) {
+    totalCritChance *= 2;
+  }
+  totalCritChance = Math.min(100, totalCritChance);
 
   document.getElementById('attackerCritChance').textContent = `${totalCritChance}%`;
 

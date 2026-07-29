@@ -1,67 +1,15 @@
 /**
  * buildOptimizerWorker.js
- * Web Worker — moteur de recherche du Build Optimizer.
- * Fonctions pures copiées/adaptées depuis damageCalculator.js & healCalculator.js
- * SANS dépendance à `state` (tout est passé en paramètre).
- *
- * ── Couverture des effets d'objets ──────────────────────────────────────────
- * Modélisés :
- *  - Tous les bonus de stats plats/% (stats[]), y compris les stacks (Attack
- *    Weight, Sp. Atk Specs, Aeos Cookie, Drive Lens, Accel Bracer, Weakness
- *    Policy) et le bonus conditionnel de Wise Glasses.
- *  - Les bonus de stats "dures" des effets activables (Tenacity Belt) —
- *    appliqués comme bonus de stats lorsque la case "activé" est cochée.
- *  - Les effets de heal/shield d'objets activables (Focus Band, Leftovers,
- *    Score Shield, Buddy Barrier, Resonant Guard) — traités à part par
- *    scoreHeal() avec une portée explicite (voir ITEM_HEAL_SHIELD_SCOPE
- *    ci-dessous) : Focus Band/Leftovers/Score Shield ne soignent QUE le
- *    porteur et ne comptent donc jamais dans le mode "Heal (Ally)" ; Buddy
- *    Barrier/Resonant Guard soignent le porteur ET un allié et comptent dans
- *    les deux modes. Heal et Shield sont en plus comptés SÉPARÉMENT (voir
- *    ci-dessous) : le classement des builds ne se base que sur le heal réel.
- *  - Rescue Hood (+17/20/23% de soin/bouclier donné aux alliés) : appliqué
- *    en mode "Heal (Ally)" aux moves qui touchent un allié ainsi qu'à la
- *    portion "allié" de Buddy Barrier/Resonant Guard — jamais aux soins de
- *    soi-même.
- *  - Choice Specs (bonus de dégâts ponctuel, une fois par combat simulé).
- *  - Slick Spoon, lorsqu'activé (pénétration de Sp. Def).
- *
- * Heal vs Shield : un bouclier (Shield) est du HP temporaire qui disparaît
- * en absorbant des dégâts ou en expirant — ce n'est pas équivalent à du
- * heal permanent. scoreHeal() les calcule donc séparément (healTotal /
- * shieldTotal) ; SEUL healTotal sert de score de classement, shieldTotal
- * n'est qu'informatif dans l'UI.
- *
- * Volontairement non modélisés (le moteur n'a pas de notion de temps/CD/PA) :
- *  - Vitesse d'attaque (Choice Scarf, Rapid-Fire Scarf, Muscle Band) : leur
- *    impact dépend du nombre d'auto-attaques réellement effectuées.
- *  - Critique (Scope Lens, Razor Claw) : aucune notion de taux de critique de
- *    base n'existe dans les données Pokémon, on ne peut donc pas calculer une
- *    espérance fiable.
- *  - Lifesteal / heal-on-hit hors mouvements (Drain Crown, Shell Bell,
- *    Big Root) : n'affectent pas un score de dégâts/défense.
- *  - Rocky Helmet (riposte de dégâts) et Curse Bangle/Incense (réduction de
- *    soin adverse) : effets de zone/debuff sans cible mesurable ici.
- * Ces items restent sélectionnables (leurs stats plates comptent toujours),
- * seul leur effet spécial n'est pas ajouté au score.
- */
+*/
 
-// ─────────────────────────────────────────────────────────────────────────────
-// PORTÉE DES EFFETS DE HEAL/SHIELD D'OBJETS ACTIVABLES
-// 'self'  → ne soigne/protège QUE le porteur (ne doit jamais compter en Heal Ally)
-// 'both'  → soigne/protège le porteur ET un allié (compte dans les deux modes)
-// ─────────────────────────────────────────────────────────────────────────────
 const ITEM_HEAL_SHIELD_SCOPE = {
-  'Focus Band':    'self',  // recovers missing HP of the holder only
-  'Leftovers':     'self',  // recovers max HP of the holder only
-  'Score Shield':  'self',  // shields the holder only, while scoring
-  'Buddy Barrier': 'both',  // shields the holder AND 1 nearby ally
-  'Resonant Guard':'both',  // shields the holder AND the lowest-HP ally
+  'Focus Band':    'self',
+  'Leftovers':     'self',
+  'Score Shield':  'self',
+  'Buddy Barrier': 'both',
+  'Resonant Guard':'both',
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// STACKABLE ITEMS (copié depuis constants.js)
-// ─────────────────────────────────────────────────────────────────────────────
 const STACKABLE_ITEMS = [
   'Attack Weight', 'Sp. Atk Specs', 'Aeos Cookie',
   'Drive Lens', 'Accel Bracer', 'Weakness Policy'

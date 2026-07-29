@@ -705,6 +705,95 @@ function applyGoodraMuddyWaterDefStacks(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── HO-OH — Safeguard ─────────────────────────────────────────────────────────
+function applyHoohSafeguard(atkStats, defStats, card) {
+  const isActive = state.defenderHoohSafeguardActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/hooh/safeguard.png')}
+    <div style="flex:1;">
+      ${moveBadge('Safeguard', 1)}
+      Protective field up → <strong style="color:#fff;">−50% next incoming damage</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Also grants +40% movement speed for 3s when it absorbs a hit</span><br>
+      <button class="hooh-safeguard-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.hooh-safeguard-toggle').onclick = () => {
+    state.defenderHoohSafeguardActive = !state.defenderHoohSafeguardActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── HO-OH — Sky Attack ───────────────────────────────────────────────────────
+function applyHoohSkyAttack(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 5) return; // Sky Attack learned at level 5
+
+  const isActive = state.defenderHoohSkyAttackActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/hooh/sky_attack.png')}
+    <div style="flex:1;">
+      ${moveBadge('Sky Attack', 5)}
+      While charging the loop → <strong style="color:#fff;">−30% damage received</strong><br>
+      <button class="hooh-skyattack-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.hooh-skyattack-toggle').onclick = () => {
+    state.defenderHoohSkyAttackActive = !state.defenderHoohSkyAttackActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── HOOPA — Rings Unbound (Unite) ────────────────────────────────────────────
+function applyHoopaRingsUnbound(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 9) return; // Unite unlocks at level 9
+
+  const isActive = state.defenderHoopaUnboundActive ?? false;
+  if (isActive) {
+    defStats.hp = Math.floor(defStats.hp * 1.40);
+  }
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/hoopa/rings_unbound.png')}
+    <div style="flex:1;">
+      ${moveBadge('Rings Unbound (Unite)', 9)}
+      Hoopa Unbound (15s) → <strong style="color:#fff;">+40% Max HP</strong><br>
+      <button class="hoopa-unbound-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.hoopa-unbound-toggle').onclick = () => {
+    state.defenderHoopaUnboundActive = !state.defenderHoopaUnboundActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -722,6 +811,8 @@ export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
     falinks:   [applyFalinksBulkUp, applyFalinksNoRetreat, applyFalinksDustDevilFormation],
     garchomp:  [applyGarchompDig, applyGarchompDragonRush, applyGarchompLividOutrage],
     goodra:    [applyGoodraMuddyWaterDefStacks],
+    hooh:      [applyHoohSafeguard, applyHoohSkyAttack],
+    hoopa:     [applyHoopaRingsUnbound],
     palkia:    [applyPalkiaDragonClawDefStacks],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));

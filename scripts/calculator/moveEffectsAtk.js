@@ -954,6 +954,138 @@ function applyFeraligatrDestructiveFangs(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── HO-OH — Sacred Fire (flight) ────────────────────────────────────────────────
+function applyHoohSacredFireFlight(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 7) return; // Sacred Fire learned at level 7
+
+  const isActive = state.attackerHoohSacredFireFlying ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/hooh/sacred_fire.png')}
+    <div style="flex:1;">
+      ${moveBadge('Sacred Fire', 7)}
+      While flying → <strong style="color:#fff;">+25% ATK</strong> & +30% movement speed<br>
+      <span style="font-size:0.8rem;color:${C}99;">Next 3 basic attacks are boosted attacks; can move freely over walls</span><br>
+      <button class="hooh-sacredfire-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.hooh-sacredfire-toggle').onclick = () => {
+    state.attackerHoohSacredFireFlying = !state.attackerHoohSacredFireFlying;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyHoohSacredFireStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'hooh') return;
+  if (level < 7) return;
+  if (!state.attackerHoohSacredFireFlying) return;
+  atkStats.atk = Math.floor(atkStats.atk * 1.25);
+}
+
+// ── HOOPA — Rings Unbound (Unite) ────────────────────────────────────────────
+function applyHoopaRingsUnbound(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 9) return; // Unite unlocks at level 9
+
+  const isActive = state.attackerHoopaUnboundActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/hoopa/rings_unbound.png')}
+    <div style="flex:1;">
+      ${moveBadge('Rings Unbound (Unite)', 9)}
+      Hoopa Unbound (15s) → <strong style="color:#fff;">+40% Max HP</strong><br>
+      <button class="hoopa-unbound-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.hoopa-unbound-toggle').onclick = () => {
+    state.attackerHoopaUnboundActive = !state.attackerHoopaUnboundActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyHoopaRingsUnboundStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'hoopa') return;
+  if (level < 9) return;
+  if (!state.attackerHoopaUnboundActive) return;
+  atkStats.hp = Math.floor(atkStats.hp * 1.40);
+}
+
+// ── INTELEON — Liquidation (5-hit stacking bonus) ─────────────────────────────
+function applyInteleonLiquidation(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 7) return;
+
+  const upgraded = level >= 13;
+  const isActive = state.attackerInteleonLiquidationStacked ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/inteleon/liquidation.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Liquidation+' : 'Liquidation', upgraded ? 13 : 7)}
+      5 bullets hit the same target → <strong style="color:#fff;">+20% damage to that target</strong> for 3s<br>
+      <button class="inteleon-liquidation-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.inteleon-liquidation-toggle').onclick = () => {
+    state.attackerInteleonLiquidationStacked = !state.attackerInteleonLiquidationStacked;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── INTELEON — Azure Spy Vision (Unite) ───────────────────────────────────────
+function applyInteleonAzureSpyVision(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 9) return;
+
+  const isActive = state.attackerInteleonAzureSpyVisionActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/inteleon/azure_spy_vision.png')}
+    <div style="flex:1;">
+      ${moveBadge('Azure Spy Vision (Unite)', 9)}
+      While active (10.5s) → <strong style="color:#fff;">×2 Critical-Hit Rate</strong><br>
+      <button class="inteleon-azurespyvision-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.inteleon-azurespyvision-toggle').onclick = () => {
+    state.attackerInteleonAzureSpyVisionActive = !state.attackerInteleonAzureSpyVisionActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -981,6 +1113,9 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     feraligatr: [applyFeraligatrDestructiveFangs],
     garchomp:   [applyGarchompAutoAttack],
     glaceon:    [applyGlaceonFreezeDry],
+    hooh:       [applyHoohSacredFireFlight],
+    hoopa:      [applyHoopaRingsUnbound],
+    inteleon:   [applyInteleonLiquidation, applyInteleonAzureSpyVision],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }
