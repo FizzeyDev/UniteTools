@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-lang="pokedex_page_title">Pokedex Unite | Unite Tools</title>
+
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/pokedex.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+  <!-- ══ CONTENU PAGE ══ -->
+  <div class="wrap">
+
+    <div class="hdr">
+      <div class="hdr-icon">📖</div>
+      <div class="hdr-text">
+        <h1 data-lang="pokedex_hdr_title">Pokédex Unite</h1>
+        <p data-lang="pokedex_hdr_desc">Retrouve tous les Pokémon jouables, leurs infos et leurs capacités.</p>
+      </div>
+    </div>
+
+    <div class="stats" id="statsBanner"></div>
+
+    <div class="controls">
+      <div class="search-row">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input type="text" id="searchInput" class="search-input" data-lang-placeholder="pokedex_search_placeholder" placeholder="Rechercher un Pokémon...">
+        </div>
+        <select id="sortSelect" class="sort-select">
+          <option value="dex" data-lang="pokedex_sort_dex">N° Pokédex</option>
+          <option value="name" data-lang="pokedex_sort_name">Nom (A-Z)</option>
+          <option value="annee_desc" data-lang="pokedex_sort_year">Année (récent)</option>
+        </select>
+      </div>
+
+      <div class="filter-group" id="roleFilters"></div>
+      <div class="filter-group" id="porteeFilters"></div>
+      <div class="filter-group" id="difficulteFilters"></div>
+    </div>
+
+    <div class="poke-grid" id="pokeGrid"></div>
+    <div class="empty" id="emptyState" data-lang="pokedex_empty" style="display:none;">Aucun Pokémon ne correspond à ta recherche.</div>
+
+  </div>
+
+  <!-- ══ MODALE DÉTAIL ══ -->
+  <div id="overlay"></div>
+  <div id="modal"></div>
+
+  <script>
+    // Init icônes Lucide (déclaratif via data-lucide)
+    lucide.createIcons();
+
+    // Toggle sidebar minimal — remplacez par votre script partagé si vous en avez un
+    // (celui utilisé sur vos autres pages pour la traduction / thème / sidebar).
+    document.getElementById('toggle-sidebar')?.addEventListener('click', () => {
+      document.getElementById('sidebar')?.classList.toggle('hidden');
+    });
+    document.getElementById('hide-sidebar-btn')?.addEventListener('click', () => {
+      document.getElementById('sidebar')?.classList.add('hidden');
+    });
+    document.getElementById('show-sidebar-btn')?.addEventListener('click', () => {
+      document.getElementById('sidebar')?.classList.remove('hidden');
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll(`.lang-btn[data-lang="${btn.dataset.lang}"]`).forEach(b => b.classList.add('active'));
+      });
+    });
+  </script>
+  <script src="scripts/navbar.js"></script>
+  <script src="scripts/pokedex.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</body>
+</html>

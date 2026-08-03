@@ -377,6 +377,26 @@ function buildMoveOptions(move, actorSlot, targetSlot) {
     options.push({ kind: 'damage', name: 'Auto-attack', target: 'target', canCrit: true, isTick: false, tickCount: 1, value: aa.normal, critValue: aa.crit });
   }
 
+  // ── CHOICE SPECS — Bonus damage on move hit (8s CD) ────────────────────────
+  // (repris du bloc sidebar "CHOICE SPECS" de applyItemsAndGlobalEffects() dans damageDisplay.js)
+  // Ne s'affiche que si le move inflige effectivement des dégâts (auto-attack inclus),
+  // pour laisser l'utilisateur cocher/décocher selon si le CD de 8s était up ou non.
+  if (options.some(o => o.kind === 'damage')) {
+    const csIdx = actorSlot.items.findIndex(i => i?.name === 'Choice Specs');
+    if (csIdx !== -1) {
+      const item = actorSlot.items[csIdx];
+      const csConstant = parseFloat(item.level20) || 0;
+      const csMultiplier = item.level20_multiplier
+        ? parseFloat(item.level20_multiplier.replace('%', '').trim()) / 100
+        : 0;
+      const specsBonus = csConstant + Math.floor(atkStats.sp_atk * csMultiplier);
+      options.push({
+        kind: 'damage', name: 'Choice Specs', target: 'target',
+        canCrit: false, isTick: false, tickCount: 1, value: specsBonus, critValue: specsBonus,
+      });
+    }
+  }
+
   return { options, maxHP: defStats.hp };
 }
 

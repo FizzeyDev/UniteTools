@@ -552,5 +552,36 @@
     "move2": [ "fury_swipes.png", "night_slash.png", "feint_attack.png" ],
     "passive": [ "illusion.png" ],
     "unite": [ "nightfall_daze.png" ]
+  },
+
+  "meganium": {
+    "move1": [ "magical_leaf.png", "grass_knot.png" ],
+    "move2": [ "synthesis.png", "petal_blizzard.png" ],
+    "passive": [ "overgrow.png" ],
+    "unite": [ "full_bloom_aura.png" ]
+  },
+  "skeledirge": {
+    "move1": [ "disarming_voice.png", "hyper_voice.png" ],
+    "move2": [ "roar.png", "snarl.png" ],
+    "passive": [ "blaze.png" ],
+    "unite": [ "rousing_symphony.png" ]
+  },
+  "quaquaval": {
+    "move1": [ "pound.png", "low_sweep.png" ],
+    "move2": [ "ving_attack.png", "liquidation.png" ],
+    "passive": [ "moxie.png" ],
+    "unite": [ "carnival_splash.png" ]
+  },
+  "yveltal": {
+    "move1": [ "gust.png", "oblivion_wing.png" ],
+    "move2": [ "lash_out.png", "dark_pulse.png" ],
+    "passive": [ "dark_aura.png" ],
+    "unite": [ "lumiere_of_demise.png" ]
+  },
+  "palkia": {
+    "move1": [ "aqua_ring.png", "aura_sphere.png" ],
+    "move2": [ "slash.png", "dragon_claw.png" ],
+    "passive": [ "pressure.png" ],
+    "unite": [ "multi_dimensional_rend.png" ]
   }
 }
