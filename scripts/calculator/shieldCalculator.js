@@ -49,11 +49,15 @@ export function calculateShield(shield, atkStats, level) {
 
 export function renderShieldLine(shield, atkStats, level, rescueMult = 1.0) {
   const amount = calculateShield(shield, atkStats, level);
-  const boosted = rescueMult > 1.0 ? Math.floor(amount * rescueMult) : amount;
 
+  // Définit le target ("both" par défaut si vide ou indéfini)
   const target    = shield.target || "both";
-  const forSelf   = target === "self"  || target === "both";
-  const forAllies = target === "ally"  || target === "both";
+  const forSelf   = target === "self" || target === "both";
+  const forAllies = target === "ally" || target === "both";
+
+  // Applique rescueMult uniquement si le bouclier cible les alliés ("ally", "both" ou par défaut)
+  const effectiveRescueMult = forAllies ? rescueMult : 1.0;
+  const boosted = effectiveRescueMult > 1.0 ? Math.floor(amount * effectiveRescueMult) : amount;
 
   const selfOnlyBadge = (target === "self")
     ? `<span class="dmg-target-badge dmg-target-self" title="Lanceur uniquement">🧬</span>`
