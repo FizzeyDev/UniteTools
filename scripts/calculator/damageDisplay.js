@@ -1551,11 +1551,14 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
 
     // ── SHIELDS ────────────────────────────────────────────────────────────
     if (visibleShields?.length > 0) {
-      const rescueIdx  = state.attackerItems.findIndex(i => i?.name === "Rescue Hood");
+      const rescueIdx = state.attackerItems.findIndex(i => i?.name === "Rescue Hood");
       const rescueMult = rescueIdx !== -1 ? 1 + parseFloat(state.attackerItems[rescueIdx].level20.replace('%', '')) / 100 : 1.0;
 
       visibleShields.forEach(shield => {
-        const mult = shield.target === "ally" ? rescueMult : 1.0;
+        // Si target vaut "ally", "both" ou est absent/non défini, on applique rescueMult
+        const target = shield.target || "both";
+        const mult = (target === "ally" || target === "both") ? rescueMult : 1.0;
+
         const line = document.createElement("div");
         line.className = "damage-line";
         line.innerHTML = renderShieldLine(shield, atkStats, state.attackerLevel, mult);

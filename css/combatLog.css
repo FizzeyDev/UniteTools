@@ -806,13 +806,20 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .clt-buffs-section {
-  background: var(--surface-2);
-  border: 1px solid var(--border-md);
-  border-radius: var(--radius);
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+    background: var(--surface-2);
+    border: 1px solid var(--border-md);
+    border-radius: var(--radius);
+    flex: 0 0 auto;
+    flex-shrink: 0;
+    min-height: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.clt-buffs-body {
+    flex: 0 0 auto;
+    max-height: none;
+    overflow: visible;
 }
 
 .clt-buffs-header {
