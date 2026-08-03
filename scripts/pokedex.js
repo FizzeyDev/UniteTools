@@ -1,6 +1,6 @@
 /**
  * pokedex.js
- * Page "Informations" — liste de tous les Pokémon (data/pokemons.json)
+ * Page "Pokédex Unite" — liste de tous les Pokémon (data/pokemons.json)
  * avec recherche, filtres, et détail (dont les capacités depuis data/moves.json)
  * dans une modale au clic sur une carte.
  */
@@ -9,10 +9,10 @@ const state = {
   pokemons: [],
   moves: {},
   search: '',
-  role: 'all',
+  role: 'any',       // 'any' = pas de filtre de rôle (à ne pas confondre avec le rôle 'all' = Polyvalent)
   portee: 'all',
   difficulte: 'all',
-  sort: 'dex',
+  sort: 'annee_desc', // vue par défaut : groupée par année
 };
 
 const ROLE_LABELS = {
@@ -36,6 +36,37 @@ const DIFF_LABELS = {
   'Expert':        { fr: 'Expert',        en: 'Expert' },
 };
 
+// Traductions basées sur normalizePortee() ('melee'/'distance'), donc robustes
+// même si une entrée du JSON contient une valeur mal orthographiée/en anglais.
+const PORTEE_LABELS = {
+  melee:    { fr: 'Mêlée',    en: 'Melee' },
+  distance: { fr: 'Distance', en: 'Ranged' },
+};
+
+const STADE_LABELS = {
+  'Base':      { fr: 'Base',      en: 'Base' },
+  '1ère évo':  { fr: '1ère évo',  en: '1st Evo' },
+  '2ème évo':  { fr: '2ème évo',  en: '2nd Evo' },
+};
+
+function porteeLabel(portee, lang) {
+  const key = normalizePortee(portee);
+  if (!key) return null;
+  return PORTEE_LABELS[key][lang];
+}
+
+function stadeLabel(stade, lang) {
+  if (!stade) return null;
+  return STADE_LABELS[stade]?.[lang] || stade;
+}
+
+function diffClass(diff) {
+  if (diff === 'Novice') return 'diff-novice';
+  if (diff === 'Intermédiaire') return 'diff-intermediaire';
+  if (diff === 'Expert') return 'diff-expert';
+  return '';
+}
+
 // Textes statiques de la page (titre, header, recherche, tri, état vide...)
 // Repris des clés fr.json / en.json "pokedex_*" pour rester cohérent avec le
 // reste du site si un script de traduction global vient aussi les appliquer.
@@ -48,6 +79,8 @@ const PAGE_TEXT = {
   sort_name:   { fr: 'Nom (A-Z)', en: 'Name (A-Z)' },
   sort_year:   { fr: 'Année (récent)', en: 'Year (recent)' },
   empty:       { fr: 'Aucun Pokémon ne correspond à ta recherche.', en: 'No Pokémon matches your search.' },
+  unknown_year:{ fr: 'Année inconnue', en: 'Unknown year' },
+  pokemon_one: { fr: 'Pokémon', en: 'Pokémon' },
 };
 
 function applyStaticTranslations() {
@@ -83,6 +116,9 @@ const MOVE_SECTIONS = [
   { key: 'unite',   fr: 'Capacité Unite',    en: 'Unite Move' },
 ];
 
+const MELEE_ICON  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="m13 19 6-6"/><path d="m16 16 4 4"/><path d="m19 21 2-2"/></svg>';
+const RANGED_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.5" fill="currentColor"/></svg>';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // LANGUE (léger, basé sur les boutons existants de la navbar)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -107,6 +143,19 @@ function pokemonMovesKey(name) {
     return rest.toLowerCase().replace(/\s+/g, '-') + '-mega';
   }
   return name.toLowerCase().replace(/\./g, '').replace(/'/g, '').replace(/\s+/g, '-');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DOSSIER DES ICÔNES DE MOVES — différent du moves.json pour les Mega
+// (assets/moves/mega_charizard_x/, assets/moves/mega_lucario/, etc.)
+// ─────────────────────────────────────────────────────────────────────────────
+function pokemonMoveImageFolder(name) {
+  if (name.startsWith('Mega-')) {
+    const rest = name.slice('Mega-'.length);
+    const slug = rest.toLowerCase().replace(/\./g, '').replace(/'/g, '').replace(/\s+/g, '_');
+    return 'mega_' + slug;
+  }
+  return pokemonMovesKey(name);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -161,7 +210,7 @@ function renderFilters() {
   const roleHost = document.getElementById('roleFilters');
   roleHost.innerHTML = `
     <span class="filter-group-lbl">${lang === 'fr' ? 'Rôle' : 'Role'}</span>
-    <button class="filter-btn ${state.role === 'all' ? 'active' : ''}" data-role="all">${lang === 'fr' ? 'Tous' : 'All'}</button>
+    <button class="filter-btn ${state.role === 'any' ? 'active' : ''}" data-role="any">${lang === 'fr' ? 'Tous' : 'All'}</button>
     ${ROLE_ORDER.map(r => `
       <button class="filter-btn ${state.role === r ? 'active' : ''}" data-role="${r}">
         <span class="dot dot-${r}"></span>${ROLE_LABELS[r][lang]}
@@ -206,7 +255,7 @@ function getFilteredSorted() {
   const term = stripDiacritics(state.search.trim().toLowerCase());
 
   let list = state.pokemons.filter(p => {
-    if (state.role !== 'all' && p.role !== state.role) return false;
+    if (state.role !== 'any' && p.role !== state.role) return false;
     if (state.portee !== 'all' && normalizePortee(p.portee) !== state.portee) return false;
     if (state.difficulte !== 'all' && p.difficulte !== state.difficulte) return false;
     if (term) {
@@ -225,6 +274,60 @@ function getFilteredSorted() {
   return list;
 }
 
+function cardHTML(p, lang) {
+  const isMega = p.name.startsWith('Mega-') || !!p.mega;
+  const roleLbl = p.role ? ROLE_LABELS[p.role]?.[lang] || p.role : '—';
+  const porteeIcon = normalizePortee(p.portee) === 'melee' ? MELEE_ICON : RANGED_ICON;
+  const diffLbl = p.difficulte ? (DIFF_LABELS[p.difficulte]?.[lang] || p.difficulte) : null;
+
+  return `
+    <div class="poke-card role-${p.role || 'none'}" data-name="${p.name}">
+      <div class="poke-avatar-wrap">
+        <div class="poke-avatar"><img src="assets/pokemon/${p.file}" alt="${p.name}" onerror="this.src='assets/pokemon/missing.png'"></div>
+        ${isMega ? `<span class="mega-flag">Mega</span>` : ''}
+      </div>
+      <div class="poke-info">
+        <div class="poke-name">${pokeName(p)}</div>
+        <div class="poke-sub">
+          <span class="poke-role role-${p.role}"><span class="dot dot-${p.role}"></span>${roleLbl}</span>
+          ${p.portee ? `<span class="poke-portee">${porteeIcon}${porteeLabel(p.portee, lang)}</span>` : ''}
+        </div>
+        ${diffLbl ? `<div class="poke-meta"><span class="diff-pill ${diffClass(p.difficulte)}">${diffLbl}</span></div>` : ''}
+      </div>
+      <div class="poke-right">
+        <span class="year-chip">${p.annee || '—'}</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderYearGroups(list, lang) {
+  const groups = [];
+  const indexByKey = new Map();
+
+  list.forEach(p => {
+    const key = p.annee ? String(p.annee) : '__unknown__';
+    if (!indexByKey.has(key)) {
+      indexByKey.set(key, groups.length);
+      groups.push({ key, label: p.annee ? String(p.annee) : PAGE_TEXT.unknown_year[lang], items: [] });
+    }
+    groups[indexByKey.get(key)].items.push(p);
+  });
+
+  return groups.map(g => `
+    <div class="year-block">
+      <div class="year-divider">
+        <span class="y-num">${g.label}</span>
+        <span class="y-line"></span>
+        <span class="y-count">${g.items.length} ${PAGE_TEXT.pokemon_one[lang]}</span>
+      </div>
+      <div class="year-grid">
+        ${g.items.map(p => cardHTML(p, lang)).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
 function renderGrid() {
   const grid = document.getElementById('pokeGrid');
   const empty = document.getElementById('emptyState');
@@ -238,30 +341,11 @@ function renderGrid() {
   }
   empty.style.display = 'none';
 
-  grid.innerHTML = list.map(p => {
-    const isMega = p.name.startsWith('Mega-');
-    const roleLbl = p.role ? ROLE_LABELS[p.role]?.[lang] || p.role : '—';
-    const porteeIcon = normalizePortee(p.portee) === 'melee'
-      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="m13 19 6-6"/><path d="m16 16 4 4"/><path d="m19 21 2-2"/></svg>'
-      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.5" fill="currentColor"/></svg>';
-
-    return `
-      <div class="poke-card" data-name="${p.name}">
-        <div class="poke-avatar"><img src="assets/pokemon/${p.file}" alt="${p.name}" onerror="this.src='assets/pokemon/missing.png'"></div>
-        <div class="poke-info">
-          <div class="poke-name">${pokeName(p)}</div>
-          <div class="poke-sub">
-            <span class="poke-role role-${p.role}">${roleLbl}</span>
-            ${p.portee ? `<span class="poke-portee">${porteeIcon} ${p.portee}</span>` : ''}
-          </div>
-        </div>
-        <div class="poke-right">
-          ${p.dex ? `<span class="dex-chip">#${String(p.dex).padStart(3, '0')}</span>` : ''}
-          ${isMega ? `<span class="mega-badge">Mega</span>` : ''}
-        </div>
-      </div>
-    `;
-  }).join('');
+  if (state.sort === 'annee_desc') {
+    grid.innerHTML = renderYearGroups(list, lang);
+  } else {
+    grid.innerHTML = `<div class="year-grid">${list.map(p => cardHTML(p, lang)).join('')}</div>`;
+  }
 
   grid.querySelectorAll('.poke-card').forEach(card => {
     card.addEventListener('click', () => openModal(card.dataset.name));
@@ -286,13 +370,17 @@ function openModal(name) {
   const overlay = document.getElementById('overlay');
   const modal = document.getElementById('modal');
 
+  const isMega = p.name.startsWith('Mega-') || !!p.mega;
   const roleLbl = p.role ? ROLE_LABELS[p.role]?.[lang] || p.role : '—';
   const movesKey = pokemonMovesKey(p.name);
+  const moveImageFolder = pokemonMoveImageFolder(p.name);
   const moveData = state.moves[movesKey];
 
   const stageLbl = p.stade || '—';
   const evoLbl = p.evo_niveaux ? `Lv. ${p.evo_niveaux}` : (lang === 'fr' ? 'Aucune' : 'None');
   const diffColor = DIFF_COLOR[p.difficulte] || 'var(--text-dim)';
+  const diffLbl = p.difficulte ? (DIFF_LABELS[p.difficulte]?.[lang] || p.difficulte) : '—';
+  const porteeIcon = normalizePortee(p.portee) === 'melee' ? MELEE_ICON : RANGED_ICON;
 
   const movesHTML = MOVE_SECTIONS.map(section => {
     const icons = moveData?.[section.key];
@@ -303,7 +391,7 @@ function openModal(name) {
           <div class="moves-icons">
             ${icons.map(icon => `
               <div class="move-icon-wrap">
-                <div class="move-icon"><img src="assets/moves/${movesKey}/${icon}" alt="" onerror="this.src='assets/moves/missing.png'"></div>
+                <div class="move-icon"><img src="assets/moves/${moveImageFolder}/${icon}" alt="" onerror="this.src='assets/moves/missing.png'"></div>
                 <div class="move-icon-name">${formatMoveIconName(icon)}</div>
               </div>
             `).join('')}
@@ -313,31 +401,49 @@ function openModal(name) {
     `;
   }).join('');
 
+  const statDefs = [
+    { icon: 'hash',        val: p.dex ? '#' + p.dex : '—', lbl: 'Pokédex' },
+    { icon: 'move',        val: p.portee ? `${porteeIcon}${porteeLabel(p.portee, lang)}` : '—', lbl: lang === 'fr' ? 'Portée' : 'Range' },
+    { icon: 'gauge',       val: diffLbl, lbl: lang === 'fr' ? 'Difficulté' : 'Difficulty', color: diffColor },
+    { icon: 'calendar',    val: p.annee || '—', lbl: lang === 'fr' ? 'Année' : 'Year' },
+    { icon: 'layers',      val: stageLbl, lbl: lang === 'fr' ? 'Stade' : 'Stage' },
+    { icon: 'trending-up', val: evoLbl, lbl: lang === 'fr' ? 'Évolution' : 'Evolution' },
+    { icon: 'zap',         val: p.unite_move_cost ?? '—', lbl: 'Unite Move' },
+    { icon: 'sparkles',    val: isMega ? (lang === 'fr' ? 'Oui' : 'Yes') : (lang === 'fr' ? 'Non' : 'No'), lbl: 'Mega' },
+  ];
+
+  const statsHTML = statDefs.map(s => `
+    <div class="m-stat">
+      <div class="m-stat-icon"><i data-lucide="${s.icon}"></i></div>
+      <div class="m-stat-val"${s.color ? ` style="color:${s.color}"` : ''}>${s.val}</div>
+      <div class="m-stat-lbl">${s.lbl}</div>
+    </div>
+  `).join('');
+
   modal.innerHTML = `
     <button class="modal-close" id="modalCloseBtn">✕</button>
-    <div class="m-header">
-      <div class="m-avatar"><img src="assets/pokemon/${p.file}" alt="${p.name}" onerror="this.src='assets/pokemon/missing.png'"></div>
-      <div>
+    <div class="m-header role-${p.role || 'none'}">
+      <div class="m-avatar-wrap">
+        <div class="m-avatar"><img src="assets/pokemon/${p.file}" alt="${p.name}" onerror="this.src='assets/pokemon/missing.png'"></div>
+        ${isMega ? `<span class="mega-flag mega-flag-lg">Mega</span>` : ''}
+      </div>
+      <div class="m-header-info">
         <div class="m-name">${pokeName(p)}</div>
-        <div class="m-role role-${p.role}">${roleLbl}${p.name.startsWith('Mega-') ? ' · Mega' : ''}</div>
+        <div class="m-role-row">
+          <span class="m-role role-${p.role}"><span class="dot dot-${p.role}"></span>${roleLbl}</span>
+        </div>
       </div>
     </div>
 
     <div class="m-stats">
-      <div class="m-stat"><div class="m-stat-val">${p.dex ? '#' + p.dex : '—'}</div><div class="m-stat-lbl">${lang === 'fr' ? 'Pokédex' : 'Pokédex'}</div></div>
-      <div class="m-stat"><div class="m-stat-val">${p.portee || '—'}</div><div class="m-stat-lbl">${lang === 'fr' ? 'Portée' : 'Range'}</div></div>
-      <div class="m-stat"><div class="m-stat-val" style="color:${diffColor}">${p.difficulte ? (DIFF_LABELS[p.difficulte]?.[lang] || p.difficulte) : '—'}</div><div class="m-stat-lbl">${lang === 'fr' ? 'Difficulté' : 'Difficulty'}</div></div>
-      <div class="m-stat"><div class="m-stat-val">${p.annee || '—'}</div><div class="m-stat-lbl">${lang === 'fr' ? 'Année' : 'Year'}</div></div>
-      <div class="m-stat"><div class="m-stat-val">${stageLbl}</div><div class="m-stat-lbl">${lang === 'fr' ? 'Stade' : 'Stage'}</div></div>
-      <div class="m-stat"><div class="m-stat-val">${evoLbl}</div><div class="m-stat-lbl">${lang === 'fr' ? 'Évolution' : 'Evolution'}</div></div>
-      <div class="m-stat"><div class="m-stat-val">${p.unite_move_cost ?? '—'}</div><div class="m-stat-lbl">Unite Move</div></div>
-      <div class="m-stat"><div class="m-stat-val">${p.name.startsWith('Mega-') || p.mega ? 'Oui' : 'Non'}</div><div class="m-stat-lbl">Mega</div></div>
+      ${statsHTML}
     </div>
 
     ${movesHTML}
   `;
 
   document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+  if (window.lucide) lucide.createIcons();
 
   overlay.classList.add('open');
   modal.classList.add('open');
@@ -363,6 +469,10 @@ function render() {
 // ─────────────────────────────────────────────────────────────────────────────
 async function initPokedex() {
   await loadData();
+
+  const sortSelect = document.getElementById('sortSelect');
+  if (sortSelect) sortSelect.value = state.sort;
+
   render();
 
   const searchInput = document.getElementById('searchInput');
@@ -371,7 +481,6 @@ async function initPokedex() {
     renderGrid();
   });
 
-  const sortSelect = document.getElementById('sortSelect');
   sortSelect.addEventListener('change', () => {
     state.sort = sortSelect.value;
     renderGrid();
@@ -380,9 +489,13 @@ async function initPokedex() {
   document.getElementById('overlay').addEventListener('click', closeModal);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-  // Re-render au changement de langue (boutons FR/EN de la navbar)
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => setTimeout(render, 0));
+  // Re-render au changement de langue (boutons FR/EN de la navbar).
+  // Délégation sur document : la navbar (et ses .lang-btn) est injectée de
+  // façon asynchrone par navbar.js, donc un binding direct via
+  // querySelectorAll+forEach au chargement pouvait s'accrocher à rien selon
+  // le timing — d'où les traductions qui ne s'appliquaient "pas tout le temps".
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.lang-btn')) setTimeout(render, 0);
   });
 }
 

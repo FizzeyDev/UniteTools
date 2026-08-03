@@ -71,11 +71,14 @@
     document.getElementById('show-sidebar-btn')?.addEventListener('click', () => {
       document.getElementById('sidebar')?.classList.remove('hidden');
     });
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll(`.lang-btn[data-lang="${btn.dataset.lang}"]`).forEach(b => b.classList.add('active'));
-      });
+    // Délégation sur document : la navbar (et ses .lang-btn) est injectée de
+    // façon asynchrone dans #navbar-container, donc un binding direct ici
+    // (avant que la navbar soit chargée) pouvait ne rien attacher.
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.lang-btn');
+      if (!btn) return;
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll(`.lang-btn[data-lang="${btn.dataset.lang}"]`).forEach(b => b.classList.add('active'));
     });
   </script>
   <script src="scripts/navbar.js"></script>

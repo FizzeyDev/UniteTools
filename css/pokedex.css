@@ -191,14 +191,51 @@ body::before {
 .filter-btn .dot   { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
 /* ─── POKÉMON GRID ───────────────────────────────────────────────────────────── */
-.poke-grid    {
+.poke-grid { display: flex; flex-direction: column; }
+
+.year-block { margin-bottom: 4px; }
+.year-divider {
+  display: flex; align-items: center; gap: 14px;
+  margin: 30px 0 14px;
+}
+.year-block:first-child .year-divider { margin-top: 2px; }
+.year-divider .y-num {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  background: linear-gradient(135deg, var(--blue), var(--violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.year-divider .y-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border-md), transparent 85%);
+}
+.year-divider .y-count {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.year-grid    {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 10px;
 }
-.poke-card    {
-  background: var(--surface);
+
+.poke-card {
+  --accent: var(--border-md);
+  background: linear-gradient(165deg, var(--surface) 0%, var(--surface-2) 130%);
   border: 1px solid var(--border);
+  border-top: 2px solid var(--accent);
   border-radius: var(--radius);
   display: flex; align-items: center;
   gap: 12px; padding: 12px 14px;
@@ -206,17 +243,55 @@ body::before {
   box-shadow: var(--shadow-sm);
   transition: border-color .2s, box-shadow .2s, transform .2s;
   position: relative;
+  overflow: hidden;
 }
-.poke-card:hover { border-color: rgba(79,195,247,0.4); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.poke-card::before {
+  content: '';
+  position: absolute;
+  top: -60%; right: -30%;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 20%, transparent) 0%, transparent 72%);
+  pointer-events: none;
+}
+.poke-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+  box-shadow: 0 10px 28px -12px color-mix(in srgb, var(--accent) 55%, transparent), var(--shadow-md);
+  transform: translateY(-3px);
+}
 
+.poke-card.role-atk { --accent: var(--red); }
+.poke-card.role-def { --accent: var(--green); }
+.poke-card.role-spe { --accent: var(--blue); }
+.poke-card.role-sup { --accent: var(--yellow); }
+.poke-card.role-all { --accent: var(--violet); }
+
+.poke-avatar-wrap { position: relative; flex-shrink: 0; }
 .poke-avatar  {
-  width: 48px; height: 48px;
-  border-radius: 50%; flex-shrink: 0; overflow: hidden;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
+  width: 52px; height: 52px;
+  border-radius: 50%; overflow: hidden;
+  background: radial-gradient(circle at 32% 30%, var(--surface-3), var(--surface-2));
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
   display: flex; align-items: center; justify-content: center;
+  position: relative;
+  z-index: 1;
 }
-.poke-avatar img { width: 100%; height: 100%; object-fit: contain; }
+.poke-avatar img { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
+
+.mega-flag {
+  position: absolute; bottom: -3px; right: -6px; z-index: 2;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.52rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #3a1d00;
+  background: linear-gradient(135deg, var(--orange), #ffc055);
+  padding: 2px 6px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.45);
+}
+.mega-flag-lg { font-size: 0.62rem; padding: 3px 8px; bottom: -2px; right: -4px; }
 
 .poke-info    { flex: 1; min-width: 0; }
 .poke-name    {
@@ -231,7 +306,7 @@ body::before {
   color: var(--text-bright);
 }
 .poke-sub {
-  display: flex; align-items: center; gap: 6px;
+  display: flex; align-items: center; gap: 8px;
   margin-top: 3px;
   flex-wrap: wrap;
 }
@@ -240,6 +315,7 @@ body::before {
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.03em;
+  display: inline-flex; align-items: center; gap: 5px;
 }
 .poke-portee {
   font-size: 0.68rem;
@@ -247,42 +323,46 @@ body::before {
   display: inline-flex; align-items: center; gap: 3px;
 }
 .poke-portee svg { width: 11px; height: 11px; }
+.poke-meta { margin-top: 6px; }
 
-.poke-right   { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
-.dex-chip {
-  font-family: 'Exo 2', sans-serif;
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--text-dim);
-  background: var(--surface-3);
-  border: 1px solid var(--border);
-  padding: 2px 7px;
-  border-radius: var(--radius-xs);
-}
-.mega-badge {
+.diff-pill {
   font-family: 'Exo 2', sans-serif;
   font-size: 0.6rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #ffc055;
-  background: var(--orange-dim);
-  border: 1px solid rgba(255,157,0,0.35);
-  padding: 2px 7px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  border: 1px solid transparent;
+  display: inline-block;
+}
+.diff-novice        { color: var(--green);  background: var(--green-dim);  border-color: rgba(76,175,130,0.3); }
+.diff-intermediaire { color: var(--yellow); background: var(--yellow-dim); border-color: rgba(255,215,64,0.3); }
+.diff-expert         { color: var(--red);    background: var(--red-dim);    border-color: rgba(239,83,80,0.3); }
+
+.poke-right   { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; z-index: 1; }
+.year-chip {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--text-bright);
+  background: var(--surface-3);
+  border: 1px solid var(--border-md);
+  padding: 3px 9px;
   border-radius: var(--radius-xs);
 }
 
-/* Role colors */
-.role-atk { color: #ff8a80; }
-.role-def { color: #82c8f7; }
-.role-spe { color: #c49ef5; }
-.role-sup { color: #6ee7b2; }
-.role-all { color: #ffc055; }
-.dot-atk  { background: #ff8a80; }
-.dot-def  { background: #82c8f7; }
-.dot-spe  { background: #c49ef5; }
-.dot-sup  { background: #6ee7b2; }
-.dot-all  { background: #ffc055; }
+/* Role colors (couleurs officielles du jeu) */
+.role-atk { color: var(--red); }
+.role-def { color: var(--green); }
+.role-spe { color: var(--blue); }
+.role-sup { color: var(--yellow); }
+.role-all { color: var(--violet); }
+.dot-atk  { background: var(--red); }
+.dot-def  { background: var(--green); }
+.dot-spe  { background: var(--blue); }
+.dot-sup  { background: var(--yellow); }
+.dot-all  { background: var(--violet); }
 
 /* ─── EMPTY STATE ────────────────────────────────────────────────────────────── */
 .empty {
@@ -316,6 +396,7 @@ body::before {
 #modal.open { display: block; }
 .modal-close {
   position: absolute; top: 14px; right: 14px;
+  z-index: 5;
   background: var(--surface-3);
   border: 1px solid var(--border);
   color: var(--text-dim);
@@ -332,15 +413,36 @@ body::before {
 .modal-close:hover { color: var(--text); border-color: var(--border-md); }
 
 /* ─── MODAL HEADER ───────────────────────────────────────────────────────────── */
-.m-header   { display: flex; align-items: center; gap: 14px; margin-bottom: 1.25rem; padding-right: 30px; }
+.m-header {
+  --accent: var(--border-md);
+  position: relative;
+  display: flex; align-items: center; gap: 16px;
+  margin: -1.5rem -1.5rem 1.25rem;
+  padding: 1.5rem 1.5rem 1.25rem;
+  padding-right: 44px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  background:
+    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--accent) 20%, transparent) 0%, transparent 62%),
+    var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+.m-header.role-atk { --accent: var(--red); }
+.m-header.role-def { --accent: var(--green); }
+.m-header.role-spe { --accent: var(--blue); }
+.m-header.role-sup { --accent: var(--yellow); }
+.m-header.role-all { --accent: var(--violet); }
+
+.m-avatar-wrap { position: relative; flex-shrink: 0; }
 .m-avatar   {
   width: 64px; height: 64px;
-  border-radius: 50%; flex-shrink: 0; overflow: hidden;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
+  border-radius: 50%; overflow: hidden;
+  background: radial-gradient(circle at 32% 30%, var(--surface-3), var(--surface-2));
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent);
   display: flex; align-items: center; justify-content: center;
 }
-.m-avatar img { width: 100%; height: 100%; object-fit: contain; }
+.m-avatar img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+.m-header-info { min-width: 0; }
 .m-name     {
   font-family: 'Exo 2', sans-serif;
   font-size: 1.3rem;
@@ -350,12 +452,13 @@ body::before {
   color: var(--text-bright);
   text-shadow: 0 0 30px rgba(79,195,247,0.25);
 }
+.m-role-row { margin-top: 5px; }
 .m-role     {
   font-family: 'Rajdhani', sans-serif;
   font-size: 0.82rem;
   font-weight: 700;
-  margin-top: 2px;
   letter-spacing: 0.04em;
+  display: inline-flex; align-items: center; gap: 6px;
 }
 
 /* ─── MODAL INFO GRID ────────────────────────────────────────────────────────── */
@@ -366,8 +469,16 @@ body::before {
   border-radius: var(--radius-sm);
   padding: 10px 8px;
   text-align: center;
+  transition: border-color .2s;
 }
-.m-stat-val       { font-family: 'Exo 2', sans-serif; font-size: 1rem; font-weight: 900; color: var(--text-bright); }
+.m-stat:hover { border-color: var(--border-md); }
+.m-stat-icon { color: var(--text-dim); margin-bottom: 4px; display: flex; justify-content: center; }
+.m-stat-icon svg { width: 15px; height: 15px; }
+.m-stat-val       {
+  font-family: 'Exo 2', sans-serif; font-size: 0.98rem; font-weight: 900; color: var(--text-bright);
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+}
+.m-stat-val svg { width: 12px; height: 12px; flex-shrink: 0; }
 .m-stat-lbl {
   font-family: 'Exo 2', sans-serif;
   font-size: 0.6rem;
@@ -407,7 +518,9 @@ body::before {
   border: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
+  transition: border-color .2s, transform .2s;
 }
+.move-icon-wrap:hover .move-icon { border-color: var(--blue); transform: translateY(-2px); }
 .move-icon img { width: 100%; height: 100%; object-fit: contain; }
 .move-icon-name {
   font-size: 0.6rem;
@@ -424,6 +537,6 @@ body::before {
 /* ─── RESPONSIVE ─────────────────────────────────────────────────────────────── */
 @media (max-width: 700px) {
   .wrap      { padding: 0.5rem 0 3rem; }
-  .poke-grid { grid-template-columns: 1fr; }
+  .year-grid { grid-template-columns: 1fr; }
   .m-stats   { grid-template-columns: repeat(2, 1fr); }
 }
