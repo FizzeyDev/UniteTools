@@ -903,6 +903,27 @@
   scrollbar-color: var(--border-md) transparent;
 }
 
+.buff-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.4rem;
+  border-left: 3px solid transparent;
+  border-radius: 4px;
+  font-size: 0.76rem;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: background .12s, border-left-color .12s;
+}
+.buff-label:hover { background: var(--surface-3); }
+.buff-label img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
 /* Buff label active indicators — colored left border by column */
 .clt-buff-col.clt-buff-col-atk .buff-label:has(input:checked)       { border-left-color: var(--green); }
 .clt-buff-col.clt-buff-col-atk-debuff .buff-label:has(input:checked){ border-left-color: var(--red); }

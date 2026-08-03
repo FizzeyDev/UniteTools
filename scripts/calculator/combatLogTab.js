@@ -213,7 +213,47 @@ function getDefenderFlashFireReduction(targetSlot) {
 // CALCUL DES OPTIONS D'UN MOVE (dans le contexte acteur/cible déjà swappé)
 // ─────────────────────────────────────────────────────────────────────────────
 
+// ─────────────────────────────────────────────────────────────────────────────
+// EFFETS D'ITEMS LOGGABLES EN CARTE (comme un move) — §"Rocky Helmet"
+// Contrairement aux effets bespoke ci-dessus (qui modifient le calcul d'un move
+// existant), ceci ajoute une carte indépendante dans le panneau de moves, tant
+// que l'item est équipé. Le montant est basé sur les PV max du PORTEUR (pas de
+// la Cible), donc on utilise les stats de actorSlot lui-même. Comme ce n'est
+// pas un dégât qui touche la Cible, on utilise kind:'reflect' (et non 'damage')
+// pour NE PAS l'inclure dans le total de dégâts / la barre de PV de la Cible —
+// c'est purement une ligne informative dans le log.
+// ─────────────────────────────────────────────────────────────────────────────
+const ITEM_EFFECT_DEFS = {
+  rockyHelmet: { itemName: 'Rocky Helmet', label: 'Rocky Helmet' },
+};
+
+function getItemEffectPseudoMoves(slot) {
+  const list = [];
+  Object.entries(ITEM_EFFECT_DEFS).forEach(([key, def]) => {
+    const item = (slot.items || []).find(i => i?.name === def.itemName);
+    if (item) list.push({ name: def.label, image: item.image, __itemEffect: key });
+  });
+  return list;
+}
+
+function buildRockyHelmetOptions(actorSlot) {
+  const item = actorSlot.items.find(i => i?.name === 'Rocky Helmet');
+  const stats = getModifiedStats(actorSlot.pokemon, actorSlot.level, actorSlot.items, actorSlot.stacks, actorSlot.activated);
+  const pct = parseFloat((item?.level20 || '0').replace('%', '').trim()) / 100 || 0;
+  const value = Math.floor(stats.hp * pct);
+  return {
+    options: [{
+      kind: 'reflect', name: 'Rocky Helmet', target: 'attacker',
+      canCrit: false, isTick: false, tickCount: 1, value, critValue: value,
+    }],
+    maxHP: stats.hp,
+  };
+}
+
 function buildMoveOptions(move, actorSlot, targetSlot) {
+  if (move.__itemEffect === 'rockyHelmet') {
+    return buildRockyHelmetOptions(actorSlot);
+  }
   const level = actorSlot.level;
   const upgraded = isMoveUpgraded(move, level);
   const visibleDamages = filterByUpgrade(move.damages, upgraded);
@@ -884,6 +924,15 @@ function renderMovesPanel() {
     card.addEventListener('click', () => openPicker(slot, move));
     grid.appendChild(card);
   });
+
+  getItemEffectPseudoMoves(slot).forEach(pseudoMove => {
+    const card = document.createElement('div');
+    const isActivePicker = clState.activePicker?.actorSlotId === slot.id && clState.activePicker?.move === pseudoMove;
+    card.className = 'clt-move-card clt-item-effect-card' + (isActivePicker ? ' active' : '');
+    card.innerHTML = `<img src="${pseudoMove.image}" onerror="this.src='assets/items/missing.png'"><span>${pseudoMove.name}</span>`;
+    card.addEventListener('click', () => openPicker(slot, pseudoMove));
+    grid.appendChild(card);
+  });
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -908,9 +957,11 @@ function refreshPickerIfOpen() {
   if (!ap) return;
   const actorSlot = clState.slots[ap.actorSlotId];
   const targetSlot = clState.slots['target'];
-  const stillValid = actorSlot?.pokemon && targetSlot?.pokemon &&
-    (actorSlot.pokemon.moves || []).includes(ap.move) &&
-    isMoveVisible(ap.move, actorSlot.level);
+  const stillValid = actorSlot?.pokemon && targetSlot?.pokemon && (
+    ap.move.__itemEffect
+      ? getItemEffectPseudoMoves(actorSlot).some(m => m.__itemEffect === ap.move.__itemEffect)
+      : (actorSlot.pokemon.moves || []).includes(ap.move) && isMoveVisible(ap.move, actorSlot.level)
+  );
   if (!stillValid) { clearPickerPanel(); return; }
   openPicker(actorSlot, ap.move);
 }
@@ -958,8 +1009,8 @@ function openPicker(actorSlot, move) {
   options.forEach((opt, idx) => {
     const row = document.createElement('div');
     row.className = 'clt-picker-row';
-    const colorClass = opt.kind === 'damage' ? 'dmg-c' : opt.kind === 'heal' ? 'heal-c' : 'shield-c';
-    const targetLabel = opt.target === 'self' ? '(self)' : opt.target === 'ally' ? '(ally)' : '';
+    const colorClass = opt.kind === 'damage' ? 'dmg-c' : opt.kind === 'heal' ? 'heal-c' : opt.kind === 'reflect' ? 'reflect-c' : 'shield-c';
+    const targetLabel = opt.target === 'self' ? '(self)' : opt.target === 'ally' ? '(ally)' : opt.target === 'attacker' ? '(to attacker, not tracked in Target HP)' : '';
 
     const cb = document.createElement('input');
     cb.type = 'checkbox';
@@ -977,12 +1028,11 @@ function openPicker(actorSlot, move) {
     valSpan.className = 'clt-picker-val ' + colorClass;
 
     const refreshVal = () => {
+      const perHit = opt.canCrit ? (rowState[idx].isCrit ? opt.critValue : opt.value) : opt.value;
       if (opt.isTick && opt.tickCount > 1) {
-        valSpan.textContent = `${(opt.value * rowState[idx].hitCount).toLocaleString()} (${rowState[idx].hitCount}×)`;
-      } else if (opt.canCrit) {
-        valSpan.textContent = (rowState[idx].isCrit ? opt.critValue : opt.value).toLocaleString();
+        valSpan.textContent = `${(perHit * rowState[idx].hitCount).toLocaleString()} (${rowState[idx].hitCount}×)`;
       } else {
-        valSpan.textContent = opt.value.toLocaleString();
+        valSpan.textContent = perHit.toLocaleString();
       }
     };
 
@@ -1009,7 +1059,8 @@ function openPicker(actorSlot, move) {
       });
       updateBounds();
       row.appendChild(ctrl);
-    } else if (opt.canCrit) {
+    }
+    if (opt.canCrit) {
       const normalBtn = document.createElement('button');
       normalBtn.className = 'clt-mini-btn active';
       normalBtn.textContent = 'Normal';
@@ -1041,13 +1092,9 @@ function openPicker(actorSlot, move) {
     const lines = options
       .map((opt, idx) => {
         if (!rowState[idx].selected) return null;
-        let value;
+        let value = opt.canCrit ? (rowState[idx].isCrit ? opt.critValue : opt.value) : opt.value;
         if (opt.isTick && opt.tickCount > 1) {
-          value = opt.value * rowState[idx].hitCount;
-        } else if (opt.canCrit) {
-          value = rowState[idx].isCrit ? opt.critValue : opt.value;
-        } else {
-          value = opt.value;
+          value = value * rowState[idx].hitCount;
         }
         return {
           kind: opt.kind, name: opt.name, target: opt.target, value, isCrit: rowState[idx].isCrit,
@@ -1274,8 +1321,8 @@ function buildChipTooltip(entry) {
 
 function buildEntryDetailHTML(entry) {
   const lineRows = entry.lines.map(l => {
-    const kindIcon = l.kind === 'damage' ? '💥' : l.kind === 'heal' ? '❤️' : '🛡️';
-    const tgt = l.target === 'self' ? '(self)' : l.target === 'ally' ? '(ally)' : '';
+    const kindIcon = l.kind === 'damage' ? '💥' : l.kind === 'heal' ? '❤️' : l.kind === 'reflect' ? '🪨' : '🛡️';
+    const tgt = l.target === 'self' ? '(self)' : l.target === 'ally' ? '(ally)' : l.target === 'attacker' ? '(to attacker)' : '';
     let breakdown = '';
     if (l.canCrit) {
       breakdown = `Normal: <b>${l.normalValue?.toLocaleString() ?? '—'}</b> · Crit: <b>${l.critValue?.toLocaleString() ?? '—'}</b> → used: <b class="${l.isCrit ? 'clt-detail-crit' : ''}">${l.isCrit ? 'CRIT' : 'Normal'}</b>`;
@@ -1499,8 +1546,8 @@ function renderBuffsSection() {
 
 export function initCombatLogTab() {
   buildTabAndPanel();
+  renderBuffsSection();
   renderRoster();
   renderHpSection();
-  renderBuffsSection();
   renderLogSection();
 }

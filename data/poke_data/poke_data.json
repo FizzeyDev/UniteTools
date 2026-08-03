@@ -6366,7 +6366,7 @@
         "learnLevel": 5,
         "unlearn": null,
         "upgradeLevel": 11,
-        "can_crit": "false",
+        "can_crit": "true",
         "image": "assets/moves/inteleon/acrobatics.png",
         "damages": [
           {"name": "Damage", "multiplier": 62, "levelCoef": 8, "constant": 172, "dealDamage": true}
