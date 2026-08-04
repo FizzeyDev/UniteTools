@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-lang="pokedex_page_title">Pokedex Unite | Unite Tools</title>
-
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/navbar.css">
   <link rel="stylesheet" href="css/pokedex.css">
   <link rel="stylesheet" href="css/theme.css">
@@ -60,17 +60,13 @@
     // Init icônes Lucide (déclaratif via data-lucide)
     lucide.createIcons();
 
-    // Toggle sidebar minimal — remplacez par votre script partagé si vous en avez un
-    // (celui utilisé sur vos autres pages pour la traduction / thème / sidebar).
-    document.getElementById('toggle-sidebar')?.addEventListener('click', () => {
-      document.getElementById('sidebar')?.classList.toggle('hidden');
-    });
-    document.getElementById('hide-sidebar-btn')?.addEventListener('click', () => {
-      document.getElementById('sidebar')?.classList.add('hidden');
-    });
-    document.getElementById('show-sidebar-btn')?.addEventListener('click', () => {
-      document.getElementById('sidebar')?.classList.remove('hidden');
-    });
+    // NB : le toggle de la sidebar (#toggle-sidebar / #hide-sidebar-btn / #show-sidebar-btn)
+    // est déjà géré par scripts/navbar.js, qui synchronise à la fois la classe
+    // .hidden sur #sidebar ET la classe .sidebar-hidden sur <body> (pour le margin-left).
+    // Un script local dupliqué ici togglait .hidden une 2e fois sans jamais toucher
+    // <body>, ce qui désynchronisait la largeur de la sidebar et le margin du contenu
+    // (le décalage visible). Ne pas le réintroduire — un seul script doit posséder ce toggle.
+
     // Délégation sur document : la navbar (et ses .lang-btn) est injectée de
     // façon asynchrone dans #navbar-container, donc un binding direct ici
     // (avant que la navbar soit chargée) pouvait ne rien attacher.

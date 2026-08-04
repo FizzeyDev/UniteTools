@@ -12,7 +12,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 100,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "21/07"
   },
   {
     "name": "Blastoise",
@@ -30,7 +31,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "01/09"
   },
   {
     "name": "Chandelure",
@@ -48,7 +50,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "27/04"
   },
   {
     "name": "Cramorant",
@@ -63,7 +66,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 123,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "21/07"
   },
   {
     "name": "Dhelmise",
@@ -78,7 +82,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 112,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "14/11"
   },
   {
     "name": "Eldegoss",
@@ -95,7 +100,8 @@
     "unite_move_cost": 100,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "21/07"
   },
   {
     "name": "Gardevoir",
@@ -113,7 +119,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "28/07"
   },
   {
     "name": "Greninja",
@@ -131,7 +138,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "21/07"
   },
   {
     "name": "Lapras",
@@ -146,7 +154,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 100,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "13/04"
   },
   {
     "name": "Machamp",
@@ -164,7 +173,8 @@
     "evolution_levels": [
       5,
       9
-    ]
+    ],
+    "date": "21/07"
   },
   {
     "name": "Mewtwo X",
@@ -179,7 +189,8 @@
     "evo_niveaux": null,
     "mega": true,
     "unite_move_cost": 134,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "21/07"
   },
   {
     "name": "Ninetales",
@@ -196,7 +207,8 @@
     "unite_move_cost": 112,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "21/07"
   },
   {
     "name": "Rapidash",
@@ -206,14 +218,15 @@
     "dex": 78,
     "portee": "Mêlée",
     "difficulte": "Intermédiaire",
-    "annee": 2023,
+    "annee": 2025,
     "stade": "1ère évo",
     "evo_niveaux": "5",
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": [
       5
-    ]
+    ],
+    "date": "23/01"
   },
   {
     "name": "Suicune",
@@ -228,7 +241,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 112,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "01/03"
   },
   {
     "name": "Tsareena",
@@ -246,7 +260,8 @@
     "evolution_levels": [
       4,
       6
-    ]
+    ],
+    "date": "09/12"
   },
   {
     "name": "Venusaur",
@@ -264,7 +279,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "21/07"
   },
   {
     "name": "Aegislash",
@@ -282,7 +298,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "11/02"
   },
   {
     "name": "Blaziken",
@@ -300,7 +317,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "14/09"
   },
   {
     "name": "Charizard",
@@ -318,7 +336,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "21/07"
   },
   {
     "name": "Mega-Charizard X",
@@ -336,7 +355,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "24/10"
   },
   {
     "name": "Mega-Charizard Y",
@@ -354,7 +374,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "19/12"
   },
   {
     "name": "Crustle",
@@ -371,7 +392,8 @@
     "unite_move_cost": 134,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "21/07"
   },
   {
     "name": "Dodrio",
@@ -388,7 +410,8 @@
     "unite_move_cost": 134,
     "evolution_levels": [
       5
-    ]
+    ],
+    "date": "15/09"
   },
   {
     "name": "Empoleon",
@@ -406,7 +429,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "19/09"
   },
   {
     "name": "Gengar",
@@ -424,7 +448,8 @@
     "evolution_levels": [
       5,
       9
-    ]
+    ],
+    "date": "21/07"
   },
   {
     "name": "Gyarados",
@@ -441,7 +466,8 @@
     "unite_move_cost": 112,
     "evolution_levels": [
       7
-    ]
+    ],
+    "date": "25/01"
   },
   {
     "name": "Mega Gyarados",
@@ -458,7 +484,8 @@
     "unite_move_cost": 112,
     "evolution_levels": [
       7
-    ]
+    ],
+    "date": "05/12"
   },
   {
     "name": "Latias",
@@ -473,7 +500,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 112,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "08/08"
   },
   {
     "name": "Mamoswine",
@@ -491,7 +519,8 @@
     "evolution_levels": [
       5,
       9
-    ]
+    ],
+    "date": "29/09"
   },
   {
     "name": "Mewtwo Y",
@@ -506,7 +535,8 @@
     "evo_niveaux": null,
     "mega": true,
     "unite_move_cost": 134,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "17/08"
   },
   {
     "name": "Pawmot",
@@ -524,7 +554,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "04/09"
   },
   {
     "name": "Sableye",
@@ -539,7 +570,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 100,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "16/11"
   },
   {
     "name": "Sylveon",
@@ -556,7 +588,8 @@
     "unite_move_cost": 112,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "06/10"
   },
   {
     "name": "Tyranitar",
@@ -574,7 +607,8 @@
     "evolution_levels": [
       5,
       9
-    ]
+    ],
+    "date": "16/08"
   },
   {
     "name": "Wigglytuff",
@@ -591,7 +625,8 @@
     "unite_move_cost": 89,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "21/07"
   },
   {
     "name": "Alcremie",
@@ -601,14 +636,15 @@
     "dex": 869,
     "portee": "Distance",
     "difficulte": "Novice",
-    "annee": 2023,
+    "annee": 2025,
     "stade": "1ère évo",
     "evo_niveaux": "4",
     "mega": false,
     "unite_move_cost": 100,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "12/06"
   },
   {
     "name": "Blissey",
@@ -625,7 +661,8 @@
     "unite_move_cost": 112,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "18/08"
   },
   {
     "name": "Cinderace",
@@ -643,7 +680,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "21/07"
   },
   {
     "name": "Darkrai",
@@ -658,7 +696,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 100,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "17/10"
   },
   {
     "name": "Dragapult",
@@ -676,7 +715,8 @@
     "evolution_levels": [
       5,
       9
-    ]
+    ],
+    "date": "29/12"
   },
   {
     "name": "Espeon",
@@ -693,7 +733,8 @@
     "unite_move_cost": 100,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "16/05"
   },
   {
     "name": "Glaceon",
@@ -710,7 +751,8 @@
     "unite_move_cost": 112,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "21/07"
   },
   {
     "name": "Ho-Oh",
@@ -720,12 +762,13 @@
     "dex": 250,
     "portee": "Distance",
     "difficulte": "Novice",
-    "annee": 2023,
+    "annee": 2024,
     "stade": "Base",
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 112,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "19/07"
   },
   {
     "name": "Latios",
@@ -740,7 +783,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 100,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "18/07"
   },
   {
     "name": "Meowscarada",
@@ -758,7 +802,8 @@
     "evolution_levels": [
       4,
       6
-    ]
+    ],
+    "date": "07/12"
   },
   {
     "name": "Meowth",
@@ -773,7 +818,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 100,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "09/01"
   },
   {
     "name": "Mimikyu",
@@ -788,7 +834,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 112,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "19/10"
   },
   {
     "name": "Pikachu",
@@ -803,7 +850,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 89,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "21/07"
   },
   {
     "name": "Scyther",
@@ -820,7 +868,8 @@
     "unite_move_cost": 112,
     "evolution_levels": [
       5
-    ]
+    ],
+    "date": "29/09"
   },
   {
     "name": "Scizor",
@@ -837,7 +886,8 @@
     "unite_move_cost": 112,
     "evolution_levels": [
       5
-    ]
+    ],
+    "date": "29/09"
   },
   {
     "name": "Skeledirge",
@@ -855,7 +905,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "04/06"
   },
   {
     "name": "Talonflame",
@@ -873,7 +924,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "21/07"
   },
   {
     "name": "Umbreon",
@@ -890,7 +942,8 @@
     "unite_move_cost": 100,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "25/05"
   },
   {
     "name": "Zacian",
@@ -905,7 +958,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 112,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "27/02"
   },
   {
     "name": "Armarouge",
@@ -922,7 +976,8 @@
     "unite_move_cost": 112,
     "evolution_levels": [
       5
-    ]
+    ],
+    "date": "12/09"
   },
   {
     "name": "Buzzwole",
@@ -937,7 +992,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 112,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "04/08"
   },
   {
     "name": "Clefable",
@@ -954,7 +1010,8 @@
     "unite_move_cost": 100,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "13/10"
   },
   {
     "name": "Decidueye",
@@ -972,7 +1029,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "19/11"
   },
   {
     "name": "Dragonite",
@@ -990,7 +1048,8 @@
     "evolution_levels": [
       5,
       8
-    ]
+    ],
+    "date": "20/12"
   },
   {
     "name": "Falinks",
@@ -1005,7 +1064,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 112,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "25/04"
   },
   {
     "name": "Goodra",
@@ -1023,7 +1083,8 @@
     "evolution_levels": [
       5,
       8
-    ]
+    ],
+    "date": "16/03"
   },
   {
     "name": "Hoopa",
@@ -1038,7 +1099,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 112,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "24/02"
   },
   {
     "name": "Leafeon",
@@ -1055,7 +1117,8 @@
     "unite_move_cost": 100,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "08/06"
   },
   {
     "name": "Metagross",
@@ -1073,7 +1136,8 @@
     "evolution_levels": [
       5,
       9
-    ]
+    ],
+    "date": "26/12"
   },
   {
     "name": "Miraidon",
@@ -1088,7 +1152,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 112,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "27/02"
   },
   {
     "name": "Psyduck",
@@ -1103,7 +1168,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 112,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "14/11"
   },
   {
     "name": "Feraligatr",
@@ -1121,7 +1187,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "08/05"
   },
   {
     "name": "Slowbro",
@@ -1138,7 +1205,8 @@
     "unite_move_cost": 112,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "21/07"
   },
   {
     "name": "Tinkaton",
@@ -1156,7 +1224,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "12/12"
   },
   {
     "name": "Urshifu",
@@ -1173,7 +1242,8 @@
     "unite_move_cost": 112,
     "evolution_levels": [
       5
-    ]
+    ],
+    "date": "01/12"
   },
   {
     "name": "Zeraora",
@@ -1188,7 +1258,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 112,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "21/07"
   },
   {
     "name": "Azumarill",
@@ -1205,7 +1276,8 @@
     "unite_move_cost": 89,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "08/04"
   },
   {
     "name": "Ceruledge",
@@ -1222,7 +1294,8 @@
     "unite_move_cost": 112,
     "evolution_levels": [
       5
-    ]
+    ],
+    "date": "13/06"
   },
   {
     "name": "Comfey",
@@ -1237,7 +1310,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 89,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "02/02"
   },
   {
     "name": "Delphox",
@@ -1255,7 +1329,8 @@
     "evolution_levels": [
       4,
       6
-    ]
+    ],
+    "date": "09/06"
   },
   {
     "name": "Duraludon",
@@ -1270,7 +1345,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 134,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "15/03"
   },
   {
     "name": "Garchomp",
@@ -1280,7 +1356,7 @@
     "dex": 445,
     "portee": "Mêlée",
     "difficulte": "Intermédiaire",
-    "annee": 2022,
+    "annee": 2021,
     "stade": "2ème évo",
     "evo_niveaux": "5/9",
     "mega": false,
@@ -1288,7 +1364,8 @@
     "evolution_levels": [
       5,
       9
-    ]
+    ],
+    "date": "21/07"
   },
   {
     "name": "Greedent",
@@ -1305,7 +1382,8 @@
     "unite_move_cost": 100,
     "evolution_levels": [
       5
-    ]
+    ],
+    "date": "20/10"
   },
   {
     "name": "Inteleon",
@@ -1323,7 +1401,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "04/07"
   },
   {
     "name": "Lucario",
@@ -1338,7 +1417,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 100,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "21/07"
   },
   {
     "name": "Mega Lucario",
@@ -1353,7 +1433,8 @@
     "evo_niveaux": null,
     "mega": true,
     "unite_move_cost": 112,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "28/09"
   },
   {
     "name": "Mew",
@@ -1368,7 +1449,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 123,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "02/09"
   },
   {
     "name": "Mr. Mime",
@@ -1383,7 +1465,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 100,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "21/07"
   },
   {
     "name": "Raichu",
@@ -1393,14 +1476,15 @@
     "dex": 26,
     "portee": "Distance",
     "difficulte": "Intermédiaire",
-    "annee": 2023,
+    "annee": 2025,
     "stade": "1ère évo",
     "evo_niveaux": "5",
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": [
       5
-    ]
+    ],
+    "date": "17/04"
   },
   {
     "name": "Snorlax",
@@ -1415,7 +1499,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 89,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "21/07"
   },
   {
     "name": "Trevenant",
@@ -1432,7 +1517,8 @@
     "unite_move_cost": 112,
     "evolution_levels": [
       5
-    ]
+    ],
+    "date": "20/01"
   },
   {
     "name": "Vaporeon",
@@ -1449,7 +1535,8 @@
     "unite_move_cost": 89,
     "evolution_levels": [
       4
-    ]
+    ],
+    "date": "20/11"
   },
   {
     "name": "Zoroark",
@@ -1466,7 +1553,8 @@
     "unite_move_cost": 100,
     "evolution_levels": [
       5
-    ]
+    ],
+    "date": "27/10"
   },
   {
     "name": "Sirfetchd",
@@ -1483,7 +1571,8 @@
     "unite_move_cost": 89,
     "evolution_levels": [
       5
-    ]
+    ],
+    "date": "30/01"
   },
   {
     "name": "Articuno",
@@ -1498,7 +1587,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 100,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "10/04"
   },
   {
     "name": "Zapdos",
@@ -1513,7 +1603,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 89,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "27/02"
   },
   {
     "name": "Moltres",
@@ -1528,7 +1619,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 112,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "13/03"
   },
   {
     "name": "Typhlosion",
@@ -1546,7 +1638,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "24/04"
   },
   {
     "name": "Meganium",
@@ -1564,7 +1657,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "22/05"
   },
   {
     "name": "Quaquaval",
@@ -1582,7 +1676,8 @@
     "evolution_levels": [
       5,
       7
-    ]
+    ],
+    "date": "19/06"
   },
   {
     "name": "Palkia",
@@ -1597,7 +1692,8 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 38,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "17/07"
   },
   {
     "name": "Yveltal",
@@ -1612,6 +1708,7 @@
     "evo_niveaux": null,
     "mega": false,
     "unite_move_cost": 100,
-    "evolution_levels": null
+    "evolution_levels": null,
+    "date": "03/07"
   }
 ]

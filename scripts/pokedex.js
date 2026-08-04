@@ -159,6 +159,47 @@ function pokemonMoveImageFolder(name) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// SLUG UNITE-DB.COM — ex: "Mega-Charizard X" -> "mega-charizard-x",
+// "Mr. Mime" -> "mr-mime", "Ho-Oh" -> "ho-oh" (validé sur unite-db.com/pokemon/…)
+// ─────────────────────────────────────────────────────────────────────────────
+function uniteDbSlug(name) {
+  return name
+    .toLowerCase()
+    .replace(/\./g, '')
+    .replace(/'/g, '')
+    .replace(/\s+/g, '-');
+}
+
+function uniteDbUrl(p) {
+  return `https://unite-db.com/pokemon/${uniteDbSlug(p.name)}`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DATE DE SORTIE PRÉCISE — p.date est au format "JJ/MM", combiné à p.annee
+// pour un tri chronologique exact et un affichage complet dans la modale.
+// ─────────────────────────────────────────────────────────────────────────────
+const MONTH_LABELS = {
+  fr: ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
+  en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+};
+
+function releaseTimestamp(p) {
+  if (p.date && p.annee) {
+    const [day, month] = p.date.split('/').map(Number);
+    return new Date(p.annee, month - 1, day).getTime();
+  }
+  if (p.annee) return new Date(p.annee, 0, 1).getTime();
+  return 0;
+}
+
+function fullDateLabel(p, lang) {
+  if (!p.date || !p.annee) return p.annee || '—';
+  const [day, month] = p.date.split('/').map(Number);
+  const monthLbl = MONTH_LABELS[lang][month - 1];
+  return lang === 'fr' ? `${day} ${monthLbl} ${p.annee}` : `${monthLbl} ${day}, ${p.annee}`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // CHARGEMENT DES DONNÉES
 // ─────────────────────────────────────────────────────────────────────────────
 async function loadData() {
@@ -267,7 +308,7 @@ function getFilteredSorted() {
 
   list = list.slice().sort((a, b) => {
     if (state.sort === 'name') return pokeName(a).localeCompare(pokeName(b));
-    if (state.sort === 'annee_desc') return (b.annee || 0) - (a.annee || 0);
+    if (state.sort === 'annee_desc') return releaseTimestamp(b) - releaseTimestamp(a);
     return (a.dex || 0) - (b.dex || 0);
   });
 
@@ -405,7 +446,7 @@ function openModal(name) {
     { icon: 'hash',        val: p.dex ? '#' + p.dex : '—', lbl: 'Pokédex' },
     { icon: 'move',        val: p.portee ? `${porteeIcon}${porteeLabel(p.portee, lang)}` : '—', lbl: lang === 'fr' ? 'Portée' : 'Range' },
     { icon: 'gauge',       val: diffLbl, lbl: lang === 'fr' ? 'Difficulté' : 'Difficulty', color: diffColor },
-    { icon: 'calendar',    val: p.annee || '—', lbl: lang === 'fr' ? 'Année' : 'Year' },
+    { icon: 'calendar',    val: fullDateLabel(p, lang), lbl: lang === 'fr' ? 'Sortie' : 'Release' },
     { icon: 'layers',      val: stageLbl, lbl: lang === 'fr' ? 'Stade' : 'Stage' },
     { icon: 'trending-up', val: evoLbl, lbl: lang === 'fr' ? 'Évolution' : 'Evolution' },
     { icon: 'zap',         val: p.unite_move_cost ?? '—', lbl: 'Unite Move' },
@@ -420,8 +461,16 @@ function openModal(name) {
     </div>
   `).join('');
 
+  const uniteDbLabel = lang === 'fr' ? 'Fiche complète sur Unite-DB' : 'Full profile on Unite-DB';
+
   modal.innerHTML = `
-    <button class="modal-close" id="modalCloseBtn">✕</button>
+    <div class="modal-topbar">
+      <a class="unite-db-btn" href="${uniteDbUrl(p)}" target="_blank" rel="noopener noreferrer" title="${uniteDbLabel}">
+        <i data-lucide="external-link"></i>
+        <span>${uniteDbLabel}</span>
+      </a>
+      <button class="modal-close" id="modalCloseBtn">✕</button>
+    </div>
     <div class="m-header role-${p.role || 'none'}">
       <div class="m-avatar-wrap">
         <div class="m-avatar"><img src="assets/pokemon/${p.file}" alt="${p.name}" onerror="this.src='assets/pokemon/missing.png'"></div>
@@ -468,6 +517,12 @@ function render() {
 // INIT
 // ─────────────────────────────────────────────────────────────────────────────
 async function initPokedex() {
+  const grid = document.getElementById('pokeGrid');
+  if (grid) {
+    const lang = getLang();
+    grid.innerHTML = `<div class="loading-state">${lang === 'fr' ? 'Chargement du Pokédex…' : 'Loading Pokédex…'}</div>`;
+  }
+
   await loadData();
 
   const sortSelect = document.getElementById('sortSelect');

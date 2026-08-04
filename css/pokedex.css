@@ -37,16 +37,29 @@ html { scroll-behavior: smooth; }
   --shadow-sm:    0 2px 8px rgba(0,0,0,0.3);
 }
 
-html, body {
+html {
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+body {
   font-family: 'Rajdhani', sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
   padding: 2rem 2rem 4rem;
-  margin-left: 250px;
-  transition: margin-left 0.3s ease;
 }
-body.sidebar-collapsed { margin-left: 0; }
+/* margin-left + transition + toggle du sidebar (classe .sidebar-hidden) sont
+   gérés uniquement par navbar.css / navbar.js — ne pas les redéfinir ici pour
+   éviter tout désync entre la largeur réelle de la sidebar et le contenu. */
+
+/* .light-mode n'est posée que sur <body>, jamais sur <html> — et les
+   variables CSS ne remontent pas vers le parent. Sans cette règle, <html>
+   reste sur le --bg sombre de :root (visible en haut de page et dans la
+   gouttière de la scrollbar) même quand le reste du site est en clair. */
+html:has(body.light-mode) {
+  background: #dde6e8;
+}
 
 body::before {
   content: '';
@@ -65,7 +78,7 @@ body::before {
 ::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 3px; }
 
 /* ─── LAYOUT ─────────────────────────────────────────────────────────────────── */
-.wrap { max-width: 1100px; margin: 0 auto; padding: 0.5rem 0 3rem; position: relative; z-index: 1; }
+.wrap { width: 100%; padding: 0.5rem 0 3rem; position: relative; z-index: 1; }
 
 /* ─── HEADER ─────────────────────────────────────────────────────────────────── */
 .hdr      { margin-bottom: 1.5rem; display: flex; align-items: center; gap: 14px; }
@@ -375,6 +388,21 @@ body::before {
   letter-spacing: 0.04em;
 }
 
+.loading-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-dim);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  animation: pulse-loading 1.4s ease-in-out infinite;
+}
+@keyframes pulse-loading {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+}
+
 /* ─── MODAL OVERLAY ──────────────────────────────────────────────────────────── */
 #overlay {
   display: none; position: fixed; inset: 0;
@@ -394,9 +422,40 @@ body::before {
   box-shadow: var(--shadow-lg), 0 0 40px rgba(79,195,247,0.1);
 }
 #modal.open { display: block; }
+
+/* ─── MODAL TOP BAR (lien Unite-DB + bouton fermer) ─────────────────────────── */
+.modal-topbar {
+  display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+  margin: -1.5rem -1.5rem 0;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--surface);
+}
+.unite-db-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--blue-dim);
+  background: var(--blue-dim);
+  color: var(--blue);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all .2s;
+}
+.unite-db-btn:hover {
+  background: var(--blue);
+  color: var(--bg);
+  border-color: var(--blue);
+}
+.unite-db-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
 .modal-close {
-  position: absolute; top: 14px; right: 14px;
-  z-index: 5;
+  flex-shrink: 0;
   background: var(--surface-3);
   border: 1px solid var(--border);
   color: var(--text-dim);
@@ -417,10 +476,9 @@ body::before {
   --accent: var(--border-md);
   position: relative;
   display: flex; align-items: center; gap: 16px;
-  margin: -1.5rem -1.5rem 1.25rem;
-  padding: 1.5rem 1.5rem 1.25rem;
-  padding-right: 44px;
-  border-radius: var(--radius) var(--radius) 0 0;
+  margin: 0 -1.5rem 1.25rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0;
   background:
     radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--accent) 20%, transparent) 0%, transparent 62%),
     var(--surface-2);
