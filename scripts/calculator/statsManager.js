@@ -23,6 +23,10 @@ import {
   applyGlaceonFreezeDryStatBuff,
   applyHoohSacredFireStatBuff,
   applyHoopaRingsUnboundStatBuff,
+  applyLucarioExtremeSpeedStatBuff,
+  applyMachampBulkUpStatBuff,
+  applyMachampDynamicPunchStatBuff,
+  applyMachampBarrageBlowStatBuff,
 } from './moveEffectsAtk.js';
 
 export function applyPokemonStatMutations(atkStats, defStats) {
@@ -90,6 +94,12 @@ export function applyPokemonStatMutations(atkStats, defStats) {
     atkStats.atk = Math.floor(atkStats.atk * (1 + state.currentAttacker.passive.bonusPercentAtk / 100));
   }
 
+  // ── Machamp — Cross Chop+ : +3 Atk (flat, permanent) per auto-attack stack, up to 40 (lvl 13) ──
+  if (state.currentAttacker?.pokemonId === "machamp" && state.attackerLevel >= 13) {
+    const ccStacks = state.attackerMachampCrossChopStacks ?? 0;
+    if (ccStacks > 0) atkStats.atk += ccStacks * 3;
+  }
+
   // ── Greninja — Torrent low HP ───────────────────────────────────────────────
   if (state.currentAttacker?.pokemonId === "greninja" && state.attackerHPPercent <= state.currentAttacker.passive.lowHpThreshold) {
     atkStats.atk = Math.floor(atkStats.atk * (1 + state.currentAttacker.passive.bonusPercentAtk / 100));
@@ -147,6 +157,10 @@ export function applyPokemonStatMutations(atkStats, defStats) {
   applyGlaceonFreezeDryStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyHoohSacredFireStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyHoopaRingsUnboundStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyLucarioExtremeSpeedStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyMachampBulkUpStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyMachampDynamicPunchStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyMachampBarrageBlowStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
 
   // ── Armarouge — Armor Cannon cooldown def debuff ───────────────────────────
   if (state.currentDefender?.pokemonId === 'armarouge' && state.defenderLevel >= 5 && state.defenderArmarougeArmorCannonDebuff) {

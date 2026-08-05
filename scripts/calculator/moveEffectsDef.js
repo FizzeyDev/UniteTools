@@ -794,6 +794,105 @@ function applyHoopaRingsUnbound(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── LEAFEON — Solar Blade (charging damage reduction) ────────────────────────
+function applyLeafeonSolarBlade(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 10) return; // Upgrade at level 10
+
+  const isActive = state.defenderLeafeonSolarBladeDmgReduc ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/leafeon/solar_blade.png')}
+    <div style="flex:1;">
+      ${moveBadge('Solar Blade+', 10)}
+      While charging → <strong style="color:#fff;">−50% damage received</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Active only while gathering light</span><br>
+      <button class="solar-blade-dmgreduc-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.solar-blade-dmgreduc-toggle').onclick = () => {
+    state.defenderLeafeonSolarBladeDmgReduc = !state.defenderLeafeonSolarBladeDmgReduc;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── LUCARIO / MEGA-LUCARIO — Power-Up Punch (charging) ───────────────────────
+// Shared between Lucario and Mega-Lucario: identical text & numbers on both kits.
+// "While held down: charges up power for up to 4s, reducing damage received by
+// 30% and decreasing movement speed by 15%." (movement speed has no impact on
+// damage calc, so only the -30% damage reduction is modeled here.)
+function applyLucarioPowerUpPunchCharge(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 5) return; // Power-Up Punch learned at level 5
+
+  const isActive = state.defenderLucarioPowerUpPunchCharging ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/lucario/power_up_punch.png')}
+    <div style="flex:1;">
+      ${moveBadge('Power-Up Punch', 5)}
+      While charging (up to 4s) → <strong style="color:#fff;">−30% damage received</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Active only while the punch is charging · also -15% Movement Speed (no dmg impact)</span><br>
+      <button class="lucario-pup-charge-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.lucario-pup-charge-toggle').onclick = () => {
+    state.defenderLucarioPowerUpPunchCharging = !state.defenderLucarioPowerUpPunchCharging;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── MACHAMP — Barrage Blow (Unite) charge ─────────────────────────────────────
+// "Machamp gains ... Defense by 300, and Sp. Defense by 300 for 8s before unleashing..."
+function applyMachampBarrageBlowDef(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 9) return; // Unite unlocks at level 9
+
+  const isActive = state.defenderMachampBarrageBlowActive ?? false;
+  const defBonus = 300;
+  if (isActive) {
+    defStats.def    += defBonus;
+    defStats.sp_def += defBonus;
+  }
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/machamp/barrage_blow.png')}
+    <div style="flex:1;">
+      ${moveBadge('Barrage Blow (Unite)', 9)}
+      Channeling (8s) → <strong style="color:#fff;">+${defBonus} Def & Sp. Def</strong><br>
+      <button class="machamp-barrage-def-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.machamp-barrage-def-toggle').onclick = () => {
+    state.defenderMachampBarrageBlowActive = !state.defenderMachampBarrageBlowActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -813,6 +912,10 @@ export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
     goodra:    [applyGoodraMuddyWaterDefStacks],
     hooh:      [applyHoohSafeguard, applyHoohSkyAttack],
     hoopa:     [applyHoopaRingsUnbound],
+    leafeon:   [applyLeafeonSolarBlade],
+    lucario:      [applyLucarioPowerUpPunchCharge],
+    "mega-lucario": [applyLucarioPowerUpPunchCharge],
+    machamp:   [applyMachampBarrageBlowDef],
     palkia:    [applyPalkiaDragonClawDefStacks],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));

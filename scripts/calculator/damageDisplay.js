@@ -65,7 +65,12 @@ import {
   applyGreninjaSmokescreenStatBuff,
   applyAegislashSacredSwordStatBuff,
   applyAegislashIronHeadStatBuff,
-  applyAzumarillBellyBashStatBuff
+  applyAzumarillBellyBashStatBuff,
+  getEonPowerProjectileCount,
+  getEonPowerProjectileScaling,
+  getLatiasDragonBreathMultiplier,
+  getDracoMeteorCometCount,
+  getDracoMeteorCometScaling
 } from './moveEffectsAtk.js';
 
 import { applyDefenderMoveEffects } from './moveEffectsDef.js';
@@ -907,6 +912,18 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         lavaPlumeMult = 1.15;
       }
 
+      // ── Lucario : Aura Cannon (Unite) → +20% sur le prochain Power-Up Punch ──
+      let auraCannonPUPMult = 1.0;
+      if (state.currentAttacker?.pokemonId === "lucario" && state.attackerLucarioAuraCannonPUPActive && move.name === "Power-Up Punch") {
+        auraCannonPUPMult = 1.20;
+      }
+
+      // ── Machamp : Close Combat+ → +25% dmg si la cible a un statut (lvl 13) ──
+      let machampCloseCombatMult = 1.0;
+      if (state.currentAttacker?.pokemonId === "machamp" && state.attackerMachampCloseCombatStatusActive && move.name === "Close Combat") {
+        machampCloseCombatMult = 1.25;
+      }
+
       // ── Chandelure : Flamethrower+ → +20% sur tous les dégâts (lvl 11+) ──
       let flamethrowerPlusMult = 1.0;
       if (state.currentAttacker?.pokemonId === "chandelure" && state.attackerFlamethrowerPlusActive) {
@@ -925,10 +942,24 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         dragonDanceFlightMult = 0.90;
       }
 
-      const effectiveGlobalMult = globalDamageMult * moltresBurnMult * lavaPlumeMult * flamethrowerPlusMult * fireSpinPlusMult * dragonDanceFlightMult;
+      const effectiveGlobalMult = globalDamageMult * moltresBurnMult * lavaPlumeMult * flamethrowerPlusMult * fireSpinPlusMult * dragonDanceFlightMult * auraCannonPUPMult * machampCloseCombatMult;
 
       let normal = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0,           effectiveGlobalMult, defStats.hp, currentDefHP);
       let crit   = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, true,  state.currentAttacker.pokemonId, scopeCritBonus, effectiveGlobalMult, defStats.hp, currentDefHP);
+
+      // ── LATIAS — Dragon Breath : +0.5% dmg / Eon power au-delà de 60 (cap 1059) ──
+      // Actif uniquement si le mode Eon Power sélectionné est "dragonBreath"
+      // (jamais cumulé avec Dragon Pulse — voir applyLatiasEonPower).
+      if (
+        state.currentAttacker?.pokemonId === "latias" &&
+        move.name === "Dragon Breath" &&
+        dmg.name === "Damage" &&
+        state.attackerLatiasEonPowerMove === "dragonBreath"
+      ) {
+        const eonMult = getLatiasDragonBreathMultiplier(state.attackerLatiasEonPower || 0);
+        normal = Math.floor(normal * eonMult);
+        crit   = Math.floor(crit   * eonMult);
+      }
 
       // ── CRUSTLE — Fury Cutter : +20%/marque (max 40%), arrondi vers le haut ──
       if (state.currentAttacker?.pokemonId === "crustle" && move.name === "Fury Cutter" && dmg.name === "Damage") {
@@ -1008,7 +1039,7 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         ? (dmg.can_crit === "true" || dmg.can_crit === true)
         : moveCrit;
       const isTick    = !!dmg.is_tick;
-      const tickCount = dmg.tick_count || 1;
+      let tickCount   = dmg.tick_count || 1;
 
       // ── BUZZWOLE — Leech Life+ (lvl 11) : +5% additif par tick successif ──
       let effectiveTickScaling = dmg.tick_scaling;
@@ -1020,6 +1051,44 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         !effectiveTickScaling
       ) {
         effectiveTickScaling = Array.from({ length: tickCount }, (_, i) => 1 + 0.05 * i);
+      }
+
+      // ── LATIAS / LATIOS — Dragon Pulse : nombre de projectiles + dégâts par
+      // projectile (et bonus % HP manquants pour Latios lvl 11+) dépendent de
+      // l'Eon Power accumulé (25/50/75/100 → 2/3/4/6 projectiles, -15%/projectile
+      // successif cap -75%, +0.5%/point au-delà de 100). Actif uniquement si le
+      // mode Eon Power sélectionné pour ce mon est "dragonPulse" (jamais cumulé
+      // avec Dragon Breath chez Latias ou Draco Meteor chez Latios).
+      if (
+        ["latias", "latios"].includes(state.currentAttacker?.pokemonId) &&
+        move.name === "Dragon Pulse" &&
+        (dmg.name.startsWith("Damage - Projectile") || dmg.name === "Damage - Additional +") &&
+        isTick
+      ) {
+        const isLatias  = state.currentAttacker.pokemonId === "latias";
+        const modeKey   = isLatias ? state.attackerLatiasEonPowerMove : state.attackerLatiosEonPowerMove;
+        const eonStored = isLatias ? state.attackerLatiasEonPower     : state.attackerLatiosEonPower;
+        const eonPower  = modeKey === "dragonPulse" ? (eonStored || 0) : 0;
+        tickCount = getEonPowerProjectileCount(eonPower);
+        effectiveTickScaling = getEonPowerProjectileScaling(eonPower);
+      }
+
+      // ── LATIOS — Draco Meteor : nombre de comètes + dégâts par comète
+      // dépendent de l'Eon Power accumulé (+1 comète / 25 Eon power, cap 6 à
+      // 100 ; 1ère comète 100%, suivantes -50% flat ; +0.5%/point au-delà de
+      // 100). Actif uniquement si le mode Eon Power sélectionné est
+      // "dracoMeteor" (jamais cumulé avec Dragon Pulse — voir applyLatiosEonPower).
+      if (
+        state.currentAttacker?.pokemonId === "latios" &&
+        move.name === "Draco Meteor" &&
+        (dmg.name === "Damage per Comet" || dmg.name === "Damage - Additional +") &&
+        isTick
+      ) {
+        const eonPower = state.attackerLatiosEonPowerMove === "dracoMeteor"
+          ? (state.attackerLatiosEonPower || 0)
+          : 0;
+        tickCount = getDracoMeteorCometCount(eonPower);
+        effectiveTickScaling = getDracoMeteorCometScaling(eonPower);
       }
 
       const tickScalingAttr = effectiveTickScaling
