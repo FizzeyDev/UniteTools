@@ -1,6 +1,17 @@
 {
   "patches": [
     {
+      "version": "1.22.1.15",
+      "name": "Aeos Summer Rush",
+      "date": "2026-08-06",
+      "buffs": [
+        "Zoroark", "Raichu", "Mewtwo X", "Palkia", "Meganium"
+      ],
+      "nerfs": ["Yveltal", "Feraligatr", "Alcremie", "Mega Lucario"],
+      "tweaks": ["Zacian"],
+      "notes": "Shop update, Event update, Bug fixes, Text fixes"
+    },
+    {
       "version": "1.22.1.14",
       "name": "Palkia Emergency Buff",
       "date": "2026-07-20",
@@ -109,7 +120,7 @@
       ],
       "nerfs": [
         "Sirfetchd",
-        "Mega-Lucario",
+        "Mega Lucario",
         "Meowth",
         "Vaporeon",
         "Zapdos"
@@ -153,7 +164,7 @@
       ],
       "nerfs": [
         "Sirfetchd",
-        "Mega-Lucario",
+        "Mega Lucario",
         "Meowth",
         "Vaporeon",
         "Zapdos"
@@ -190,7 +201,7 @@
         "Dhelmise",
         "Gyarados",
         "Mega-Charizard Y",
-        "Mega-Gyarados",
+        "Mega Gyarados",
         "Mewtwo Y",
         "Mimikyu",
         "Scizor",
@@ -239,7 +250,7 @@
         "Glaceon",
         "Latias",
         "Mega-Charizard Y",
-        "Mega-Gyarados",
+        "Mega Gyarados",
         "Mewtwo X",
         "Vaporeon",
         "Zacian"
@@ -309,7 +320,7 @@
       "nerfs": [
         "Dodrio",
         "Mega-Charizard X",
-        "Mega-Lucario",
+        "Mega Lucario",
         "Zacian"
       ],
       "tweaks": [],
@@ -338,7 +349,7 @@
       ],
       "tweaks": [
         "Raichu",
-        "Mega-Lucario"
+        "Mega Lucario"
       ],
       "notes": "Shop Updates, Event Updates, Bug Fixes, Map Adjustments"
     },
@@ -1587,14 +1598,14 @@
       "releaseDate": "2026-02-12"
     },
     {
-      "name": "Mega-Gyarados",
+      "name": "Mega Gyarados",
       "role": "All-Rounder",
       "type": "melee",
       "releaseVersion": "1.22.1.1",
       "releaseDate": "2026-02-12"
     },
     {
-      "name": "Mega-Lucario",
+      "name": "Mega Lucario",
       "role": "All-Rounder",
       "type": "melee",
       "releaseVersion": "1.22.1.1",
