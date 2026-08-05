@@ -130,7 +130,20 @@ body::before {
 }
 
 /* ─── CONTROLS ───────────────────────────────────────────────────────────────── */
-.controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+/* Un seul "panneau" (fond + bordure + ombre, comme .stat-card / .poke-card)
+   qui regroupe recherche, tri ET filtres, au lieu de plusieurs éléments
+   posés à plat les uns sous les autres directement sur le fond de la page. */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+}
 
 .search-row  { display: flex; gap: 10px; }
 .search-wrap { flex: 1; position: relative; }
@@ -142,7 +155,7 @@ body::before {
 }
 .search-input {
   width: 100%;
-  background: var(--surface);
+  background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 9px 14px 9px 38px;
@@ -157,7 +170,7 @@ body::before {
 .search-input::placeholder { color: var(--text-dim); }
 
 .sort-select       {
-  background: var(--surface);
+  background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 5px 10px;
@@ -172,7 +185,35 @@ body::before {
 .sort-select:focus { border-color: var(--blue); }
 
 /* ─── FILTER BAR ─────────────────────────────────────────────────────────────── */
-.filter-group   { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+/* Les 3 groupes de filtres sont maintenant réunis dans une seule bande,
+   séparée de la recherche par une ligne, avec un séparateur vertical entre
+   chaque groupe — ça se lit comme UNE barre de filtres plutôt que 3 lignes
+   de boutons indépendantes qui flottent. */
+.filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 22px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  position: relative;
+  padding-right: 22px;
+}
+.filter-group:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 18px;
+  background: var(--border-md);
+}
 .filter-group-lbl {
   font-family: 'Exo 2', sans-serif;
   font-size: 0.62rem;
@@ -191,7 +232,7 @@ body::before {
   text-transform: uppercase;
   border: 1px solid var(--border);
   border-radius: 99px;
-  background: var(--surface);
+  background: var(--surface-2);
   color: var(--text-dim);
   cursor: pointer;
   transition: all .2s;
@@ -597,4 +638,14 @@ body::before {
   .wrap      { padding: 0.5rem 0 3rem; }
   .year-grid { grid-template-columns: 1fr; }
   .m-stats   { grid-template-columns: repeat(2, 1fr); }
+
+  .search-row { flex-direction: column; }
+
+  .filter-group { padding-right: 0; }
+  .filter-group:not(:last-child)::after { display: none; }
+  .filter-group:not(:last-child) {
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--border);
+    width: 100%;
+  }
 }

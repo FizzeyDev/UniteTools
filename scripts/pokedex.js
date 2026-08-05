@@ -123,8 +123,15 @@ const RANGED_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 // LANGUE (léger, basé sur les boutons existants de la navbar)
 // ─────────────────────────────────────────────────────────────────────────────
 function getLang() {
-  const activeBtn = document.querySelector('.lang-switch .lang-btn.active, .sidebar-mini-footer .lang-btn.active');
-  return activeBtn?.dataset.lang === 'en' ? 'en' : 'fr';
+  // On lit directement le localStorage (source de vérité utilisée par navbar.js
+  // pour initialiser `currentLang`), plutôt que l'état .active des boutons de
+  // la navbar. La navbar est injectée de façon asynchrone (fetch de navbar.html
+  // PUIS fetch de fr.json/en.json), donc au moment où initPokedex() fait son
+  // premier render(), les boutons .lang-btn n'existent pas encore dans le DOM
+  // (ou existent avec leur classe .active par défaut du template, pas encore
+  // synchronisée sur la langue sauvegardée) — d'où la page qui s'affichait
+  // toujours en français au premier chargement, même avec lang=en enregistré.
+  return localStorage.getItem('lang') === 'en' ? 'en' : 'fr';
 }
 
 function pokeName(p) {
@@ -242,7 +249,18 @@ function renderStats() {
 // ─────────────────────────────────────────────────────────────────────────────
 function normalizePortee(portee) {
   if (!portee) return null;
-  return portee === 'Mêlée' ? 'melee' : 'distance';
+  // Comparaison normalisée (minuscules + accents retirés + espaces coupés)
+  // au lieu d'une égalité stricte avec 'Mêlée'. Avant : toute entrée qui
+  // n'était pas EXACTEMENT la chaîne "Mêlée" (accent inclus, casse exacte)
+  // retombait sur 'distance' par défaut — donc une entrée mal saisie dans
+  // le JSON (ex : "melee", "Melee", "mêlée " avec un espace...) affichait le
+  // mauvais badge "Distance" au lieu de "Mêlée", dans les deux langues.
+  // Ici, une valeur non reconnue retourne null (pas de badge affiché /
+  // exclue des filtres Mêlée ET Distance) plutôt que de deviner à tort.
+  const key = stripDiacritics(String(portee).trim().toLowerCase());
+  if (key === 'melee') return 'melee';
+  if (key === 'distance' || key === 'ranged') return 'distance';
+  return null;
 }
 
 function renderFilters() {
@@ -318,6 +336,7 @@ function getFilteredSorted() {
 function cardHTML(p, lang) {
   const isMega = p.name.startsWith('Mega-') || !!p.mega;
   const roleLbl = p.role ? ROLE_LABELS[p.role]?.[lang] || p.role : '—';
+  const porteeLbl = porteeLabel(p.portee, lang);
   const porteeIcon = normalizePortee(p.portee) === 'melee' ? MELEE_ICON : RANGED_ICON;
   const diffLbl = p.difficulte ? (DIFF_LABELS[p.difficulte]?.[lang] || p.difficulte) : null;
 
@@ -331,7 +350,7 @@ function cardHTML(p, lang) {
         <div class="poke-name">${pokeName(p)}</div>
         <div class="poke-sub">
           <span class="poke-role role-${p.role}"><span class="dot dot-${p.role}"></span>${roleLbl}</span>
-          ${p.portee ? `<span class="poke-portee">${porteeIcon}${porteeLabel(p.portee, lang)}</span>` : ''}
+          ${porteeLbl ? `<span class="poke-portee">${porteeIcon}${porteeLbl}</span>` : ''}
         </div>
         ${diffLbl ? `<div class="poke-meta"><span class="diff-pill ${diffClass(p.difficulte)}">${diffLbl}</span></div>` : ''}
       </div>
@@ -418,9 +437,13 @@ function openModal(name) {
   const moveData = state.moves[movesKey];
 
   const stageLbl = p.stade || '—';
-  const evoLbl = p.evo_niveaux ? `Lv. ${p.evo_niveaux}` : (lang === 'fr' ? 'Aucune' : 'None');
+  // "Lv." était codé en dur même en français (ça devrait être "Niv.").
+  const evoLbl = p.evo_niveaux
+    ? (lang === 'fr' ? `Niv. ${p.evo_niveaux}` : `Lv. ${p.evo_niveaux}`)
+    : (lang === 'fr' ? 'Aucune' : 'None');
   const diffColor = DIFF_COLOR[p.difficulte] || 'var(--text-dim)';
   const diffLbl = p.difficulte ? (DIFF_LABELS[p.difficulte]?.[lang] || p.difficulte) : '—';
+  const porteeLbl = porteeLabel(p.portee, lang);
   const porteeIcon = normalizePortee(p.portee) === 'melee' ? MELEE_ICON : RANGED_ICON;
 
   const movesHTML = MOVE_SECTIONS.map(section => {
@@ -444,7 +467,7 @@ function openModal(name) {
 
   const statDefs = [
     { icon: 'hash',        val: p.dex ? '#' + p.dex : '—', lbl: 'Pokédex' },
-    { icon: 'move',        val: p.portee ? `${porteeIcon}${porteeLabel(p.portee, lang)}` : '—', lbl: lang === 'fr' ? 'Portée' : 'Range' },
+    { icon: 'move',        val: porteeLbl ? `${porteeIcon}${porteeLbl}` : '—', lbl: lang === 'fr' ? 'Portée' : 'Range' },
     { icon: 'gauge',       val: diffLbl, lbl: lang === 'fr' ? 'Difficulté' : 'Difficulty', color: diffColor },
     { icon: 'calendar',    val: fullDateLabel(p, lang), lbl: lang === 'fr' ? 'Sortie' : 'Release' },
     { icon: 'layers',      val: stageLbl, lbl: lang === 'fr' ? 'Stade' : 'Stage' },
@@ -552,6 +575,13 @@ async function initPokedex() {
   document.addEventListener('click', (e) => {
     if (e.target.closest('.lang-btn')) setTimeout(render, 0);
   });
+
+  // Filet de sécurité supplémentaire : navbar.js dispatch 'translationsReady'
+  // une fois que fr.json/en.json sont chargés et appliqués (donc aussi au
+  // tout premier chargement de la page, pas seulement lors d'un clic). On
+  // se resynchronise dessus pour ne jamais rester bloqué sur la mauvaise
+  // langue, quel que soit l'ordre d'arrivée des fetch.
+  document.addEventListener('translationsReady', render);
 }
 
 document.addEventListener('DOMContentLoaded', initPokedex);
