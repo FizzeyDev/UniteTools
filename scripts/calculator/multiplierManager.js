@@ -29,6 +29,11 @@ export function computeDefenderDamageMult() {
   if (state.currentDefender?.pokemonId === "hooh" && state.defenderHoohSafeguardActive)  defenderDamageMult *= 0.50;
   if (state.currentDefender?.pokemonId === "hooh" && state.defenderHoohSkyAttackActive)  defenderDamageMult *= 0.70;
 
+  // Lucario / Mega-Lucario — Power-Up Punch charging : -30% damage received
+  if (["lucario", "mega-lucario"].includes(state.currentDefender?.pokemonId) && state.defenderLucarioPowerUpPunchCharging) {
+    defenderDamageMult *= 0.70;
+  }
+
   // Snow Cloak (Articuno)
   if (state.currentDefender?.pokemonId === "articuno") {
     const snowCloakState = state.defenderSnowCloakState || "none";
@@ -55,6 +60,11 @@ export function computeGlobalDamageMult() {
 
   if (state.currentAttacker?.pokemonId === "inteleon" && state.attackerInteleonLiquidationStacked) globalDamageMult *= 1.20;
 
+  // ── LATIOS — Luster Purge mark : +20% dmg vs marked target (benefits allied Latias too) ──
+  if (state.attackerLatiosLusterPurgeMarkActive && ["latios", "latias"].includes(state.currentAttacker?.pokemonId)) {
+    globalDamageMult *= 1.20;
+  }
+
   // ── YVELTAL — Dark Aura: +3% dmg per Mark of Destruction (max 5, vs marked target) ──
   if (state.currentAttacker?.pokemonId === "yveltal") {
     const marks = Math.min(5, state.attackerPassiveStacks || 0);
@@ -79,6 +89,10 @@ export function computeGlobalDamageMult() {
 
   if (state.currentDefender?.pokemonId === 'ceruledge' && state.defenderLevel >= 9 && state.defenderCeruledgeRevenantRendBuff) {
     globalDamageMult *= 0.30;
+  }
+
+  if (state.currentDefender?.pokemonId === 'leafeon' && state.defenderLevel >= 10 && state.defenderLeafeonSolarBladeDmgReduc) {
+    globalDamageMult *= 0.50;
   }
 
   return globalDamageMult;

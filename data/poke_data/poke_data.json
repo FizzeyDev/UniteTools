@@ -6801,7 +6801,7 @@
         "damages": [
           {"name": "Damage - Boosted Attack", "multiplier": 128, "levelCoef": 4, "constant": 340, "dealDamage": true},
           {"name": "Damage - Projectile (per)", "multiplier": 35.7, "levelCoef": 5, "constant": 108, "dealDamage": true, "is_tick": true, "tick_count": 6},
-          { "name": "Damage - Additional +", "missing_hp_percent": 3, "missing_hp_cap": 300, "dealDamage": true, "is_tick": true, "tick_count": 6, "notes": "3% missing HP, only at lvl 11" }
+          { "name": "Damage - Additional +", "missing_hp_percent": 3, "missing_hp_cap": 300, "dealDamage": true, "is_tick": true, "tick_count": 6, "upgrade_bonus": true, "notes": "3% missing HP" }
         ]
       },
       {
@@ -6813,7 +6813,7 @@
         "image": "assets/moves/latios/draco_meteor.png",
         "damages": [
           {"name": "Damage per Comet", "multiplier": 109, "levelCoef": 24, "constant": 364, "dealDamage": true, "is_tick": true, "tick_count": 6},
-          { "name": "Damage - Additional +", "missing_hp_percent": 3, "missing_hp_cap": 300, "dealDamage": true, "is_tick": true, "tick_count": 6, "notes": "3% missing HP, only at lvl 11" }
+          { "name": "Damage - Additional +", "missing_hp_percent": 3, "missing_hp_cap": 300, "dealDamage": true, "is_tick": true, "tick_count": 6, "upgrade_bonus": true, "notes": "3% missing HP" }
         ]
       },
       {

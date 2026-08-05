@@ -1086,6 +1086,506 @@ function applyInteleonAzureSpyVision(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── LATIAS / LATIOS — Eon Power shared mechanics ─────────────────────────────
+// Eon Power is accumulated by hitting opposing Pokémon with certain moves.
+// Each Pokémon tracks its own moves' Eon Power independently, and a mon's two
+// Eon Power moves are NEVER active at the same time — picking one resets/locks
+// out the other (see applyLatiasEonPower / applyLatiosEonPower below).
+
+// Dragon Pulse (Latias & Latios): gains projectiles at 25/50/75/100 Eon power
+// (2/1/1/2 → 6 total).
+export function getEonPowerProjectileCount(eonPower) {
+  const eon = Math.max(0, eonPower || 0);
+  if (eon >= 100) return 6;
+  if (eon >= 75)  return 4;
+  if (eon >= 50)  return 3;
+  if (eon >= 25)  return 2;
+  return 0;
+}
+
+// Per-projectile multiplier: -15% per successive projectile (cap -75%),
+// plus +0.5% per Eon power point beyond 100 (caps at 1099 Eon power).
+export function getEonPowerProjectileScaling(eonPower) {
+  const eon = Math.min(1099, Math.max(0, eonPower || 0));
+  const count = getEonPowerProjectileCount(eon);
+  if (count === 0) return [];
+  const eonDmgBonus = 1 + Math.max(0, eon - 100) * 0.005;
+  return Array.from({ length: count }, (_, i) => (1 - Math.min(0.15 * i, 0.75)) * eonDmgBonus);
+}
+
+export const EON_POWER_PROJECTILE_MAX_EON = 1099;
+
+// Dragon Breath (Latias only): +0.5% damage per Eon power point beyond 60 (caps at 1059 Eon power).
+export function getLatiasDragonBreathMultiplier(eonPower) {
+  const eon = Math.min(1059, Math.max(0, eonPower || 0));
+  return 1 + Math.max(0, eon - 60) * 0.005;
+}
+
+export const LATIAS_DRAGON_PULSE_MAX_EON  = EON_POWER_PROJECTILE_MAX_EON;
+export const LATIAS_DRAGON_BREATH_MAX_EON = 1059;
+
+// Draco Meteor (Latios only): +1 comet per 25 Eon power, base 2, cap 6 at 100 Eon power.
+export function getDracoMeteorCometCount(eonPower) {
+  const eon = Math.max(0, eonPower || 0);
+  return Math.min(6, 2 + Math.floor(eon / 25));
+}
+
+// First comet full damage; every subsequent comet is a flat -50% (not cumulative),
+// plus +0.5% per Eon power point beyond 100 (caps at 1099 Eon power).
+export function getDracoMeteorCometScaling(eonPower) {
+  const eon = Math.min(1099, Math.max(0, eonPower || 0));
+  const count = getDracoMeteorCometCount(eon);
+  const eonDmgBonus = 1 + Math.max(0, eon - 100) * 0.005;
+  return Array.from({ length: count }, (_, i) => (i === 0 ? 1 : 0.5) * eonDmgBonus);
+}
+
+export const LATIOS_DRAGON_PULSE_MAX_EON  = EON_POWER_PROJECTILE_MAX_EON;
+export const LATIOS_DRACO_METEOR_MAX_EON  = 1099;
+
+function applyLatiasEonPower(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 4) return; // Both moves learned at level 4
+
+  const mode = state.attackerLatiasEonPowerMove || null; // 'dragonPulse' | 'dragonBreath' | null
+  const maxEon = mode === 'dragonBreath' ? LATIAS_DRAGON_BREATH_MAX_EON : LATIAS_DRAGON_PULSE_MAX_EON;
+  const eon = Math.min(maxEon, Math.max(0, state.attackerLatiasEonPower || 0));
+
+  const setMode = (newMode) => {
+    if (state.attackerLatiasEonPowerMove === newMode) {
+      // Clicking the active mode again clears it entirely
+      state.attackerLatiasEonPowerMove = null;
+      state.attackerLatiasEonPower = 0;
+    } else {
+      state.attackerLatiasEonPowerMove = newMode;
+      const cap = newMode === 'dragonBreath' ? LATIAS_DRAGON_BREATH_MAX_EON : LATIAS_DRAGON_PULSE_MAX_EON;
+      state.attackerLatiasEonPower = Math.min(state.attackerLatiasEonPower || 0, cap);
+    }
+    updateDamages();
+  };
+
+  const projCount = mode === 'dragonPulse' ? getEonPowerProjectileCount(eon) : 0;
+  const dpBonusPct = mode === 'dragonPulse'  ? Math.max(0, eon - 100) * 0.5 : 0;
+  const dbBonusPct = mode === 'dragonBreath' ? Math.max(0, eon - 60)  * 0.5 : 0;
+  const dbSlowLabel = level >= 10 ? '40%' : '30%';
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/latias/dragon_pulse.png')}
+    <div style="flex:1;">
+      ${moveBadge('Eon Power', 4)}
+      <span style="font-size:0.8rem;color:${C}99;">Dragon Pulse and Dragon Breath track Eon Power separately and are never active together — pick which move is stacking.</span><br>
+      <div style="margin-top:8px;display:flex;gap:6px;">
+        <button class="latias-mode-btn latias-mode-pulse" style="
+          padding:6px 14px;background:${mode === 'dragonPulse' ? C : '#0d2428'};color:${mode === 'dragonPulse' ? '#000' : C};
+          border:1px solid ${C};border-radius:6px;cursor:pointer;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+        ">Dragon Pulse</button>
+        <button class="latias-mode-btn latias-mode-breath" style="
+          padding:6px 14px;background:${mode === 'dragonBreath' ? C : '#0d2428'};color:${mode === 'dragonBreath' ? '#000' : C};
+          border:1px solid ${C};border-radius:6px;cursor:pointer;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+        ">Dragon Breath</button>
+      </div>
+      ${mode ? `
+        <div style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+          <span style="font-size:0.85rem;color:${C};">Eon power:</span>
+          <button class="stack-btn minus latias-eon-minus" style="padding:2px 10px;">−</button>
+          <input type="number" class="latias-eon-input" value="${eon}" min="0" max="${maxEon}" step="1" style="
+            width:76px;background:#0d2428;color:${C};border:1px solid ${C};border-radius:4px;padding:4px 6px;
+            text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.9rem;">
+          <button class="stack-btn plus latias-eon-plus" style="padding:2px 10px;">+</button>
+          <span style="font-size:0.8rem;color:${C}99;">/ ${maxEon}</span>
+        </div>
+        <div style="margin-top:8px;font-size:0.85rem;color:#fff;">
+          ${mode === 'dragonPulse'
+            ? `→ <strong style="color:${C};">${projCount}</strong> projectile${projCount !== 1 ? 's' : ''} on hit${dpBonusPct > 0 ? ` · projectile damage <strong style="color:#88ff88;">+${dpBonusPct.toFixed(1)}%</strong>` : ''}`
+            : `→ Damage ${dbBonusPct > 0 ? `<strong style="color:#88ff88;">+${dbBonusPct.toFixed(1)}%</strong>` : '<strong style="color:#888;">+0%</strong>'} · slow ${dbSlowLabel} for 3s${level >= 10 ? '' : ' (40% at level 10)'}`
+          }
+        </div>
+      ` : ''}
+    </div>
+  `);
+
+  line.querySelector('.latias-mode-pulse').onclick  = () => setMode('dragonPulse');
+  line.querySelector('.latias-mode-breath').onclick = () => setMode('dragonBreath');
+
+  if (mode) {
+    const clamp = (v) => Math.min(maxEon, Math.max(0, v));
+    line.querySelector('.latias-eon-minus').onclick = () => {
+      state.attackerLatiasEonPower = clamp((state.attackerLatiasEonPower || 0) - 5);
+      updateDamages();
+    };
+    line.querySelector('.latias-eon-plus').onclick = () => {
+      state.attackerLatiasEonPower = clamp((state.attackerLatiasEonPower || 0) + 5);
+      updateDamages();
+    };
+    line.querySelector('.latias-eon-input').onchange = (e) => {
+      state.attackerLatiasEonPower = clamp(parseInt(e.target.value, 10) || 0);
+      updateDamages();
+    };
+  }
+
+  card.appendChild(line);
+}
+
+function applyLatiosEonPower(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Both moves learned at level 5
+
+  const mode = state.attackerLatiosEonPowerMove || null; // 'dragonPulse' | 'dracoMeteor' | null
+  const maxEon = LATIOS_DRAGON_PULSE_MAX_EON; // both cap at 1099 for Latios
+  const eon = Math.min(maxEon, Math.max(0, state.attackerLatiosEonPower || 0));
+
+  const setMode = (newMode) => {
+    if (state.attackerLatiosEonPowerMove === newMode) {
+      // Clicking the active mode again clears it entirely
+      state.attackerLatiosEonPowerMove = null;
+      state.attackerLatiosEonPower = 0;
+    } else {
+      state.attackerLatiosEonPowerMove = newMode;
+      state.attackerLatiosEonPower = Math.min(state.attackerLatiosEonPower || 0, maxEon);
+    }
+    updateDamages();
+  };
+
+  const projCount  = mode === 'dragonPulse' ? getEonPowerProjectileCount(eon) : 0;
+  const cometCount = mode === 'dracoMeteor' ? getDracoMeteorCometCount(eon)   : 0;
+  const dpBonusPct = (mode === 'dragonPulse' || mode === 'dracoMeteor') ? Math.max(0, eon - 100) * 0.5 : 0;
+  const upgraded   = level >= 11;
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/latios/dragon_pulse.png')}
+    <div style="flex:1;">
+      ${moveBadge('Eon Power', 5)}
+      <span style="font-size:0.8rem;color:${C}99;">Dragon Pulse and Draco Meteor track Eon Power separately and are never active together — pick which move is stacking.</span><br>
+      <div style="margin-top:8px;display:flex;gap:6px;">
+        <button class="latios-mode-btn latios-mode-pulse" style="
+          padding:6px 14px;background:${mode === 'dragonPulse' ? C : '#0d2428'};color:${mode === 'dragonPulse' ? '#000' : C};
+          border:1px solid ${C};border-radius:6px;cursor:pointer;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+        ">Dragon Pulse</button>
+        <button class="latios-mode-btn latios-mode-meteor" style="
+          padding:6px 14px;background:${mode === 'dracoMeteor' ? C : '#0d2428'};color:${mode === 'dracoMeteor' ? '#000' : C};
+          border:1px solid ${C};border-radius:6px;cursor:pointer;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+        ">Draco Meteor</button>
+      </div>
+      ${mode ? `
+        <div style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+          <span style="font-size:0.85rem;color:${C};">Eon power:</span>
+          <button class="stack-btn minus latios-eon-minus" style="padding:2px 10px;">−</button>
+          <input type="number" class="latios-eon-input" value="${eon}" min="0" max="${maxEon}" step="1" style="
+            width:76px;background:#0d2428;color:${C};border:1px solid ${C};border-radius:4px;padding:4px 6px;
+            text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.9rem;">
+          <button class="stack-btn plus latios-eon-plus" style="padding:2px 10px;">+</button>
+          <span style="font-size:0.8rem;color:${C}99;">/ ${maxEon}</span>
+        </div>
+        <div style="margin-top:8px;font-size:0.85rem;color:#fff;">
+          ${mode === 'dragonPulse'
+            ? `→ <strong style="color:${C};">${projCount}</strong> projectile${projCount !== 1 ? 's' : ''} on hit${dpBonusPct > 0 ? ` · damage <strong style="color:#88ff88;">+${dpBonusPct.toFixed(1)}%</strong>` : ''}${upgraded ? ' · +3% missing HP dmg/projectile (cap 300)' : ''}`
+            : `→ <strong style="color:${C};">${cometCount}</strong> comet${cometCount !== 1 ? 's' : ''}${dpBonusPct > 0 ? ` · damage <strong style="color:#88ff88;">+${dpBonusPct.toFixed(1)}%</strong>` : ''}${upgraded ? ' · +3% missing HP dmg/comet (cap 300)' : ''}`
+          }
+        </div>
+      ` : ''}
+    </div>
+  `);
+
+  line.querySelector('.latios-mode-pulse').onclick  = () => setMode('dragonPulse');
+  line.querySelector('.latios-mode-meteor').onclick = () => setMode('dracoMeteor');
+
+  if (mode) {
+    const clamp = (v) => Math.min(maxEon, Math.max(0, v));
+    line.querySelector('.latios-eon-minus').onclick = () => {
+      state.attackerLatiosEonPower = clamp((state.attackerLatiosEonPower || 0) - 5);
+      updateDamages();
+    };
+    line.querySelector('.latios-eon-plus').onclick = () => {
+      state.attackerLatiosEonPower = clamp((state.attackerLatiosEonPower || 0) + 5);
+      updateDamages();
+    };
+    line.querySelector('.latios-eon-input').onchange = (e) => {
+      state.attackerLatiosEonPower = clamp(parseInt(e.target.value, 10) || 0);
+      updateDamages();
+    };
+  }
+
+  card.appendChild(line);
+}
+
+// ── LATIOS — Luster Purge mark (also benefits an allied Latias) ──────────────
+// Simple on/off trigger: is the target currently marked by Luster Purge?
+// If active, +20% damage on every subsequent hit against that target.
+function applyLusterPurgeMark(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 7) return; 
+
+  const isActive = state.attackerLatiosLusterPurgeMarkActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/latios/luster_purge.png')}
+    <div style="flex:1;">
+      ${moveBadge('Luster Purge — Mark', 7)}
+      Target marked → <strong style="color:#fff;">+20% damage</strong> from Latios & allied Latias<br>
+      <button class="luster-purge-mark-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Marked' : 'Mark inactive'}</button>
+    </div>
+  `);
+  line.querySelector('.luster-purge-mark-toggle').onclick = () => {
+    state.attackerLatiosLusterPurgeMarkActive = !state.attackerLatiosLusterPurgeMarkActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── LUCARIO ────────────────────────────────────────────────────────────────
+// Extreme Speed+ (level 11 upgrade) : +7.5% Attack for 2s when the move is used.
+// Single stack max — does not stack with itself (re-using the move just refreshes it).
+function applyLucarioExtremeSpeed(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 11) return; // Upgrade unlocked at level 11
+
+  const isActive = state.attackerLucarioExtremeSpeedActive ?? false;
+  const bonusPct = 7.5;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/lucario/extreme_speed.png')}
+    <div style="flex:1;">
+      ${moveBadge('Extreme Speed+', 11)}
+      Move used → <strong style="color:#fff;">+${bonusPct}% Attack</strong> for 2s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Single stack only (does not stack with itself)</span><br>
+      <button class="lucario-espeed-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.lucario-espeed-toggle').onclick = () => {
+    state.attackerLucarioExtremeSpeedActive = !state.attackerLucarioExtremeSpeedActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// Stat buff applied in statsManager.js (single stack, +7.5% ATK).
+export function applyLucarioExtremeSpeedStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'lucario') return;
+  if (level < 11) return;
+  if (!state.attackerLucarioExtremeSpeedActive) return;
+  atkStats.atk += Math.floor(atkStats.atk * (7.5 / 100));
+}
+
+// Aura Cannon (Unite, level 9) : if Power-Up Punch is learned, strengthens the
+// damage of the next Power-Up Punch attack by ~20% (also extends its shove
+// duration to 1s, which has no impact on damage calc).
+function applyLucarioAuraCannonPUP(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 9) return; // Aura Cannon unlocks at level 9
+
+  const isActive = state.attackerLucarioAuraCannonPUPActive ?? false;
+  const bonusPct = 20;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/lucario/aura_cannon.png')}
+    <div style="flex:1;">
+      ${moveBadge('Aura Cannon (Unite)', 9)}
+      Unite Move used (if Power-Up Punch learned) → next Power-Up Punch hit deals <strong style="color:#fff;">+${bonusPct}% damage</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Applies to the next Power-Up Punch attack only</span><br>
+      <button class="lucario-aura-cannon-pup-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.lucario-aura-cannon-pup-toggle').onclick = () => {
+    state.attackerLucarioAuraCannonPUPActive = !state.attackerLucarioAuraCannonPUPActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── MACHAMP ────────────────────────────────────────────────────────────────
+// Close Combat+ (level 13) : +25% damage if the target has a status condition.
+function applyMachampCloseCombatStatus(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const isActive = state.attackerMachampCloseCombatStatusActive ?? false;
+  const bonusPct = 25;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/machamp/close_combat.png')}
+    <div style="flex:1;">
+      ${moveBadge('Close Combat+', 13)}
+      Target affected by a status condition → <strong style="color:#fff;">+${bonusPct}% damage</strong><br>
+      <button class="machamp-cc-status-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.machamp-cc-status-toggle').onclick = () => {
+    state.attackerMachampCloseCombatStatusActive = !state.attackerMachampCloseCombatStatusActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// Cross Chop+ (level 13) : auto attacks permanently grant +3 Atk per target hit, up to 40 stacks.
+function applyMachampCrossChopStacks(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const stacks    = state.attackerMachampCrossChopStacks ?? 0;
+  const maxStacks = 40;
+  const perStack  = 3;
+  const total     = stacks * perStack;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/machamp/cross_chop.png')}
+    <div style="flex:1;">
+      ${moveBadge('Cross Chop+', 13)}
+      Auto attacks hit a target: <button class="stack-btn minus machamp-cc-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus machamp-cc-plus">+</button><br>
+      → <strong style="color:${total > 0 ? '#88ff88' : '#888'};">+${total} Attack</strong> (permanent)
+      ${stacks >= maxStacks ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ MAX</span>' : ''}
+    </div>
+  `);
+  line.querySelector('.machamp-cc-minus').onclick = () => { if ((state.attackerMachampCrossChopStacks ?? 0) > 0)        { state.attackerMachampCrossChopStacks = (state.attackerMachampCrossChopStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.machamp-cc-plus').onclick  = () => { if ((state.attackerMachampCrossChopStacks ?? 0) < maxStacks) { state.attackerMachampCrossChopStacks = (state.attackerMachampCrossChopStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
+// Bulk Up (level 1) : self-buff, +15% Attack for 3s (peak value — the buff diminishes over the duration).
+function applyMachampBulkUp(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 1 || level >= 5) return;
+
+  const isActive = state.attackerMachampBulkUpActive ?? false;
+  const bonusPct = 15;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/machamp/bulk_up.png')}
+    <div style="flex:1;">
+      ${moveBadge('Bulk Up', 1)}
+      Move used → <strong style="color:#fff;">+${bonusPct}% Attack</strong> for 3s<br>
+      <button class="machamp-bulkup-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.machamp-bulkup-toggle').onclick = () => {
+    state.attackerMachampBulkUpActive = !state.attackerMachampBulkUpActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyMachampBulkUpStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'machamp') return;
+  if (!state.attackerMachampBulkUpActive) return;
+  atkStats.atk += Math.floor(atkStats.atk * 0.15);
+}
+
+// Dynamic Punch (level 5 : +15% Atk for 5s / level 11 upgrade : +20% Atk for 5s).
+function applyMachampDynamicPunch(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Learned at level 5
+
+  const upgraded = level >= 11;
+  const bonusPct = upgraded ? 20 : 15;
+  const isActive = state.attackerMachampDynamicPunchActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/machamp/dynamic_punch.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Dynamic Punch+' : 'Dynamic Punch', upgraded ? 11 : 5)}
+      Move used → <strong style="color:#fff;">+${bonusPct}% Attack</strong> for 5s<br>
+      <button class="machamp-dynpunch-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.machamp-dynpunch-toggle').onclick = () => {
+    state.attackerMachampDynamicPunchActive = !state.attackerMachampDynamicPunchActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyMachampDynamicPunchStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'machamp') return;
+  if (level < 5) return;
+  if (!state.attackerMachampDynamicPunchActive) return;
+  const bonusPct = level >= 11 ? 0.20 : 0.15;
+  atkStats.atk += Math.floor(atkStats.atk * bonusPct);
+}
+
+// Barrage Blow (Unite, level 9) : +25% Attack (and +300 Def/Sp.Def, see moveEffectsDef.js) for 8s while channeling.
+function applyMachampBarrageBlowAtk(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 9) return; // Unite unlocks at level 9
+
+  const isActive = state.attackerMachampBarrageBlowActive ?? false;
+  const bonusPct = 25;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/machamp/barrage_blow.png')}
+    <div style="flex:1;">
+      ${moveBadge('Barrage Blow (Unite)', 9)}
+      Channeling (8s) → <strong style="color:#fff;">+${bonusPct}% Attack</strong><br>
+      <button class="machamp-barrage-atk-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.machamp-barrage-atk-toggle').onclick = () => {
+    state.attackerMachampBarrageBlowActive = !state.attackerMachampBarrageBlowActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyMachampBarrageBlowStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'machamp') return;
+  if (level < 9) return;
+  if (!state.attackerMachampBarrageBlowActive) return;
+  atkStats.atk += Math.floor(atkStats.atk * 0.25);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -1116,6 +1616,10 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     hooh:       [applyHoohSacredFireFlight],
     hoopa:      [applyHoopaRingsUnbound],
     inteleon:   [applyInteleonLiquidation, applyInteleonAzureSpyVision],
+    latias:     [applyLatiasEonPower, applyLusterPurgeMark],
+    latios:     [applyLatiosEonPower, applyLusterPurgeMark],
+    lucario:    [applyLucarioExtremeSpeed, applyLucarioAuraCannonPUP],
+    machamp:    [applyMachampCloseCombatStatus, applyMachampCrossChopStacks, applyMachampBulkUp, applyMachampDynamicPunch, applyMachampBarrageBlowAtk],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

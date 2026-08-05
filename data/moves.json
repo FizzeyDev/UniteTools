@@ -568,7 +568,7 @@
   },
   "quaquaval": {
     "move1": [ "pound.png", "low_sweep.png" ],
-    "move2": [ "ving_attack.png", "liquidation.png" ],
+    "move2": [ "wing_attack.png", "liquidation.png" ],
     "passive": [ "moxie.png" ],
     "unite": [ "carnival_splash.png" ]
   },
