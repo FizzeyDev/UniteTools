@@ -1586,6 +1586,204 @@ export function applyMachampBarrageBlowStatBuff(pokemon, atkStats, level) {
   atkStats.atk += Math.floor(atkStats.atk * 0.25);
 }
 
+// ── MEOWSCARADA — Leafage (4 leaves, 2nd-4th deal -20% dmg, 50% slow 2.5s) ─────
+function applyMeowscaradaLeafage(atkStats, defStats, card) {
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/meowscarada/leafage.png')}
+    <div style="flex:1;">
+      ${moveBadge('Leafage', 1)}
+      4 leaves fired → each hit slows by <strong style="color:#fff;">-50% Movement Speed</strong> for 2.5s<br>
+      Once a leaf connects, every following leaf deals <strong style="color:#fff;">-20% damage</strong> (not cumulative)<br>
+      <span style="font-size:0.8rem;color:${C}99;">Data entry: use tick_scaling [1, 0.8, 0.8, 0.8] on the 4 leaf hits</span>
+    </div>
+  `);
+  card.appendChild(line);
+}
+
+// ── MEOWSCARADA — Flower Trick (flower bomb, execute + increased explosion) ───
+function applyMeowscaradaFlowerTrick(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 6) return;
+  const upgraded = level >= 11;
+
+  const isActive = state.attackerMeowscaradaFlowerTrickIncreased ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/meowscarada/flower_trick.png')}
+    <div style="flex:1;">
+      ${moveBadge('Flower Trick', 6)}
+      Attaches a flower bomb (5s) → detonate at will for area damage<br>
+      Explosion also deals <strong style="color:#fff;">+18% target's missing HP</strong> <span style="font-size:0.8rem;color:${C}99;">(capped at 1000 vs Wild Pokémon — handled automatically via missing_hp_percent / wild_cap)</span><br>
+      If the bombed target is damaged by Meowscarada before it pops → <strong style="color:#fff;">bigger AoE & ×1.6 explosion damage</strong><br>
+      ${upgraded ? `<span style="font-size:0.8rem;color:${C}99;">Level 11: bigger bomb range/AoE, +30% Move Speed for 3s (diminishing -10%/s) when planting — not modeled here</span><br>` : ''}
+      <button class="meowscarada-flower-trick-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Increased Explosion' : 'Activate Increased Explosion'}</button>
+    </div>
+  `);
+  line.querySelector('.meowscarada-flower-trick-toggle').onclick = () => {
+    state.attackerMeowscaradaFlowerTrickIncreased = !state.attackerMeowscaradaFlowerTrickIncreased;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── MEOWSCARADA — Night Slash (mark → +crit rate, cooldown/heal on marked) ────
+function applyMeowscaradaNightSlash(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 6) return;
+  const upgraded = level >= 11;
+  const critBonus = upgraded ? 65 : 50;
+
+  const isActive = state.attackerMeowscaradaNightSlashMarkActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/meowscarada/night_slash.png')}
+    <div style="flex:1;">
+      ${moveBadge('Night Slash', 6)}
+      3 slashing waves (2nd/3rd deal 70% of the 1st) → apply a 5s Mark on hit enemies<br>
+      Basic attacks vs Marked targets: <strong style="color:#fff;">+${critBonus}% Critical-Hit Rate</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Also reduces this move's cooldown by 0.5s and heals (100%/50%/20% cycle) on basic-attack hits vs Marked targets — not modeled here</span><br>
+      <button class="meowscarada-night-slash-mark-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Target Marked' : 'Mark Target'}</button>
+    </div>
+  `);
+  line.querySelector('.meowscarada-night-slash-mark-toggle').onclick = () => {
+    state.attackerMeowscaradaNightSlashMarkActive = !state.attackerMeowscaradaNightSlashMarkActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── MEOWSCARADA — Trailblaze (leap, paralyze, attack/move speed, lvl13 shield) ─
+function applyMeowscaradaTrailblaze(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 7) return;
+  const upgraded = level >= 13;
+  const shieldPct = (20 + 0.5 * (level - 1)).toFixed(1);
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/meowscarada/trailblaze.png')}
+    <div style="flex:1;">
+      ${moveBadge('Trailblaze', 7)}
+      Leap on hit → target Paralyzed, <strong style="color:#fff;">-40% Attack Speed</strong> & <strong style="color:#fff;">-40% Movement Speed</strong> for 2s<br>
+      On hit → Meowscarada gains <strong style="color:#fff;">+100% Attack Speed</strong> (4s) and <strong style="color:#fff;">+60% Movement Speed</strong> (4s, diminishing -5%/0.5s, min 35%)<br>
+      Used from tall grass → increased leap range. KO/Assist → cooldown reset<br>
+      ${upgraded ? `<span style="font-size:0.8rem;color:${C}99;">Level 13: grants a shield worth ${shieldPct}% Max HP for 3s — not modeled here</span>` : ''}
+    </div>
+  `);
+  card.appendChild(line);
+}
+
+// ── MEWTWO X — Future Sight (lock-on mark + additional explosion) ─────────────
+// "The locked-on enemy ... takes 10% increased damage from Mewtwo" (3s).
+// Level 11: increased to 20%. After 3s, an additional explosion deals damage
+// equal to 50% of any damage the target received while locked-on (cap 2000 vs players).
+function applyMewtwoXFutureSight(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Future Sight learned at level 5
+  const upgraded = level >= 11;
+  const bonusPct = upgraded ? 20 : 10;
+
+  const isActive     = state.attackerMewtwoXFutureSightMarkActive ?? false;
+  const damageTaken  = state.attackerMewtwoXFutureSightDamageTaken ?? 0;
+  const isVsPlayer   = state.attackerMewtwoXFutureSightVsPlayer ?? true;
+  let additionalExplosion = Math.floor(damageTaken * 0.5);
+  if (isVsPlayer) additionalExplosion = Math.min(additionalExplosion, 2000);
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/mega_mewtwo_x/future_sight.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Future Sight+' : 'Future Sight', upgraded ? 11 : 5)}
+      Target locked-on (3s) → <strong style="color:#fff;">+${bonusPct}% damage</strong> from Mewtwo<br>
+      <span style="font-size:0.8rem;color:${C}99;">Also −25% Movement Speed on the target for 3s — not modeled here</span><br>
+      <button class="mewtwo-x-futuresight-mark-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Target Locked-On' : 'Lock On Target'}</button>
+      <div style="margin-top:10px;font-size:0.8rem;color:${C}99;">Additional Explosion — 50% of damage dealt while locked-on${isVsPlayer ? ' (capped at 2000 vs players)' : ''}:</div>
+      <div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:0.85rem;color:${C};">Damage taken while locked-on:</span>
+        <input type="number" class="mewtwo-x-futuresight-dmg-input" value="${damageTaken}" min="0" step="10" style="
+          width:90px;background:#0d2428;color:${C};border:1px solid ${C};border-radius:4px;padding:4px 6px;
+          text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.9rem;">
+        <button class="mewtwo-x-futuresight-vsplayer-toggle" style="
+          padding:4px 12px;background:${isVsPlayer ? C : '#0d2428'};color:${isVsPlayer ? '#000' : C};
+          border:1px solid ${C};border-radius:6px;cursor:pointer;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.8rem;
+        ">${isVsPlayer ? 'vs Player (cap 2000)' : 'vs Wild (no cap)'}</button>
+      </div>
+      <div style="margin-top:6px;font-size:0.9rem;color:#fff;">→ Additional Explosion: <strong style="color:${C};">${additionalExplosion}</strong> damage</div>
+    </div>
+  `);
+  line.querySelector('.mewtwo-x-futuresight-mark-toggle').onclick = () => {
+    state.attackerMewtwoXFutureSightMarkActive = !state.attackerMewtwoXFutureSightMarkActive;
+    updateDamages();
+  };
+  line.querySelector('.mewtwo-x-futuresight-dmg-input').onchange = (e) => {
+    state.attackerMewtwoXFutureSightDamageTaken = Math.max(0, parseInt(e.target.value, 10) || 0);
+    updateDamages();
+  };
+  line.querySelector('.mewtwo-x-futuresight-vsplayer-toggle').onclick = () => {
+    state.attackerMewtwoXFutureSightVsPlayer = !isVsPlayer;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── MEWTWO X — Teleport (post-dash damage buff) ────────────────────────────────
+// "For 5s, movement speed is increased by 30%, Mewtwo deals 10% more damage,
+// and the Mega gauge increases 50% faster." Level 13: damage bonus → 20%.
+function applyMewtwoXTeleportDash(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 7) return; // Teleport learned at level 7
+  const upgraded = level >= 13;
+  const bonusPct = upgraded ? 20 : 10;
+
+  const isActive = state.attackerMewtwoXTeleportActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/mega_mewtwo_x/teleport.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Teleport+' : 'Teleport', upgraded ? 13 : 7)}
+      After teleporting (5s) → <strong style="color:#fff;">+${bonusPct}% damage dealt</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Also +30% Movement Speed and faster Mega gauge gain — not modeled here</span><br>
+      <button class="mewtwo-x-teleport-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.mewtwo-x-teleport-toggle').onclick = () => {
+    state.attackerMewtwoXTeleportActive = !state.attackerMewtwoXTeleportActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -1620,6 +1818,8 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     latios:     [applyLatiosEonPower, applyLusterPurgeMark],
     lucario:    [applyLucarioExtremeSpeed, applyLucarioAuraCannonPUP],
     machamp:    [applyMachampCloseCombatStatus, applyMachampCrossChopStacks, applyMachampBulkUp, applyMachampDynamicPunch, applyMachampBarrageBlowAtk],
+    meowscarada: [applyMeowscaradaLeafage, applyMeowscaradaFlowerTrick, applyMeowscaradaNightSlash, applyMeowscaradaTrailblaze],
+    mewtwo_x:   [applyMewtwoXFutureSight, applyMewtwoXTeleportDash],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

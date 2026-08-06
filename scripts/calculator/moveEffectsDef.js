@@ -893,6 +893,130 @@ function applyMachampBarrageBlowDef(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── METAGROSS — Zen Headbutt (post-hit damage reduction) ─────────────────────
+function applyMetagrossZenHeadbutt(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const isActive = state.defenderMetagrossZenHeadbuttActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/metagross/zen_headbutt.png')}
+    <div style="flex:1;">
+      ${moveBadge('Zen Headbutt+', 13)}
+      After dealing damage with Zen Headbutt (2s) → <strong style="color:#fff;">−20% damage received</strong><br>
+      <button class="metagross-zenheadbutt-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.metagross-zenheadbutt-toggle').onclick = () => {
+    state.defenderMetagrossZenHeadbuttActive = !state.defenderMetagrossZenHeadbuttActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── METAGROSS — Magnet Rise (levitating damage reduction) ────────────────────
+function applyMetagrossMagnetRise(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const isActive = state.defenderMetagrossMagnetRiseActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/metagross/magnet_rise.png')}
+    <div style="flex:1;">
+      ${moveBadge('Magnet Rise+', 13)}
+      While levitating (up to 4s) → <strong style="color:#fff;">−30% damage received</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Active only while levitating</span><br>
+      <button class="metagross-magnetrise-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.metagross-magnetrise-toggle').onclick = () => {
+    state.defenderMetagrossMagnetRiseActive = !state.defenderMetagrossMagnetRiseActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── MEW — Light Screen (moving wall, damage mitigation) ──────────────────────
+// "While the wall moves with Mew, enemy attacks that pass through it will deal
+// 25% reduced damage but will not prevent enemies from passing and does not
+// shove them anymore." (Only active once the wall is re-cast to follow Mew.)
+function applyMewLightScreenWall(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 3) return; // Light Screen learned at level 3
+
+  const upgraded = level >= 12; // Level 12: bigger wall (no dmg impact)
+  const isActive = state.defenderMewLightScreenWallActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/mew/light_screen.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Light Screen+' : 'Light Screen', upgraded ? 12 : 3)}
+      Wall following Mew (recast within 4s) → <strong style="color:#fff;">−25% damage received</strong> from attacks passing through<br>
+      <span style="font-size:0.8rem;color:${C}99;">Active only while the wall is moving with Mew · no longer blocks or shoves enemies while moving${upgraded ? ' · larger wall at level 12' : ''}</span><br>
+      <button class="mew-lightscreen-wall-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.mew-lightscreen-wall-toggle').onclick = () => {
+    state.defenderMewLightScreenWallActive = !state.defenderMewLightScreenWallActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── MEWTWO X — Psystrike (channeling damage reduction) ────────────────────────
+// "While Mewtwo is directing psychic waves, it takes 15% reduced damage."
+function applyMewtwoXPsystrikeChannel(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 5) return; // Psystrike learned at level 5
+
+  const isActive = state.defenderMewtwoXPsystrikeChanneling ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/mega_mewtwo_x/psystrike.png')}
+    <div style="flex:1;">
+      ${moveBadge('Psystrike', 5)}
+      Directing psychic waves → <strong style="color:#fff;">−15% damage received</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Active only while channeling the move</span><br>
+      <button class="mewtwo-x-psystrike-channel-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.mewtwo-x-psystrike-channel-toggle').onclick = () => {
+    state.defenderMewtwoXPsystrikeChanneling = !state.defenderMewtwoXPsystrikeChanneling;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -916,6 +1040,9 @@ export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
     lucario:      [applyLucarioPowerUpPunchCharge],
     "mega-lucario": [applyLucarioPowerUpPunchCharge],
     machamp:   [applyMachampBarrageBlowDef],
+    metagross: [applyMetagrossZenHeadbutt, applyMetagrossMagnetRise],
+    mew:       [applyMewLightScreenWall],
+    mewtwo_x:  [applyMewtwoXPsystrikeChannel],
     palkia:    [applyPalkiaDragonClawDefStacks],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));

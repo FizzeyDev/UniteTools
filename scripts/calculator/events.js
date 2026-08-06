@@ -86,7 +86,9 @@ export function setupDebuffListeners() {
     'tinkatonIceHammerDebuffAttacker',
     'tinkatonIceHammerPlusDebuffAttacker',
     'alcremieCharmDebuffAttacker',
-    'latiasMistBallDebuffAttacker'
+    'latiasMistBallDebuffAttacker',
+    'meganiumSynthesisDebuffAttacker',
+    'meganiumFullBloomAromaDebuffAttacker'
   ];
 
   attackerDebuffIds.forEach(id => {
@@ -122,6 +124,8 @@ export function setupDebuffListeners() {
           case 'tinkatonIceHammerPlusDebuffAttacker': state.debuffTinkatonIceHammerPlus = e.target.checked; break;
           case 'alcremieCharmDebuffAttacker': state.debuffAlcremieCharm = e.target.checked; break;
           case 'latiasMistBallDebuffAttacker': state.debuffLatiasMistBall = e.target.checked; break;
+          case 'meganiumSynthesisDebuffAttacker': state.debuffMeganiumSynthesis = e.target.checked; break;
+          case 'meganiumFullBloomAromaDebuffAttacker': state.debuffMeganiumFullBloomAroma = e.target.checked; break;
         }
         updateDamages();
       });

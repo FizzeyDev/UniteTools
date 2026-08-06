@@ -225,6 +225,9 @@ export function updateDamages() {
   if (state.currentAttacker?.pokemonId === "inteleon" && state.attackerInteleonAzureSpyVisionActive) {
     totalCritChance *= 2;
   }
+  if (state.currentAttacker?.pokemonId === "meowscarada" && state.attackerMeowscaradaNightSlashMarkActive) {
+    totalCritChance += state.attackerLevel >= 11 ? 65 : 50;
+  }
   totalCritChance = Math.min(100, totalCritChance);
 
   document.getElementById('attackerCritChance').textContent = `${totalCritChance}%`;
@@ -1598,13 +1601,24 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         curseMult *= 0.50;
       }
 
+      // ── Meganium — Overgrow : +10% heal vers une cible (soi ou allié) à ≤30% PV ──
+      const isMeganiumOvergrow = state.currentAttacker?.pokemonId === "meganium";
+      const overgrowThreshold  = isMeganiumOvergrow ? (state.currentAttacker.passive?.lowHpThreshold ?? 30) : null;
+      const overgrowBonusPct   = isMeganiumOvergrow ? (state.currentAttacker.passive?.bonusHealPercent ?? 10) : 0;
+
       visibleHeals.forEach(heal => {
         const line = document.createElement("div");
         line.className = "damage-line";
         const casterCurrentHP = state.attackerHPAbsolute != null
           ? Math.min(state.attackerHPAbsolute, atkStats.hp)
           : Math.floor(atkStats.hp * (state.attackerHPPercent / 100));
-        line.innerHTML = renderHealLine(heal, atkStats, state.attackerLevel, bigRootMult, rescueMult, curseMult, casterCurrentHP);
+
+        const casterHPPercent = atkStats.hp > 0 ? (casterCurrentHP / atkStats.hp) * 100 : 100;
+        const overgrowSelfMult = (isMeganiumOvergrow && casterHPPercent <= overgrowThreshold)
+          ? 1 + overgrowBonusPct / 100
+          : 1.0;
+
+        line.innerHTML = renderHealLine(heal, atkStats, state.attackerLevel, bigRootMult, rescueMult, curseMult, casterCurrentHP, overgrowSelfMult);
         card.appendChild(line);
 
         const currentAllies = getAllies();
@@ -1612,7 +1626,10 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           const valuesEl = line.querySelector('.dmg-values');
           if (valuesEl && !valuesEl.dataset.noAllies) {
             const allyVal = parseInt(valuesEl.dataset.allyHeal, 10);
-            if (!isNaN(allyVal) && allyVal > 0) appendAllyBadges(valuesEl, 'heal', allyVal);
+            const overgrowAllyMult = isMeganiumOvergrow
+              ? (ally => (ally.hpPercent <= overgrowThreshold ? 1 + overgrowBonusPct / 100 : 1))
+              : null;
+            if (!isNaN(allyVal) && allyVal > 0) appendAllyBadges(valuesEl, 'heal', allyVal, overgrowAllyMult);
           }
         }
       });

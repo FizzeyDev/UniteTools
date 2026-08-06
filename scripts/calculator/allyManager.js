@@ -487,7 +487,7 @@ function openAllyItemPicker(ally, slot, anchorCard, panel, refreshStatsFn) {
 
 // ── Badges alliés sur move-cards ──────────────────────────────────────────────
 
-export function appendAllyBadges(valuesEl, type, allyValue) {
+export function appendAllyBadges(valuesEl, type, allyValue, getAllyMult = null) {
   if (!allies.length) return;
   if (!allyValue || allyValue <= 0) return;
 
@@ -499,13 +499,16 @@ export function appendAllyBadges(valuesEl, type, allyValue) {
   }
 
   allies.forEach(ally => {
+    const mult = typeof getAllyMult === 'function' ? (getAllyMult(ally) || 1) : 1;
+    const finalValue = mult !== 1 ? Math.floor(allyValue * mult) : allyValue;
+
     const badge = document.createElement('span');
     badge.className = `dmg-ally-badge dmg-ally-${type}`;
     badge.innerHTML = `
       <img src="${ally.image}" alt="${ally.displayName}" onerror="this.src='assets/pokemon/missing.png'">
-      ${allyValue.toLocaleString()}
+      ${finalValue.toLocaleString()}
     `;
-    badge.title = `${type === 'heal' ? '❤️' : '🛡️'} ${ally.displayName}: ${allyValue.toLocaleString()}`;
+    badge.title = `${type === 'heal' ? '❤️' : '🛡️'} ${ally.displayName}: ${finalValue.toLocaleString()}`;
     wrapper.appendChild(badge);
   });
 }

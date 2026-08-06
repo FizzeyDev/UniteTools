@@ -128,6 +128,8 @@ export const state = {
   debuffTinkatonIceHammerPlus: false,
   debuffAlcremieCharm: false,
   debuffLatiasMistBall: false,
+  debuffMeganiumSynthesis: false,
+  debuffMeganiumFullBloomAroma: false,
 
   umbreonSnarlStacks: 0,
   umbreonSnarlStacksMax: 6,
