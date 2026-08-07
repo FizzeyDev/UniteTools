@@ -46,126 +46,7 @@ const cptState = {
   target: { hp: 100000, def: 0, sp_def: 0, hpPercent: 100 },
 
   itemPopoverSlot: null,
-
-  // Universal (non Pokémon-specific) buffs/debuffs — battle items & ally
-  // Unite moves that any attacker/target can receive regardless of kit.
-  universalAttackerBuffs: {
-    xAttack: false,
-    allyIronDefense: false,
-    allyBlisseyUlt: false,
-    allyGroudon: false,
-    allyRayquaza: false,
-    allyBlisseyHand: false,
-    allyMimeSwap: false,
-    allyMimeSwapPlus: false,
-    allySkeledirge: false,
-  },
-  universalAttackerDebuffs: {
-    goodraMuddyWater: false,
-    mimePowerSwap: false,
-    mimePowerSwapPlus: false,
-    trevenantWoodHammerPlus: false,
-    psyduckSurfPlus: false,
-    psyduckUnite: false,
-    latiasMistBall: false,
-  },
-  universalTargetBuffs: {
-    eldegoss: false,
-    ninetails: false,
-    ninetailsPlus: false,
-    umbreon: false,
-    umbreonPlus: false,
-    blisseyRedirection: false,
-    hoohRedirection: false,
-  },
-  universalTargetDebuffs: {
-    dhelmiseAnchorShotPlus: false,
-  },
 };
-
-// ─────────────────────────────────────────────────────────────────────────
-// DÉFINITIONS DES BUFFS/DEBUFFS UNIVERSELS (indépendants du Pokémon choisi)
-// ─────────────────────────────────────────────────────────────────────────
-
-const UNIVERSAL_ATK_BUFFS = [
-  { key: 'xAttack',          icon: '⚔️', title: 'X Attack',                    effect: '+20% Atk / Sp. Atk' },
-  { key: 'allyIronDefense',  icon: '🛡️', title: 'Registeel Unite (ally)',      effect: '+15% Atk / Sp. Atk' },
-  { key: 'allyBlisseyUlt',   icon: '🎀', title: 'Blissey Unite (ally)',        effect: '+20% Atk / Sp. Atk' },
-  { key: 'allyGroudon',      icon: '🌋', title: 'Groudon Unite (ally)',        effect: '×1.50 damage dealt' },
-  { key: 'allyRayquaza',     icon: '🐉', title: 'Rayquaza Unite (ally)',       effect: '×1.40 damage dealt' },
-  { key: 'allyBlisseyHand',  icon: '🖐️', title: 'Helping Hand (ally Blissey)', effect: '×1.15 damage dealt' },
-  { key: 'allyMimeSwap',     icon: '🔄', title: 'Role Swap (ally Mr. Mime)',   effect: '×1.15 damage dealt' },
-  { key: 'allyMimeSwapPlus', icon: '🔄', title: 'Role Swap+ (ally Mr. Mime)',  effect: '×1.20 damage dealt' },
-  { key: 'allySkeledirge',   icon: '🔥', title: 'Skeledirge Unite (ally)',     effect: '×1.15 damage dealt' },
-];
-
-const UNIVERSAL_ATK_DEBUFFS = [
-  { key: 'goodraMuddyWater',        icon: '💧', title: 'Muddy Water (Goodra)',        effect: '×0.85 damage dealt' },
-  { key: 'mimePowerSwap',           icon: '🌀', title: 'Power Swap (Mr. Mime)',       effect: '×0.85 damage dealt' },
-  { key: 'mimePowerSwapPlus',       icon: '🌀', title: 'Power Swap+ (Mr. Mime)',      effect: '×0.80 damage dealt' },
-  { key: 'trevenantWoodHammerPlus', icon: '🌲', title: 'Wood Hammer+ (Trevenant)',    effect: '×0.80 damage dealt' },
-  { key: 'psyduckSurfPlus',         icon: '🌊', title: 'Surf+ (Psyduck)',             effect: '×0.75 damage dealt' },
-  { key: 'psyduckUnite',            icon: '💫', title: 'Psyduck Unite Move',          effect: '×0.70 damage dealt' },
-  { key: 'latiasMistBall',          icon: '☁️', title: 'Mist Ball (Latias)',          effect: '×0.75 damage dealt' },
-];
-
-const UNIVERSAL_TARGET_BUFFS = [
-  { key: 'eldegoss',           icon: '🌼', title: 'Cotton Guard (ally Eldegoss)', effect: '×0.80 damage taken' },
-  { key: 'ninetails',          icon: '❄️', title: 'Aurora Veil (Ninetails)',      effect: '×0.65 damage taken' },
-  { key: 'ninetailsPlus',      icon: '❄️', title: 'Aurora Veil+ (Ninetails)',     effect: '×0.60 damage taken' },
-  { key: 'umbreon',            icon: '🌙', title: 'Yawn Wall (Umbreon)',          effect: '×0.80 damage taken' },
-  { key: 'umbreonPlus',        icon: '🌙', title: 'Yawn Wall+ (Umbreon)',         effect: '×0.70 damage taken' },
-  { key: 'blisseyRedirection', icon: '🎀', title: 'Redirection (ally Blissey)',  effect: '×0.50 damage taken' },
-  { key: 'hoohRedirection',    icon: '🔥', title: 'Redirection (ally Ho-Oh)',    effect: '×0.40 damage taken' },
-];
-
-const UNIVERSAL_TARGET_DEBUFFS = [
-  { key: 'dhelmiseAnchorShotPlus', icon: '⚓', title: 'Anchor Shot+ (Dhelmise)', effect: '×1.50 damage taken' },
-];
-
-function computeUniversalAtkStatBonus(atkStats) {
-  const b = cptState.universalAttackerBuffs;
-  let { atk, sp_atk } = atkStats;
-  if (b.xAttack)         { atk += Math.floor(atkStats.atk * 0.20);    sp_atk += Math.floor(atkStats.sp_atk * 0.20); }
-  if (b.allyIronDefense) { atk += Math.floor(atkStats.atk * 0.15);    sp_atk += Math.floor(atkStats.sp_atk * 0.15); }
-  if (b.allyBlisseyUlt)  { atk += Math.floor(atkStats.atk * 0.20);    sp_atk += Math.floor(atkStats.sp_atk * 0.20); }
-  return { ...atkStats, atk, sp_atk };
-}
-
-function computeUniversalGlobalMult() {
-  const b = cptState.universalAttackerBuffs;
-  const d = cptState.universalAttackerDebuffs;
-  let mult = 1.0;
-  if (b.allyGroudon)               mult *= 1.50;
-  if (b.allyRayquaza)              mult *= 1.40;
-  if (b.allyBlisseyHand)           mult *= 1.15;
-  if (b.allyMimeSwap)              mult *= 1.15;
-  if (b.allyMimeSwapPlus)          mult *= 1.20;
-  if (b.allySkeledirge)            mult *= 1.15;
-  if (d.goodraMuddyWater)          mult *= 0.85;
-  if (d.mimePowerSwap)             mult *= 0.85;
-  if (d.mimePowerSwapPlus)         mult *= 0.80;
-  if (d.trevenantWoodHammerPlus)   mult *= 0.80;
-  if (d.psyduckSurfPlus)           mult *= 0.75;
-  if (d.psyduckUnite)              mult *= 0.70;
-  if (d.latiasMistBall)            mult *= 0.75;
-  return mult;
-}
-
-function computeUniversalDefenderMult() {
-  const b = cptState.universalTargetBuffs;
-  const d = cptState.universalTargetDebuffs;
-  let mult = 1.0;
-  if (b.eldegoss)             mult *= 0.80;
-  if (b.ninetails)            mult *= 0.65;
-  if (b.ninetailsPlus)        mult *= 0.60;
-  if (b.umbreon)              mult *= 0.80;
-  if (b.umbreonPlus)          mult *= 0.70;
-  if (b.blisseyRedirection)   mult *= 0.50;
-  if (b.hoohRedirection)      mult *= 0.40;
-  if (d.dhelmiseAnchorShotPlus) mult *= 1.50;
-  return mult;
-}
 
 // ─────────────────────────────────────────────────────────────────────────
 // CHARGEMENT + CACHE DES DONNÉES DE PATCH
@@ -244,15 +125,15 @@ function normalizeDmg(dmg) {
   };
 }
 
-function computeHitDamage(dmgEntry, record, atkStats, defStats, level, globalMult = 1.0, defenderMult = 1.0) {
+function computeHitDamage(dmgEntry, record, atkStats, defStats, level) {
   if (!isDamageLikeEntry(dmgEntry)) return null;
   const dmg = normalizeDmg(dmgEntry);
   const scaling = dmg.scaling || record.style;
   const atkStat = scaling === 'special' ? atkStats.sp_atk : atkStats.atk;
   const defStat = scaling === 'special' ? defStats.sp_def : defStats.def;
 
-  const normal = Math.floor(calculateDamage(dmg, atkStat, defStat, level, false, record.pokemonId, 1.0, globalMult, defStats.hp, defStats.currentHp) * defenderMult);
-  const crit   = Math.floor(calculateDamage(dmg, atkStat, defStat, level, true,  record.pokemonId, 1.0, globalMult, defStats.hp, defStats.currentHp) * defenderMult);
+  const normal = Math.floor(calculateDamage(dmg, atkStat, defStat, level, false, record.pokemonId, 1.0, 1.0, defStats.hp, defStats.currentHp));
+  const crit   = Math.floor(calculateDamage(dmg, atkStat, defStat, level, true,  record.pokemonId, 1.0, 1.0, defStats.hp, defStats.currentHp));
   return { normal, crit };
 }
 
@@ -660,42 +541,233 @@ function renderHitRow(label, hitA, hitB) {
     </div>`;
 }
 
+// ─────────────────────────────────────────────────────────────────────────
+// RENDU : carte de comparaison des stats de base (HP/Atk/Def/SpAtk/SpDef)
+// ─────────────────────────────────────────────────────────────────────────
+
+const STAT_FIELDS = [
+  ['hp',     'HP'],
+  ['atk',    'Atk'],
+  ['def',    'Def'],
+  ['sp_atk', 'Sp. Atk'],
+  ['sp_def', 'Sp. Def'],
+];
+
+function getStatsRowAtLevel(record, level) {
+  if (!record?.stats?.length) return null;
+  return record.stats.find(s => s.level === level) || null;
+}
+
+function renderStatRow(label, valA, valB) {
+  const changed = valA !== valB;
+  if (!changed && cptState.onlyChanged) return '';
+
+  let deltaHtml = '<span class="cpt-hit-delta cpt-neutral">No change</span>';
+  let cls = 'cpt-neutral';
+  let pct = 0;
+
+  if (valA != null && valB != null && valA !== valB) {
+    const delta = valB - valA;
+    pct = valA ? (delta / valA * 100) : 0;
+    cls = delta > 0 ? 'cpt-buff' : 'cpt-nerf';
+    const sign = delta > 0 ? '+' : '';
+    deltaHtml = `<span class="cpt-hit-delta ${cls}">${sign}${delta.toLocaleString()} (${sign}${pct.toFixed(1)}%)</span>`;
+  } else if (valA == null || valB == null) {
+    cls = valA == null ? 'cpt-buff' : 'cpt-nerf';
+    pct = valA == null ? 100 : -100;
+    deltaHtml = `<span class="cpt-hit-delta ${cls}">${valA == null ? 'Added' : 'Removed'}</span>`;
+  }
+
+  const barWidth = Math.max(4, Math.min(100, Math.abs(pct)));
+  const barHtml = cls !== 'cpt-neutral'
+    ? `<div class="cpt-hit-bar-track"><div class="cpt-hit-bar-fill ${cls}" style="width:${barWidth}%"></div></div>`
+    : '';
+
+  return `
+    <div class="cpt-hit-row ${changed ? 'cpt-hit-changed' : ''}">
+      <div class="cpt-hit-label">${label}</div>
+      <div class="cpt-hit-compare">
+        <span class="cpt-hit-val cpt-hit-before">${valA != null ? valA.toLocaleString() : '—'}</span>
+        <span class="cpt-hit-arrow">→</span>
+        <span class="cpt-hit-val cpt-hit-after ${valB != null ? cls : ''}">${valB != null ? valB.toLocaleString() : '—'}</span>
+        ${barHtml}
+        ${deltaHtml}
+      </div>
+    </div>`;
+}
+
+// Carte "Base Stats" : compare les stats brutes du JSON pour le niveau
+// sélectionné entre Patch A et Patch B. Retourne '' si rien à montrer.
+function renderStatsCard(dataA, dataB, level) {
+  const rowA = getStatsRowAtLevel(dataA, level);
+  const rowB = getStatsRowAtLevel(dataB, level);
+  if (!rowA && !rowB) return '';
+
+  const rowsHtml = STAT_FIELDS
+    .map(([key, label]) => renderStatRow(label, rowA ? rowA[key] : null, rowB ? rowB[key] : null))
+    .filter(Boolean);
+  if (!rowsHtml.length) return '';
+
+  return `
+    <div class="cpt-move-card cpt-stats-card">
+      <div class="cpt-move-name">📈 Base Stats (Lv.${level})</div>
+      ${rowsHtml.join('')}
+    </div>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// RENDU : comparaison des heals / shields (pas de défense, pas de crit)
+// ─────────────────────────────────────────────────────────────────────────
+
+// Même formule que les dégâts stat-based (constant + %stat + levelCoef par
+// niveau au-dessus de 1), mais SANS réduction de défense ni crit — un heal
+// ou un shield n'est jamais réduit par la DEF de la cible.
+function computeHealShieldValue(entry, casterStats, level) {
+  if (!entry) return null;
+  const scaling = entry.scaling || 'sp_atk';
+  const statValue = casterStats?.[scaling] ?? 0;
+  const statScaling = Math.floor(statValue * ((entry.multiplier || 0) / 100));
+  const levelScaling = (level - 1) * (entry.levelCoef || 0);
+  const perInstance = Math.max(0, Math.floor((entry.constant || 0) + statScaling + levelScaling));
+  const tickCount = entry.is_tick ? Math.max(1, entry.tick_count || 1) : 1;
+  const total = perInstance * tickCount;
+  return { perInstance, total, tickCount, isTick: !!entry.is_tick };
+}
+
+function formatHealShield(res) {
+  if (!res) return '<span class="cpt-missing">—</span>';
+  if (res.isTick && res.tickCount > 1) {
+    return `${res.total.toLocaleString()} <span class="cpt-crit">(${res.perInstance.toLocaleString()}/tick × ${res.tickCount})</span>`;
+  }
+  return res.total.toLocaleString();
+}
+
+function renderHealShieldRow(label, resA, resB) {
+  if (!resA && !resB) return '';
+
+  const changed = !resA || !resB || resA.total !== resB.total;
+  if (!changed && cptState.onlyChanged) return '';
+
+  let deltaHtml = '<span class="cpt-hit-delta cpt-neutral">No change</span>';
+  let cls = 'cpt-neutral';
+  let pct = 0;
+  if (resA && resB && resA.total !== resB.total) {
+    const delta = resB.total - resA.total;
+    pct = resA.total ? (delta / resA.total * 100) : 0;
+    cls = delta > 0 ? 'cpt-buff' : 'cpt-nerf';
+    const sign = delta > 0 ? '+' : '';
+    deltaHtml = `<span class="cpt-hit-delta ${cls}">${sign}${Math.round(delta).toLocaleString()} (${sign}${pct.toFixed(1)}%)</span>`;
+  } else if (!resA || !resB) {
+    cls = resA ? 'cpt-nerf' : 'cpt-buff';
+    pct = resA ? -100 : 100;
+    deltaHtml = `<span class="cpt-hit-delta ${cls}">${resA ? 'Removed' : 'Added'}</span>`;
+  }
+
+  const barWidth = Math.max(4, Math.min(100, Math.abs(pct)));
+  const barHtml = cls !== 'cpt-neutral'
+    ? `<div class="cpt-hit-bar-track"><div class="cpt-hit-bar-fill ${cls}" style="width:${barWidth}%"></div></div>`
+    : '';
+
+  return `
+    <div class="cpt-hit-row ${changed ? 'cpt-hit-changed' : ''}">
+      <div class="cpt-hit-label">${escapeHtml(label)}</div>
+      <div class="cpt-hit-compare">
+        <span class="cpt-hit-val cpt-hit-before">${formatHealShield(resA)}</span>
+        <span class="cpt-hit-arrow">→</span>
+        <span class="cpt-hit-val cpt-hit-after ${resB ? cls : ''}">${formatHealShield(resB)}</span>
+        ${barHtml}
+        ${deltaHtml}
+      </div>
+    </div>`;
+}
+
+// Heals/shields sont appariés par `name` (contrairement aux dégâts, qui le
+// sont par position/index) car leur ordre dans le JSON n'est pas garanti
+// stable entre deux patchs.
+function buildOrderedEntryNames(listA, listB) {
+  const names = [];
+  const seen = new Set();
+  (listA || []).forEach(e => { if (!seen.has(e.name)) { seen.add(e.name); names.push(e.name); } });
+  (listB || []).forEach(e => { if (!seen.has(e.name)) { seen.add(e.name); names.push(e.name); } });
+  return names;
+}
+
 function renderMoveCard(name, moveA, moveB, level, ctx) {
   const damagesA = moveA ? filterDamagesByUpgrade(moveA.damages, isMoveUpgraded(moveA, level)) : [];
   const damagesB = moveB ? filterDamagesByUpgrade(moveB.damages, isMoveUpgraded(moveB, level)) : [];
+  const healsA = moveA ? filterDamagesByUpgrade(moveA.heals, isMoveUpgraded(moveA, level)) : [];
+  const healsB = moveB ? filterDamagesByUpgrade(moveB.heals, isMoveUpgraded(moveB, level)) : [];
+  const shieldsA = moveA ? filterDamagesByUpgrade(moveA.shields, isMoveUpgraded(moveA, level)) : [];
+  const shieldsB = moveB ? filterDamagesByUpgrade(moveB.shields, isMoveUpgraded(moveB, level)) : [];
 
+  // ── Dégâts (appariés par position, comme avant) ──────────────────────────
   const hitCount = Math.max(damagesA.length, damagesB.length);
-  if (hitCount === 0) return '';
-
-  const rowsHtml = [];
+  const damageRows = [];
   for (let i = 0; i < hitCount; i++) {
     const dA = damagesA[i];
     const dB = damagesB[i];
     const label = dA?.name || dB?.name || `Hit ${i + 1}`;
-    const hitA = dA ? computeHitDamage(dA, ctx.recordA, ctx.atkStatsA, ctx.defStats, level, ctx.globalMult, ctx.defenderMult) : null;
-    const hitB = dB ? computeHitDamage(dB, ctx.recordB, ctx.atkStatsB, ctx.defStats, level, ctx.globalMult, ctx.defenderMult) : null;
-    rowsHtml.push(renderHitRow(label, hitA, hitB));
+    const hitA = dA ? computeHitDamage(dA, ctx.recordA, ctx.atkStatsA, ctx.defStats, level) : null;
+    const hitB = dB ? computeHitDamage(dB, ctx.recordB, ctx.atkStatsB, ctx.defStats, level) : null;
+    damageRows.push(renderHitRow(label, hitA, hitB));
   }
 
-  const visibleRows = rowsHtml.filter(Boolean);
-  if (!visibleRows.length) return '';
+  // ── Heals (appariés par nom) ──────────────────────────────────────────────
+  const healNames = buildOrderedEntryNames(healsA, healsB);
+  const healRows = healNames.map(n => {
+    const eA = healsA.find(e => e.name === n) || null;
+    const eB = healsB.find(e => e.name === n) || null;
+    const resA = eA ? computeHealShieldValue(eA, ctx.atkStatsA, level) : null;
+    const resB = eB ? computeHealShieldValue(eB, ctx.atkStatsB, level) : null;
+    return renderHealShieldRow(n, resA, resB);
+  });
+
+  // ── Shields (appariés par nom) ────────────────────────────────────────────
+  const shieldNames = buildOrderedEntryNames(shieldsA, shieldsB);
+  const shieldRows = shieldNames.map(n => {
+    const eA = shieldsA.find(e => e.name === n) || null;
+    const eB = shieldsB.find(e => e.name === n) || null;
+    const resA = eA ? computeHealShieldValue(eA, ctx.atkStatsA, level) : null;
+    const resB = eB ? computeHealShieldValue(eB, ctx.atkStatsB, level) : null;
+    return renderHealShieldRow(n, resA, resB);
+  });
+
+  const visibleDamageRows = damageRows.filter(Boolean);
+  const visibleHealRows = healRows.filter(Boolean);
+  const visibleShieldRows = shieldRows.filter(Boolean);
+
+  if (!visibleDamageRows.length && !visibleHealRows.length && !visibleShieldRows.length) return '';
 
   let statusBadge = '';
   if (!moveA) statusBadge = '<span class="cpt-move-badge cpt-move-badge-new">New in Patch B</span>';
   else if (!moveB) statusBadge = '<span class="cpt-move-badge cpt-move-badge-removed">Removed in Patch B</span>';
 
-  // Résumé global du move : moyenne des variations de dégâts normaux sur
-  // tous les hits comparables (présents dans A ET B).
+  // Résumé global du move : moyenne des variations sur tous les hits/heals/
+  // shields comparables (présents dans A ET B).
   let summaryHtml = '';
   if (moveA && moveB) {
     const deltas = [];
     for (let i = 0; i < hitCount; i++) {
       const dA = damagesA[i], dB = damagesB[i];
       if (!dA || !dB) continue;
-      const hitA = computeHitDamage(dA, ctx.recordA, ctx.atkStatsA, ctx.defStats, level, ctx.globalMult, ctx.defenderMult);
-      const hitB = computeHitDamage(dB, ctx.recordB, ctx.atkStatsB, ctx.defStats, level, ctx.globalMult, ctx.defenderMult);
+      const hitA = computeHitDamage(dA, ctx.recordA, ctx.atkStatsA, ctx.defStats, level);
+      const hitB = computeHitDamage(dB, ctx.recordB, ctx.atkStatsB, ctx.defStats, level);
       if (hitA && hitB && hitA.normal) deltas.push((hitB.normal - hitA.normal) / hitA.normal * 100);
     }
+    healNames.forEach(n => {
+      const eA = healsA.find(e => e.name === n), eB = healsB.find(e => e.name === n);
+      if (!eA || !eB) return;
+      const resA = computeHealShieldValue(eA, ctx.atkStatsA, level);
+      const resB = computeHealShieldValue(eB, ctx.atkStatsB, level);
+      if (resA?.total) deltas.push((resB.total - resA.total) / resA.total * 100);
+    });
+    shieldNames.forEach(n => {
+      const eA = shieldsA.find(e => e.name === n), eB = shieldsB.find(e => e.name === n);
+      if (!eA || !eB) return;
+      const resA = computeHealShieldValue(eA, ctx.atkStatsA, level);
+      const resB = computeHealShieldValue(eB, ctx.atkStatsB, level);
+      if (resA?.total) deltas.push((resB.total - resA.total) / resA.total * 100);
+    });
     if (deltas.length) {
       const avgPct = deltas.reduce((s, v) => s + v, 0) / deltas.length;
       const summaryCls = Math.abs(avgPct) < 0.05 ? 'cpt-neutral' : (avgPct > 0 ? 'cpt-buff' : 'cpt-nerf');
@@ -704,84 +776,26 @@ function renderMoveCard(name, moveA, moveB, level, ctx) {
     }
   }
 
+  // N'affiche les sous-titres de section (⚔️/❤️/🛡️) que si le move mélange
+  // plusieurs types de valeurs — un move 100% dégâts garde son look d'origine.
+  const groupCount = [visibleDamageRows.length, visibleHealRows.length, visibleShieldRows.length].filter(n => n > 0).length;
+  const section = (icon, label, rows) => {
+    if (!rows.length) return '';
+    const header = groupCount > 1 ? `<div class="cpt-entry-section-title">${icon} ${label}</div>` : '';
+    return `<div class="cpt-entry-section">${header}${rows.join('')}</div>`;
+  };
+
+  const sectionsHtml = [
+    section('⚔️', 'Damage', visibleDamageRows),
+    section('❤️', 'Healing', visibleHealRows),
+    section('🛡️', 'Shield', visibleShieldRows),
+  ].join('');
+
   return `
     <div class="cpt-move-card">
       <div class="cpt-move-name">${escapeHtml(name)} ${statusBadge}${summaryHtml}</div>
-      ${visibleRows.join('')}
+      ${sectionsHtml}
     </div>`;
-}
-
-// ─────────────────────────────────────────────────────────────────────────
-// RENDU : drawers de buffs/debuffs universels (attaquant + cible)
-// ─────────────────────────────────────────────────────────────────────────
-
-function renderUniversalDrawer(drawerId, accentClass, title, list, stateObj) {
-  const activeCount = Object.values(stateObj).filter(Boolean).length;
-  return `
-    <div class="buffs-drawer cpt-universal-drawer ${accentClass}" id="${drawerId}">
-      <div class="buffs-drawer-header">
-        <span class="buffs-drawer-title">${title}</span>
-        <span class="buff-active-count ${activeCount ? 'visible' : ''}">${activeCount}</span>
-        <span class="buffs-drawer-chevron">▾</span>
-      </div>
-      <div class="buffs-drawer-body">
-        <div class="buffs-drawer-inner">
-          <div class="buff-checkboxes">
-            ${list.map(b => `
-              <label class="buff-label">
-                <span class="buff-icon-fallback">${b.icon}</span>
-                <span class="buff-text">
-                  <span class="buff-title">${escapeHtml(b.title)}</span>
-                  <span class="buff-effect">${escapeHtml(b.effect)}</span>
-                </span>
-                <input type="checkbox" data-key="${b.key}" ${stateObj[b.key] ? 'checked' : ''}>
-              </label>`).join('')}
-          </div>
-        </div>
-      </div>
-    </div>`;
-}
-
-function wireUniversalDrawer(drawerId, stateObj) {
-  const drawer = document.getElementById(drawerId);
-  if (!drawer) return;
-
-  const header = drawer.querySelector('.buffs-drawer-header');
-  header?.addEventListener('click', () => drawer.classList.toggle('open'));
-
-  drawer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-    cb.addEventListener('click', (e) => e.stopPropagation());
-    cb.addEventListener('change', () => {
-      stateObj[cb.dataset.key] = cb.checked;
-      const count = drawer.querySelector('.buff-active-count');
-      const activeCount = Object.values(stateObj).filter(Boolean).length;
-      if (count) {
-        count.textContent = activeCount;
-        count.classList.toggle('visible', activeCount > 0);
-      }
-      renderResult();
-    });
-  });
-}
-
-function renderUniversalDrawers() {
-  const atkWrap = document.getElementById('cptAtkUniversalDrawers');
-  if (atkWrap) {
-    atkWrap.innerHTML =
-      renderUniversalDrawer('cptAtkBuffsDrawer', 'cpt-drawer-buff', '✅ Universal Buffs', UNIVERSAL_ATK_BUFFS, cptState.universalAttackerBuffs) +
-      renderUniversalDrawer('cptAtkDebuffsDrawer', 'cpt-drawer-debuff', '⛔ Universal Debuffs', UNIVERSAL_ATK_DEBUFFS, cptState.universalAttackerDebuffs);
-    wireUniversalDrawer('cptAtkBuffsDrawer', cptState.universalAttackerBuffs);
-    wireUniversalDrawer('cptAtkDebuffsDrawer', cptState.universalAttackerDebuffs);
-  }
-
-  const targetWrap = document.getElementById('cptTargetUniversalDrawers');
-  if (targetWrap) {
-    targetWrap.innerHTML =
-      renderUniversalDrawer('cptTargetBuffsDrawer', 'cpt-drawer-buff', '✅ Universal Buffs (received)', UNIVERSAL_TARGET_BUFFS, cptState.universalTargetBuffs) +
-      renderUniversalDrawer('cptTargetDebuffsDrawer', 'cpt-drawer-debuff', '⛔ Universal Debuffs (received)', UNIVERSAL_TARGET_DEBUFFS, cptState.universalTargetDebuffs);
-    wireUniversalDrawer('cptTargetBuffsDrawer', cptState.universalTargetBuffs);
-    wireUniversalDrawer('cptTargetDebuffsDrawer', cptState.universalTargetDebuffs);
-  }
 }
 
 function renderNotEnoughPatches() {
@@ -831,10 +845,8 @@ async function renderResult() {
   }
 
   const level = cptState.attackerLevel;
-  let atkStatsA = getModifiedStats(dataA, level, cptState.attackerItems, cptState.attackerItemStacks, cptState.attackerItemActivated);
-  let atkStatsB = getModifiedStats(dataB, level, cptState.attackerItems, cptState.attackerItemStacks, cptState.attackerItemActivated);
-  atkStatsA = computeUniversalAtkStatBonus(atkStatsA);
-  atkStatsB = computeUniversalAtkStatBonus(atkStatsB);
+  const atkStatsA = getModifiedStats(dataA, level, cptState.attackerItems, cptState.attackerItemStacks, cptState.attackerItemActivated);
+  const atkStatsB = getModifiedStats(dataB, level, cptState.attackerItems, cptState.attackerItemStacks, cptState.attackerItemActivated);
 
   const defStats = {
     hp: cptState.target.hp,
@@ -843,10 +855,7 @@ async function renderResult() {
     currentHp: Math.floor(cptState.target.hp * cptState.target.hpPercent / 100),
   };
 
-  const globalMult = computeUniversalGlobalMult();
-  const defenderMult = computeUniversalDefenderMult();
-
-  const ctx = { recordA: dataA, recordB: dataB, atkStatsA, atkStatsB, defStats, globalMult, defenderMult };
+  const ctx = { recordA: dataA, recordB: dataB, atkStatsA, atkStatsB, defStats };
 
   const movesA = getVisibleMoves(dataA, level);
   const movesB = getVisibleMoves(dataB, level);
@@ -856,11 +865,15 @@ async function renderResult() {
   movesA.forEach(m => { if (!seen.has(m.name)) { seen.add(m.name); orderedNames.push(m.name); } });
   movesB.forEach(m => { if (!seen.has(m.name)) { seen.add(m.name); orderedNames.push(m.name); } });
 
+  const statsCardHtml = renderStatsCard(dataA, dataB, level);
+
   const cardsHtml = orderedNames.map(name => {
     const moveA = movesA.find(m => m.name === name) || null;
     const moveB = movesB.find(m => m.name === name) || null;
     return renderMoveCard(name, moveA, moveB, level, ctx);
   }).filter(Boolean);
+
+  const hasAnyCard = !!statsCardHtml || cardsHtml.length > 0;
 
   result.innerHTML = `
     <div class="cpt-result-header">
@@ -871,11 +884,11 @@ async function renderResult() {
       </div>
       <label class="cpt-toggle">
         <input type="checkbox" id="cptOnlyChanged" ${cptState.onlyChanged ? 'checked' : ''}>
-        Show only changed moves
+        Show only changes
       </label>
     </div>
     <div class="cpt-moves-list">
-      ${cardsHtml.length ? cardsHtml.join('') : '<div class="cpt-empty-state">No differences to show for this Pokémon at this level.</div>'}
+      ${hasAnyCard ? `${statsCardHtml}${cardsHtml.join('')}` : '<div class="cpt-empty-state">No differences to show for this Pokémon at this level.</div>'}
     </div>
   `;
 
@@ -925,7 +938,7 @@ function buildTabAndPanel() {
       </div>
     </div>
 
-    <div class="cpt-note">ℹ️ Item stats/stacks and universal buffs & debuffs (battle items, ally Unite moves) apply to the calculation. Pokémon-specific ability toggles from the main Calculator (e.g. Mold Breaker, Dragon Dance...) aren't reproduced here — only base stats, level, equipped items and universal effects.</div>
+    <div class="cpt-note">ℹ️ Item stats/stacks apply to the calculation. Pokémon-specific ability toggles and universal buffs/debuffs from the main Calculator (e.g. Mold Breaker, Dragon Dance, X Attack, ally Unite moves...) aren't reproduced here — only base stats, level and equipped items.</div>
 
     <div class="cpt-main-grid">
       <div class="cpt-attacker-col">
@@ -949,7 +962,6 @@ function buildTabAndPanel() {
           </div>
           <div class="cpt-item-row" id="cptItemRow"></div>
           <div class="cpt-item-popover" id="cptItemPopover" style="display:none;"></div>
-          <div class="cpt-universal-drawers" id="cptAtkUniversalDrawers"></div>
         </div>
       </div>
 
@@ -973,7 +985,6 @@ function buildTabAndPanel() {
           <label>Current HP <span id="cptTargetHpPercentValue">100%</span></label>
           <input type="range" id="cptTargetHpPercent" class="cpt-hp-slider" min="1" max="100" value="100">
         </div>
-        <div class="cpt-universal-drawers" id="cptTargetUniversalDrawers"></div>
       </div>
     </div>
 
@@ -1020,7 +1031,6 @@ export function initComparePatchTab() {
   buildTabAndPanel();
   setupPatchSelectors();
   setupTargetControls();
-  renderUniversalDrawers();
   renderGrid();
   renderAttackerControls();
   renderResult();

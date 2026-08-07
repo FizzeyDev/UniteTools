@@ -100,11 +100,12 @@ export function selectDefender(id) {
   state.defenderUmbreonPlusBuff = false;
   state.defenderBlisseyRedirectionBuff = false;
   state.defenderHoOhRedirectionBuff = false;
+  state.defenderMimeActive = false;
 
   const defenderCheckboxes = [
     'regirockBuffDefender', 'eldegossBuffDefender', 'ninetailsBuffDefender',
     'ninetailsPlusBuffDefender', 'umbreonBuffDefender', 'umbreonPlusBuffDefender',
-    'blisseyRedirectionBuffDefender', 'hoohRedirectionBuffDefender'
+    'blisseyRedirectionBuffDefender', 'hoohRedirectionBuffDefender', 'mimeShieldBuffDefender'
   ];
   defenderCheckboxes.forEach(cid => {
     const el = document.getElementById(cid);

@@ -34,7 +34,7 @@ export function setupBuffListeners() {
   const defenderBuffIds = [
     'regirockBuffDefender', 'eldegossBuffDefender', 'ninetailsBuffDefender',
     'ninetailsPlusBuffDefender', 'umbreonBuffDefender', 'umbreonPlusBuffDefender',
-    'blisseyRedirectionBuffDefender', 'hoohRedirectionBuffDefender'
+    'blisseyRedirectionBuffDefender', 'hoohRedirectionBuffDefender', 'mimeShieldBuffDefender'
   ];
 
   defenderBuffIds.forEach(id => {
@@ -50,6 +50,7 @@ export function setupBuffListeners() {
           case 'umbreonPlusBuffDefender': state.defenderUmbreonPlusBuff = e.target.checked; break;
           case 'blisseyRedirectionBuffDefender': state.defenderBlisseyRedirectionBuff = e.target.checked; break;
           case 'hoohRedirectionBuffDefender': state.defenderHoOhRedirectionBuff = e.target.checked; break;
+          case 'mimeShieldBuffDefender': state.defenderMimeActive = e.target.checked; break;
         }
         updateDamages();
       });
