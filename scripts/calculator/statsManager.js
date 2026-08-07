@@ -27,6 +27,7 @@ import {
   applyMachampBulkUpStatBuff,
   applyMachampDynamicPunchStatBuff,
   applyMachampBarrageBlowStatBuff,
+  applyReshiramDragonDanceStatBuff,
 } from './moveEffectsAtk.js';
 
 export function applyPokemonStatMutations(atkStats, defStats) {
@@ -161,6 +162,7 @@ export function applyPokemonStatMutations(atkStats, defStats) {
   applyMachampBulkUpStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyMachampDynamicPunchStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyMachampBarrageBlowStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyReshiramDragonDanceStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
 
   // ── Armarouge — Armor Cannon cooldown def debuff ───────────────────────────
   if (state.currentDefender?.pokemonId === 'armarouge' && state.defenderLevel >= 5 && state.defenderArmarougeArmorCannonDebuff) {

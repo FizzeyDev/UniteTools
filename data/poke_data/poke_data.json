@@ -9956,6 +9956,109 @@
     ]
   },
   {
+    "pokemonId": "reshiram",
+    "dex": 643,
+    "role": "attacker",
+    "style": "special",
+    "stats": [
+      {"level": 1,  "hp": 3200, "atk": 134, "def": 35,  "sp_atk": 55,   "sp_def": 27,  "crit": 0,  "lifesteal": 0},
+      {"level": 2,  "hp": 3250, "atk": 136, "def": 38,  "sp_atk": 69,   "sp_def": 30,  "crit": 0,  "lifesteal": 0},
+      {"level": 3,  "hp": 3310, "atk": 139, "def": 42,  "sp_atk": 85,   "sp_def": 34,  "crit": 0,  "lifesteal": 0},
+      {"level": 4,  "hp": 3382, "atk": 142, "def": 47,  "sp_atk": 104,  "sp_def": 38,  "crit": 0,  "lifesteal": 0},
+      {"level": 5,  "hp": 3644, "atk": 154, "def": 65,  "sp_atk": 175,  "sp_def": 54,  "crit": 10, "lifesteal": 0},
+      {"level": 6,  "hp": 3748, "atk": 159, "def": 72,  "sp_atk": 203,  "sp_def": 60,  "crit": 10, "lifesteal": 0},
+      {"level": 7,  "hp": 4223, "atk": 180, "def": 104, "sp_atk": 331,  "sp_def": 89,  "crit": 10, "lifesteal": 0},
+      {"level": 8,  "hp": 4373, "atk": 187, "def": 114, "sp_atk": 372,  "sp_def": 98,  "crit": 10, "lifesteal": 0},
+      {"level": 9,  "hp": 4553, "atk": 195, "def": 126, "sp_atk": 421,  "sp_def": 109, "crit": 20, "lifesteal": 0},
+      {"level": 10, "hp": 4769, "atk": 205, "def": 141, "sp_atk": 479,  "sp_def": 122, "crit": 20, "lifesteal": 0},
+      {"level": 11, "hp": 5029, "atk": 216, "def": 158, "sp_atk": 549,  "sp_def": 138, "crit": 20, "lifesteal": 0},
+      {"level": 12, "hp": 5340, "atk": 230, "def": 179, "sp_atk": 633,  "sp_def": 157, "crit": 20, "lifesteal": 0},
+      {"level": 13, "hp": 5714, "atk": 247, "def": 204, "sp_atk": 734,  "sp_def": 180, "crit": 20, "lifesteal": 0},
+      {"level": 14, "hp": 6162, "atk": 267, "def": 234, "sp_atk": 855,  "sp_def": 207, "crit": 20, "lifesteal": 0},
+      {"level": 15, "hp": 6700, "atk": 291, "def": 270, "sp_atk": 1000, "sp_def": 240, "crit": 20, "lifesteal": 0}
+    ],
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "true",
+        "image": "assets/moves/basic_attack.png",
+        "notes": "Every third attack (or the attack after a move) becomes a Boosted attack dealing increased damage in an area",
+        "damages": [
+          {"name": "Basic Attack", "multiplier": 54, "levelCoef": 0, "constant": 220, "dealDamage": true},
+          {"name": "Boosted Attack (Area)", "multiplier": 81, "levelCoef": 0, "constant": 330, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Turboblaze (Passive)",
+        "can_crit": "true",
+        "image": "assets/moves/reshiram/turboblaze.png",
+        "notes": "Also removes 50% of their remaining shields",
+        "damages": [
+          {"name": "Damage", "multiplier": 54, "levelCoef": 0, "constant": 220, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Dragon Breath",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/reshiram/dragon_breath.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 40, "levelCoef": 0, "constant": 500, "dealDamage": true}
+        ]
+      },
+      {
+        "name": "Blue Flare",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/reshiram/blue_flare.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 110, "levelCoef": 0, "constant": 700, "dealDamage": true},
+          {"name": "Burn (per tick, x5)", "multiplier": 11, "levelCoef": 0, "constant": 70, "dealDamage": true, "is_tick": true, "tick_count": 5}
+        ]
+      },
+      {
+        "name": "Tailwind",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/reshiram/tailwind.png",
+        "damages": []
+      },
+      {
+        "name": "Dragon Dance",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/reshiram/dragon_dance.png",
+        "damages": [],
+        "shields": [
+          {"name": "Shield", "scaling": "sp_atk", "multiplier": 80, "levelCoef": 0, "constant": 300}
+        ]
+      },
+      {
+        "name": "Flames That Bring Lightning (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/reshiram/flames_that_bring_lightning.png",
+        "damages": [
+          {"name": "Damage - Flames", "multiplier": 100, "levelCoef": 0, "constant": 500, "dealDamage": true},
+          {"name": "Damage - Lightning (Empowered only)", "multiplier": 60, "levelCoef": 0, "constant": 300, "dealDamage": true}
+        ],
+        "shields": [
+          {"name": "Shield - Unite Buff (Empowered only, 20% Max HP)", "scaling": "hp", "multiplier": 20, "levelCoef": 0, "constant": 0}
+        ]
+      }
+    ]
+  },
+  {
     "pokemonId": "sableye",
     "dex": 302,
     "role": "supporter",

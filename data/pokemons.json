@@ -1710,5 +1710,21 @@
     "unite_move_cost": 100,
     "evolution_levels": null,
     "date": "03/07"
+  },
+  {
+    "name": "Reshiram",
+    "name_fr": "Reshiram",
+    "file": "reshiram_atk.png",
+    "role": "atk",
+    "dex": 643,
+    "portee": "Distance",
+    "difficulte": "Intermédiaire",
+    "annee": 2026,
+    "stade": "Base",
+    "evo_niveaux": null,
+    "mega": false,
+    "unite_move_cost": 8,
+    "evolution_levels": null,
+    "date": "07/08"
   }
 ]

@@ -68,6 +68,47 @@ function applyDragoniteDragonDance(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── RESHIRAM ──────────────────────────────────────────────────────────────────
+function applyReshiramDragonDance(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Dragon Dance learned at level 5
+
+  const upgraded = level >= 11;
+  const bonusPct = upgraded ? 20 : 10;
+
+  const isActive = state.attackerReshiramDragonDanceActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/reshiram/dragon_dance.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Dragon Dance+' : 'Dragon Dance', upgraded ? 11 : 5)}
+      After the dash → <strong style="color:#fff;">+${bonusPct}% Sp. Atk</strong> for 3s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Shield is calculated separately below</span><br>
+      <button class="reshiram-dragon-dance-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.reshiram-dragon-dance-toggle').onclick = () => {
+    state.attackerReshiramDragonDanceActive = !state.attackerReshiramDragonDanceActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyReshiramDragonDanceStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'reshiram') return;
+  if (level < 5) return;
+  if (!state.attackerReshiramDragonDanceActive) return;
+  const bonusPct = level >= 11 ? 0.20 : 0.10;
+  atkStats.sp_atk = Math.floor(atkStats.sp_atk * (1 + bonusPct));
+}
+
 // ── AEGISLASH ─────────────────────────────────────────────────────────────────
 function applyAegislashSacredSword(atkStats, defStats, card) {
   const level = state.attackerLevel;
@@ -1808,6 +1849,7 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     duraludon:  [applyDuraludonRevolvingRuin],
     falinks:    [applyFalinksBulkUp, applyFalinksNoRetreat],
     palkia:     [applyPalkiaAuraSphereMark],
+    reshiram:   [applyReshiramDragonDance],
     feraligatr: [applyFeraligatrDestructiveFangs],
     garchomp:   [applyGarchompAutoAttack],
     glaceon:    [applyGlaceonFreezeDry],

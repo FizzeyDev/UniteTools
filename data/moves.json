@@ -583,5 +583,11 @@
     "move2": [ "slash.png", "dragon_claw.png" ],
     "passive": [ "pressure.png" ],
     "unite": [ "multi_dimensional_rend.png" ]
+  },
+  "reshiram": {
+    "move1": [ "dragon_breath.png", "blue_flare.png" ],
+    "move2": [ "tailwind.png", "dragon_dance.png" ],
+    "passive": [ "turboblaze.png" ],
+    "unite": [ "flames_that_bring_lightning.png" ]
   }
 }
