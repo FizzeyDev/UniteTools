@@ -12919,10 +12919,17 @@
         "can_crit": "true",
         "image": "assets/moves/basic_attack.png",
         "damages": [
-          {"name": "Stage One", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Stage Two", "multiplier": 130, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Stage Three", "multiplier": 130, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Stage Four", "multiplier": 160, "levelCoef": 0, "constant": 0, "dealDamage": true}
+          {"name": "Stage One (Boosted)", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "Increased area of effect"},
+          {"name": "Additional (Stage One - Boosted)", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "max_hp_percent": 1, "wild_cap": 400, "notes": "2% Max HP additional damage, capped at 400 on Wild Pokémon"},
+          {"name": "Stage Two (Boosted)", "multiplier": 130, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "Applies 15% Slow for 1s. Increased area of effect"},
+          {"name": "Additional (Stage Two - Boosted)", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "max_hp_percent": 2, "wild_cap": 600, "notes": "3% Max HP additional damage, capped at 600 on Wild Pokémon"},
+          {"name": "Stage Three (Boosted)", "multiplier": 130, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "Heals 5% Max HP. Increased area of effect"},
+          {"name": "Additional (Stage Three - Boosted)", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "max_hp_percent": 2, "wild_cap": 600, "notes": "3% Max HP additional damage, capped at 600 on Wild Pokémon"},
+          {"name": "Stage Four (Boosted)", "multiplier": 160, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "Dashes towards the target, reduces all Move cooldowns by 15% of their current cooldown. Increased area of effect"},
+          {"name": "Additional (Stage Four - Boosted)", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": true, "max_hp_percent": 3, "wild_cap": 750, "notes": "4% Max HP additional damage, capped at 750 on Wild Pokémon"}
+        ],
+        "heals": [
+          {"name": "Stage Three - Self Heal", "scaling": "hp", "multiplier": 5, "levelCoef": 0, "constant": 0, "notes": "Heals 5% of Zacian's own max HP — same value on Stage Three normal and Boosted"}
         ]
       },
       {
