@@ -47,9 +47,9 @@ export function calculateHeal(heal, atkStats, level, casterCurrentHP = null) {
   return Math.max(0, constant + statPart + levelPart);
 }
 
-export function renderHealLine(heal, atkStats, level, bigRootMult = 1.0, rescueMult = 1.0, curseMult = 1.0, casterCurrentHP = null) {
+export function renderHealLine(heal, atkStats, level, bigRootMult = 1.0, rescueMult = 1.0, curseMult = 1.0, casterCurrentHP = null, overgrowSelfMult = 1.0) {
   const base = calculateHeal(heal, atkStats, level, casterCurrentHP);
-  const self = Math.floor(base * bigRootMult * curseMult);
+  const self = Math.floor(base * bigRootMult * curseMult * overgrowSelfMult);
   const ally = Math.floor(base * rescueMult  * curseMult);
 
   const target    = heal.target || "both";

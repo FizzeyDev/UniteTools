@@ -354,8 +354,8 @@
       "can_crit": "false",
       "image": "assets/moves/alcremie/sweet_scent.png",
       "damages": [
-        {"name": "Initial Explosion", "multiplier": 62.9, "levelCoef": 8, "constant": 209, "dealDamage": true},
-        {"name": "Outer Ring", "multiplier": 89.25, "levelCoef": 10, "constant": 293, "dealDamage": true}
+        {"name": "Initial Explosion", "multiplier": 74, "levelCoef": 9, "constant": 246, "dealDamage": true},
+        {"name": "Outer Ring", "multiplier": 105, "levelCoef": 12, "constant": 345, "dealDamage": true}
       ]
 		},
 		{
@@ -396,8 +396,8 @@
       "image": "assets/moves/alcremie/recover.png",
       "damages": [],
       "heals": [
-        { "name": "Healing - Basic", "scaling": "sp_atk", "multiplier": 234, "levelCoef": 14, "constant": 297 },
-        { "name": "Healing - Empowered", "scaling": "sp_atk", "multiplier": 351, "levelCoef": 22, "constant": 446 },
+        { "name": "Healing - Basic", "scaling": "sp_atk", "multiplier": 260, "levelCoef": 16, "constant": 330 },
+        { "name": "Healing - Empowered", "scaling": "sp_atk", "multiplier": 390, "levelCoef": 24, "constant": 495 },
         { "name": "Additional Healing (Ally Snorlax) - Empowered:", "scaling": "sp_atk", "multiplier": 19.2, "levelCoef": 1, "constant": 24 },
         { "name": "Additional Healing (Ally Snorlax) - Basic", "scaling": "sp_atk", "multiplier": 28.8, "levelCoef": 2, "constant": 36 }
       ]
@@ -4657,10 +4657,10 @@
         "upgradeLevel": 11,
         "image": "assets/moves/feraligatr/crunch.png",
         "damages": [
-          {"name": "Damage - Bonus", "multiplier": 220.8, "levelCoef": 0, "constant": 662, "dealDamage": true},
-          {"name": "Damage - Bonus +", "multiplier": 253.9, "levelCoef": 0, "constant": 762, "dealDamage": true, "upgraded": true},
-          {"name": "Damage - Bonus (Destructive Fangs)", "multiplier": 256.7, "levelCoef": 0, "constant": 770, "dealDamage": true},
-          {"name": "Damage - Bonus + (Destructive Fangs)", "multiplier": 294, "levelCoef": 0, "constant": 888, "dealDamage": true, "upgraded": true}
+          {"name": "Damage - Bonus", "multiplier": 240, "levelCoef": 0, "constant": 720, "dealDamage": true},
+          {"name": "Damage - Bonus +", "multiplier": 276, "levelCoef": 0, "constant": 827, "dealDamage": true, "upgraded": true},
+          {"name": "Damage - Bonus (Destructive Fangs)", "multiplier": 279, "levelCoef": 0, "constant": 837, "dealDamage": true},
+          {"name": "Damage - Bonus + (Destructive Fangs)", "multiplier": 320, "levelCoef": 0, "constant": 963, "dealDamage": true, "upgraded": true}
         ],
         "heals": [
           {"name": "Healing - Gluttonous Fangs", "scaling": "atk", "multiplier": 38, "levelCoef": 0, "constant": 115}
@@ -7140,8 +7140,8 @@
       "image": "assets/moves/mega_lucario/adaptability.png",
       "stackable": true,
       "maxStacks": 10,
-      "bonusPercentAtk": 4,
-      "description": "When the user deals damage with moves, their attack stat increases by 4% for 4s up to 10 times."
+      "bonusPercentAtk": 5,
+      "description": "When the user deals damage with moves, their attack stat increases by 5% for 4s up to 10 times."
     },
     "moves": [
       {
@@ -8242,8 +8242,8 @@
         "can_crit": "false",
         "image": "assets/moves/mega_mewtwo_x/psystrike.png",
         "damages": [
-          {"name": "Per Wave (x5)", "multiplier": 45.1, "levelCoef": 3, "constant": 110, "dealDamage": true, "is_tick": true, "tick_count": 5},
-          {"name": "Final Hit", "multiplier": 160.6, "levelCoef": 8, "constant": 351, "dealDamage": true}
+          {"name": "Per Wave (x5)", "multiplier": 41, "levelCoef": 3, "constant": 100, "dealDamage": true, "is_tick": true, "tick_count": 5},
+          {"name": "Final Hit", "multiplier": 146, "levelCoef": 7, "constant": 319, "dealDamage": true}
         ]
       },
       {
@@ -9801,7 +9801,7 @@
         "can_crit": "false",
         "image": "assets/moves/raichu/psychic.png",
         "damages": [
-          {"name": "Damage", "multiplier": 112.64, "levelCoef": 0, "constant": 264, "dealDamage": true},
+          {"name": "Damage", "multiplier": 102.4, "levelCoef": 0, "constant": 240, "dealDamage": true},
           {"name": "Additional", "multiplier": 16, "levelCoef": 0, "constant": 40, "dealDamage": true},
           {"name": "Damage - Dot + (x5)", "multiplier": 10.24, "levelCoef": 0, "constant": 24, "dealDamage": true, "is_tick": true, "tick_count": 5, "notes": "Need at least level 11"}
         ]
@@ -12775,21 +12775,21 @@
     "role": "attacker",
     "style": "special",
     "stats": [
-      {"level": 1, "hp": 3320, "atk": 20, "def": 72, "sp_atk": 120, "sp_def": 72, "crit": 0, "lifesteal": 0},
-      {"level": 2, "hp": 3452, "atk": 23, "def": 80, "sp_atk": 141, "sp_def": 80, "crit": 0, "lifesteal": 0},
-      {"level": 3, "hp": 3596, "atk": 27, "def": 89, "sp_atk": 165, "sp_def": 89, "crit": 0, "lifesteal": 0},
-      {"level": 4, "hp": 3755, "atk": 31, "def": 99, "sp_atk": 191, "sp_def": 99, "crit": 0, "lifesteal": 0},
-      {"level": 5, "hp": 3930, "atk": 36, "def": 110, "sp_atk": 219, "sp_def": 110, "crit": 0, "lifesteal": 0},
-      {"level": 6, "hp": 4123, "atk": 41, "def": 122, "sp_atk": 251, "sp_def": 122, "crit": 0, "lifesteal": 0},
-      {"level": 7, "hp": 4335, "atk": 46, "def": 135, "sp_atk": 285, "sp_def": 135, "crit": 0, "lifesteal": 0},
-      {"level": 8, "hp": 4568, "atk": 53, "def": 149, "sp_atk": 323, "sp_def": 149, "crit": 0, "lifesteal": 0},
-      {"level": 9, "hp": 4824, "atk": 59, "def": 165, "sp_atk": 365, "sp_def": 165, "crit": 0, "lifesteal": 0},
-      {"level": 10, "hp": 5106, "atk": 67, "def": 183, "sp_atk": 411, "sp_def": 183, "crit": 0, "lifesteal": 0},
-      {"level": 11, "hp": 5416, "atk": 75, "def": 202, "sp_atk": 462, "sp_def": 202, "crit": 0, "lifesteal": 0},
-      {"level": 12, "hp": 5757, "atk": 84, "def": 223, "sp_atk": 517, "sp_def": 223, "crit": 0, "lifesteal": 0},
-      {"level": 13, "hp": 6133, "atk": 93, "def": 246, "sp_atk": 579, "sp_def": 246, "crit": 0, "lifesteal": 0},
-      {"level": 14, "hp": 6545, "atk": 104, "def": 272, "sp_atk": 646, "sp_def": 272, "crit": 0, "lifesteal": 0},
-      {"level": 15, "hp": 7000, "atk": 116, "def": 300, "sp_atk": 720, "sp_def": 300, "crit": 0, "lifesteal": 0}
+      {"level": 1, "hp": 3360, "atk": 20, "def": 76, "sp_atk": 120, "sp_def": 76, "crit": 0, "lifesteal": 0},
+      {"level": 2, "hp": 3504, "atk": 23, "def": 85, "sp_atk": 141, "sp_def": 85, "crit": 0, "lifesteal": 0},
+      {"level": 3, "hp": 3663, "atk": 27, "def": 95, "sp_atk": 165, "sp_def": 95, "crit": 0, "lifesteal": 0},
+      {"level": 4, "hp": 3838, "atk": 31, "def": 106, "sp_atk": 191, "sp_def": 106, "crit": 0, "lifesteal": 0},
+      {"level": 5, "hp": 4030, "atk": 36, "def": 117, "sp_atk": 219, "sp_def": 118, "crit": 0, "lifesteal": 0},
+      {"level": 6, "hp": 4241, "atk": 41, "def": 131, "sp_atk": 251, "sp_def": 131, "crit": 0, "lifesteal": 0},
+      {"level": 7, "hp": 4474, "atk": 46, "def": 145, "sp_atk": 285, "sp_def": 146, "crit": 0, "lifesteal": 0},
+      {"level": 8, "hp": 4730, "atk": 53, "def": 161, "sp_atk": 323, "sp_def": 162, "crit": 0, "lifesteal": 0},
+      {"level": 9, "hp": 5011, "atk": 59, "def": 178, "sp_atk": 365, "sp_def": 180, "crit": 0, "lifesteal": 0},
+      {"level": 10, "hp": 5321, "atk": 67, "def": 197, "sp_atk": 411, "sp_def": 199, "crit": 0, "lifesteal": 0},
+      {"level": 11, "hp": 5661, "atk": 75, "def": 218, "sp_atk": 462, "sp_def": 221, "crit": 0, "lifesteal": 0},
+      {"level": 12, "hp": 6035, "atk": 84, "def": 242, "sp_atk": 517, "sp_def": 244, "crit": 0, "lifesteal": 0},
+      {"level": 13, "hp": 6448, "atk": 93, "def": 267, "sp_atk": 579, "sp_def": 270, "crit": 0, "lifesteal": 0},
+      {"level": 14, "hp": 6901, "atk": 104, "def": 295, "sp_atk": 646, "sp_def": 299, "crit": 0, "lifesteal": 0},
+      {"level": 15, "hp": 7400, "atk": 116, "def": 326, "sp_atk": 720, "sp_def": 330, "crit": 0, "lifesteal": 0}
     ],
     "passive": {
       "name": "Dark Aura",
@@ -12973,10 +12973,10 @@
         "can_crit": "false",
         "image": "assets/moves/zacian/sacred_sword.png",
         "damages": [
-          {"name": "Damage - Circle Draw", "multiplier": 56.7, "levelCoef": 5, "constant": 92, "dealDamage": true},
-          {"name": "Damage - Flurry (x3 hits)", "multiplier": 37.26, "levelCoef": 3, "constant": 65, "dealDamage": true, "is_tick": true, "tick_count": 3},
-          {"name": "Damage - Circle Draw (Boosted)", "multiplier": 72.9, "levelCoef": 6, "constant": 127, "dealDamage": true},
-          {"name": "Damage - Flurry (x3 hits, Boosted)", "multiplier": 48.6, "levelCoef": 4, "constant": 81, "dealDamage": true, "is_tick": true, "tick_count": 3}
+          {"name": "Damage - Circle Draw", "multiplier": 52.5, "levelCoef": 5, "constant": 85, "dealDamage": true},
+          {"name": "Damage - Flurry (x3 hits)", "multiplier": 34.5, "levelCoef": 3, "constant": 60, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Damage - Circle Draw (Boosted)", "multiplier": 67.5, "levelCoef": 6, "constant": 118, "dealDamage": true},
+          {"name": "Damage - Flurry (x3 hits, Boosted)", "multiplier": 45, "levelCoef": 4, "constant": 75, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
       {
@@ -13283,20 +13283,20 @@
     "style": "physical",
     "stats": [
       {"level": 1, "hp": 3030, "atk": 135, "def": 55, "sp_atk": 20, "sp_def": 45, "crit": 0},
-      {"level": 2, "hp": 3105, "atk": 147, "def": 60, "sp_atk": 22, "sp_def": 49, "crit": 0},
-      {"level": 3, "hp": 3191, "atk": 160, "def": 67, "sp_atk": 25, "sp_def": 53, "crit": 0},
-      {"level": 4, "hp": 3290, "atk": 175, "def": 74, "sp_atk": 28, "sp_def": 58, "crit": 0},
-      {"level": 5, "hp": 3741, "atk": 245, "def": 107, "sp_atk": 41, "sp_def": 80, "crit": 5},
-      {"level": 6, "hp": 3872, "atk": 265, "def": 116, "sp_atk": 45, "sp_def": 86, "crit": 5},
-      {"level": 7, "hp": 4022, "atk": 288, "def": 127, "sp_atk": 49, "sp_def": 94, "crit": 5},
-      {"level": 8, "hp": 4195, "atk": 315, "def": 140, "sp_atk": 54, "sp_def": 102, "crit": 5},
-      {"level": 9, "hp": 4394, "atk": 346, "def": 154, "sp_atk": 60, "sp_def": 112, "crit": 10},
-      {"level": 10, "hp": 4624, "atk": 382, "def": 171, "sp_atk": 67, "sp_def": 123, "crit": 10},
-      {"level": 11, "hp": 4887, "atk": 423, "def": 190, "sp_atk": 75, "sp_def": 136, "crit": 10},
-      {"level": 12, "hp": 5190, "atk": 470, "def": 212, "sp_atk": 84, "sp_def": 151, "crit": 10},
-      {"level": 13, "hp": 5539, "atk": 525, "def": 237, "sp_atk": 94, "sp_def": 168, "crit": 10},
-      {"level": 14, "hp": 5939, "atk": 588, "def": 266, "sp_atk": 106, "sp_def": 187, "crit": 10},
-      {"level": 15, "hp": 6400, "atk": 660, "def": 300, "sp_atk": 120, "sp_def": 210, "crit": 10}
+      {"level": 2, "hp": 3100, "atk": 147, "def": 60, "sp_atk": 22, "sp_def": 48, "crit": 0},
+      {"level": 3, "hp": 3181, "atk": 160, "def": 65, "sp_atk": 25, "sp_def": 51, "crit": 0},
+      {"level": 4, "hp": 3274, "atk": 175, "def": 71, "sp_atk": 28, "sp_def": 55, "crit": 0},
+      {"level": 5, "hp": 3698, "atk": 245, "def": 99, "sp_atk": 41, "sp_def": 73, "crit": 5},
+      {"level": 6, "hp": 3821, "atk": 265, "def": 107, "sp_atk": 45, "sp_def": 78, "crit": 5},
+      {"level": 7, "hp": 3962, "atk": 288, "def": 116, "sp_atk": 49, "sp_def": 84, "crit": 5},
+      {"level": 8, "hp": 4125, "atk": 315, "def": 127, "sp_atk": 54, "sp_def": 91, "crit": 5},
+      {"level": 9, "hp": 4312, "atk": 346, "def": 139, "sp_atk": 60, "sp_def": 99, "crit": 10},
+      {"level": 10, "hp": 4528, "atk": 382, "def": 153, "sp_atk": 67, "sp_def": 108, "crit": 10},
+      {"level": 11, "hp": 4776, "atk": 423, "def": 169, "sp_atk": 75, "sp_def": 119, "crit": 10},
+      {"level": 12, "hp": 5061, "atk": 470, "def": 187, "sp_atk": 84, "sp_def": 131, "crit": 10},
+      {"level": 13, "hp": 5389, "atk": 525, "def": 208, "sp_atk": 94, "sp_def": 145, "crit": 10},
+      {"level": 14, "hp": 5766, "atk": 588, "def": 232, "sp_atk": 106, "sp_def": 161, "crit": 10},
+      {"level": 15, "hp": 6200, "atk": 660, "def": 260, "sp_atk": 120, "sp_def": 180, "crit": 10}
     ],
     "moves": [
       {
@@ -13349,7 +13349,7 @@
         "can_crit": "false",
         "image": "assets/moves/zoroark/cut.png",
         "damages": [
-          {"name": "Damage", "multiplier": 97.75, "levelCoef": 13, "constant": 287, "dealDamage": true}
+          {"name": "Damage", "multiplier": 85, "levelCoef": 11, "constant": 250, "dealDamage": true}
         ],
         "heals": [
           {"name": "Healing", "scaling": "atk", "multiplier": 53, "levelCoef": 7, "constant": 158},

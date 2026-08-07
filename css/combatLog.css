@@ -533,6 +533,35 @@
 
 .clt-picker-val { margin-left: auto; font-weight: 700; font-family: 'Rajdhani', sans-serif; }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOVE & PASSIVE EFFECTS (toggle cards reused as-is from the classic Calculator)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.clt-effects-panel {
+  display: none;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.clt-effects-panel.open { display: flex; }
+
+.clt-effects-group {
+  background: var(--surface-2);
+  border: 1px solid var(--border-md);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 0.9rem;
+}
+.clt-effects-group > h5 {
+  margin: 0 0 0.3rem 0;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+.clt-effects-col .global-bonus-line:first-of-type { margin-top: 0; }
+.clt-effects-col .global-bonus-line:last-of-type { margin-bottom: 0; }
+
 .clt-mini-btn {
   background: var(--surface-3);
   border: 1px solid var(--border-md);

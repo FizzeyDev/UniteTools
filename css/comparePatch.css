@@ -525,6 +525,13 @@
 .cpt-move-badge-new { background: var(--green-dim); color: var(--green); }
 .cpt-move-badge-removed { background: var(--red-dim); color: var(--red); }
 
+/* Base stats comparison card (HP/Atk/Def/SpAtk/SpDef) */
+.cpt-stats-card {
+  border-left: 3px solid var(--violet);
+  background: var(--surface-2);
+}
+.cpt-stats-card .cpt-move-name { color: var(--violet); }
+
 .cpt-move-summary {
   margin-left: auto;
   font-size: 0.68rem;
@@ -604,6 +611,18 @@
 .cpt-hit-bar-fill { height: 100%; border-radius: 3px; transition: width 0.25s ease; }
 .cpt-hit-bar-fill.cpt-buff { background: var(--green); box-shadow: 0 0 8px rgba(76,175,130,0.5); }
 .cpt-hit-bar-fill.cpt-nerf { background: var(--red); box-shadow: 0 0 8px rgba(239,83,80,0.5); }
+
+/* Sub-sections within a move card when it mixes damage/heal/shield entries */
+.cpt-entry-section + .cpt-entry-section { margin-top: 0.5rem; padding-top: 0.4rem; border-top: 1px solid var(--border-md); }
+.cpt-entry-section-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  margin-bottom: 0.2rem;
+}
 
 @media (max-width: 720px) {
   .cpt-main-grid { grid-template-columns: 1fr; }

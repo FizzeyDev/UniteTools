@@ -34,7 +34,7 @@ export function setupBuffListeners() {
   const defenderBuffIds = [
     'regirockBuffDefender', 'eldegossBuffDefender', 'ninetailsBuffDefender',
     'ninetailsPlusBuffDefender', 'umbreonBuffDefender', 'umbreonPlusBuffDefender',
-    'blisseyRedirectionBuffDefender', 'hoohRedirectionBuffDefender'
+    'blisseyRedirectionBuffDefender', 'hoohRedirectionBuffDefender', 'mimeShieldBuffDefender'
   ];
 
   defenderBuffIds.forEach(id => {
@@ -50,6 +50,7 @@ export function setupBuffListeners() {
           case 'umbreonPlusBuffDefender': state.defenderUmbreonPlusBuff = e.target.checked; break;
           case 'blisseyRedirectionBuffDefender': state.defenderBlisseyRedirectionBuff = e.target.checked; break;
           case 'hoohRedirectionBuffDefender': state.defenderHoOhRedirectionBuff = e.target.checked; break;
+          case 'mimeShieldBuffDefender': state.defenderMimeActive = e.target.checked; break;
         }
         updateDamages();
       });
@@ -86,7 +87,9 @@ export function setupDebuffListeners() {
     'tinkatonIceHammerDebuffAttacker',
     'tinkatonIceHammerPlusDebuffAttacker',
     'alcremieCharmDebuffAttacker',
-    'latiasMistBallDebuffAttacker'
+    'latiasMistBallDebuffAttacker',
+    'meganiumSynthesisDebuffAttacker',
+    'meganiumFullBloomAromaDebuffAttacker'
   ];
 
   attackerDebuffIds.forEach(id => {
@@ -122,6 +125,8 @@ export function setupDebuffListeners() {
           case 'tinkatonIceHammerPlusDebuffAttacker': state.debuffTinkatonIceHammerPlus = e.target.checked; break;
           case 'alcremieCharmDebuffAttacker': state.debuffAlcremieCharm = e.target.checked; break;
           case 'latiasMistBallDebuffAttacker': state.debuffLatiasMistBall = e.target.checked; break;
+          case 'meganiumSynthesisDebuffAttacker': state.debuffMeganiumSynthesis = e.target.checked; break;
+          case 'meganiumFullBloomAromaDebuffAttacker': state.debuffMeganiumFullBloomAroma = e.target.checked; break;
         }
         updateDamages();
       });

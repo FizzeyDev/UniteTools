@@ -23,6 +23,13 @@ export function computeDefenderDamageMult() {
   if (state.currentDefender?.pokemonId === "dragonite" && state.defenderDragoniteHyperBeamCharging) defenderDamageMult *= 0.50;
   if (state.currentDefender?.pokemonId === "duraludon" && state.defenderDuraludonLaserFocusActive) defenderDamageMult *= 0.80;
 
+  // Metagross — Zen Headbutt+ (post-hit) & Magnet Rise+ (levitating)
+  if (state.currentDefender?.pokemonId === "metagross" && state.defenderMetagrossZenHeadbuttActive) defenderDamageMult *= 0.80;
+  if (state.currentDefender?.pokemonId === "metagross" && state.defenderMetagrossMagnetRiseActive)  defenderDamageMult *= 0.70;
+
+  // Mew — Light Screen (moving wall) : -25% dmg from attacks passing through
+  if (state.currentDefender?.pokemonId === "mew" && state.defenderMewLightScreenWallActive) defenderDamageMult *= 0.75;
+
   if (state.currentDefender?.pokemonId === "garchomp" && state.defenderGarchompDragonRushDmgReduc)   defenderDamageMult *= 0.55;
   if (state.currentDefender?.pokemonId === "garchomp" && state.defenderGarchompLividOutrageActive)   defenderDamageMult *= 0.70;
 
@@ -32,6 +39,11 @@ export function computeDefenderDamageMult() {
   // Lucario / Mega-Lucario — Power-Up Punch charging : -30% damage received
   if (["lucario", "mega-lucario"].includes(state.currentDefender?.pokemonId) && state.defenderLucarioPowerUpPunchCharging) {
     defenderDamageMult *= 0.70;
+  }
+
+  // Mewtwo X — Psystrike: -15% damage received while channeling
+  if (state.currentDefender?.pokemonId === "mewtwo_x" && state.defenderMewtwoXPsystrikeChanneling) {
+    defenderDamageMult *= 0.85;
   }
 
   // Snow Cloak (Articuno)
@@ -60,6 +72,9 @@ export function computeGlobalDamageMult() {
 
   if (state.currentAttacker?.pokemonId === "inteleon" && state.attackerInteleonLiquidationStacked) globalDamageMult *= 1.20;
 
+  // ── MEOWSCARADA — Flower Trick: Increased Explosion (bomb re-hit before detonation) ──
+  if (state.currentAttacker?.pokemonId === "meowscarada" && state.attackerMeowscaradaFlowerTrickIncreased) globalDamageMult *= 1.60;
+
   // ── LATIOS — Luster Purge mark : +20% dmg vs marked target (benefits allied Latias too) ──
   if (state.attackerLatiosLusterPurgeMarkActive && ["latios", "latias"].includes(state.currentAttacker?.pokemonId)) {
     globalDamageMult *= 1.20;
@@ -71,6 +86,16 @@ export function computeGlobalDamageMult() {
     if (marks > 0) globalDamageMult *= (1 + marks * 0.03);
   }
 
+  // ── MEWTWO X — Future Sight: +10%/+20% dmg vs locked-on target ─────────────
+  if (state.currentAttacker?.pokemonId === "mewtwo_x" && state.attackerMewtwoXFutureSightMarkActive) {
+    globalDamageMult *= state.attackerLevel >= 11 ? 1.20 : 1.10;
+  }
+
+  // ── MEWTWO X — Teleport: +10%/+20% dmg dealt for 5s after teleporting ──────
+  if (state.currentAttacker?.pokemonId === "mewtwo_x" && state.attackerMewtwoXTeleportActive) {
+    globalDamageMult *= state.attackerLevel >= 13 ? 1.20 : 1.10;
+  }
+
   if (state.debuffGoodraMuddyWater)         globalDamageMult *= 0.85;
   if (state.debuffMimePowerSwap)            globalDamageMult *= 0.85;
   if (state.debuffMimePowerSwapPlus)        globalDamageMult *= 0.80;
@@ -78,6 +103,8 @@ export function computeGlobalDamageMult() {
   if (state.debuffPsyduckSurfPlus)          globalDamageMult *= 0.75;
   if (state.debuffPsyduckUnite)             globalDamageMult *= 0.70;
   if (state.debuffLatiasMistBall)           globalDamageMult *= 0.75;
+  if (state.debuffMeganiumSynthesis)        globalDamageMult *= 0.85;
+  if (state.debuffMeganiumFullBloomAroma)   globalDamageMult *= 0.90;
 
   if (state.currentDefender?.pokemonId === 'armarouge' && state.defenderLevel >= 13 && state.defenderArmarougeFlameChargeDmgReduc) {
     globalDamageMult *= 0.80;

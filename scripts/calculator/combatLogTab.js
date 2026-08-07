@@ -16,11 +16,25 @@
  * Cela correspond exactement à la contrainte UX de la spec (§1.3) : "un seul panneau
  * de moves actif à la fois" — il n'y a donc jamais besoin de deux contextes simultanés.
  *
- * TOUJOURS PAS RÉPLIQUÉ — découvert en creusant displayMoves() en profondeur pour la
- * passe ci-dessus, scope bien plus large que prévu initialement. Il s'agit de "lignes
- * bonus" affichées séparément dans le Calculator classique (procs, heals-on-hit, caps),
- * pas de simples multiplicateurs — porter ça veut dire dupliquer chaque bloc, pas
- * juste une formule :
+ * MOVE EFFECTS / PASSIVE EFFECTS — désormais répliqués (cf. §"EFFETS D'HABILITÉ
+ * PAR POKÉMON" plus bas) :
+ *   • Les cartes toggle/stacks de moveEffectsAtk.js / moveEffectsDef.js et
+ *     passiveEffectsAtk.js / passiveEffectsDef.js s'affichent maintenant dans
+ *     le panneau du picker (mêmes boutons que le Calculator classique), pour
+ *     l'attaquant sélectionné ET la Cible. Cliquer dessus modifie le même
+ *     `state` global (partagé avec le Calculator) puis rafraîchit le picker.
+ *   • Les multiplicateurs "bespoke" qui en découlent (Latias Dragon Breath
+ *     Eon Power, Decidueye Spirit Shackle+/Nock Nock, Espeon Future Sight+,
+ *     Buzzwole Muscle stacks, multiplicateur d'état "wound" — Ceruledge/
+ *     Darkrai/Decidueye/Meowscarada/Mimikyu/Venusaur/Rapidash —, Lucario Aura
+ *     Cannon PUP, Machamp Close Combat+, bonus Auto-attack Armarouge/Flash
+ *     Fire) sont maintenant appliqués dans buildMoveOptions(), dans le même
+ *     ordre que displayMoves().
+ *
+ * TOUJOURS PAS RÉPLIQUÉ — restant hors scope de cette passe car ce sont de
+ * vraies "lignes bonus" séparées (pas de simples multiplicateurs sur le hit
+ * déjà loggé), donc porter ça veut dire dupliquer chaque bloc, pas juste
+ * une formule :
  *   • Lifesteal affiché en ligne dédiée sous chaque dégât
  *   • Yveltal — Oblivion Wing (heal), Dark Aura Execute (true dmg + heal on KO)
  *   • Charizard/Mega-X/Mega-Y — heal Seismic Slam (Unite)
@@ -29,11 +43,14 @@
  *   • Palkia — Pressure (bonus prochaine AA)
  *   • Absol — second hit Night Slash+
  *   • Falinks — cap multi-hit (110%)
- *   • Decidueye — Razor Leaf Enhanced+, Spirit Shackle+, Nock Nock Large Quill (bonus % HP cible)
- *   • Buzzwole — getBuzzwoleMuscleMultiplier() (Fell Stinger/Superpower/Leech Life tick scaling)
- *   • getAttackerWoundMultiplier() — Ceruledge (6 stacks), Darkrai (sleep), Decidueye (distant),
- *     Meowscarada, Mimikyu, Venusaur (<30% HP), Rapidash (stacks) : multiplicateur "état" global
- *   • Armarouge — bonus AA fixe pendant Flash Fire
+ *   • Decidueye — Razor Leaf Enhanced+ (bonus % HP cible, distinct du bonus
+ *     Spirit Shackle+/Nock Nock ci-dessus qui, eux, sont répliqués)
+ *   • Latios — Draco Meteor (nombre de comètes variable ; changerait la
+ *     structure du move, pas juste sa valeur — pas juste un multiplicateur)
+ *   • Armarouge — bonus ATK/SpAtk Crustle Shell Smash : PAS un manque du
+ *     Combat Log, bug préexistant du Calculator classique (le bonus n'est
+ *     affiché que dans le libellé UI, jamais réellement injecté dans
+ *     atkStats avant calcul — même limite que Mold Breaker ci-dessous)
  * → à traiter dans une prochaine passe dédiée si besoin, ce n'est plus un "petit ajout".
  * - Mold Breaker def-pen (Mega-Gyarados attaquant) : PAS un manque du Combat Log, bug
  *   préexistant du Calculator classique (calculé dans damageDisplay.js mais jamais consommé).
@@ -56,6 +73,62 @@ import { applyPokemonStatMutations } from './statsManager.js';
 import { computeGlobalDamageMult, computeDefenderDamageMult } from './multiplierManager.js';
 import { stackableItems, specialHeldItems, getMobHPAtTimer } from './constants.js';
 import { enhanceBuffLabels } from './buff-visuals.js';
+import { applyAttackerMoveEffects, getLatiasDragonBreathMultiplier } from './moveEffectsAtk.js';
+import { applyDefenderMoveEffects } from './moveEffectsDef.js';
+import {
+  applyBuzzwoleAttacker, applyCeruledgeAttacker, applyChandelureAttacker,
+  applyDarkraiAttacker, applyDecidueyeAttacker, applyZardyAttacker,
+  applyAegislashAttacker, applyArmarougeAttacker, applyMegaGyaradosAttacker,
+  applyMegaLucarioAttacker, applyGyaradosAttacker, applyMachampAttacker,
+  applyMeowscaradaAttacker, applyMegaMewtwoAttacker, applyMegaMewtwoYAttacker,
+  applyMimikyuAttacker, applyRapidashAttacker, applySirfetchdAttacker,
+  applySylveonAttacker, applyTinkatonAttacker, applyTyranitarAttacker,
+  applyZeraoraAttacker, applyMoltresAttacker, applyTyphlosionAttacker,
+  applySkeledirgAttacker, applyQuaquavalAttacker, applyYveltalAttacker, applyPalkiaAttacker,
+} from './passiveEffectsAtk.js';
+import {
+  applyAegislashDefender, applyArmarougeDefender, applyArticunoDefender,
+  applyZardxDefender, applyMegaGyaradosDefender, applyGyaradosDefender,
+  applyCrustleDefender, applyDragoniteDefender, applyLaprasDefender,
+  applyMamoswineDefender, applyMegaMewtwoDefender, applyMegaMewtwoYDefender,
+  applyMimeDefender, applySylveonDefender, applyTyranitarDefender,
+  applyUmbreonDefender, applyGarchompDefender, applyFalinksDefender,
+} from './passiveEffectsDef.js';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DISPATCH DES PASSIFS PAR POKÉMON (repris à l'identique de applyAttackerPassive
+// / applyDefenderPassive dans damageDisplay.js — ces deux fonctions n'y sont pas
+// exportées, donc dupliquées ici. Contrairement aux Move Effects, les Passive
+// Effects n'ont pas de dispatcher unique exporté par passiveEffectsAtk/Def.js.)
+// ─────────────────────────────────────────────────────────────────────────────
+const ATTACKER_PASSIVE_HANDLERS = {
+  buzzwole: applyBuzzwoleAttacker, ceruledge: applyCeruledgeAttacker,
+  chandelure: applyChandelureAttacker, darkrai: applyDarkraiAttacker,
+  decidueye: applyDecidueyeAttacker, "mega-charizard-y": applyZardyAttacker,
+  aegislash: applyAegislashAttacker, armarouge: applyArmarougeAttacker,
+  gyarados: applyGyaradosAttacker, machamp: applyMachampAttacker,
+  "mega-gyarados": applyMegaGyaradosAttacker, "mega-lucario": applyMegaLucarioAttacker,
+  meowscarada: applyMeowscaradaAttacker, "mewtwo_x": applyMegaMewtwoAttacker,
+  "mewtwo_y": applyMegaMewtwoYAttacker, mimikyu: applyMimikyuAttacker,
+  rapidash: applyRapidashAttacker, sirfetchd: applySirfetchdAttacker,
+  sylveon: applySylveonAttacker, tinkaton: applyTinkatonAttacker,
+  tyranitar: applyTyranitarAttacker, zeraora: applyZeraoraAttacker,
+  moltres: applyMoltresAttacker, typhlosion: applyTyphlosionAttacker,
+  skeledirge: applySkeledirgAttacker, quaquaval: applyQuaquavalAttacker,
+  yveltal: applyYveltalAttacker, palkia: applyPalkiaAttacker,
+};
+const DEFENDER_PASSIVE_HANDLERS = {
+  aegislash: applyAegislashDefender, armarouge: applyArmarougeDefender,
+  articuno: applyArticunoDefender,
+  "mega-charizard-x": applyZardxDefender, "mega-gyarados": applyMegaGyaradosDefender,
+  gyarados: applyGyaradosDefender, crustle: applyCrustleDefender,
+  dragonite: applyDragoniteDefender, lapras: applyLaprasDefender,
+  mamoswine: applyMamoswineDefender, "mewtwo_x": applyMegaMewtwoDefender,
+  "mewtwo_y": applyMegaMewtwoYDefender, "mr_mime": applyMimeDefender,
+  sylveon: applySylveonDefender, tyranitar: applyTyranitarDefender,
+  umbreon: applyUmbreonDefender, garchomp: applyGarchompDefender,
+  falinks: applyFalinksDefender,
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ÉTAT LOCAL DE L'ONGLET
@@ -209,6 +282,38 @@ function getDefenderFlashFireReduction(targetSlot) {
     : 0;
 }
 
+// ── Repris à l'identique de damageDisplay.js (non exportées là-bas) ──────────
+function getBuzzwoleMuscleMultiplier(moveName, damageName) {
+  if (state.currentAttacker?.pokemonId !== 'buzzwole') return 1;
+  const stacks = state.attackerPassiveStacks;
+  if (stacks <= 0) return 1;
+  if (moveName === 'Fell Stinger' || moveName === 'Superpower') return 1 + 0.125 * stacks;
+  if (moveName === 'Leech Life' && (damageName || '').includes('per Tick')) return 1 + 0.015 * stacks;
+  return 1;
+}
+
+function getAttackerWoundMultiplier() {
+  let mult = 1;
+  const attacker = state.currentAttacker;
+  if (!attacker) return 1;
+  switch (attacker.pokemonId) {
+    case 'ceruledge':    if (state.attackerPassiveStacks >= 6) mult *= 1.15; break;
+    case 'darkrai':      if (state.attackerDarkraiSleep) mult *= 1.10; break;
+    case 'decidueye':    if (state.attackerDecidueyeDistant) mult *= 1.20; break;
+    case 'meowscarada':  if (state.attackerMeowscaradaActive) mult *= 1.15; break;
+    case 'mimikyu':      if (state.attackerMimikyuActive) mult *= 1.10; break;
+    case 'venusaur':     if (state.attackerHPPercent <= 30) mult *= 1.20; break;
+    case 'rapidash':
+      if      (state.attackerRapidashStacks >= 5) mult *= 1.60;
+      else if (state.attackerRapidashStacks === 4) mult *= 1.50;
+      else if (state.attackerRapidashStacks === 3) mult *= 1.35;
+      else if (state.attackerRapidashStacks === 2) mult *= 1.20;
+      else if (state.attackerRapidashStacks === 1) mult *= 1.05;
+      break;
+  }
+  return mult;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // CALCUL DES OPTIONS D'UN MOVE (dans le contexte acteur/cible déjà swappé)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -300,7 +405,15 @@ function buildMoveOptions(move, actorSlot, targetSlot) {
   if (actorSlot.pokemon?.pokemonId === 'delphox' && (state.attackerDelphoxFireSpinPlusActive ?? false)) {
     fireSpinPlusMult = 1.15;
   }
-  const bespokeMoveMult = moltresBurnMult * lavaPlumeMult * flamethrowerPlusMult * fireSpinPlusMult;
+  let auraCannonPUPMult = 1.0;
+  if (actorSlot.pokemon?.pokemonId === 'lucario' && (state.attackerLucarioAuraCannonPUPActive ?? false) && move.name === 'Power-Up Punch') {
+    auraCannonPUPMult = 1.20;
+  }
+  let machampCloseCombatMult = 1.0;
+  if (actorSlot.pokemon?.pokemonId === 'machamp' && (state.attackerMachampCloseCombatStatusActive ?? false) && move.name === 'Close Combat') {
+    machampCloseCombatMult = 1.25;
+  }
+  const bespokeMoveMult = moltresBurnMult * lavaPlumeMult * flamethrowerPlusMult * fireSpinPlusMult * auraCannonPUPMult * machampCloseCombatMult;
 
   visibleDamages?.forEach(dmg => {
     if (!dmg.dealDamage) return;
@@ -346,6 +459,68 @@ function buildMoveOptions(move, actorSlot, targetSlot) {
         normal = Math.ceil(normal * (1 + fcPct));
         crit = Math.ceil(crit * (1 + fcPct));
       }
+    }
+
+    // ── LATIAS — Dragon Breath : bonus Eon Power (mode "dragonBreath" uniquement) ──
+    if (
+      actorSlot.pokemon?.pokemonId === 'latias' &&
+      move.name === 'Dragon Breath' &&
+      dmg.name === 'Damage' &&
+      state.attackerLatiasEonPowerMove === 'dragonBreath'
+    ) {
+      const eonMult = getLatiasDragonBreathMultiplier(state.attackerLatiasEonPower || 0);
+      normal = Math.floor(normal * eonMult);
+      crit   = Math.floor(crit   * eonMult);
+    }
+
+    // ── DECIDUEYE — Spirit Shackle+ (lvl 11) : +15% si cible < 50% HP ─────────
+    if (
+      actorSlot.pokemon?.pokemonId === 'decidueye' &&
+      upgraded &&
+      move.name === 'Spirit Shackle' &&
+      dmg.name !== 'Enhanced+ Bonus' &&
+      currentDefHP != null && defStats.hp > 0 &&
+      currentDefHP / defStats.hp < 0.50
+    ) {
+      normal = Math.floor(normal * 1.15);
+      crit   = Math.floor(crit   * 1.15);
+    }
+
+    // ── DECIDUEYE — Nock Nock (Unite) : +30% sur Large Quill si cible < 50% HP ──
+    if (
+      actorSlot.pokemon?.pokemonId === 'decidueye' &&
+      move.name === 'Nock Nock (Unite)' &&
+      dmg.name === 'Damage - Large Quill' &&
+      currentDefHP != null && defStats.hp > 0 &&
+      currentDefHP / defStats.hp < 0.50
+    ) {
+      normal = Math.floor(normal * 1.30);
+      crit   = Math.floor(crit   * 1.30);
+    }
+
+    // ── ESPEON — Future Sight+ (lvl 12) : +15% sur cible verrouillée ──────────
+    if (actorSlot.pokemon?.pokemonId === 'espeon' && upgraded && move.name === 'Future Sight') {
+      normal = Math.floor(normal * 1.15);
+      crit   = Math.floor(crit   * 1.15);
+    }
+
+    // ── BUZZWOLE — Muscle stacks (Fell Stinger / Superpower / Leech Life tick) ──
+    const muscleMult = getBuzzwoleMuscleMultiplier(move.name, dmg.name);
+    normal = Math.floor(normal * muscleMult);
+    crit   = Math.floor(crit   * muscleMult);
+
+    // ── Multiplicateur d'état "wound" (Ceruledge/Darkrai/Decidueye/Meowscarada/
+    // Mimikyu/Venusaur/Rapidash) — cf. getAttackerWoundMultiplier() ────────────
+    const woundMult = getAttackerWoundMultiplier();
+    normal = Math.floor(normal * woundMult);
+    crit   = Math.floor(crit   * woundMult);
+
+    // ── ARMAROUGE — bonus Auto-attack fixe pendant Flash Fire (attaquant) ─────
+    if (move.name === 'Auto-attack' && (state.attackerFlashFireActive ?? false) && actorSlot.pokemon?.pokemonId === 'armarouge') {
+      const passive = actorSlot.pokemon.passive || { extraAutoMultiplier: 60, extraAutoConstant: 120 };
+      const bonus = calculateDamage({ multiplier: passive.extraAutoMultiplier, levelCoef: 0, constant: passive.extraAutoConstant }, relevantAtk, effectiveDef, level);
+      normal += bonus;
+      crit += bonus;
     }
 
     const finalNormal = Math.floor(normal * defenderDamageMult);
@@ -440,6 +615,71 @@ function buildMoveOptions(move, actorSlot, targetSlot) {
   return { options, maxHP: defStats.hp };
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// EFFETS D'HABILITÉ PAR POKÉMON (Move Effects + Passive Effects) — §ask
+// Réutilise TEL QUEL les cartes toggle/stacks du Calculator classique
+// (moveEffectsAtk.js / moveEffectsDef.js / passiveEffectsAtk.js / passiveEffectsDef.js) :
+// mêmes fonctions, mêmes boutons, même `state` global. Elles sont rendues ici
+// dans le panneau du picker (dans le contexte acteur/cible déjà swappé par
+// withActorTargetContext), pour l'attaquant sélectionné ET la Cible.
+//
+// Ces fonctions appellent en interne updateDamages() (du Calculator classique)
+// sur clic — c'est inoffensif ici (early-return si aucun attaquant n'y est
+// sélectionné) mais ne rafraîchit pas NOTRE picker. On ajoute donc un listener
+// de clic en bulle sur le conteneur qui appelle refreshPickerIfOpen() APRÈS le
+// handler natif du bouton (le state global venant d'être muté correctement).
+// ─────────────────────────────────────────────────────────────────────────────
+
+function renderMoveAndPassiveEffectsPanel(actorSlot, targetSlot) {
+  const host = document.getElementById('cltEffectsPanel');
+  if (!host) return;
+  host.innerHTML = '';
+
+  if (!actorSlot?.pokemon || !targetSlot?.pokemon) return;
+
+  const atkStats = getModifiedStats(actorSlot.pokemon, actorSlot.level, actorSlot.items, actorSlot.stacks, actorSlot.activated);
+  const defStats = getModifiedStats(targetSlot.pokemon, targetSlot.level, targetSlot.items, targetSlot.stacks, targetSlot.activated);
+  if (targetSlot.pokemon.timerBased && targetSlot.pokemon.hpTable) {
+    defStats.hp = getMobHPAtTimer(targetSlot.pokemon.hpTable, targetSlot.timer);
+  }
+  applyPokemonStatMutations(atkStats, defStats);
+
+  const attackerCard = document.createElement('div');
+  attackerCard.className = 'clt-effects-col';
+  ATTACKER_PASSIVE_HANDLERS[actorSlot.pokemon.pokemonId]?.(atkStats, defStats, attackerCard);
+  applyAttackerMoveEffects(actorSlot.pokemon.pokemonId, atkStats, defStats, attackerCard);
+
+  const defenderCard = document.createElement('div');
+  defenderCard.className = 'clt-effects-col';
+  DEFENDER_PASSIVE_HANDLERS[targetSlot.pokemon.pokemonId]?.(atkStats, defStats, defenderCard);
+  applyDefenderMoveEffects(targetSlot.pokemon.pokemonId, atkStats, defStats, defenderCard);
+
+  const hasAtk = attackerCard.children.length > 0;
+  const hasDef = defenderCard.children.length > 0;
+  if (!hasAtk && !hasDef) return;
+
+  host.classList.add('open');
+
+  if (hasAtk) {
+    const wrap = document.createElement('div');
+    wrap.className = 'clt-effects-group';
+    wrap.innerHTML = `<h5>⚔️ ${escapeHtml(actorSlot.pokemon.displayName)} — Move &amp; Passive Effects</h5>`;
+    wrap.appendChild(attackerCard);
+    host.appendChild(wrap);
+  }
+  if (hasDef) {
+    const wrap = document.createElement('div');
+    wrap.className = 'clt-effects-group';
+    wrap.innerHTML = `<h5>🛡️ ${escapeHtml(targetSlot.pokemon.displayName)} — Move &amp; Passive Effects</h5>`;
+    wrap.appendChild(defenderCard);
+    host.appendChild(wrap);
+  }
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 // Styles now live in combatLog.css — imported via <link> in damage-calc.html
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -480,6 +720,7 @@ function buildTabAndPanel() {
     <div class="clt-config-panel" id="cltConfigPanel"></div>
     <div class="clt-moves-panel" id="cltMovesPanel"></div>
     <div class="clt-picker-panel" id="cltPickerPanel"></div>
+    <div class="clt-effects-panel" id="cltEffectsPanel"></div>
     <div class="clt-hp-section" id="cltHpSection"></div>
     <div class="clt-buffs-section" id="cltBuffsSection">
       <div class="clt-buffs-header" id="cltBuffsToggle">
@@ -526,6 +767,15 @@ function buildTabAndPanel() {
 
   document.getElementById('cltBuffsToggle').addEventListener('click', () => {
     document.getElementById('cltBuffsSection').classList.toggle('collapsed');
+  });
+
+  // Les cartes Move/Passive Effects rendues dans #cltEffectsPanel viennent de
+  // moveEffectsAtk.js / moveEffectsDef.js / passiveEffectsAtk.js / passiveEffectsDef.js
+  // et gèrent elles-mêmes la mutation de `state` sur clic (bouton .onclick).
+  // On rafraîchit notre picker APRÈS coup (l'écouteur en bulle se déclenche
+  // après le .onclick du bouton cible, une fois le state déjà à jour).
+  document.getElementById('cltEffectsPanel').addEventListener('click', () => {
+    refreshPickerIfOpen();
   });
 
   clearPickerPanel();
@@ -946,6 +1196,11 @@ function clearPickerPanel() {
   if (host) {
     host.innerHTML = `<div class="clt-picker-placeholder">Click a Pokémon's move above to preview its damage / heal / shield here.</div>`;
   }
+  const effectsHost = document.getElementById('cltEffectsPanel');
+  if (effectsHost) {
+    effectsHost.innerHTML = '';
+    effectsHost.classList.remove('open');
+  }
 }
 
 // Recalcule et ré-affiche le picker actuellement ouvert (si il y en a un) — appelé
@@ -973,7 +1228,10 @@ function openPicker(actorSlot, move) {
 
   clState.activePicker = { actorSlotId: actorSlot.id, move };
 
-  const { options } = withActorTargetContext(actorSlot, targetSlot, () => buildMoveOptions(move, actorSlot, targetSlot));
+  const { options } = withActorTargetContext(actorSlot, targetSlot, () => {
+    renderMoveAndPassiveEffectsPanel(actorSlot, targetSlot);
+    return buildMoveOptions(move, actorSlot, targetSlot);
+  });
 
   const host = document.getElementById('cltPickerPanel');
   if (!host) return;

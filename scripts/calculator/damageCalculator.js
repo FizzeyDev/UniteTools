@@ -203,7 +203,7 @@ function applyDebuffs(pokemon, stats) {
     if (state.defenderPsyduckTailWhip) spDefMult *= 0.80;
     if (state.defenderPsyduckTailWhipMysterious) spDefMult *= 0.70;
     if (state.defenderPsyduckPsychicPlus) spDefMult *= 0.75;
-    if (state.defenderAlolanRaichuStoredPowerPlus) spDefMult *= Math.pow(0.95, Math.min(state.raichuStoredpowerStacks || 0, state.raichuStoredpowerStacksMax ?? 3));
+    if (state.defenderAlolanRaichuStoredPowerPlus) spDefMult *= Math.pow(0.92, Math.min(state.raichuStoredpowerStacks || 0, state.raichuStoredpowerStacksMax ?? 3));
     if (state.defenderLatiasDragonBreath) spDefMult *= 0.70;
     if (state.defenderEmpoleonAquaJetTorrent) spDefMult *= 0.40;
 
