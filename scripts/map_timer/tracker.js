@@ -5,6 +5,8 @@
  *          window.trackerClearAll()
  */
 
+import { translate } from "./i18n.js";
+
 const mobsList    = document.getElementById("tracker-mobs-list");
 const towersList  = document.getElementById("tracker-towers-list");
 const mobsEmpty   = document.getElementById("tracker-mobs-empty");
@@ -48,21 +50,21 @@ function makeTrackerItem({ id, name, img, killedTime, respawnTime, isTower = fal
     : `<div class="tracker-item-icon">${isTower ? "🗼" : "💀"}</div>`;
 
   const respawnHTML = isTower
-    ? `<div class="tracker-item-respawn no-respawn"><span>🚫</span> <span>Destroyed permanently</span></div>`
+    ? `<div class="tracker-item-respawn no-respawn"><span>🚫</span> <span data-tr="perm">${translate("map_timer_destroyed_permanently", "Destroyed permanently")}</span></div>`
     : respawnTime != null && respawnTime > 0
-      ? `<div class="tracker-item-respawn"><span>🔄</span> <span>Respawn: <span class="t-val" data-respawn="${id}">${fmt(respawnTime)}</span></span></div>`
-      : `<div class="tracker-item-respawn no-respawn"><span>🚫</span> <span>Does not respawn</span></div>`;
+      ? `<div class="tracker-item-respawn"><span>🔄</span> <span data-tr="respawn-label">${translate("map_timer_respawn_label", "Respawn:")}</span> <span class="t-val" data-respawn="${id}">${fmt(respawnTime)}</span></div>`
+      : `<div class="tracker-item-respawn no-respawn"><span>🚫</span> <span data-tr="norespawn">${translate("map_timer_does_not_respawn", "Does not respawn")}</span></div>`;
 
   div.innerHTML = `
     ${iconEl}
     <div class="tracker-item-info">
       <div class="tracker-item-name">${name}</div>
       <div class="tracker-item-times">
-        <div class="tracker-item-killed">💀 <span>Killed at: <span class="t-val">${fmt(killedTime)}</span></span></div>
+        <div class="tracker-item-killed">💀 <span data-tr="killed-label">${translate("map_timer_killed_at", "Killed at:")}</span> <span class="t-val">${fmt(killedTime)}</span></div>
         ${respawnHTML}
       </div>
     </div>
-    <button class="tracker-item-remove" title="Remove entry">✕</button>
+    <button class="tracker-item-remove" title="${translate("map_timer_remove_entry", "Remove entry")}">✕</button>
   `;
 
   div.querySelector(".tracker-item-remove").addEventListener("click", () => {
@@ -128,5 +130,14 @@ window.trackerClearAll = function () {
   towerEntries = [];
   updateBadge();
 };
+
+// Refresh already-rendered items' static labels when the language changes
+document.addEventListener("mapTimerLangChanged", () => {
+  document.querySelectorAll('[data-tr="killed-label"]').forEach(el => el.textContent = translate("map_timer_killed_at", "Killed at:"));
+  document.querySelectorAll('[data-tr="respawn-label"]').forEach(el => el.textContent = translate("map_timer_respawn_label", "Respawn:"));
+  document.querySelectorAll('[data-tr="perm"]').forEach(el => el.textContent = translate("map_timer_destroyed_permanently", "Destroyed permanently"));
+  document.querySelectorAll('[data-tr="norespawn"]').forEach(el => el.textContent = translate("map_timer_does_not_respawn", "Does not respawn"));
+  document.querySelectorAll(".tracker-item-remove").forEach(el => el.title = translate("map_timer_remove_entry", "Remove entry"));
+});
 
 updateBadge();

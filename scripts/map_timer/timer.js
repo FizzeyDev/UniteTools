@@ -2,6 +2,7 @@ import { state } from "./state.js";
 import { updateSpawns } from "./spawns.js";
 import { updateTowers } from "./towers.js";
 import { initializeAltariaLane } from "./altaria.js";
+import { translate } from "./i18n.js";
 
 const playBtn      = document.getElementById("play-btn");
 const resetBtn     = document.getElementById("reset-btn");
@@ -15,11 +16,19 @@ const phaseLabel   = document.getElementById("phase-label");
 
 function updatePhaseLabel(t) {
   if (!phaseLabel) return;
-  if (t > 420)      { phaseLabel.textContent = "🟢 Early Game";  phaseLabel.style.color = "var(--green)";  phaseLabel.style.borderColor = "rgba(76,175,130,0.3)"; }
-  else if (t > 240) { phaseLabel.textContent = "🟡 Mid Game";    phaseLabel.style.color = "var(--yellow)"; phaseLabel.style.borderColor = "rgba(255,215,64,0.3)"; }
-  else if (t > 0)   { phaseLabel.textContent = "🔴 Late Game";   phaseLabel.style.color = "var(--red)";    phaseLabel.style.borderColor = "rgba(239,83,80,0.3)"; }
-  else              { phaseLabel.textContent = "⚫ Game Over";   phaseLabel.style.color = "var(--text-dim)"; phaseLabel.style.borderColor = "var(--border)"; }
+  if (t > 420)      { phaseLabel.textContent = translate("map_timer_phase_early", "🟢 Early Game");  phaseLabel.style.color = "var(--green)";  phaseLabel.style.borderColor = "rgba(76,175,130,0.3)"; }
+  else if (t > 240) { phaseLabel.textContent = translate("map_timer_phase_mid", "🟡 Mid Game");    phaseLabel.style.color = "var(--yellow)"; phaseLabel.style.borderColor = "rgba(255,215,64,0.3)"; }
+  else if (t > 0)   { phaseLabel.textContent = translate("map_timer_phase_late", "🔴 Late Game");   phaseLabel.style.color = "var(--red)";    phaseLabel.style.borderColor = "rgba(239,83,80,0.3)"; }
+  else              { phaseLabel.textContent = translate("map_timer_phase_over", "⚫ Game Over");   phaseLabel.style.color = "var(--text-dim)"; phaseLabel.style.borderColor = "var(--border)"; }
 }
+
+// Re-render dynamic strings whenever the language changes
+document.addEventListener("mapTimerLangChanged", () => {
+  updatePhaseLabel(state.currentTime);
+  playBtn.textContent = state.timerRunning
+    ? translate("map_timer_pause", "⏸ Pause")
+    : translate("map_timer_play", "▶ Play");
+});
 
 export function updateDisplay() {
   const m = Math.floor(state.currentTime / 60).toString().padStart(2, "0");
@@ -34,7 +43,7 @@ export function updateDisplay() {
 
 function startTimer() {
   state.timerRunning = true;
-  playBtn.textContent = "⏸ Pause";
+  playBtn.textContent = translate("map_timer_pause", "⏸ Pause");
   state.timerInterval = setInterval(() => {
     if (state.currentTime > 0) { state.currentTime--; updateDisplay(); }
     else stopTimer();
@@ -43,7 +52,7 @@ function startTimer() {
 
 export function stopTimer() {
   state.timerRunning = false;
-  playBtn.textContent = "▶ Play";
+  playBtn.textContent = translate("map_timer_play", "▶ Play");
   clearInterval(state.timerInterval);
 }
 

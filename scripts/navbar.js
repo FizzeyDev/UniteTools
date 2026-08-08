@@ -198,10 +198,11 @@ function syncThemeIcon(btn) {
 function loadAllTranslations(basePath) {
   Promise.all([
     fetch(`${basePath}lang/fr.json`).then(r => { if (!r.ok) throw new Error(); return r.json(); }),
-    fetch(`${basePath}lang/en.json`).then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    fetch(`${basePath}lang/en.json`).then(r => { if (!r.ok) throw new Error(); return r.json(); }),
+    fetch(`${basePath}lang/ja.json`).then(r => { if (!r.ok) throw new Error(); return r.json(); })
   ])
-  .then(([fr, en]) => {
-    translations = { fr, en };
+  .then(([fr, en, ja]) => {
+    translations = { fr, en, ja };
     window.translations = translations;
     applyTranslations();
   })
@@ -214,8 +215,10 @@ function applyTranslations() {
 
   document.querySelectorAll('[data-lang]').forEach(el => {
     const key = el.dataset.lang;
-    /* Ne pas écraser les éléments qui ont des enfants (sb-icon, sb-link-text) */
-    if (lang[key] && el.children.length === 0) {
+    /* Ne pas écraser les éléments qui enveloppent un enfant lui-même traduisible
+       (ex: <a data-lang="nav_x"><span class="sb-icon">…</span><span data-lang="nav_x">…</span></a>).
+       En revanche, du HTML inline neutre (<br>, <strong>, etc.) ne doit PAS bloquer la traduction. */
+    if (lang[key] && !el.querySelector('[data-lang]')) {
       el.innerHTML = lang[key];
     }
   });
@@ -223,6 +226,11 @@ function applyTranslations() {
   document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
     const key = el.dataset.langPlaceholder;
     if (lang[key]) el.placeholder = lang[key];
+  });
+
+  document.querySelectorAll('[data-lang-title]').forEach(el => {
+    const key = el.dataset.langTitle;
+    if (lang[key]) el.title = lang[key];
   });
 
   if (lang.page_title) document.title = lang.page_title;

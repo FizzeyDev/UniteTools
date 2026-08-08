@@ -60,37 +60,38 @@ body::before {
 
 h1 {
   font-family: 'Exo 2', sans-serif;
-  text-align: center;
-  font-size: 2.2rem;
+  font-size: 1.5rem;
   font-weight: 900;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-bright);
-  margin-bottom: 1.5rem;
   position: relative;
   z-index: 1;
-  text-shadow: 0 0 60px rgba(79,195,247,0.3), 0 0 120px rgba(159,83,236,0.15);
-}
-h1::after {
-  content: '';
-  display: block;
-  width: 80px;
-  height: 2px;
-  margin: 8px auto 0;
-  background: linear-gradient(90deg, transparent, var(--blue), transparent);
-  border-radius: 2px;
+  text-shadow: 0 0 40px rgba(79,195,247,0.25);
+  white-space: nowrap;
 }
 
-/* ── Top-right floating controls ── */
-.top-right-controls {
-  position: fixed;
-  top: 1rem;
-  right: 1.25rem;
-  z-index: 8000;
+/* ── Full-width top bar (title + actions) ── */
+.mt-topbar {
+  width: calc(100% + 3rem);
+  margin: -1.5rem -1.5rem 1.25rem;
+  padding: 1rem 1.5rem;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 100%);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  box-shadow: var(--shadow-md);
+}
+
+.mt-topbar-actions {
+  display: flex;
   gap: 8px;
-  align-items: flex-end;
+  flex-shrink: 0;
 }
 
 .ctrl-btn {
@@ -109,7 +110,6 @@ h1::after {
   gap: 6px;
   position: relative;
   white-space: nowrap;
-  box-shadow: var(--shadow-md);
 }
 
 .tracker-ctrl-btn {
@@ -121,7 +121,7 @@ h1::after {
   background: rgba(79,195,247,0.22);
   border-color: var(--blue);
   color: var(--text-bright);
-  transform: translateX(-3px);
+  transform: translateY(-2px);
   box-shadow: 0 4px 20px var(--blue-glow);
 }
 
@@ -134,7 +134,7 @@ h1::after {
   background: rgba(159,83,236,0.24);
   border-color: var(--violet);
   color: var(--text-bright);
-  transform: translateX(-3px);
+  transform: translateY(-2px);
   box-shadow: 0 4px 20px rgba(159,83,236,0.25);
 }
 
@@ -163,80 +163,98 @@ h1::after {
   100% { transform: scale(1); }
 }
 
-/* ── Map Switch ── */
-.map-switch {
+/* ── Full-width control bar (map picker + timer) ── */
+.mt-control-bar {
+  width: calc(100% + 3rem);
+  margin: 0 -1.5rem 1.25rem;
+  padding: 1rem 1.5rem;
   display: flex;
-  justify-content: center;
-  gap: 6px;
-  margin-bottom: 1.25rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
   flex-wrap: wrap;
+  background: var(--surface-2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   position: relative;
   z-index: 1;
 }
 
-.map-switch button {
+/* ── Map picker pills (colored per legendary, with artwork) ── */
+.map-switch {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.map-pill {
+  --map-color: var(--blue);
+  --map-glow: var(--blue-glow);
+  --map-border: rgba(79,195,247,0.4);
   font-family: 'Rajdhani', sans-serif;
   font-weight: 700;
-  font-size: 0.82rem;
-  padding: 7px 18px;
-  background: var(--surface-2);
+  font-size: 0.85rem;
+  padding: 6px 16px 6px 8px;
+  background: var(--surface-3);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   color: var(--text-dim);
   cursor: pointer;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-.map-switch button:hover {
-  background: var(--surface-3);
-  color: var(--text);
+.map-pill[data-map="groudon"]  { --map-color:#ff7a45; --map-glow:rgba(255,122,69,0.18); --map-border:rgba(255,122,69,0.5); }
+.map-pill[data-map="kyogre"]   { --map-color:#4fa3f7; --map-glow:rgba(79,163,247,0.18);  --map-border:rgba(79,163,247,0.5); }
+.map-pill[data-map="rayquaza"] { --map-color:#3ecf8e; --map-glow:rgba(62,207,142,0.18);  --map-border:rgba(62,207,142,0.5); }
+
+.map-pill-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.25);
+  padding: 3px;
+  flex-shrink: 0;
+}
+
+.map-pill:hover {
+  border-color: var(--map-border);
+  color: var(--map-color);
   transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }
-.map-switch button.active {
-  background: var(--blue-dim);
-  border-color: rgba(79,195,247,0.4);
-  color: var(--blue);
-  box-shadow: 0 0 16px rgba(79,195,247,0.15);
+.map-pill.active {
+  background: var(--map-glow);
+  border-color: var(--map-border);
+  color: var(--map-color);
+  box-shadow: 0 0 16px var(--map-glow);
 }
 
-/* ── Timer bubble ── */
-.timer-section {
+/* ── Timer strip (buttons + display + slider + phase) ── */
+.mt-timer-strip {
+  flex: 1 1 480px;
   display: flex;
-  justify-content: center;
-  margin-bottom: 1.25rem;
-  position: relative;
-  z-index: 1;
-}
-
-.middle-bubble {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 24px;
-  text-align: center;
-  box-shadow: var(--shadow-lg);
-  width: 100%;
-  max-width: 520px;
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 1.25rem;
+  min-width: 0;
 }
 
-.timer-top {
+.mt-timer-btns {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 #play-btn {
   font-family: 'Exo 2', sans-serif;
   font-weight: 700;
-  font-size: 1rem;
-  padding: 9px 22px;
+  font-size: 0.95rem;
+  padding: 9px 20px;
   border-radius: var(--radius-sm);
   border: 1px solid rgba(79,195,247,0.35);
   background: var(--blue-dim);
@@ -245,6 +263,7 @@ h1::after {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 #play-btn:hover {
   background: rgba(79,195,247,0.22);
@@ -255,8 +274,8 @@ h1::after {
 .reset-btn {
   font-family: 'Exo 2', sans-serif;
   font-weight: 700;
-  font-size: 0.9rem;
-  padding: 9px 16px;
+  font-size: 0.85rem;
+  padding: 9px 14px;
   border-radius: var(--radius-sm);
   border: 1px solid rgba(255,157,0,0.3);
   background: var(--orange-dim);
@@ -265,11 +284,20 @@ h1::after {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 .reset-btn:hover {
   background: rgba(255,157,0,0.24);
   transform: translateY(-2px);
   box-shadow: 0 4px 14px rgba(255,157,0,0.2);
+}
+
+.mt-timer-mid {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 #timer-display {
@@ -284,11 +312,24 @@ h1::after {
   letter-spacing: 0.04em;
 }
 
+#timer-display {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: var(--yellow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
 #timer-display input {
-  width: 72px;
+  width: 46px;
   text-align: center;
   font-family: 'Exo 2', sans-serif;
-  font-size: 2.6rem;
+  font-size: 1.6rem;
   font-weight: 900;
   color: var(--yellow);
   background: transparent;
@@ -311,15 +352,18 @@ h1::after {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-dim);
-  padding: 3px 10px;
+  padding: 5px 14px;
   background: rgba(255,255,255,0.03);
   border-radius: 20px;
   border: 1px solid var(--border);
   transition: color 0.4s, border-color 0.4s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 #time-slider {
-  width: 100%;
+  flex: 1;
+  min-width: 80px;
   direction: rtl;
   -webkit-appearance: none;
   background: transparent;
@@ -735,18 +779,22 @@ footer {
 /* ── Responsive ── */
 @media (max-width: 860px) {
   body { margin-left: 0; padding: 1rem 0.75rem 2rem; }
-  .middle-bubble { max-width: 100%; }
+  .mt-topbar, .mt-control-bar { width: calc(100% + 1.5rem); margin-left: -0.75rem; margin-right: -0.75rem; }
+  .mt-control-bar { flex-direction: column; align-items: stretch; }
+  .mt-timer-strip { flex-wrap: wrap; }
   .pokemon-tooltip { bottom: 1rem; right: 1rem; width: calc(100vw - 2rem); max-width: 340px; }
   .htu-modal { padding: 1.5rem 1.25rem; }
   .tracker-panel { width: 290px; }
-  .top-right-controls { top: 0.5rem; right: 0.75rem; }
 }
 
 @media (max-width: 480px) {
-  h1 { font-size: 1.3rem; }
-  #timer-display { font-size: 2rem; }
-  #timer-display input { font-size: 1.8rem; width: 56px; }
-  .map-switch button { font-size: 0.75rem; padding: 7px 12px; }
+  h1 { font-size: 1rem; }
+  .mt-topbar { flex-wrap: wrap; gap: 0.5rem; }
+  #timer-display { font-size: 1.3rem; }
+  #timer-display input { font-size: 1.2rem; width: 38px; }
+  .map-pill { font-size: 0.72rem; padding: 5px 12px 5px 5px; }
+  .map-pill-icon { width: 24px; height: 24px; }
   .ctrl-label { display: none; }
   .ctrl-btn { padding: 8px 10px; }
+  .mt-timer-mid { flex-wrap: wrap; }
 }

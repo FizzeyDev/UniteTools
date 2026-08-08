@@ -19,40 +19,54 @@
 <body>
   <div id="navbar-container"></div>
 
-  <div class="top-right-controls">
-    <button id="tracker-btn" class="ctrl-btn tracker-ctrl-btn" title="Tracker (T)">
-      <span class="ctrl-icon">📋</span>
-      <span class="ctrl-label">Tracker</span>
-      <span id="tracker-badge" class="tracker-badge hidden">0</span>
-    </button>
-    <button id="how-to-use-btn" class="ctrl-btn htu-ctrl-btn" title="Help (H)">
-      <span class="ctrl-icon">❓</span>
-      <span class="ctrl-label">Help</span>
-    </button>
+  <!-- ── Full-width top bar: title + actions ── -->
+  <div class="mt-topbar">
+    <h1 data-lang="map_timer_h1">Pokémon Unite - Map Timer</h1>
+    <div class="mt-topbar-actions">
+      <button id="tracker-btn" class="ctrl-btn tracker-ctrl-btn" data-lang-title="map_timer_tracker_title_full" title="Tracker (T)">
+        <span class="ctrl-icon">📋</span>
+        <span class="ctrl-label" data-lang="map_timer_tracker_btn">Tracker</span>
+        <span id="tracker-badge" class="tracker-badge hidden">0</span>
+      </button>
+      <button id="how-to-use-btn" class="ctrl-btn htu-ctrl-btn" data-lang-title="map_timer_help_title_full" title="Help (H)">
+        <span class="ctrl-icon">❓</span>
+        <span class="ctrl-label" data-lang="map_timer_help_btn">Help</span>
+      </button>
+    </div>
   </div>
 
-  <h1 data-lang="map_timer_h1">Pokémon Unite - Map Timer</h1>
+  <!-- ── Full-width control bar: map picker + timer controls ── -->
+  <div class="mt-control-bar">
+    <div class="map-switch">
+      <button class="map-pill active" data-map="groudon">
+        <img src="assets/farms/groudon.png" alt="Groudon" class="map-pill-icon" onerror="this.style.display='none'">
+        <span data-lang="map_name_groudon">Groudon</span>
+      </button>
+      <button class="map-pill" data-map="kyogre">
+        <img src="assets/farms/kyogre.png" alt="Kyogre" class="map-pill-icon" onerror="this.style.display='none'">
+        <span data-lang="map_name_kyogre">Kyogre</span>
+      </button>
+      <button class="map-pill" data-map="rayquaza">
+        <img src="assets/farms/rayquaza.png" alt="Rayquaza" class="map-pill-icon" onerror="this.style.display='none'">
+        <span data-lang="map_name_rayquaza">Rayquaza</span>
+      </button>
+    </div>
 
-  <div class="map-switch">
-    <button class="active" data-map="groudon">Map Groudon</button>
-    <button data-map="kyogre">Map Kyogre</button>
-    <button data-map="rayquaza">Map Rayquaza <span style="font-size:0.7em;opacity:0.5;"></span></button>
-  </div>
-
-  <div class="timer-section">
-    <div class="middle-bubble">
-      <div class="timer-top">
-        <button id="play-btn">▶ Play</button>
-        <button id="reset-btn" class="reset-btn" title="Reset (R)">↺ Reset</button>
+    <div class="mt-timer-strip">
+      <div class="mt-timer-btns">
+        <button id="play-btn" data-lang="map_timer_play">▶ Play</button>
+        <button id="reset-btn" class="reset-btn" data-lang-title="map_timer_reset_title_full" title="Reset (R)" data-lang="map_timer_reset_btn">↺ Reset</button>
       </div>
 
-      <div id="timer-display">
-        <input type="number" id="minutes" min="0" max="10" value="10">
-        <span class="timer-sep">:</span>
-        <input type="number" id="seconds" min="0" max="59" value="00">
+      <div class="mt-timer-mid">
+        <div id="timer-display">
+          <input type="number" id="minutes" min="0" max="10" value="10">
+          <span class="timer-sep">:</span>
+          <input type="number" id="seconds" min="0" max="59" value="00">
+        </div>
+        <input type="range" id="time-slider" min="0" max="600" value="600">
       </div>
 
-      <input type="range" id="time-slider" min="0" max="600" value="600">
       <div id="phase-label" class="timer-phase-label">🟢 Early Game</div>
     </div>
   </div>
@@ -78,32 +92,32 @@
   <div id="tracker-panel" class="tracker-panel" aria-hidden="true">
     <div class="tracker-header">
       <div class="tracker-tabs">
-        <button class="tracker-tab active" data-tab="mobs">⚔️ Mobs <span id="mobs-count" class="tab-count">0</span></button>
-        <button class="tracker-tab" data-tab="towers">🗼 Towers <span id="towers-count" class="tab-count">0</span></button>
+        <button class="tracker-tab active" data-tab="mobs"><span data-lang="map_timer_tracker_tab_mobs">⚔️ Mobs</span> <span id="mobs-count" class="tab-count">0</span></button>
+        <button class="tracker-tab" data-tab="towers"><span data-lang="map_timer_tracker_tab_towers">🗼 Towers</span> <span id="towers-count" class="tab-count">0</span></button>
       </div>
-      <button id="tracker-close" class="tracker-close" aria-label="Close">✕</button>
+      <button id="tracker-close" class="tracker-close" data-lang-title="map_timer_tracker_close" aria-label="Close">✕</button>
     </div>
     <div class="tracker-body">
       <div id="tracker-mobs" class="tracker-section active">
         <div id="tracker-mobs-empty" class="tracker-empty">
           <span class="tracker-empty-icon">👻</span>
-          <p>No mobs defeated yet.</p>
-          <p class="tracker-hint">Click a Pokémon on the map to track it.</p>
+          <p data-lang="map_timer_tracker_mobs_empty_title">No mobs defeated yet.</p>
+          <p class="tracker-hint" data-lang="map_timer_tracker_mobs_empty_hint">Click a Pokémon on the map to track it.</p>
         </div>
         <div id="tracker-mobs-list" class="tracker-list"></div>
       </div>
       <div id="tracker-towers" class="tracker-section">
         <div id="tracker-towers-empty" class="tracker-empty">
           <span class="tracker-empty-icon">🏛️</span>
-          <p>No towers destroyed yet.</p>
-          <p class="tracker-hint">Click a tower on the map to track it.</p>
+          <p data-lang="map_timer_tracker_towers_empty_title">No towers destroyed yet.</p>
+          <p class="tracker-hint" data-lang="map_timer_tracker_towers_empty_hint">Click a tower on the map to track it.</p>
         </div>
         <div id="tracker-towers-list" class="tracker-list"></div>
       </div>
     </div>
     <div class="tracker-footer">
-      <button id="tracker-clear" class="tracker-clear-btn">🗑 Clear all</button>
-      <span class="tracker-kbd">Press <kbd>T</kbd> to toggle</span>
+      <button id="tracker-clear" class="tracker-clear-btn" data-lang="map_timer_tracker_clear">🗑 Clear all</button>
+      <span class="tracker-kbd"><span data-lang="map_timer_tracker_kbd_hint">Press <kbd>T</kbd> to toggle</span></span>
     </div>
   </div>
   <div id="tracker-overlay" class="tracker-overlay"></div>
@@ -112,41 +126,41 @@
   <div id="how-to-use-modal" class="htu-overlay" aria-hidden="true">
     <div class="htu-modal" role="dialog" aria-modal="true" aria-labelledby="htu-title">
       <button class="htu-close" id="htu-close-btn" aria-label="Close">✕</button>
-      <h2 id="htu-title">How to use the Map Timer</h2>
+      <h2 id="htu-title" data-lang="map_timer_htu_title">How to use the Map Timer</h2>
       <div class="htu-body">
         <div class="htu-section">
           <div class="htu-icon">🗺️</div>
-          <div><h3>Choose a map</h3><p>Use the buttons at the top to switch between <strong>Groudon</strong>, <strong>Kyogre</strong> and <strong>Rayquaza</strong> maps. The timer and all spawns reset automatically.</p></div>
+          <div><h3 data-lang="map_timer_htu_maps_title">Choose a map</h3><p data-lang="map_timer_htu_maps_desc">Use the buttons at the top to switch between <strong>Groudon</strong>, <strong>Kyogre</strong> and <strong>Rayquaza</strong> maps. The timer and all spawns reset automatically.</p></div>
         </div>
         <div class="htu-section">
           <div class="htu-icon">⏱️</div>
-          <div><h3>Control the timer</h3><p>Press <strong>▶ Play</strong> to start the countdown from 10:00. Drag the slider or edit the fields to jump to any time. Press <kbd>Space</kbd> to play/pause, <kbd>R</kbd> to reset.</p></div>
+          <div><h3 data-lang="map_timer_htu_timer_title">Control the timer</h3><p data-lang="map_timer_htu_timer_desc">Press <strong>▶ Play</strong> to start the countdown from 10:00. Drag the slider or edit the fields to jump to any time. Press <kbd>Space</kbd> to play/pause, <kbd>R</kbd> to reset.</p></div>
         </div>
         <div class="htu-section">
           <div class="htu-icon">🟢</div>
-          <div><h3>Pokémon spawns</h3><p>Icons appear at the correct game time. <strong>Click</strong> to mark as defeated - it greys out and the respawn timer starts automatically.</p></div>
+          <div><h3 data-lang="map_timer_htu_spawns_title">Pokémon spawns</h3><p data-lang="map_timer_htu_spawns_desc">Icons appear at the correct game time. <strong>Click</strong> to mark as defeated - it greys out and the respawn timer starts automatically.</p></div>
         </div>
         <div class="htu-section">
           <div class="htu-icon">🗼</div>
-          <div><h3>Goal zones</h3><p><strong>Click</strong> a tower to mark it destroyed. Some Pokémon only appear depending on which goals are broken, so keep them updated.</p></div>
+          <div><h3 data-lang="map_timer_htu_towers_title">Goal zones</h3><p data-lang="map_timer_htu_towers_desc"><strong>Click</strong> a tower to mark it destroyed. Some Pokémon only appear depending on which goals are broken, so keep them updated.</p></div>
         </div>
         <div class="htu-section">
           <div class="htu-icon">📋</div>
-          <div><h3>Tracker</h3><p>Click the <strong>Tracker</strong> button (top-right) or press <kbd>T</kbd> to open the kill tracker. See when mobs were killed and when they respawn. Switch between <strong>Mobs</strong> and <strong>Towers</strong> tabs.</p></div>
+          <div><h3 data-lang="map_timer_htu_tracker_title">Tracker</h3><p data-lang="map_timer_htu_tracker_desc">Click the <strong>Tracker</strong> button (top-right) or press <kbd>T</kbd> to open the kill tracker. See when mobs were killed and when they respawn. Switch between <strong>Mobs</strong> and <strong>Towers</strong> tabs.</p></div>
         </div>
         <div class="htu-section">
           <div class="htu-icon">💬</div>
-          <div><h3>Tooltips</h3><p><strong>Hover</strong> any icon for ~1 second to see HP, spawn rules, and interactions.</p></div>
+          <div><h3 data-lang="map_timer_htu_tooltip_title">Tooltips</h3><p data-lang="map_timer_htu_tooltip_desc"><strong>Hover</strong> any icon for ~1 second to see HP, spawn rules, and interactions.</p></div>
         </div>
         <div class="htu-section">
           <div class="htu-icon">⌨️</div>
-          <div><h3>Keyboard shortcuts</h3><p><kbd>Space</kbd> Play/Pause &nbsp;·&nbsp; <kbd>R</kbd> Reset &nbsp;·&nbsp; <kbd>T</kbd> Tracker &nbsp;·&nbsp; <kbd>H</kbd> Help &nbsp;·&nbsp; <kbd>Esc</kbd> Close</p></div>
+          <div><h3 data-lang="map_timer_htu_keyboard_title">Keyboard shortcuts</h3><p data-lang="map_timer_htu_keyboard_desc"><kbd>Space</kbd> Play/Pause &nbsp;·&nbsp; <kbd>R</kbd> Reset &nbsp;·&nbsp; <kbd>T</kbd> Tracker &nbsp;·&nbsp; <kbd>H</kbd> Help &nbsp;·&nbsp; <kbd>Esc</kbd> Close</p></div>
         </div>
       </div>
     </div>
   </div>
 
-  <footer><p>Created by Fizzey - Pokémon Unite Map Timer</p></footer>
+  <footer><p data-lang="map_timer_footer">Created by Fizzey - Pokémon Unite Map Timer</p></footer>
 
   <script type="module" src="./scripts/map_timer/main.js"></script>
   <script src="./scripts/navbar.js"></script>

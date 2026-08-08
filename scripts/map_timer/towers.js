@@ -3,6 +3,7 @@ import { attachTooltip } from "./tooltip.js";
 import { updateDisplay } from "./timer.js";
 import { scaledSize } from "./scale.js";
 import { addTowerKill } from "./tracker.js";
+import { translate } from "./i18n.js";
 
 const towersContainer = document.getElementById("towers-container");
 
@@ -35,9 +36,9 @@ export function updateTowers() {
       attachTooltip(img, {
         name: tower.name || tower.id,
         gif: tower.img,
-        html: (tower.info || "<p>No information available.</p>") +
+        html: (tower.info || `<p>${translate("map_timer_no_info", "No information available.")}</p>`) +
           (tower.mobsLinked?.length
-            ? `<p><strong>Affected Pokémon:</strong> ${tower.mobsLinked.join(", ")}</p>`
+            ? `<p><strong>${translate("map_timer_affected_pokemon", "Affected Pokémon:")}</strong> ${tower.mobsLinked.join(", ")}</p>`
             : ""),
       });
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Unite Tools - XP Calculator</title>
+  <title data-lang="xpcalc_page_title">Unite Tools - XP Calculator</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./css/navbar.css">
   <link rel="stylesheet" href="./css/exp-calc.css">
@@ -23,11 +23,11 @@
 
   <!-- ── Top Bar ── -->
   <div class="topbar">
-    <span class="topbar-title">⚡ XP Calculator</span>
+    <span class="topbar-title" data-lang="xpcalc_topbar_title">⚡ XP Calculator</span>
     <div class="topbar-spacer"></div>
-    <button class="btn btn-topbar btn-orange disclaimer-btn" id="disclaimerBtn">⚠️ Disclaimer</button>
-    <button class="btn btn-topbar btn-blue how-to-use-btn" id="howToUseBtn">📖 How to Use</button>
-    <button class="btn btn-topbar btn-violet roadmap-btn" id="roadmapBtn">🗺️ Roadmap</button>
+    <button class="btn btn-topbar btn-orange disclaimer-btn" id="disclaimerBtn" data-lang="xpcalc_disclaimer_btn">⚠️ Disclaimer</button>
+    <button class="btn btn-topbar btn-blue how-to-use-btn" id="howToUseBtn" data-lang="xpcalc_howtouse_btn">📖 How to Use</button>
+    <button class="btn btn-topbar btn-violet roadmap-btn" id="roadmapBtn" data-lang="xpcalc_roadmap_btn">🗺️ Roadmap</button>
   </div>
 
   <!-- ── Main Layout ── -->
@@ -48,9 +48,10 @@
             </div>
           </div>
           <div class="pokemon-info-col">
-            <div class="pokemon-name-display" id="pokemon-name-display">Select a Pokémon</div>
+            <!-- NOTE: dynamic text set by JS after Pokemon selection, not translated to avoid overwriting selection -->
+            <div class="pokemon-name-display" id="pokemon-name-display" data-lang-default="xpcalc_select_pokemon">Select a Pokémon</div>
             <div class="pokemon-level-row">
-              <span class="cfg-label">Level</span>
+              <span class="cfg-label" data-lang="xpcalc_level_label">Level</span>
               <div class="level-stepper">
                 <button class="step-btn" id="lvl-minus">−</button>
                 <span class="level-value" id="lvl-display">1</span>
@@ -60,7 +61,7 @@
             </div>
             <div class="exp-share-row">
               <img src="assets/items/exp_share.png" alt="Exp Share" class="exp-share-icon" draggable="false">
-              <span class="exp-share-label">Exp. Share</span>
+              <span class="exp-share-label" data-lang="xpcalc_expshare_label">Exp. Share</span>
               <label class="toggle-switch">
                 <input type="checkbox" id="exp-share-toggle">
                 <span class="toggle-slider"></span>
@@ -71,7 +72,7 @@
 
         <!-- Pokemon Search -->
         <div class="pokemon-search-wrap">
-          <input type="text" id="pokemon-search" class="cfg-input" placeholder="🔍  Search Pokémon…" autocomplete="off">
+          <input type="text" id="pokemon-search" class="cfg-input" placeholder="🔍  Search Pokémon…" data-lang-placeholder="xpcalc_search_placeholder" autocomplete="off">
         </div>
         <div class="pokemon-picker-grid" id="pokemon-picker-grid">
           <!-- filled by JS -->
@@ -83,43 +84,43 @@
 
       <!-- Session Config Block -->
       <div class="session-config-block">
-        <div class="session-title">Session Settings</div>
+        <div class="session-title" data-lang="xpcalc_session_title">Session Settings</div>
 
         <div class="session-fields">
           <div class="field-group">
-            <label class="cfg-label">Start Timer</label>
+            <label class="cfg-label" data-lang="xpcalc_start_timer_label">Start Timer</label>
             <div class="timer-input-wrap">
               <input type="number" id="start-min" class="timer-part" min="0" max="10" value="10" placeholder="MM">
               <span class="timer-colon">:</span>
               <input type="number" id="start-sec" class="timer-part" min="0" max="59" value="0" placeholder="SS">
             </div>
-            <span class="field-hint">Game timer at start (e.g. 10:00)</span>
+            <span class="field-hint" data-lang="xpcalc_start_timer_hint">Game timer at start (e.g. 10:00)</span>
           </div>
 
           <div class="field-group">
-            <label class="cfg-label">Duration</label>
+            <label class="cfg-label" data-lang="xpcalc_duration_label">Duration</label>
             <div class="timer-input-wrap">
               <input type="number" id="dur-min" class="timer-part" min="0" max="10" value="10" placeholder="MM">
               <span class="timer-colon">:</span>
               <input type="number" id="dur-sec" class="timer-part" min="0" max="59" value="0" placeholder="SS">
             </div>
-            <span class="field-hint">How long to simulate</span>
+            <span class="field-hint" data-lang="xpcalc_duration_hint">How long to simulate</span>
           </div>
 
           <div class="field-group">
-            <label class="cfg-label">Passive XP/sec</label>
+            <label class="cfg-label" data-lang="xpcalc_passive_xp_label">Passive XP/sec</label>
             <div class="passive-xp-info">
-              <span class="passive-xp-badge before8">4 <span class="passive-xp-small">xp/s before 8:00</span></span>
-              <span class="passive-xp-badge after8">6 <span class="passive-xp-small">xp/s after 8:00</span></span>
+              <span class="passive-xp-badge before8">4 <span class="passive-xp-small" data-lang="xpcalc_passive_before8">xp/s before 8:00</span></span>
+              <span class="passive-xp-badge after8">6 <span class="passive-xp-small" data-lang="xpcalc_passive_after8">xp/s after 8:00</span></span>
             </div>
-            <span class="field-hint">Calculated automatically</span>
+            <span class="field-hint" data-lang="xpcalc_passive_calc_hint">Calculated automatically</span>
           </div>
         </div>
 
         <!-- XP Progress Display -->
         <div class="xp-progress-box">
           <div class="xp-prog-row">
-            <span class="xp-prog-label">Current XP</span>
+            <span class="xp-prog-label" data-lang="xpcalc_current_xp_label">Current XP</span>
             <span class="xp-prog-val" id="current-xp-display">0</span>
           </div>
           <div class="xp-prog-bar-wrap">
@@ -136,15 +137,15 @@
           <button class="calc-btn classic" id="calc-classic-btn">
             <span class="calc-btn-icon">⚡</span>
             <div>
-              <div class="calc-btn-title">Classic</div>
-              <div class="calc-btn-sub">Instant result</div>
+              <div class="calc-btn-title" data-lang="xpcalc_classic_title">Classic</div>
+              <div class="calc-btn-sub" data-lang="xpcalc_classic_sub">Instant result</div>
             </div>
           </button>
           <button class="calc-btn advanced" id="calc-advanced-btn">
             <span class="calc-btn-icon">🎬</span>
             <div>
-              <div class="calc-btn-title">Advanced</div>
-              <div class="calc-btn-sub">Live simulation</div>
+              <div class="calc-btn-title" data-lang="xpcalc_advanced_title">Advanced</div>
+              <div class="calc-btn-sub" data-lang="xpcalc_advanced_sub">Live simulation</div>
             </div>
           </button>
         </div>
@@ -157,16 +158,16 @@
     ═══════════════════════════════════════ -->
     <div class="enemy-config-section">
       <div class="enemy-config-header">
-        <span class="enemy-config-title">⚔️ Team Configuration</span>
-        <span class="enemy-config-hint">Configure your <strong>Ally</strong> (Exp. Share) and the <strong>Enemy</strong> (Catch-Up Modifier + parallel simulation)</span>
+        <span class="enemy-config-title" data-lang="xpcalc_team_config_title">⚔️ Team Configuration</span>
+        <span class="enemy-config-hint" data-lang="xpcalc_team_config_hint">Configure your <strong>Ally</strong> (Exp. Share) and the <strong>Enemy</strong> (Catch-Up Modifier + parallel simulation)</span>
       </div>
       <div class="enemy-config-body two-col">
 
         <!-- ── Ally block ── -->
         <div class="team-config-block ally-block">
-          <div class="team-config-block-title">🤝 Ally Pokémon</div>
+          <div class="team-config-block-title" data-lang="xpcalc_ally_block_title">🤝 Ally Pokémon</div>
 
-          <span class="cfg-label">Ally's starting level</span>
+          <span class="cfg-label" data-lang="xpcalc_ally_level_label">Ally's starting level</span>
           <div class="ally-level-row">
             <div class="level-stepper">
               <button class="step-btn" id="ally-lvl-minus">−</button>
@@ -178,8 +179,8 @@
             </div>
           </div>
 
-          <span class="cfg-label" style="margin-top:10px;">Assign a Farm Preset to the ally track</span>
-          <span class="field-hint">The ally will follow this Kill Queue in parallel during Advanced Simulation. Their live XP determines Exp. Share eligibility each tick.</span>
+          <span class="cfg-label" style="margin-top:10px;" data-lang="xpcalc_ally_preset_label">Assign a Farm Preset to the ally track</span>
+          <span class="field-hint" data-lang="xpcalc_ally_preset_hint">The ally will follow this Kill Queue in parallel during Advanced Simulation. Their live XP determines Exp. Share eligibility each tick.</span>
           <div class="preset-chips preset-selector-row" id="ally-preset-chips">
             <!-- filled by presets.js -->
           </div>
@@ -187,9 +188,9 @@
 
         <!-- ── Enemy block ── -->
         <div class="team-config-block enemy-block">
-          <div class="team-config-block-title">🎯 Enemy Team</div>
+          <div class="team-config-block-title" data-lang="xpcalc_enemy_block_title">🎯 Enemy Team</div>
 
-          <span class="cfg-label">Highest level on the opposing team (Catch-Up reference)</span>
+          <span class="cfg-label" data-lang="xpcalc_enemy_level_label">Highest level on the opposing team (Catch-Up reference)</span>
           <div class="enemy-level-row">
             <div class="level-stepper">
               <button class="step-btn" id="enemy-lvl-minus">−</button>
@@ -202,15 +203,15 @@
             </div>
           </div>
 
-          <span class="cfg-label" style="margin-top:10px;">Enemy starting level (for simulation track)</span>
+          <span class="cfg-label" style="margin-top:10px;" data-lang="xpcalc_enemy_start_level_label">Enemy starting level (for simulation track)</span>
           <div class="level-stepper" style="margin-bottom:6px;">
             <button class="step-btn" id="enemy-start-lvl-minus">−</button>
             <span class="level-value" id="enemy-start-lvl-display">1</span>
             <button class="step-btn" id="enemy-start-lvl-plus">+</button>
           </div>
 
-          <span class="cfg-label">Assign a Farm Preset to the enemy track</span>
-          <span class="field-hint">The enemy will follow this Kill Queue in Advanced Simulation. Their live level updates the Catch-Up modifier in real time.</span>
+          <span class="cfg-label" data-lang="xpcalc_enemy_preset_label">Assign a Farm Preset to the enemy track</span>
+          <span class="field-hint" data-lang="xpcalc_enemy_preset_hint">The enemy will follow this Kill Queue in Advanced Simulation. Their live level updates the Catch-Up modifier in real time.</span>
           <div class="preset-chips preset-selector-row" id="enemy-preset-chips">
             <!-- filled by presets.js -->
           </div>
@@ -227,37 +228,37 @@
       <!-- Kill Queue (left) -->
       <div class="kill-queue-panel">
         <div class="panel-header">
-          <span class="panel-header-title">📋 Kill Queue</span>
-          <button class="btn btn-xs btn-red clear-queue-btn" id="clear-queue-btn">🗑 Clear</button>
+          <span class="panel-header-title" data-lang="xpcalc_killqueue_title">📋 Kill Queue</span>
+          <button class="btn btn-xs btn-red clear-queue-btn" id="clear-queue-btn" data-lang="xpcalc_clear_btn">🗑 Clear</button>
         </div>
 
         <!-- ── Farm Rota Presets ── -->
         <div class="preset-bar">
           <div class="preset-bar-top">
-            <span class="preset-bar-label">💾 Farm Presets</span>
+            <span class="preset-bar-label" data-lang="xpcalc_presets_label">💾 Farm Presets</span>
             <div class="preset-bar-actions">
-              <button class="preset-save-btn" id="preset-save-btn">+ Save Current</button>
-              <button id="preset-export-btn">⬆ Export</button>
-              <button id="preset-import-btn">⬇ Import</button>
+              <button class="preset-save-btn" id="preset-save-btn" data-lang="xpcalc_preset_save_btn">+ Save Current</button>
+              <button id="preset-export-btn" data-lang="xpcalc_preset_export_btn">⬆ Export</button>
+              <button id="preset-import-btn" data-lang="xpcalc_preset_import_btn">⬇ Import</button>
             </div>
           </div>
           <div class="preset-chips" id="preset-chips">
             <!-- filled by JS -->
-            <span class="preset-empty-hint" id="preset-empty-hint">No presets yet. Build a queue and save it!</span>
+            <span class="preset-empty-hint" id="preset-empty-hint" data-lang="xpcalc_preset_empty_hint">No presets yet. Build a queue and save it!</span>
           </div>
         </div>
 
         <div class="kill-queue-list" id="kill-queue-list">
-          <div class="empty-queue-hint">Add wild Pokémon kills, player KOs or scoring events below.</div>
+          <div class="empty-queue-hint" data-lang="xpcalc_empty_queue_hint">Add wild Pokémon kills, player KOs or scoring events below.</div>
         </div>
 
         <!-- Quick Add: Scoring -->
         <div class="quick-add-row">
           <div class="quick-add-block">
-            <span class="quick-add-label">🏆 Scoring</span>
+            <span class="quick-add-label" data-lang="xpcalc_scoring_label">🏆 Scoring</span>
             <div class="quick-add-fields">
               <div class="qaf">
-                <span class="qaf-label">Timer</span>
+                <span class="qaf-label" data-lang="xpcalc_timer_label">Timer</span>
                 <div class="timer-input-wrap mini">
                   <input type="number" id="score-min" class="timer-part mini" min="0" max="10" value="5">
                   <span class="timer-colon">:</span>
@@ -265,11 +266,11 @@
                 </div>
               </div>
               <div class="qaf">
-                <span class="qaf-label">Points</span>
+                <span class="qaf-label" data-lang="xpcalc_points_label">Points</span>
                 <input type="number" id="score-pts" class="cfg-input mini" min="1" max="100" value="10">
               </div>
             </div>
-            <button class="quick-add-btn" id="add-score-btn">+ Add</button>
+            <button class="quick-add-btn" id="add-score-btn" data-lang="xpcalc_add_btn">+ Add</button>
           </div>
         </div>
       </div>
@@ -277,12 +278,12 @@
       <!-- Wild Pokemon Grid (right, scrollable) -->
       <div class="wild-panel">
         <div class="panel-header">
-          <span class="panel-header-title">🌿 Wild Pokémon</span>
+          <span class="panel-header-title" data-lang="xpcalc_wild_pokemon_title">🌿 Wild Pokémon</span>
           <!-- Map filter -->
           <div class="map-pills small">
-            <button class="map-pill active" data-map="groudon">Groudon</button>
-            <button class="map-pill" data-map="kyogre">Kyogre</button>
-            <button class="map-pill" data-map="rayquaza">Rayquaza</button>
+            <button class="map-pill active" data-map="groudon" data-lang="map_name_groudon">Groudon</button>
+            <button class="map-pill" data-map="kyogre" data-lang="map_name_kyogre">Kyogre</button>
+            <button class="map-pill" data-map="rayquaza" data-lang="map_name_rayquaza">Rayquaza</button>
           </div>
         </div>
         <div class="wild-grid-scroll">
@@ -300,7 +301,7 @@
     <div class="result-panel" id="result-panel" style="display:none;">
       <div class="result-header">
         <span class="result-title" id="result-mode-label">Classic Result</span>
-        <button class="btn btn-xs btn-ghost result-close-btn" id="result-close-btn">✕ Close</button>
+        <button class="btn btn-xs btn-ghost result-close-btn" id="result-close-btn" data-lang="xpcalc_close_btn">✕ Close</button>
       </div>
 
       <!-- Classic result -->
@@ -308,15 +309,15 @@
         <div class="result-summary">
           <div class="result-stat-big">
             <div class="rsb-val" id="res-total-xp">0</div>
-            <div class="rsb-label">Total XP Gained</div>
+            <div class="rsb-label" data-lang="xpcalc_total_xp_label">Total XP Gained</div>
           </div>
           <div class="result-stat-big">
             <div class="rsb-val gold" id="res-final-level">1</div>
-            <div class="rsb-label">Final Level</div>
+            <div class="rsb-label" data-lang="xpcalc_final_level_label">Final Level</div>
           </div>
           <div class="result-stat-big">
             <div class="rsb-val teal" id="res-remaining-xp">0</div>
-            <div class="rsb-label">XP Remaining to Lv Up</div>
+            <div class="rsb-label" data-lang="xpcalc_remaining_xp_label">XP Remaining to Lv Up</div>
           </div>
         </div>
         <div class="result-breakdown" id="result-breakdown">
@@ -334,22 +335,22 @@
 
         <div class="sim-header-row">
           <div class="sim-timer-display">
-            <span class="sim-timer-label">TIMER</span>
+            <span class="sim-timer-label" data-lang="xpcalc_timer_caps_label">TIMER</span>
             <span class="sim-timer-val" id="sim-timer-val">10:00</span>
           </div>
           <div class="xp-prog-box-sim">
             <!-- Stats row: Total XP / XP to next / Stored XP -->
             <div class="sim-stats-row">
               <div class="sim-stat">
-                <span class="sim-stat-label">Total XP</span>
+                <span class="sim-stat-label" data-lang="xpcalc_total_xp_sim_label">Total XP</span>
                 <span class="sim-stat-val" id="sim-xp-val">0</span>
               </div>
               <div class="sim-stat">
-                <span class="sim-stat-label">To next Lv.</span>
+                <span class="sim-stat-label" data-lang="xpcalc_to_next_lv_label">To next Lv.</span>
                 <span class="sim-stat-val" id="sim-xp-to-next">—</span>
               </div>
               <div class="sim-stat stored-stat" id="sim-stored-stat" style="display:none;">
-                <span class="sim-stat-label">📦 Stored XP</span>
+                <span class="sim-stat-label" data-lang="xpcalc_stored_xp_label">📦 Stored XP</span>
                 <span class="sim-stat-val stored" id="sim-stored-val">0</span>
               </div>
             </div>
@@ -364,15 +365,15 @@
             <!-- Level badge + stored indicator -->
             <div class="sim-level-row">
               <span class="sim-level-badge" id="sim-level-badge">Lv. 1</span>
-              <span class="sim-stored-badge" id="sim-stored-badge" style="display:none;">📦 Stored active</span>
+              <span class="sim-stored-badge" id="sim-stored-badge" style="display:none;" data-lang="xpcalc_stored_active_label">📦 Stored active</span>
             </div>
           </div>
           <div class="sim-controls">
             <button class="sim-ctrl-btn" id="sim-play-pause">▶ Play</button>
             <button class="sim-ctrl-btn" id="sim-speed-btn" data-speed="1">1x</button>
-            <button class="sim-ctrl-btn" id="sim-restart-btn">↩ Restart</button>
-            <button class="sim-ctrl-btn secondary" id="sim-add-event-btn" title="Pause and scroll to wild grid to add a kill">+ Wild Kill</button>
-            <button class="sim-ctrl-btn secondary" id="sim-add-pko-btn" title="Pause and open Player KO modal">+ Player KO</button>
+            <button class="sim-ctrl-btn" id="sim-restart-btn" data-lang="xpcalc_restart_btn">↩ Restart</button>
+            <button class="sim-ctrl-btn secondary" id="sim-add-event-btn" data-lang="xpcalc_wild_kill_btn" title="Pause and scroll to wild grid to add a kill">+ Wild Kill</button>
+            <button class="sim-ctrl-btn secondary" id="sim-add-pko-btn" data-lang="xpcalc_player_ko_btn" title="Pause and open Player KO modal">+ Player KO</button>
           </div>
         </div>
 
@@ -390,11 +391,11 @@
     ═══════════════════════════════════════ -->
     <div class="xp-table-section">
       <div class="section-header-row">
-        <span class="section-title">📊 Wild Pokémon XP Table</span>
+        <span class="section-title" data-lang="xpcalc_xp_table_title">📊 Wild Pokémon XP Table</span>
         <div class="map-pills small">
-          <button class="map-pill active" data-map-table="groudon">Groudon</button>
-          <button class="map-pill" data-map-table="kyogre">Kyogre</button>
-          <button class="map-pill" data-map-table="rayquaza">Rayquaza</button>
+          <button class="map-pill active" data-map-table="groudon" data-lang="map_name_groudon">Groudon</button>
+          <button class="map-pill" data-map-table="kyogre" data-lang="map_name_kyogre">Kyogre</button>
+          <button class="map-pill" data-map-table="rayquaza" data-lang="map_name_rayquaza">Rayquaza</button>
         </div>
       </div>
       <div class="xp-table-scroll">
@@ -412,24 +413,24 @@
   ═══════════════════════════════════════ -->
   <footer class="credits-footer">
     <div class="credits-inner">
-      <div class="credits-title">📊 Data Sources & Credits</div>
-      <p class="credits-intro">The data used in this calculator comes from the <strong>Mathcord</strong> community. Many thanks to all contributors!</p>
+      <div class="credits-title" data-lang="xpcalc_credits_title">📊 Data Sources & Credits</div>
+      <p class="credits-intro" data-lang="xpcalc_credits_intro">The data used in this calculator comes from the <strong>Mathcord</strong> community. Many thanks to all contributors!</p>
       <div class="credits-links">
         <a class="credits-link" href="https://discord.gg/DMBB3nzTqm" target="_blank" rel="noopener">
           <span class="credits-link-icon">💬</span>
-          <span>Mathcord Discord</span>
+          <span data-lang="xpcalc_credit_discord">Mathcord Discord</span>
         </a>
         <a class="credits-link" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQSC178tOXF_sRzZSiR6Hel91Mkldw9qbptZ7M9TbqSQMCM9phuFvJGDvicjUnNqTimd9yEVT8EBEQN/pubhtml" target="_blank" rel="noopener">
           <span class="credits-link-icon">📄</span>
-          <span>Wild Pokémon - Groudon / Kyogre</span>
+          <span data-lang="xpcalc_credit_wild_gk">Wild Pokémon - Groudon / Kyogre</span>
         </a>
         <a class="credits-link" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTyFxS5sJsG7sTe_luVIK5nuvbrt9cbftsa1KuvVgeFiEbWICLp9EdrKCyk3OzqAR1o7iWw9Hd5P7B0/pubhtml#gid=1290754032" target="_blank" rel="noopener">
           <span class="credits-link-icon">📄</span>
-          <span>Wild Pokémon - Rayquaza (Theia Sky Ruins)</span>
+          <span data-lang="xpcalc_credit_wild_rayquaza">Wild Pokémon - Rayquaza (Theia Sky Ruins)</span>
         </a>
         <a class="credits-link" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQSiaT9MXnLGTy1PZCYiABi3Vhp2-v9tbs2IwkuBePPiX3bpP50I1sAVt8Zflj9jtYvm7BswzGPUL_G/pubhtml" target="_blank" rel="noopener">
           <span class="credits-link-icon">📄</span>
-          <span>XP Tables (levels & progression)</span>
+          <span data-lang="xpcalc_credit_xp_tables">XP Tables (levels & progression)</span>
         </a>
       </div>
     </div>
@@ -439,7 +440,7 @@
   <div class="modal-overlay" id="kill-modal" style="display:none;">
     <div class="modal-box">
       <div class="modal-header">
-        <span class="modal-title" id="kill-modal-title">Add Kill</span>
+        <span class="modal-title" id="kill-modal-title" data-lang="xpcalc_kill_modal_title">Add Kill</span>
         <button class="modal-close" id="kill-modal-close">✕</button>
       </div>
       <div class="modal-body">
@@ -448,7 +449,7 @@
           <span id="kill-modal-name"></span>
         </div>
         <div class="field-group">
-          <label class="cfg-label">Timer of Kill</label>
+          <label class="cfg-label" data-lang="xpcalc_kill_timer_label">Timer of Kill</label>
           <div class="timer-input-wrap">
             <input type="number" id="kill-min" class="timer-part" min="0" max="10" value="9">
             <span class="timer-colon">:</span>
@@ -456,22 +457,22 @@
           </div>
         </div>
         <div class="field-group">
-          <label class="cfg-label">Allies sharing XP</label>
+          <label class="cfg-label" data-lang="xpcalc_allies_sharing_label">Allies sharing XP</label>
           <div class="level-stepper">
             <button class="step-btn" id="allies-minus">−</button>
             <span class="level-value" id="allies-count">0</span>
             <button class="step-btn" id="allies-plus">+</button>
           </div>
-          <span class="field-hint">0 = solo kill</span>
+          <span class="field-hint" data-lang="xpcalc_solo_kill_hint">0 = solo kill</span>
         </div>
         <div class="field-group">
-          <label class="cfg-label">XP at this timer</label>
+          <label class="cfg-label" data-lang="xpcalc_xp_at_timer_label">XP at this timer</label>
           <div class="modal-xp-preview" id="kill-xp-preview">- XP</div>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="modal-btn confirm" id="kill-modal-confirm">+ Add to Queue</button>
-        <button class="modal-btn cancel" id="kill-modal-cancel">Cancel</button>
+        <button class="modal-btn confirm" id="kill-modal-confirm" data-lang="xpcalc_add_to_queue_btn">+ Add to Queue</button>
+        <button class="modal-btn cancel" id="kill-modal-cancel" data-lang="cancel">Cancel</button>
       </div>
     </div>
   </div>
@@ -480,14 +481,14 @@
   <div class="modal-overlay" id="player-ko-modal" style="display:none;">
     <div class="modal-box wide">
       <div class="modal-header">
-        <span class="modal-title">⚔️ Add Player KO</span>
+        <span class="modal-title" data-lang="xpcalc_pko_modal_title">⚔️ Add Player KO</span>
         <button class="modal-close" id="pko-modal-close">✕</button>
       </div>
       <div class="modal-body">
 
         <!-- Timer -->
         <div class="field-group">
-          <label class="cfg-label">Timer of KO</label>
+          <label class="cfg-label" data-lang="xpcalc_ko_timer_label">Timer of KO</label>
           <div class="timer-input-wrap">
             <input type="number" id="pko-min" class="timer-part" min="0" max="10" value="9">
             <span class="timer-colon">:</span>
@@ -498,35 +499,35 @@
         <!-- Two-column fields -->
         <div class="pko-fields-grid">
           <div class="field-group">
-            <label class="cfg-label">Victim level</label>
+            <label class="cfg-label" data-lang="xpcalc_victim_level_label">Victim level</label>
             <input type="number" id="pko-victim-level" class="cfg-input" min="1" max="15" value="2">
-            <span class="field-hint">Level of the KO'd player (1–15)</span>
+            <span class="field-hint" data-lang="xpcalc_victim_level_hint">Level of the KO'd player (1–15)</span>
           </div>
           <div class="field-group">
-            <label class="cfg-label">Victim streak</label>
+            <label class="cfg-label" data-lang="xpcalc_victim_streak_label">Victim streak</label>
             <input type="number" id="pko-streak" class="cfg-input" min="-3" max="3" value="0">
-            <span class="field-hint">−3 (death streak) → +3 (kill streak)</span>
+            <span class="field-hint" data-lang="xpcalc_victim_streak_hint">−3 (death streak) → +3 (kill streak)</span>
           </div>
         </div>
 
         <!-- Role + Allies nearby -->
         <div class="field-group">
-          <label class="cfg-label">Your role in this KO</label>
+          <label class="cfg-label" data-lang="xpcalc_role_label">Your role in this KO</label>
           <div class="pko-role-row">
             <label class="pko-role-option" id="pko-role-koer-label">
               <input type="radio" name="pko-role" id="pko-role-koer" value="koer" checked>
-              <span class="pko-role-btn">⚔️ KO-er <span class="pko-role-sub">100% XP</span></span>
+              <span class="pko-role-btn"><span data-lang="xpcalc_role_koer">⚔️ KO-er</span> <span class="pko-role-sub" data-lang="xpcalc_role_koer_sub">100% XP</span></span>
             </label>
             <label class="pko-role-option" id="pko-role-ally-label">
               <input type="radio" name="pko-role" id="pko-role-ally" value="ally">
-              <span class="pko-role-btn">🤝 Ally nearby <span class="pko-role-sub" id="pko-ally-pct">—</span></span>
+              <span class="pko-role-btn"><span data-lang="xpcalc_role_ally">🤝 Ally nearby</span> <span class="pko-role-sub" id="pko-ally-pct">—</span></span>
             </label>
           </div>
         </div>
 
         <!-- Allies nearby stepper (always shown, affects both roles) -->
         <div class="field-group" id="pko-allies-field">
-          <label class="cfg-label">Allied players nearby</label>
+          <label class="cfg-label" data-lang="xpcalc_allies_nearby_label">Allied players nearby</label>
           <div class="pko-allies-row">
             <div class="level-stepper">
               <button class="step-btn" id="pko-allies-minus">−</button>
@@ -542,8 +543,8 @@
           <label class="pko-toggle-row">
             <input type="checkbox" id="pko-apply-catchup">
             <span class="pko-toggle-label">
-              <span class="pko-toggle-title">Apply Catch-Up Modifier</span>
-              <span class="pko-toggle-sub pko-unconfirmed">⚠️ Unconfirmed in-game - needs testing</span>
+              <span class="pko-toggle-title" data-lang="xpcalc_apply_catchup_title">Apply Catch-Up Modifier</span>
+              <span class="pko-toggle-sub pko-unconfirmed" data-lang="xpcalc_apply_catchup_sub">⚠️ Unconfirmed in-game - needs testing</span>
             </span>
           </label>
         </div>
@@ -551,20 +552,20 @@
         <!-- Catch-up unconfirmed warning -->
         <div class="pko-catchup-warn" id="pko-catchup-warn" style="display:none;">
           <span>⚠️</span>
-          <span>Applying the Catch-Up Modifier to Player KOs is <strong>not yet confirmed</strong> in-game. This value is a theoretical estimate based on the general mechanic.</span>
+          <span data-lang="xpcalc_catchup_warn_text">Applying the Catch-Up Modifier to Player KOs is <strong>not yet confirmed</strong> in-game. This value is a theoretical estimate based on the general mechanic.</span>
         </div>
 
         <!-- XP Preview -->
         <div class="field-group">
-          <label class="cfg-label">Estimated XP</label>
+          <label class="cfg-label" data-lang="xpcalc_estimated_xp_label">Estimated XP</label>
           <div class="modal-xp-preview" id="pko-xp-preview">- XP</div>
           <div class="pko-breakdown" id="pko-breakdown"></div>
         </div>
 
       </div>
       <div class="modal-footer">
-        <button class="modal-btn confirm" id="pko-modal-confirm">+ Add to Queue</button>
-        <button class="modal-btn cancel" id="pko-modal-cancel">Cancel</button>
+        <button class="modal-btn confirm" id="pko-modal-confirm" data-lang="xpcalc_add_to_queue_btn">+ Add to Queue</button>
+        <button class="modal-btn cancel" id="pko-modal-cancel" data-lang="cancel">Cancel</button>
       </div>
     </div>
   </div>
@@ -573,60 +574,60 @@
   <div class="modal-overlay" id="howto-modal" style="display:none;">
     <div class="modal-box wide">
       <div class="modal-header">
-        <span class="modal-title">📖 How to Use - XP Calculator</span>
+        <span class="modal-title" data-lang="xpcalc_howto_title">📖 How to Use - XP Calculator</span>
         <button class="modal-close" id="howto-close">✕</button>
       </div>
       <div class="modal-body howto-body">
         <div class="howto-step">
           <div class="howto-num">1</div>
-          <div>
+          <div data-lang="xpcalc_howto_step1">
             <strong>Choose your Pokémon</strong> and set your starting level.
           </div>
         </div>
         <div class="howto-step">
           <div class="howto-num">2</div>
-          <div>
+          <div data-lang="xpcalc_howto_step2">
             Set the <strong>Start Timer</strong> (when you start farming) of your session.
           </div>
         </div>
         <div class="howto-step">
           <div class="howto-num">3</div>
-          <div>
+          <div data-lang="xpcalc_howto_step3">
             Configure the <strong>Enemy Team</strong> section - set the highest enemy Pokémon level to activate the <strong>Catch-Up Modifier</strong> if applicable.
           </div>
         </div>
         <div class="howto-step">
           <div class="howto-num">4</div>
-          <div>
+          <div data-lang="xpcalc_howto_step4">
             Add kills from the <strong>Wild Pokémon</strong> grid. Click a Pokémon, set the timer and number of allies sharing XP, then confirm.
           </div>
         </div>
         <div class="howto-step">
           <div class="howto-num">5</div>
-          <div>
+          <div data-lang="xpcalc_howto_step5">
             Add <strong>Player KO</strong> events via the Kill Queue panel - enter the victim's level, their streak, and whether you landed the killing blow.
           </div>
         </div>
         <div class="howto-step">
           <div class="howto-num">6</div>
-          <div>
+          <div data-lang="xpcalc_howto_step6">
             Add <strong>Scoring</strong> events using the scoring quick-add row (timer + points scored).
           </div>
         </div>
         <div class="howto-step">
           <div class="howto-num">7</div>
-          <div>
+          <div data-lang="xpcalc_howto_step7">
             Press <strong>Classic</strong> for an instant summary, or <strong>Advanced</strong> to watch a real-time simulation that you can speed up to x4.
           </div>
         </div>
         <div class="howto-step">
           <div class="howto-num">💡</div>
-          <div>
+          <div data-lang="xpcalc_howto_tip">
             The <strong>XP Table</strong> at the bottom shows how much XP each wild Pokémon gives at every timer tick - use it to plan kills efficiently.
           </div>
         </div>
         <hr style="border-color:rgba(255,255,255,0.07);margin:12px 0">
-        <p style="color:var(--text-dim);font-size:0.82rem;">
+        <p style="color:var(--text-dim);font-size:0.82rem;" data-lang="xpcalc_howto_footnote">
           <strong style="color:var(--yellow)">Passive XP:</strong> Automatic - 4 XP/sec between 10:00 and 8:00, then 6 XP/sec between 8:00 and 0:00.<br>
           <strong style="color:var(--yellow)">XP Share:</strong> Coming Soon - will be implemented in a future update.<br>
           <strong style="color:var(--yellow)">Catch-Up on Player KO:</strong> Unconfirmed - enable the option at your own risk to test the theoretical value.
@@ -639,36 +640,36 @@
   <div class="modal-overlay" id="disclaimer-modal" style="display:none;">
     <div class="modal-box wide">
       <div class="modal-header disclaimer-header">
-        <span class="modal-title">⚠️ Disclaimer - Please read before using</span>
+        <span class="modal-title" data-lang="xpcalc_disclaimer_title">⚠️ Disclaimer - Please read before using</span>
         <button class="modal-close" id="disclaimer-close">✕</button>
       </div>
       <div class="modal-body howto-body">
 
         <div class="disclaimer-intro">
-          <p>This calculator is an <strong>estimation tool</strong> designed to approximate Pokémon UNITE's in-game mechanics as closely as possible. It does not claim to perfectly reproduce every match condition.</p>
+          <p data-lang="xpcalc_disclaimer_intro">This calculator is an <strong>estimation tool</strong> designed to approximate Pokémon UNITE's in-game mechanics as closely as possible. It does not claim to perfectly reproduce every match condition.</p>
         </div>
 
         <div class="disclaimer-block">
-          <div class="disclaimer-block-title">📊 Data Accuracy</div>
-          <p>XP values for wild Pokémon, passive XP, scoring, and KOs are based on in-game observations and measurements. They may differ slightly depending on the game version, balance updates, or undocumented conditions.</p>
+          <div class="disclaimer-block-title" data-lang="xpcalc_disclaimer_data_title">📊 Data Accuracy</div>
+          <p data-lang="xpcalc_disclaimer_data_body">XP values for wild Pokémon, passive XP, scoring, and KOs are based on in-game observations and measurements. They may differ slightly depending on the game version, balance updates, or undocumented conditions.</p>
         </div>
 
         <div class="disclaimer-block">
-          <div class="disclaimer-block-title">🎯 Partially Confirmed Mechanics</div>
-          <p>Some mechanics - in particular <strong>the application of the Catch-Up Modifier to Player KOs</strong> - are not officially documented by the developers and have not yet been exhaustively verified in-game. The corresponding values are theoretical extrapolations.</p>
+          <div class="disclaimer-block-title" data-lang="xpcalc_disclaimer_partial_title">🎯 Partially Confirmed Mechanics</div>
+          <p data-lang="xpcalc_disclaimer_partial_body">Some mechanics - in particular <strong>the application of the Catch-Up Modifier to Player KOs</strong> - are not officially documented by the developers and have not yet been exhaustively verified in-game. The corresponding values are theoretical extrapolations.</p>
         </div>
 
         <div class="disclaimer-block">
-          <div class="disclaimer-block-title">⚙️ Model Simplifications</div>
-          <p>This simulator does not reproduce every condition of a real match: Pokémon interactions, exact wild respawn timing, Exp. Share between nearby allies, held item buffs, and other situational factors are not yet integrated.</p>
+          <div class="disclaimer-block-title" data-lang="xpcalc_disclaimer_model_title">⚙️ Model Simplifications</div>
+          <p data-lang="xpcalc_disclaimer_model_body">This simulator does not reproduce every condition of a real match: Pokémon interactions, exact wild respawn timing, Exp. Share between nearby allies, held item buffs, and other situational factors are not yet integrated.</p>
         </div>
 
         <div class="disclaimer-block">
-          <div class="disclaimer-block-title">🔄 Ongoing Development</div>
-          <p>This tool is actively developed. Data is updated as patches are released. If you spot an inconsistency or have data to share, feel free to contribute.</p>
+          <div class="disclaimer-block-title" data-lang="xpcalc_disclaimer_dev_title">🔄 Ongoing Development</div>
+          <p data-lang="xpcalc_disclaimer_dev_body">This tool is actively developed. Data is updated as patches are released. If you spot an inconsistency or have data to share, feel free to contribute.</p>
         </div>
 
-        <div class="disclaimer-footer-note">
+        <div class="disclaimer-footer-note" data-lang="xpcalc_disclaimer_footer">
           This calculator is an independent community project, unaffiliated with TiMi Studio Group, Nintendo, or The Pokémon Company.
         </div>
 
@@ -680,12 +681,12 @@
   <div class="modal-overlay" id="roadmap-modal" style="display:none;">
     <div class="modal-box wide">
       <div class="modal-header roadmap-header">
-        <span class="modal-title roadmap-title">🗺️ Roadmap - Upcoming Updates</span>
+        <span class="modal-title roadmap-title" data-lang="xpcalc_roadmap_title">🗺️ Roadmap - Upcoming Updates</span>
         <button class="modal-close" id="roadmap-close">✕</button>
       </div>
       <div class="modal-body howto-body">
 
-        <p class="roadmap-intro">
+        <p class="roadmap-intro" data-lang="xpcalc_roadmap_intro">
           Here are the features currently in development or planned for upcoming versions of the XP Calculator.
         </p>
 
@@ -693,17 +694,17 @@
           <div class="roadmap-item-icon green">🎯</div>
           <div class="roadmap-item-content">
             <div class="roadmap-item-top">
-              <span class="roadmap-item-title">Increased Accuracy</span>
-              <span class="roadmap-badge later">Ongoing</span>
+              <span class="roadmap-item-title" data-lang="xpcalc_roadmap_item_title">Increased Accuracy</span>
+              <span class="roadmap-badge later" data-lang="xpcalc_roadmap_ongoing">Ongoing</span>
             </div>
-            <p class="roadmap-item-desc">Continuous refinement of all data: wild Pokémon respawn timing, held item buffs, player KO formulas, Catch-Up Modifier verification on KOs. Community contributions from Mathcord are always welcome.</p>
+            <p class="roadmap-item-desc" data-lang="xpcalc_roadmap_item_desc">Continuous refinement of all data: wild Pokémon respawn timing, held item buffs, player KO formulas, Catch-Up Modifier verification on KOs. Community contributions from Mathcord are always welcome.</p>
           </div>
         </div>
 
         <hr style="border-color:rgba(255,255,255,0.07);margin:4px 0">
-        <p style="color:var(--text-dim);font-size:0.78rem;line-height:1.55;">
+        <p style="color:var(--text-dim);font-size:0.78rem;line-height:1.55;" data-lang="xpcalc_roadmap_footer">
           Have an idea, data to share or found a bug? Open a ticket in the 
-          <a href="http://127.0.0.1:5501/feedback.html" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none;">Feedback part</a>
+          <a href="/feedback.html" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none;">Feedback part</a>
           and contribute to the project!
         </p>
 
@@ -715,22 +716,22 @@
   <div class="modal-overlay" id="preset-save-modal" style="display:none;">
     <div class="modal-box">
       <div class="modal-header">
-        <span class="modal-title">💾 Save Farm Preset</span>
+        <span class="modal-title" data-lang="xpcalc_preset_save_title">💾 Save Farm Preset</span>
         <button class="modal-close" id="preset-save-close">✕</button>
       </div>
       <div class="modal-body">
         <div class="field-group">
-          <label class="cfg-label">Preset name</label>
-          <input type="text" id="preset-name-input" class="cfg-input" placeholder="e.g. Early Jungle, Full Clear…" maxlength="32" autocomplete="off">
-          <span class="field-hint">Max 32 characters</span>
+          <label class="cfg-label" data-lang="xpcalc_preset_name_label">Preset name</label>
+          <input type="text" id="preset-name-input" class="cfg-input" placeholder="e.g. Early Jungle, Full Clear…" data-lang-placeholder="xpcalc_preset_name_placeholder" maxlength="32" autocomplete="off">
+          <span class="field-hint" data-lang="xpcalc_preset_max_chars_hint">Max 32 characters</span>
         </div>
         <div class="preset-save-summary" id="preset-save-summary">
           <!-- filled by JS -->
         </div>
       </div>
       <div class="modal-footer">
-        <button class="modal-btn confirm" id="preset-save-confirm">💾 Save</button>
-        <button class="modal-btn cancel" id="preset-save-cancel">Cancel</button>
+        <button class="modal-btn confirm" id="preset-save-confirm" data-lang="xpcalc_preset_save_confirm_btn">💾 Save</button>
+        <button class="modal-btn cancel" id="preset-save-cancel" data-lang="cancel">Cancel</button>
       </div>
     </div>
   </div>
