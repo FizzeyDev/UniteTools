@@ -21,35 +21,38 @@
 <body>
   <div id="navbar-container"></div>
 
-  <h1 id="title" data-lang="title">Pokémon Unite Draft Simulator</h1>
-
-  <!-- Mode is fixed to tournament (3 bans) – no selector needed -->
-
-  <!-- ── Multiplayer toggle ───────────────────────── -->
-  <button id="mp-toggle-btn" style="display:flex;">
-    🌐 Multiplayer <i class="mp-chevron">▾</i>
-  </button>
+  <!-- ── Full-width top bar: title + actions (mirrors the Map Timer page) ── -->
+  <div class="draft-topbar">
+    <h1 id="title" data-lang="title">Pokémon Unite Draft Simulator</h1>
+    <div class="draft-topbar-actions">
+      <button id="mp-toggle-btn" class="ctrl-btn mp-ctrl-btn">
+        <span class="ctrl-icon">🌐</span>
+        <span class="ctrl-label" data-lang="mp_toggle">Multiplayer</span>
+        <i class="mp-chevron">▾</i>
+      </button>
+    </div>
+  </div>
 
   <!-- ── Multiplayer panel ────────────────────────── -->
   <div id="mp-controls">
     <div class="mp-panel-header">
       <span class="mp-icon">🌐</span>
-      <h3>Online Multiplayer</h3>
+      <h3 data-lang="mp_online_title">Online Multiplayer</h3>
     </div>
     <div class="mp-section">
-      <button id="create-room-btn" class="draft-btn mp-btn">🎮 Create a room</button>
+      <button id="create-room-btn" class="draft-btn mp-btn">🎮 <span data-lang="mp_create_room">Create a room</span></button>
       
     </div>
-    <div class="mp-divider">or</div>
+    <div class="mp-divider" data-lang="mp_or">or</div>
     <div class="mp-section">
       <div class="mp-join-row">
         <input type="text" id="room-code-input" placeholder="ABC123"
               maxlength="6" class="mp-code-input" />
-        <button id="join-room-btn" class="draft-btn mp-btn">🔗 Join</button>
+        <button id="join-room-btn" class="draft-btn mp-btn">🔗 <span data-lang="mp_join">Join</span></button>
       </div>
       <label class="mp-spectator-label">
         <input type="checkbox" id="join-as-spectator" />
-        <span>Join as spectator</span>
+        <span data-lang="mp_join_spectator">Join as spectator</span>
       </label>
     </div>
     <div id="mp-error" class="mp-error" style="display:none;"></div>
@@ -58,9 +61,9 @@
   <!-- ── Room banner ──────────────────────────────── -->
   <div id="mp-room-banner" class="mp-room-banner" style="display:none;">
     <div class="mp-room-left">
-      <span class="mp-room-label">Room:</span>
+      <span class="mp-room-label" data-lang="mp_room_label">Room:</span>
       <span id="mp-room-code" class="mp-room-code-display">------</span>
-      <button id="mp-copy-code" class="mp-copy-btn">📋 Copy</button>
+      <button id="mp-copy-code" class="mp-copy-btn">📋 <span data-lang="mp_copy">Copy</span></button>
     </div>
     <div class="mp-room-right">
       <span id="mp-player-role"     class="mp-player-role"></span>
@@ -74,36 +77,51 @@
     </div>
     <!-- Role selector - visible once inside a room -->
     <div id="mp-role-selector" class="mp-role-selector" style="display:none;">
-      <span class="mp-role-label">Your role:</span>
-      <button class="mp-role-btn" data-role="teamA">🟣 Purple</button>
-      <button class="mp-role-btn" data-role="teamB">🟠 Orange</button>
-      <button class="mp-role-btn" data-role="spectator">👁 Spectator</button>
+      <span class="mp-role-label" data-lang="mp_your_role">Your role:</span>
+      <button class="mp-role-btn" data-role="teamA">🟣 <span data-lang="role_purple">Purple</span></button>
+      <button class="mp-role-btn" data-role="teamB">🟠 <span data-lang="role_orange">Orange</span></button>
+      <button class="mp-role-btn" data-role="spectator">👁 <span data-lang="role_spectator">Spectator</span></button>
     </div>
   </div>
 
-  <!-- ── Map selection ────────────────────────────── -->
-  <div id="map-selection" class="map-selection">
-    <p data-lang="tooltip_maps">Choose a map or leave it random</p>
-    <div class="map-buttons">
-      <button class="map-btn" data-map="groudon">
-        <img src="assets/maps/spawn/groudon.png" alt="Groudon"><span>Groudon</span>
+  <!-- ── Full-width control bar: map picker + draft actions ── -->
+  <div class="draft-control-bar">
+    <div id="map-selection" class="map-selection">
+      <p data-lang="tooltip_maps">Choose a map or leave it random</p>
+      <div class="map-buttons">
+        <button class="map-btn" data-map="groudon">
+          <img src="assets/maps/spawn/groudon.png" alt="Groudon"><span data-lang="map_name_groudon">Groudon</span>
+        </button>
+        <button class="map-btn" data-map="kyogre">
+          <img src="assets/maps/spawn/kyogre.png" alt="Kyogre"><span data-lang="map_name_kyogre">Kyogre</span>
+        </button>
+        <button class="map-btn" data-map="rayquaza">
+          <img src="assets/maps/spawn/rayquaza.png" alt="Rayquaza"><span data-lang="map_name_rayquaza">Rayquaza</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="draft-action-btns">
+      <button id="start-draft" class="ctrl-btn start-ctrl-btn" data-lang="start_draft">▶ Start Draft</button>
+      <button id="reset-draft" class="ctrl-btn reset-ctrl-btn" data-lang-title="reset" title="Reset" style="display:none;">
+        <span class="ctrl-icon">↺</span>
+        <span class="ctrl-label" data-lang="reset">Reset</span>
       </button>
-      <button class="map-btn" data-map="kyogre">
-        <img src="assets/maps/spawn/kyogre.png" alt="Kyogre"><span>Kyogre</span>
+      <!-- Undo: solo mode only (no Undo in multiplayer - desyncs would break the room). -->
+      <button id="backBtn" class="ctrl-btn undo-ctrl-btn" style="display:none;">
+        <span class="ctrl-icon">⏪</span>
+        <span class="ctrl-label" data-lang="undo">Undo</span>
       </button>
-      <button class="map-btn" data-map="rayquaza">
-        <img src="assets/maps/spawn/rayquaza.png" alt="Rayquaza"><span>Rayquaza</span>
+      <!-- Hide-picked: sits right next to Undo, and takes its slot in
+           multiplayer where Undo is unavailable. Only shown once a
+           Fearless/All-Star draft is running (see updateHideBlockedRowVisibility). -->
+      <button id="hide-blocked-btn" class="ctrl-btn hide-ctrl-btn" data-lang-title="hide_blocked_tooltip" title="Completely hide (instead of just greying out) Pokémon already picked earlier in this series. In Fearless mode this list is different for each team." style="display:none;">
+        <span class="ctrl-icon">🙈</span>
+        <span class="ctrl-label" data-lang="hide_blocked_label">Hide picked</span>
       </button>
     </div>
-  </div>
-
-  <!-- ── Start / Reset / Undo ─────────────────────── -->
-  <div class="start-reset-controls">
-    <button id="start-draft" class="draft-btn" data-lang="start_draft">▶ Start Draft</button>
-    <button id="reset-draft" class="draft-btn" data-lang="reset" style="display:none;">↺ Reset</button>
   </div>
   <div id="mp-start-hint" class="mp-start-hint" style="display:none;"></div>
-  <button id="backBtn" style="display:none;">⏪ Undo</button>
 
   <!-- ════════════════════════════════════════════════
       DRAFT WINDOW
@@ -114,7 +132,7 @@
     <!-- ── Colonne GAUCHE : Purple Team ─────────── -->
     <div id="picks-teamA" class="team-picks-col">
       <div class="team-col-header">
-        <div class="team-name">🟣 Purple Team</div>
+        <div class="team-name">🟣 <span data-lang="team_purple">Purple Team</span></div>
         <div class="team-bans" id="bans-teamA">
           <div class="ban-slot" data-team="teamA" data-index="0"></div>
           <div class="ban-slot" data-team="teamA" data-index="1"></div>
@@ -134,13 +152,13 @@
     <div id="center-col">
 
       <!-- Barre collapse : toujours visible, cliquable -->
-      <button id="collapse-center-btn" title="Masquer / Afficher la map">
+      <button id="collapse-center-btn" data-lang-title="collapse_tooltip" title="Show / Hide the map">
         <span id="cbar-arrow" class="cbar-arrow">▲</span>
         <span id="cbar-map"   class="cbar-map"></span>
         <span id="cbar-mode"  class="cbar-mode"></span>
         <span id="cbar-timer" class="cbar-timer" style="display:none;"></span>
         <span class="cbar-spacer"></span>
-        <span id="cbar-label" class="cbar-label">Hide</span>
+        <span id="cbar-label" class="cbar-label" data-lang="collapse_hide">Hide</span>
       </button>
 
       <!-- Info : map + turn + timer + switches -->
@@ -149,11 +167,19 @@
         <div id="turn-display" style="display:none;"></div>
         <div id="mp-turn-indicator" class="mp-turn-indicator" style="display:none;"></div>
 
+        <!-- Compact ban recap: always visible on mobile so bans can be checked
+             without scrolling up/down to the team columns. -->
+        <div id="mini-bans" class="mini-bans">
+          <div class="mini-bans-team mini-bans-teamA" id="mini-bans-teamA"></div>
+          <div class="mini-bans-vs" data-lang="mini_bans_label">⛔ Bans</div>
+          <div class="mini-bans-team mini-bans-teamB" id="mini-bans-teamB"></div>
+        </div>
+
         <div class="draft-settings-panel">
           <div class="draft-setting-row" id="timer-row">
             <label class="setting-toggle-label" for="enable-timer">
               <span class="setting-icon">⏱</span>
-              <span class="setting-name">Timer</span>
+              <span class="setting-name" data-lang="setting_timer">Timer</span>
               <span class="switch compact">
                 <input type="checkbox" id="enable-timer">
                 <span class="slider"></span>
@@ -168,27 +194,27 @@
           <div class="draft-setting-row" id="fearless-row">
             <label class="setting-toggle-label" for="fearless-checkbox">
               <span class="setting-icon">⚡</span>
-              <span class="setting-name">Fearless</span>
-              <button class="setting-help-btn" type="button" data-tooltip="Each Pokémon picked by a team cannot be picked again by that same team in future drafts of the series. The opposing team can still use it.">?</button>
+              <span class="setting-name" data-lang="setting_fearless">Fearless</span>
+              <button class="setting-help-btn" type="button" data-lang-tooltip="setting_fearless_tooltip" data-tooltip="Each Pokémon picked by a team cannot be picked again by that same team in future drafts of the series. The opposing team can still use it.">?</button>
               <span class="switch compact">
                 <input type="checkbox" id="fearless-checkbox">
                 <span class="slider"></span>
               </span>
             </label>
-            <span class="setting-hint">No repeat picks per team</span>
+            <span class="setting-hint" data-lang="setting_fearless_hint">No repeat picks per team</span>
           </div>
 
           <div class="draft-setting-row" id="allstar-row">
             <label class="setting-toggle-label" for="allstar-checkbox">
               <span class="setting-icon">🌟</span>
-              <span class="setting-name">All-Star</span>
-              <button class="setting-help-btn" type="button" data-tooltip="Once any Pokémon is picked by either team, it becomes unavailable for both teams in all future drafts of the series. Stronger than Fearless!">?</button>
+              <span class="setting-name" data-lang="setting_allstar">All-Star</span>
+              <button class="setting-help-btn" type="button" data-lang-tooltip="setting_allstar_tooltip" data-tooltip="Once any Pokémon is picked by either team, it becomes unavailable for both teams in all future drafts of the series. Stronger than Fearless!">?</button>
               <span class="switch compact">
                 <input type="checkbox" id="allstar-checkbox">
                 <span class="slider"></span>
               </span>
             </label>
-            <span class="setting-hint">No repeat picks globally</span>
+            <span class="setting-hint" data-lang="setting_allstar_hint">No repeat picks globally</span>
           </div>
         </div>
 
@@ -212,7 +238,7 @@
               <option value="name" data-lang="pkmn_name">Name</option>
               <option value="role" data-lang="role_sort">Role</option>
             </select>
-            <input type="text" id="search-input" placeholder="Search…" class="search-input">
+            <input type="text" id="search-input" placeholder="Search…" data-lang-placeholder="search_placeholder" class="search-input">
           </div>
         </div>
         <section id="gallery"></section>
@@ -232,7 +258,7 @@
     <!-- ── Colonne DROITE : Orange Team ─────────── -->
     <div id="picks-teamB" class="team-picks-col">
       <div class="team-col-header">
-        <div class="team-name">🟠 Orange Team</div>
+        <div class="team-name">🟠 <span data-lang="team_orange">Orange Team</span></div>
         <div class="team-bans" id="bans-teamB">
           <div class="ban-slot" data-team="teamB" data-index="0"></div>
           <div class="ban-slot" data-team="teamB" data-index="1"></div>
@@ -251,7 +277,7 @@
   </div><!-- /.draft-window -->
 
   <!-- ── Toast ────────────────────────────────────── -->
-  <div id="not-your-turn-toast" class="not-your-turn-toast">🚫 Not your turn!</div>
+  <div id="not-your-turn-toast" class="not-your-turn-toast" data-lang="not_your_turn">🚫 Not your turn!</div>
 
   <!-- ── Final Draft Result ───────────────────────── -->
   <div id="final-draft" class="final-draft">
@@ -261,11 +287,11 @@
 
   <!-- ── Fearless series ──────────────────────────── -->
   <div id="fearless-series" class="fearless-series">
-    <h2>Fearless Series Recaps</h2>
+    <h2 data-lang="fearless_series_title">Fearless Series Recaps</h2>
     <div id="series-recaps"></div>
     <div id="fearless-controls">
       <div id="fearless-map-reselect">
-        <p class="fearless-map-label">Change map for next draft?</p>
+        <p class="fearless-map-label" data-lang="change_map_next">Change map for next draft?</p>
         <div class="map-buttons fearless-map-buttons">
           <button class="map-btn fearless-map-btn" data-map="groudon">
             <img src="assets/maps/spawn/groudon.png" alt="Groudon"><span>Groudon</span>
@@ -279,18 +305,18 @@
         </div>
       </div>
       <div class="fearless-action-btns">
-        <button id="swap-sides-btn" class="draft-btn draft-btn-swap" style="display:none;">🔄 Swap Sides</button>
-        <button id="next-draft-btn" class="draft-btn">▶ Next Draft</button>
-        <button id="end-series-btn" class="draft-btn draft-btn-danger">✕ End Series</button>
+        <button id="swap-sides-btn" class="draft-btn draft-btn-swap" style="display:none;">🔄 <span data-lang="swap_sides">Swap Sides</span></button>
+        <button id="next-draft-btn" class="draft-btn">▶ <span data-lang="next_draft">Next Draft</span></button>
+        <button id="end-series-btn" class="draft-btn draft-btn-danger">✕ <span data-lang="end_series">End Series</span></button>
       </div>
-      <div id="mp-recap-wait-msg" class="mp-recap-wait-msg" style="display:none;">
+      <div id="mp-recap-wait-msg" class="mp-recap-wait-msg" style="display:none;" data-lang="mp_wait_next_draft">
         ⏳ Waiting for host to start the next draft…
       </div>
     </div>
   </div>
 
   <footer>
-    <p>Created by Fizzey - Pokémon Unite Draft Simulator</p>
+    <p data-lang="draft_footer">Created by Fizzey - Pokémon Unite Draft Simulator</p>
   </footer>
 
   <script src="scripts/navbar.js"></script>
@@ -318,7 +344,9 @@
       const col = document.getElementById('center-col');
       const isCollapsed = col.classList.toggle('info-collapsed');
       document.getElementById('cbar-arrow').textContent = isCollapsed ? '▼' : '▲';
-      document.getElementById('cbar-label').textContent = isCollapsed ? 'Show' : 'Hide';
+      const lang = (window.__draftLangData) || {};
+      document.getElementById('cbar-label').textContent =
+        isCollapsed ? (lang.collapse_show || 'Show') : (lang.collapse_hide || 'Hide');
     });
 
     // ── Fearless / All-Star mutual exclusion ──────────────────────────────────

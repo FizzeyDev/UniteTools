@@ -61,25 +61,212 @@ body::before {
 
 h1 {
   font-family: 'Exo 2', sans-serif;
-  text-align: center;
-  font-size: 2.2rem;
+  font-size: 1.5rem;
   font-weight: 900;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-bright);
-  margin-bottom: 1.5rem;
   position: relative;
   z-index: 1;
-  text-shadow: 0 0 60px rgba(79,195,247,0.3), 0 0 120px rgba(159,83,236,0.15);
+  text-shadow: 0 0 40px rgba(79,195,247,0.25);
+  white-space: nowrap;
 }
-h1::after {
-  content: '';
-  display: block;
-  width: 80px;
-  height: 2px;
-  margin: 8px auto 0;
-  background: linear-gradient(90deg, transparent, var(--blue), transparent);
-  border-radius: 2px;
+
+/* ── Full-width top bar: title + actions (mirrors the Map Timer page) ── */
+.draft-topbar {
+  width: calc(100% + 3rem);
+  margin: -1.5rem -1.5rem 1.25rem;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 100%);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  box-shadow: var(--shadow-md);
+}
+
+.draft-topbar-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Shared pill/control-button look (icon + label), used for the
+   multiplayer toggle, Start/Reset/Undo/Hide-picked, etc. ── */
+.ctrl-btn {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-md);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  white-space: nowrap;
+  background: var(--surface-2);
+  color: var(--text);
+}
+.ctrl-btn:hover { transform: translateY(-2px); }
+.ctrl-icon { font-size: 1rem; line-height: 1; }
+
+.mp-ctrl-btn {
+  background: var(--blue-dim);
+  border-color: rgba(79,195,247,0.4);
+  color: var(--blue);
+}
+.mp-ctrl-btn:hover {
+  background: rgba(79,195,247,0.22);
+  border-color: var(--blue);
+  color: var(--text-bright);
+  box-shadow: 0 4px 20px var(--blue-glow);
+}
+.mp-ctrl-btn .mp-chevron { transition: transform 0.25s; font-style: normal; }
+.mp-ctrl-btn.open .mp-chevron { transform: rotate(180deg); }
+
+.start-ctrl-btn {
+  background: var(--green-dim);
+  border-color: rgba(76,175,130,0.4);
+  color: var(--green);
+  font-size: 0.95rem;
+  padding: 10px 20px;
+}
+.start-ctrl-btn:hover {
+  background: rgba(76,175,130,0.24);
+  border-color: var(--green);
+  color: var(--text-bright);
+  box-shadow: 0 4px 20px rgba(76,175,130,0.25);
+}
+
+.reset-ctrl-btn {
+  background: var(--orange-dim);
+  border-color: rgba(255,157,0,0.4);
+  color: var(--orange);
+}
+.reset-ctrl-btn:hover {
+  background: rgba(255,157,0,0.22);
+  border-color: var(--orange);
+  color: var(--text-bright);
+  box-shadow: 0 4px 20px rgba(255,157,0,0.2);
+}
+
+.undo-ctrl-btn {
+  background: var(--red-dim);
+  border-color: rgba(239,83,80,0.4);
+  color: var(--red);
+}
+.undo-ctrl-btn:hover {
+  background: rgba(239,83,80,0.22);
+  border-color: var(--red);
+  color: var(--text-bright);
+  box-shadow: 0 4px 20px rgba(239,83,80,0.2);
+}
+
+/* Hide-picked toggle: a plain ctrl-btn when off, filled/"active" when on. */
+.hide-ctrl-btn {
+  background: var(--violet-dim);
+  border-color: rgba(159,83,236,0.4);
+  color: var(--violet);
+}
+.hide-ctrl-btn:hover {
+  background: rgba(159,83,236,0.24);
+  border-color: var(--violet);
+  color: var(--text-bright);
+  box-shadow: 0 4px 20px rgba(159,83,236,0.25);
+}
+.hide-ctrl-btn.active {
+  background: rgba(159,83,236,0.3);
+  border-color: var(--violet);
+  color: var(--text-bright);
+  box-shadow: 0 0 14px rgba(159,83,236,0.35);
+}
+
+/* ── Full-width control bar: map picker + draft actions (mirrors the
+   Map Timer page's map-switch layout) ── */
+.draft-control-bar {
+  width: calc(100% + 3rem);
+  margin: 0 -1.5rem 1.25rem;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: var(--surface-2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+
+.map-switch {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.map-pill {
+  --map-color: var(--blue);
+  --map-glow: var(--blue-glow);
+  --map-border: rgba(79,195,247,0.4);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 6px 16px 6px 8px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-dim);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.map-pill[data-map="groudon"]  { --map-color:#ff7a45; --map-glow:rgba(255,122,69,0.18); --map-border:rgba(255,122,69,0.5); }
+.map-pill[data-map="kyogre"]   { --map-color:#4fa3f7; --map-glow:rgba(79,163,247,0.18);  --map-border:rgba(79,163,247,0.5); }
+.map-pill[data-map="rayquaza"] { --map-color:#3ecf8e; --map-glow:rgba(62,207,142,0.18);  --map-border:rgba(62,207,142,0.5); }
+
+.map-pill-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.25);
+  padding: 3px;
+  flex-shrink: 0;
+}
+
+.map-pill:hover {
+  border-color: var(--map-border);
+  color: var(--map-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+.map-pill.active {
+  background: var(--map-glow);
+  border-color: var(--map-border);
+  color: var(--map-color);
+  box-shadow: 0 0 16px var(--map-glow);
+}
+
+.draft-action-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .draft-controls {
@@ -132,8 +319,10 @@ button:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
   margin-bottom: 4px;
 }
 
-#map-selection { text-align: center; margin-bottom: 16px; }
-#map-selection p { margin-bottom: 12px; color: var(--text-dim); font-size: 0.9rem; }
+/* Large map-artwork buttons - used both for the top map picker and the
+   fearless-series map re-select prompt shown between drafts of a series. */
+#map-selection.map-selection { text-align: center; }
+#map-selection.map-selection p { margin-bottom: 10px; color: var(--text-dim); font-size: 0.85rem; }
 
 .map-buttons { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
 
@@ -167,12 +356,6 @@ button:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
 .map-btn.active img { box-shadow: 0 0 24px rgba(255,215,64,0.5); }
 .map-btn.active span { color: var(--yellow); }
 
-.start-reset-controls {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
 .draft-btn {
   padding: 10px 24px;
   font-size: 1rem;
@@ -184,17 +367,6 @@ button:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
   letter-spacing: 0.05em;
 }
 .draft-btn:hover { border-color: rgba(255,255,255,0.2); }
-
-#backBtn {
-  display: block;
-  margin: 0 auto 12px;
-  font-size: 0.85rem;
-  padding: 7px 16px;
-  background: rgba(239,83,80,0.12);
-  border-color: rgba(239,83,80,0.3);
-  color: var(--red);
-}
-#backBtn:hover { background: rgba(239,83,80,0.22); }
 
 .draft-window {
   display: grid;
@@ -470,6 +642,14 @@ input:checked + .slider::before { transform: translateX(18px); }
   cursor: not-allowed;
 }
 
+/* "Hide picked" toggle: when ON, previously-picked mons (Fearless/All-Star)
+   disappear from the gallery entirely instead of just being greyed out.
+   !important is required to beat the inline display:none/block set by
+   applyFiltersAndSearch() for the role/search filters. */
+#gallery.hide-blocked img.fearless-blocked {
+  display: none !important;
+}
+
 #filters { display: none; gap: 4px; flex-wrap: wrap; }
 .filter-btn {
   padding: 4px 9px;
@@ -550,26 +730,6 @@ input:checked + .slider::before { transform: translateX(18px); }
 }
 .slots .slot { width: 58px; height: 58px; max-width: none; }
 .slots .ban-slot { width: 48px; height: 48px; }
-
-#mp-toggle-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 auto 6px;
-  padding: 8px 20px;
-  background: var(--blue-dim);
-  border: 1px solid rgba(79,195,247,0.25);
-  color: var(--blue);
-  border-radius: 20px;
-  font-size: 0.88rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-#mp-toggle-btn:hover { background: rgba(79,195,247,0.2); transform: none; }
-#mp-toggle-btn .mp-chevron { transition: transform 0.25s; font-style: normal; }
-#mp-toggle-btn.open .mp-chevron { transform: rotate(180deg); }
 
 #mp-controls {
   background: linear-gradient(135deg, #1a2a2b 0%, #243536 100%);
@@ -1132,8 +1292,52 @@ input:checked + .slider::before { transform: translateX(18px); }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 3px; }
 
+/* ── Compact ban recap (mobile only) ──────────────────────────────────────
+   On mobile the team columns (with the ban slots) stack above/below the
+   gallery, so checking bans means scrolling away from the Pokémon grid.
+   This small strip mirrors both teams' bans right above the gallery. */
+.mini-bans {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 4px 8px;
+  flex-shrink: 0;
+}
+.mini-bans-team {
+  display: flex;
+  gap: 4px;
+  min-height: 26px;
+}
+.mini-bans-team img {
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  object-fit: cover;
+  opacity: 0.9;
+}
+.mini-bans-teamA img { border: 1.5px solid rgba(159,83,236,0.6); }
+.mini-bans-teamB img { border: 1.5px solid rgba(255,157,0,0.6); }
+.mini-bans-vs {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
 @media (max-width: 860px) {
   body { margin-left: 0; padding: 1rem 0.75rem 2rem; }
+
+  .draft-topbar, .draft-control-bar {
+    width: calc(100% + 1.5rem);
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+  }
+  .draft-topbar { flex-wrap: wrap; gap: 0.5rem; }
+  .draft-action-btns { justify-content: center; }
+
+  .mini-bans.has-content { display: flex; }
 
   .draft-window {
     grid-template-columns: 1fr;
@@ -1169,6 +1373,10 @@ input:checked + .slider::before { transform: translateX(18px); }
   h1 { font-size: 1.3rem; }
   .mode-btn { font-size: 0.75rem; padding: 6px 9px; }
   .slot { max-width: 54px; }
+  .map-pill { font-size: 0.72rem; padding: 5px 12px 5px 5px; }
+  .map-pill-icon { width: 24px; height: 24px; }
+  .ctrl-label { display: none; }
+  .ctrl-btn { padding: 8px 10px; }
 }
 
 /* =============================================

@@ -20,3 +20,6 @@ export const fearlessTeamA = new Set();
 export const fearlessTeamB = new Set();
 // All-Star: tracks picks from BOTH teams across drafts (shared pool)
 export const allStarPicked = new Set();
+// Tracks every mon picked OR banned in the CURRENT draft, so the gallery
+// can keep them greyed out even after a re-render (sort/filter change).
+export const usedFiles = new Set();

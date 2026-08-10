@@ -1,5 +1,5 @@
-import { state, fearlessTeamA, fearlessTeamB, allStarPicked } from "./state.js";
-import { highlightCurrentSlot, updateTurn, findNextBanSlot, findNextPickSlot } from "./ui.js";
+import { state, fearlessTeamA, fearlessTeamB, allStarPicked, usedFiles } from "./state.js";
+import { highlightCurrentSlot, updateTurn, findNextBanSlot, findNextPickSlot, updateFearlessRestrictions } from "./ui.js";
 import { endDraft } from "./draft.js";
 
 let currentRole = null;
@@ -44,12 +44,18 @@ export function renderGallery() {
     img.alt = mon[`name_${currentLang}`] || mon.name;
     img.dataset.file = mon.file;
     img.dataset.role = mon.role;
+    // Re-apply the "used" (picked/banned this draft) grey-out immediately,
+    // so sorting/filtering mid-draft never loses the visual state.
+    if (usedFiles.has(mon.file)) img.classList.add("used");
     img.addEventListener("click", () => onPokemonClick(img));
     gallery.appendChild(img);
     state.allImages.push(img);
   });
 
   applyFiltersAndSearch();
+  // Re-apply fearless / all-star grey-out (relies on state.allImages, which
+  // was just rebuilt above).
+  updateFearlessRestrictions();
 }
 
 function onPokemonClick(img) {
@@ -79,6 +85,7 @@ function onPokemonClick(img) {
   clone.dataset.file = img.dataset.file; // garantir que le clone garde le file pour undoLastPick
   slot.appendChild(clone);
   img.classList.add("used");
+  usedFiles.add(img.dataset.file);
 
   if (state.fearlessMode && step.type === "pick") {
     (step.team === "teamA" ? fearlessTeamA : fearlessTeamB).add(img.dataset.file);
@@ -110,6 +117,7 @@ function onPokemonClick(img) {
 function _showToast() {
   const el = document.getElementById("not-your-turn-toast");
   if (!el) return;
+  if (state.langData.not_your_turn) el.textContent = state.langData.not_your_turn;
   el.classList.add("visible");
   setTimeout(() => el.classList.remove("visible"), 2000);
 }
@@ -137,4 +145,14 @@ export function initFilters() {
 export function initSearch() {
   const inp = document.getElementById("search-input");
   if (inp) inp.addEventListener("input", e => { searchTerm = e.target.value.trim(); applyFiltersAndSearch(); });
+}
+
+export function initHideBlockedToggle() {
+  const btn = document.getElementById("hide-blocked-btn");
+  const gallery = document.getElementById("gallery");
+  if (!btn || !gallery) return;
+  btn.addEventListener("click", () => {
+    const active = btn.classList.toggle("active");
+    gallery.classList.toggle("hide-blocked", active);
+  });
 }

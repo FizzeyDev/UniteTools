@@ -1,14 +1,24 @@
 import { state } from "./state.js";
 import { draftOrders } from "./constants.js";
 import { updateDynamicContent } from "./ui.js";
-import { renderGallery, initSortSelect, initFilters, initSearch } from "./gallery.js";
-import { startDraft, endFearlessSeries, softResetDraft, undoLastPick, startNextDraft, _updateMpTurnIndicator } from "./draft.js";
+import { renderGallery, initSortSelect, initFilters, initSearch, initHideBlockedToggle } from "./gallery.js";
+import { startDraft, endFearlessSeries, softResetDraft, undoLastPick, startNextDraft, _updateMpTurnIndicator, updateHideBlockedRowVisibility } from "./draft.js";
 import { mpState, createRoom, joinRoom, disconnectRoom, isMyTurn, publishDraftStart, switchRole, publishSideSwap } from "./multiplayer.js";
+
+// Small i18n helper: looks up a key in the currently loaded language file,
+// falling back to the given English string if the key isn't loaded yet.
+function t(key, fallback) {
+  return (state.langData && state.langData[key]) || fallback;
+}
 
 // ─── Language & data ──────────────────────────────────────────────────────────
 
 const currentLang = localStorage.getItem("lang") || "fr";
-fetch(`lang/${currentLang}.json`).then(r => r.json()).then(d => { state.langData = d; updateDynamicContent(); });
+fetch(`lang/${currentLang}.json`).then(r => r.json()).then(d => {
+  state.langData = d;
+  window.__draftLangData = d; // used by the small inline <script> in draft.html
+  updateDynamicContent();
+});
 fetch("data/pokemons.json").then(r => r.json()).then(d => {
   // Scyther is excluded from the draft pool
   state.monsData = d.filter(mon => !(mon.file && mon.file.toLowerCase().includes("scyther")) &&
@@ -80,7 +90,7 @@ document.getElementById("end-series-btn").addEventListener("click", () => {
     endFearlessSeries();
     document.getElementById("mp-room-banner").style.display = "none";
     const endBtn = document.getElementById("end-series-btn");
-    if (endBtn) endBtn.textContent = "✕ End Series";
+    if (endBtn) endBtn.textContent = "✕ " + t("end_series", "End Series");
   } else {
     endFearlessSeries();
   }
@@ -91,7 +101,9 @@ document.getElementById("end-series-btn").addEventListener("click", () => {
 document.getElementById("swap-sides-btn").addEventListener("click", async () => {
   state.sidesSwapped = !state.sidesSwapped;
   const btn = document.getElementById("swap-sides-btn");
-  btn.textContent = state.sidesSwapped ? "🔄 Sides Swapped ✓" : "🔄 Swap Sides";
+  btn.textContent = state.sidesSwapped
+    ? "🔄 " + t("swap_sides_done", "Sides Swapped ✓")
+    : "🔄 " + t("swap_sides", "Swap Sides");
   btn.classList.toggle("active", state.sidesSwapped);
   // Broadcast to all players so isMyTurn() stays in sync
   if (mpState.enabled && mpState.isHost) {
@@ -103,15 +115,15 @@ document.getElementById("swap-sides-btn").addEventListener("click", async () => 
 
 document.getElementById("create-room-btn").addEventListener("click", async () => {
   const btn = document.getElementById("create-room-btn");
-  btn.disabled = true; btn.textContent = "Creating…";
+  btn.disabled = true; btn.textContent = t("mp_creating", "Creating…");
   try {
     const roomId = await createRoom(state.selectedMode, state.selectedMap);
     _showRoomBanner(roomId, "teamA");
     _updateRoleSelectorUI();
   } catch (e) {
-    _showMpError("Firebase error: " + e.message); console.error(e);
+    _showMpError(t("mp_err_firebase_prefix", "Firebase error: ") + (t(e.message, "") || e.message)); console.error(e);
   } finally {
-    btn.disabled = false; btn.textContent = "🎮 Create a room";
+    btn.disabled = false; btn.textContent = "🎮 " + t("mp_create_room", "Create a room");
   }
 });
 
@@ -119,9 +131,9 @@ document.getElementById("create-room-btn").addEventListener("click", async () =>
 
 document.getElementById("join-room-btn").addEventListener("click", async () => {
   const code = document.getElementById("room-code-input").value.trim().toUpperCase();
-  if (!code || code.length !== 6) { _showMpError("Enter a valid room code (6 characters)."); return; }
+  if (!code || code.length !== 6) { _showMpError(t("mp_err_invalid_code", "Enter a valid room code (6 characters).")); return; }
   const btn = document.getElementById("join-room-btn");
-  btn.disabled = true; btn.textContent = "Connecting…";
+  btn.disabled = true; btn.textContent = t("mp_connecting", "Connecting…");
   const asSpectator = document.getElementById("join-as-spectator").checked;
   try {
     const { role, data } = await joinRoom(code, asSpectator);
@@ -141,9 +153,11 @@ document.getElementById("join-room-btn").addEventListener("click", async () => {
       _launchDraftForPlayer(data);
     }
   } catch (e) {
-    _showMpError(e.message || "Could not join the room."); console.error(e);
+    // multiplayer.js throws Error objects whose message is an i18n key
+    // (e.g. "mp_err_room_not_found"); fall back to a generic message otherwise.
+    _showMpError(t(e.message, "") || t("mp_err_join_failed", "Could not join the room.")); console.error(e);
   } finally {
-    btn.disabled = false; btn.textContent = "🔗 Join";
+    btn.disabled = false; btn.textContent = "🔗 " + t("mp_join", "Join");
   }
 });
 
@@ -162,7 +176,7 @@ document.querySelectorAll(".mp-role-btn").forEach(btn => {
       document.getElementById("start-draft").disabled = !mpState.isHost;
       _updateStartDraftHint(mpState.isHost ? "teamA" : "teamB");
     } catch (e) {
-      _showMpError(e.message);
+      _showMpError(t(e.message, "") || e.message);
     }
   });
 });
@@ -190,6 +204,7 @@ window.addEventListener("mp:nextDraft", (e) => {
   if (cb) cb.checked = state.fearlessMode;
   const cbAs = document.getElementById("allstar-checkbox");
   if (cbAs) cbAs.checked = state.allStarMode;
+  updateHideBlockedRowVisibility();
   startNextDraft(true); // skipPublish = true, host already published
   _forceShowGallery();
 });
@@ -232,6 +247,8 @@ function _launchDraftForPlayer(data) {
   const cbAs = document.getElementById("allstar-checkbox");
   if (cbAs) cbAs.checked = state.allStarMode;
 
+  updateHideBlockedRowVisibility();
+
   document.querySelectorAll(".mode-btn").forEach(b =>
     b.classList.toggle("active", b.dataset.mode === data.mode));
 
@@ -248,16 +265,16 @@ function _forceShowGallery() {
 
 function _showRoomBanner(roomId, role) {
   document.getElementById("mp-room-code").textContent = roomId;
-  const hostBadge = mpState.isHost ? " (Host)" : "";
+  const hostBadge = mpState.isHost ? " " + t("mp_host_suffix", "(Host)") : "";
   document.getElementById("mp-player-role").textContent =
-    role === "teamA"    ? `🟣 Purple Team${hostBadge}` :
-    role === "teamB"    ? `🟠 Orange Team${hostBadge}` :
-    `👁 Spectator${hostBadge}`;
+    role === "teamA"    ? `🟣 ${t("team_purple", "Purple Team")}${hostBadge}` :
+    role === "teamB"    ? `🟠 ${t("team_orange", "Orange Team")}${hostBadge}` :
+    `👁 ${t("role_spectator", "Spectator")}${hostBadge}`;
   document.getElementById("mp-room-banner").style.display = "flex";
   document.getElementById("mp-copy-code").onclick = () => {
     navigator.clipboard.writeText(roomId);
-    document.getElementById("mp-copy-code").textContent = "✅ Copied!";
-    setTimeout(() => { document.getElementById("mp-copy-code").textContent = "📋 Copy"; }, 2000);
+    document.getElementById("mp-copy-code").textContent = "✅ " + t("mp_copied", "Copied!");
+    setTimeout(() => { document.getElementById("mp-copy-code").textContent = "📋 " + t("mp_copy", "Copy"); }, 2000);
   };
 }
 
@@ -268,7 +285,7 @@ function _updateStartDraftHint(role) {
     hint.textContent = "";
     hint.style.display = "none";
   } else {
-    hint.textContent = "⏳ Waiting for host (Purple Team) to start the draft…";
+    hint.textContent = "⏳ " + t("mp_wait_start", "Waiting for host (Purple Team) to start the draft…");
     hint.style.display = "block";
   }
 }
@@ -294,3 +311,4 @@ window._mpIsMyTurn = isMyTurn;
 initSortSelect();
 initFilters();
 initSearch();
+initHideBlockedToggle();

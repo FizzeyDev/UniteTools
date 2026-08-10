@@ -1,4 +1,4 @@
-import { state } from "./state.js";
+import { state, usedFiles as _usedFiles } from "./state.js";
 import { draftOrders } from "./constants.js";
 
 const DATABASE_URL = "https://unite-draft-default-rtdb.europe-west1.firebasedatabase.app";
@@ -88,7 +88,7 @@ export async function createRoom(mode, map) {
 
 export async function joinRoom(roomId, asSpectator = false) {
   const data = await dbGet(`rooms/${roomId}`);
-  if (!data) throw new Error("Room not found. Check the code.");
+  if (!data) throw new Error("mp_err_room_not_found");
 
   let role;
   const teamBFree = !data.roles?.teamB;
@@ -139,14 +139,14 @@ export async function switchRole(newRole) {
 
   // Validate availability
   if (newRole === "teamA" && data.roles?.teamA && oldRole !== "teamA") {
-    throw new Error("Purple Team is already taken.");
+    throw new Error("mp_err_purple_taken");
   }
   if (newRole === "teamB" && data.roles?.teamB && oldRole !== "teamB") {
-    throw new Error("Orange Team is already taken.");
+    throw new Error("mp_err_orange_taken");
   }
   if (newRole === "spectator") {
     const count = data.spectators ? Object.keys(data.spectators).length : 0;
-    if (count >= 5 && oldRole !== "spectator") throw new Error("Spectator slots are full (max 5).");
+    if (count >= 5 && oldRole !== "spectator") throw new Error("mp_err_spectator_full");
   }
 
   // Free old slot
@@ -279,7 +279,10 @@ function _onRoomUpdate(data) {
   const count = data.spectators ? Object.keys(data.spectators).length : 0;
   mpState.spectatorCount = count;
   const specEl = document.getElementById("mp-spectator-count");
-  if (specEl) specEl.textContent = count > 0 ? `👁 ${count} spectator${count > 1 ? "s" : ""}` : "";
+  if (specEl) {
+    const tpl = (state.langData && state.langData.mp_spectator_count) || "👁 {n} spectator(s)";
+    specEl.textContent = count > 0 ? tpl.replace("{n}", count) : "";
+  }
 
   const rs = data.status;
   const ls = mpState.localStatus;
@@ -290,7 +293,10 @@ function _onRoomUpdate(data) {
       state.sidesSwapped = data.sidesSwapped;
       const swapBtn = document.getElementById("swap-sides-btn");
       if (swapBtn) {
-        swapBtn.textContent = state.sidesSwapped ? "🔄 Sides Swapped ✓" : "🔄 Swap Sides";
+        const lang = state.langData || {};
+        swapBtn.textContent = state.sidesSwapped
+          ? "🔄 " + (lang.swap_sides_done || "Sides Swapped ✓")
+          : "🔄 " + (lang.swap_sides || "Swap Sides");
         swapBtn.classList.toggle("active", state.sidesSwapped);
       }
     }
@@ -378,6 +384,7 @@ function _syncPicks(data, remoteStep) {
       clone.style.cssText = "";
       slot.appendChild(clone);
       gImg.classList.add("used");
+      _usedFiles.add(pick.file);
     }
     state.currentStep = i + 1;
   }

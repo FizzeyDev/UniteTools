@@ -1,9 +1,15 @@
-import { state, fearlessTeamA, fearlessTeamB, allStarPicked } from "./state.js";
+import { state, fearlessTeamA, fearlessTeamB, allStarPicked, usedFiles } from "./state.js";
 import { mapImages, draftOrders, swapDraftOrder } from "./constants.js";
 import { updateTurn, highlightCurrentSlot, resetDraftSlots, createRecapSlots, getAllBanSlots, getAllPickSlots } from "./ui.js";
 import { setupTimer } from "./timer.js";
 import { publishPick, publishDraftEnd, publishReturnToLobby, publishNextDraft, mpState } from "./multiplayer.js";
 import { openMapFromDraft } from "./map_draft.js";
+
+// Small i18n helper (mirrors the one in main.js): looks up a key in the
+// currently loaded language file, falling back to an English string.
+function t(key, fallback) {
+  return (state.langData && state.langData[key]) || fallback;
+}
 
 window._mpPublishPick = async (stepIndex, monFile) => {
   if (mpState.enabled) await publishPick(stepIndex, monFile);
@@ -22,6 +28,7 @@ export function startDraft() {
   // Toujours lire la checkbox - en MP, publishDraftStart va broadcaster la valeur
   state.fearlessMode = document.getElementById("fearless-checkbox").checked;
   state.allStarMode  = document.getElementById("allstar-checkbox").checked;
+  updateHideBlockedRowVisibility();
 
   state.currentDraftOrder = [...draftOrders[state.selectedMode]];
   state.currentStep = 0;
@@ -35,9 +42,9 @@ export function startDraft() {
   _updateCollapseBar();
 
   document.getElementById("start-draft").style.display = "none";
-  document.getElementById("reset-draft").style.display = "inline-block";
+  document.getElementById("reset-draft").style.display = "flex";
   // Undo is disabled in MP (desyncs would break the room)
-  document.getElementById("backBtn").style.display = mpState.enabled ? "none" : "inline-block";
+  document.getElementById("backBtn").style.display = mpState.enabled ? "none" : "flex";
 
   _showGallery();
   _hideRecap();
@@ -49,6 +56,7 @@ export function startDraft() {
   setupTimer();
   resetDraftSlots();
   state.allImages.forEach(img => img.classList.remove("used", "fearless-blocked"));
+  usedFiles.clear();
   updateTurn();
   highlightCurrentSlot();
   if (mpState.enabled) _updateMpTurnIndicator();
@@ -96,7 +104,7 @@ export async function endDraft() {
 
 function _showFinalRecap() {
   state.draftCount++;
-  _buildCenterRecap("Draft Result");
+  _buildCenterRecap(t("recap_draft_result", "Draft Result"));
   document.getElementById("fearless-controls").style.display = "none";
 
   if (mpState.enabled) {
@@ -111,23 +119,23 @@ function _showFinalRecap() {
       btn.classList.toggle("active", btn.dataset.map === state.selectedMap);
     });
     const nextBtn = document.getElementById("next-draft-btn");
-    nextBtn.textContent = "\u25b6 Next Draft";
+    nextBtn.textContent = "\u25b6 " + t("next_draft", "Next Draft");
     nextBtn.style.display = mpState.isHost ? "inline-block" : "none";
     const swapBtn = document.getElementById("swap-sides-btn");
     if (swapBtn) swapBtn.style.display = mpState.isHost ? "inline-block" : "none";
     const endBtn = document.getElementById("end-series-btn");
-    endBtn.textContent = "\u2715 Disconnect";
+    endBtn.textContent = "\u2715 " + t("disconnect", "Disconnect");
     endBtn.style.display = mpState.isHost ? "inline-block" : "none";
     const waitMsg = document.getElementById("mp-recap-wait-msg");
     if (waitMsg) waitMsg.style.display = mpState.isHost ? "none" : "block";
   } else {
-    document.getElementById("reset-draft").style.display    = "inline-block";
+    document.getElementById("reset-draft").style.display    = "flex";
     document.getElementById("mp-toggle-btn").style.display  = "flex";
     // Show swap-sides button and next-draft in solo mode too
     const swapBtn = document.getElementById("swap-sides-btn");
     if (swapBtn) swapBtn.style.display = "inline-block";
     const nextBtn = document.getElementById("next-draft-btn");
-    nextBtn.textContent = "▶ New Draft";
+    nextBtn.textContent = "▶ " + t("new_draft", "New Draft");
     nextBtn.style.display = "inline-block";
     document.getElementById("fearless-controls").style.display = "flex";
     document.getElementById("fearless-map-reselect").style.display = "block";
@@ -138,8 +146,8 @@ function _showFinalRecap() {
 function _showFearlessRecap() {
   state.draftCount++;
   _updateCollapseBar();
-  _buildCenterRecap(`Draft ${state.draftCount} Recap`);
-  _appendToSeriesHistory(`Draft ${state.draftCount}`);
+  _buildCenterRecap(t("recap_draft_n", "Draft {n} Recap").replace("{n}", state.draftCount));
+  _appendToSeriesHistory(t("draft_n", "Draft {n}").replace("{n}", state.draftCount));
   document.getElementById("fearless-controls").style.display = "flex";
   document.getElementById("fearless-series").style.display   = "block";
   document.querySelectorAll(".fearless-map-btn").forEach(btn => {
@@ -153,7 +161,7 @@ function _showFearlessRecap() {
     const endBtn  = document.getElementById("end-series-btn");
     const swapBtn = document.getElementById("swap-sides-btn");
     const waitMsg = document.getElementById("mp-recap-wait-msg");
-    nextBtn.textContent = "▶ Next Draft";
+    nextBtn.textContent = "▶ " + t("next_draft", "Next Draft");
 
     nextBtn.style.display = mpState.isHost ? "inline-block" : "none";
     endBtn.style.display  = mpState.isHost ? "inline-block" : "none";
@@ -183,8 +191,8 @@ function _buildCenterRecap(title) {
   const openMapBtn = document.createElement("button");
   openMapBtn.id        = "center-recap-open-map";
   openMapBtn.className = "open-map-btn";
-  openMapBtn.innerHTML = "🗺 Open on Map";
-  openMapBtn.title     = "Open a new tab with these picks pre-placed on the interactive map";
+  openMapBtn.innerHTML = "🗺 " + t("open_on_map", "Open on Map");
+  openMapBtn.title     = t("open_on_map_tooltip", "Open a new tab with these picks pre-placed on the interactive map");
   openMapBtn.addEventListener("click", () => {
     openMapFromDraft(
       state.selectedMap,
@@ -205,12 +213,12 @@ function _buildRecapTeam(teamId) {
 
   const title = document.createElement("div");
   title.className = "recap-team-title";
-  title.textContent = teamId === "teamA" ? "🟣 Purple Team" : "🟠 Orange Team";
+  title.textContent = teamId === "teamA" ? ("🟣 " + t("team_purple", "Purple Team")) : ("🟠 " + t("team_orange", "Orange Team"));
   wrap.appendChild(title);
 
   const bansLabel = document.createElement("div");
   bansLabel.className = "recap-section-label";
-  bansLabel.textContent = "Bans";
+  bansLabel.textContent = t("recap_bans", "Bans");
   wrap.appendChild(bansLabel);
   const bansRow = document.createElement("div");
   bansRow.className = "recap-slots";
@@ -229,7 +237,7 @@ function _buildRecapTeam(teamId) {
 
   const picksLabel = document.createElement("div");
   picksLabel.className = "recap-section-label";
-  picksLabel.textContent = "Picks";
+  picksLabel.textContent = t("recap_picks", "Picks");
   wrap.appendChild(picksLabel);
   const picksRow = document.createElement("div");
   picksRow.className = "recap-slots";
@@ -262,7 +270,7 @@ function _appendToSeriesHistory(title) {
     container.style.textAlign = "center";
     const th = document.createElement("div");
     th.style.cssText = `font-size:0.75rem;font-weight:700;margin-bottom:6px;color:${teamId === "teamA" ? "var(--violet)" : "var(--orange)"};`;
-    th.textContent = teamId === "teamA" ? "🟣 Purple" : "🟠 Orange";
+    th.textContent = teamId === "teamA" ? ("🟣 " + t("role_purple", "Purple")) : ("🟠 " + t("role_orange", "Orange"));
     container.appendChild(th);
     container.appendChild(createRecapSlots(getAllBanSlots(teamId), true));
     container.appendChild(createRecapSlots(getAllPickSlots(teamId), false));
@@ -284,8 +292,8 @@ function _appendToSeriesHistory(title) {
   
   const histMapBtn = document.createElement("button");
   histMapBtn.className = "open-map-btn open-map-btn--history";
-  histMapBtn.innerHTML = "🗺 Open on Map";
-  histMapBtn.title     = "Open a new tab with these picks pre-placed on the interactive map";
+  histMapBtn.innerHTML = "🗺 " + t("open_on_map", "Open on Map");
+  histMapBtn.title     = t("open_on_map_tooltip", "Open a new tab with these picks pre-placed on the interactive map");
   histMapBtn.addEventListener("click", () => {
     // openMapFromDraft accepts raw slot arrays OR our pre-snapshotted objects.
     // We create lightweight fake slot wrappers so the extractor works.
@@ -316,7 +324,11 @@ export function undoLastPick() {
     const last = [...slots].reverse().find(s => s.querySelector("img"));
     if (!last) return;
     const monFile = last.querySelector("img")?.dataset?.file;
-    if (monFile) { const g = state.allImages.find(i => i.dataset.file === monFile); if (g) g.classList.remove("used"); }
+    if (monFile) {
+      const g = state.allImages.find(i => i.dataset.file === monFile);
+      if (g) g.classList.remove("used");
+      usedFiles.delete(monFile);
+    }
     last.innerHTML = "";
     last.classList.remove("filled");
   } else {
@@ -327,6 +339,7 @@ export function undoLastPick() {
     if (monFile) {
       const g = state.allImages.find(i => i.dataset.file === monFile);
       if (g) g.classList.remove("used");
+      usedFiles.delete(monFile);
       if (state.fearlessMode) {
         (step.team === "teamA" ? fearlessTeamA : fearlessTeamB).delete(monFile);
       }
@@ -348,7 +361,7 @@ export function softResetDraft() {
 
   document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active", "disabled"));
   document.querySelectorAll(".map-btn").forEach(b => b.classList.remove("active"));
-  document.getElementById("start-draft").style.display    = "inline-block";
+  document.getElementById("start-draft").style.display    = "flex";
   document.getElementById("reset-draft").style.display    = "none";
   document.getElementById("backBtn").style.display        = "none";
   document.getElementById("final-draft").style.display    = "none";
@@ -362,12 +375,19 @@ export function softResetDraft() {
   const mpInd = document.getElementById("mp-turn-indicator");
   if (mpInd) mpInd.style.display = "none";
   const swapBtn = document.getElementById("swap-sides-btn");
-  if (swapBtn) { swapBtn.style.display = "none"; swapBtn.classList.remove("active"); swapBtn.textContent = "🔄 Swap Sides"; }
+  if (swapBtn) { swapBtn.style.display = "none"; swapBtn.classList.remove("active"); swapBtn.textContent = "🔄 " + t("swap_sides", "Swap Sides"); }
 
   _hideGallery();
   _hideRecap();
   resetDraftSlots();
   state.allImages.forEach(img => img.classList.remove("used", "fearless-blocked"));
+  usedFiles.clear();
+
+  // Reset the "hide picked" toggle for the next series/draft
+  const hideBlockedBtn = document.getElementById("hide-blocked-btn");
+  if (hideBlockedBtn) { hideBlockedBtn.style.display = "none"; hideBlockedBtn.classList.remove("active"); }
+  const galleryEl = document.getElementById("gallery");
+  if (galleryEl) galleryEl.classList.remove("hide-blocked");
 }
 
 /**
@@ -379,7 +399,7 @@ export async function returnToLobby() {
 
   // Reset the next-draft-btn text in case it was repurposed
   const ndBtn = document.getElementById("next-draft-btn");
-  if (ndBtn) ndBtn.textContent = "▶ Next Draft";
+  if (ndBtn) ndBtn.textContent = "▶ " + t("next_draft", "Next Draft");
 
   // Restore fearless map reselect visibility for next time
   const fmr = document.getElementById("fearless-map-reselect");
@@ -418,8 +438,10 @@ export async function startNextDraft(skipPublish = false) {
   // NE PAS vider fearlessTeamA/B ici - en fearless, les picks s'accumulent
   // entre les drafts. Les sets sont clearés uniquement dans endFearlessSeries().
 
+  updateHideBlockedRowVisibility();
   resetDraftSlots();
   state.allImages.forEach(img => img.classList.remove("used", "fearless-blocked"));
+  usedFiles.clear();
   state.currentStep = 0;
 
   document.getElementById("map-display").innerHTML =
@@ -431,16 +453,16 @@ export async function startNextDraft(skipPublish = false) {
   _hideRecap();
   _showGallery();
   document.getElementById("fearless-controls").style.display = "none";
-  document.getElementById("backBtn").style.display = mpState.enabled ? "none" : "inline-block";
+  document.getElementById("backBtn").style.display = mpState.enabled ? "none" : "flex";
   // Reset end-series-btn text in case it was relabelled
   const endBtn = document.getElementById("end-series-btn");
-  if (endBtn) endBtn.textContent = "✕ End Series";
+  if (endBtn) endBtn.textContent = "✕ " + t("end_series", "End Series");
   // Capture sidesSwapped BEFORE resetting - we still need to publish it
   const sidesSwappedToPublish = state.sidesSwapped;
   // Reset swap-sides button (swap was applied, now reset for next round)
   state.sidesSwapped = false;
   const swapBtn = document.getElementById("swap-sides-btn");
-  if (swapBtn) { swapBtn.style.display = "none"; swapBtn.classList.remove("active"); swapBtn.textContent = "🔄 Swap Sides"; }
+  if (swapBtn) { swapBtn.style.display = "none"; swapBtn.classList.remove("active"); swapBtn.textContent = "🔄 " + t("swap_sides", "Swap Sides"); }
   const waitMsg = document.getElementById("mp-recap-wait-msg");
   if (waitMsg) waitMsg.style.display = "none";
 
@@ -476,13 +498,13 @@ export function _updateMpTurnIndicator() {
   if (!indicator) return;
   const mine = window._mpIsMyTurn ? window._mpIsMyTurn() : true;
   if (mpState.playerRole === "spectator") {
-    indicator.textContent = "👁 Spectator";
+    indicator.textContent = "👁 " + t("role_spectator", "Spectator");
     indicator.className = "mp-turn-indicator spectator";
   } else if (mine) {
-    indicator.textContent = "✅ Your turn!";
+    indicator.textContent = "✅ " + t("mp_your_turn", "Your turn!");
     indicator.className = "mp-turn-indicator your-turn";
   } else {
-    indicator.textContent = "⏳ Waiting for opponent…";
+    indicator.textContent = "⏳ " + t("mp_waiting_opponent", "Waiting for opponent…");
     indicator.className = "mp-turn-indicator waiting";
   }
   indicator.style.display = "block";
@@ -507,19 +529,19 @@ export function updateCollapseBar() {
     tournament: "Tournament 3 Bans",
   };
   if (state.allStarMode && state.draftCount > 0) {
-    modeEl.textContent = `🌟 All-Star - Draft #${state.draftCount + 1}`;
+    modeEl.textContent = `🌟 ${t("setting_allstar","All-Star")} - ${t("cbar_draft_hash","Draft #")}${state.draftCount + 1}`;
     modeEl.style.color = "var(--yellow)";
   } else if (state.allStarMode) {
-    modeEl.textContent = `🌟 All-Star - ${modeLabels[state.selectedMode] || state.selectedMode || ""}`;
+    modeEl.textContent = `🌟 ${t("setting_allstar","All-Star")} - ${t("cbar_mode_tournament", modeLabels[state.selectedMode]) || state.selectedMode || ""}`;
     modeEl.style.color = "var(--yellow)";
   } else if (state.fearlessMode && state.draftCount > 0) {
-    modeEl.textContent = `⚡ Fearless - Draft #${state.draftCount + 1}`;
+    modeEl.textContent = `⚡ ${t("setting_fearless","Fearless")} - ${t("cbar_draft_hash","Draft #")}${state.draftCount + 1}`;
     modeEl.style.color = "var(--violet)";
   } else if (state.fearlessMode) {
-    modeEl.textContent = `⚡ Fearless - ${modeLabels[state.selectedMode] || state.selectedMode || ""}`;
+    modeEl.textContent = `⚡ ${t("setting_fearless","Fearless")} - ${t("cbar_mode_tournament", modeLabels[state.selectedMode]) || state.selectedMode || ""}`;
     modeEl.style.color = "var(--violet)";
   } else {
-    modeEl.textContent = modeLabels[state.selectedMode] || state.selectedMode || "";
+    modeEl.textContent = t("cbar_mode_tournament", modeLabels[state.selectedMode]) || state.selectedMode || "";
     modeEl.style.color = "";
   }
 }
@@ -545,4 +567,15 @@ function _hideGallery() {
 function _hideRecap() {
   const r = document.getElementById("center-recap");
   if (r) r.style.display = "none";
+}
+
+/**
+ * The "Hide picked" button (next to Undo) only makes sense once there's an
+ * accumulated pool of previously-picked mons to hide, i.e. in a running
+ * Fearless or All-Star series - so it stays hidden for a plain draft.
+ */
+export function updateHideBlockedRowVisibility() {
+  const btn = document.getElementById("hide-blocked-btn");
+  if (!btn) return;
+  btn.style.display = (state.fearlessMode || state.allStarMode) ? "flex" : "none";
 }

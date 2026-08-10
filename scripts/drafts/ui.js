@@ -6,6 +6,18 @@ export function updateDynamicContent() {
     const key = el.getAttribute("data-lang");
     if (state.langData[key]) el.textContent = state.langData[key];
   });
+  document.querySelectorAll("[data-lang-placeholder]").forEach(el => {
+    const key = el.getAttribute("data-lang-placeholder");
+    if (state.langData[key]) el.placeholder = state.langData[key];
+  });
+  document.querySelectorAll("[data-lang-title]").forEach(el => {
+    const key = el.getAttribute("data-lang-title");
+    if (state.langData[key]) el.title = state.langData[key];
+  });
+  document.querySelectorAll("[data-lang-tooltip]").forEach(el => {
+    const key = el.getAttribute("data-lang-tooltip");
+    if (state.langData[key]) el.dataset.tooltip = state.langData[key];
+  });
 }
 
 export function updateTurn() {
@@ -18,9 +30,10 @@ export function updateTurn() {
     return;
   }
   const step   = state.currentDraftOrder[state.currentStep];
-  const label  = step.team === "teamA" ? "Purple Team" : "Orange Team";
+  const lang   = state.langData || {};
+  const label  = step.team === "teamA" ? (lang.team_purple || "Purple Team") : (lang.team_orange || "Orange Team");
   const color  = step.team === "teamA" ? "var(--violet, #9f53ec)" : "var(--orange, #ff9d00)";
-  const action = step.type === "ban" ? "to Ban" : "to Pick";
+  const action = step.type === "ban" ? (lang.turn_to_ban || "to Ban") : (lang.turn_to_pick || "to Pick");
   turnDisplay.innerHTML = `<span style="color:${color};">${label}</span><br>${action}`;
   turnDisplay.style.display = "block";
 
@@ -32,9 +45,30 @@ export function updateTurn() {
   if (window._updateMiniBar) window._updateMiniBar();
 }
 
+export function updateMiniBans() {
+  const wrap = document.getElementById("mini-bans");
+  if (!wrap) return;
+  let any = false;
+  ["teamA", "teamB"].forEach(teamId => {
+    const target = document.getElementById(`mini-bans-${teamId}`);
+    if (!target) return;
+    target.innerHTML = "";
+    getAllBanSlots(teamId).forEach(slot => {
+      const img = slot.querySelector("img");
+      if (!img) return;
+      any = true;
+      const clone = img.cloneNode();
+      clone.style.cssText = "";
+      target.appendChild(clone);
+    });
+  });
+  wrap.classList.toggle("has-content", any);
+}
+
 export function highlightCurrentSlot() {
   document.querySelectorAll(".slot.current-pick, .ban-slot.current-pick")
     .forEach(s => s.classList.remove("current-pick"));
+  updateMiniBans();
   if (state.currentStep >= state.currentDraftOrder.length) {
     updateFearlessRestrictions(); return;
   }
@@ -59,10 +93,11 @@ export function updateFearlessRestrictions() {
   state.allImages.forEach(img => img.classList.remove("fearless-blocked"));
   if (state.currentStep >= state.currentDraftOrder.length) return;
 
-  // All-Star mode: picks from either team are blocked for everyone
+  // All-Star mode: mons picked in a PREVIOUS draft of the series stay
+  // blocked (greyed + unclickable) during BOTH the ban and the pick phase.
+  // Real bans from earlier drafts are never in allStarPicked (only picks
+  // are tracked there), so they remain fully available as expected.
   if (state.allStarMode) {
-    const step = state.currentDraftOrder[state.currentStep];
-    if (step.type !== "pick") return;
     state.allImages.forEach(img => {
       if (allStarPicked.has(img.dataset.file) && !img.classList.contains("used"))
         img.classList.add("fearless-blocked");
@@ -70,10 +105,9 @@ export function updateFearlessRestrictions() {
     return;
   }
 
-  // Fearless mode: team-specific restriction
+  // Fearless mode: team-specific restriction, also enforced during bans.
   if (!state.fearlessMode) return;
   const step = state.currentDraftOrder[state.currentStep];
-  if (step.type !== "pick") return;
   const teamSet = step.team === "teamA" ? fearlessTeamA : fearlessTeamB;
   state.allImages.forEach(img => {
     if (teamSet.has(img.dataset.file) && !img.classList.contains("used"))
@@ -93,6 +127,7 @@ export function resetDraftSlots() {
       s.innerHTML = ""; s.classList.remove("current-pick", "filled");
     });
   });
+  updateMiniBans();
 }
 
 export function createRecapSlots(slots, isBan = false) {
