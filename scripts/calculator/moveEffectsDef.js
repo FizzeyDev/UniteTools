@@ -986,22 +986,22 @@ function applyMewLightScreenWall(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
-// ── MEWTWO X — Psystrike (channeling damage reduction) ────────────────────────
+// ── MEWTWO Y — Psystrike (channeling damage reduction) ────────────────────────
 // "While Mewtwo is directing psychic waves, it takes 15% reduced damage."
-function applyMewtwoXPsystrikeChannel(atkStats, defStats, card) {
+function applyMewtwoYPsystrikeChannel(atkStats, defStats, card) {
   const level = state.defenderLevel;
   if (level < 5) return; // Psystrike learned at level 5
 
-  const isActive = state.defenderMewtwoXPsystrikeChanneling ?? false;
+  const isActive = state.defenderMewtwoYPsystrikeChanneling ?? false;
   const line = document.createElement('div');
   line.className = 'global-bonus-line';
   line.innerHTML = wrap(`
-    ${icon('assets/moves/mega_mewtwo_x/psystrike.png')}
+    ${icon('assets/moves/mega_mewtwo_y/psystrike.png')}
     <div style="flex:1;">
       ${moveBadge('Psystrike', 5)}
       Directing psychic waves → <strong style="color:#fff;">−15% damage received</strong><br>
       <span style="font-size:0.8rem;color:${C}99;">Active only while channeling the move</span><br>
-      <button class="mewtwo-x-psystrike-channel-toggle" style="
+      <button class="mewtwo-y-psystrike-channel-toggle" style="
         margin-top:8px;padding:6px 16px;
         background:${isActive ? C : '#0d2428'};
         color:${isActive ? '#000' : C};
@@ -1010,8 +1010,8 @@ function applyMewtwoXPsystrikeChannel(atkStats, defStats, card) {
       ">${isActive ? '✓ Active' : 'Activate'}</button>
     </div>
   `);
-  line.querySelector('.mewtwo-x-psystrike-channel-toggle').onclick = () => {
-    state.defenderMewtwoXPsystrikeChanneling = !state.defenderMewtwoXPsystrikeChanneling;
+  line.querySelector('.mewtwo-y-psystrike-channel-toggle').onclick = () => {
+    state.defenderMewtwoYPsystrikeChanneling = !state.defenderMewtwoYPsystrikeChanneling;
     updateDamages();
   };
   card.appendChild(line);
@@ -1042,7 +1042,7 @@ export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
     machamp:   [applyMachampBarrageBlowDef],
     metagross: [applyMetagrossZenHeadbutt, applyMetagrossMagnetRise],
     mew:       [applyMewLightScreenWall],
-    mewtwo_x:  [applyMewtwoXPsystrikeChannel],
+    mewtwo_y:  [applyMewtwoYPsystrikeChannel],
     palkia:    [applyPalkiaDragonClawDefStacks],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));

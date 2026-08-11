@@ -41,8 +41,8 @@ export function computeDefenderDamageMult() {
     defenderDamageMult *= 0.70;
   }
 
-  // Mewtwo X — Psystrike: -15% damage received while channeling
-  if (state.currentDefender?.pokemonId === "mewtwo_x" && state.defenderMewtwoXPsystrikeChanneling) {
+  // Mewtwo Y — Psystrike: -15% damage received while channeling
+  if (state.currentDefender?.pokemonId === "mewtwo_y" && state.defenderMewtwoYPsystrikeChanneling) {
     defenderDamageMult *= 0.85;
   }
 
@@ -86,14 +86,14 @@ export function computeGlobalDamageMult() {
     if (marks > 0) globalDamageMult *= (1 + marks * 0.03);
   }
 
-  // ── MEWTWO X — Future Sight: +10%/+20% dmg vs locked-on target ─────────────
-  if (state.currentAttacker?.pokemonId === "mewtwo_x" && state.attackerMewtwoXFutureSightMarkActive) {
-    globalDamageMult *= state.attackerLevel >= 11 ? 1.20 : 1.10;
+  // ── MEWTWO Y — Future Sight: +10%/+15% dmg vs locked-on target ─────────────
+  if (state.currentAttacker?.pokemonId === "mewtwo_y" && state.attackerMewtwoYFutureSightMarkActive) {
+    globalDamageMult *= state.attackerLevel >= 11 ? 1.15 : 1.10;
   }
 
-  // ── MEWTWO X — Teleport: +10%/+20% dmg dealt for 5s after teleporting ──────
-  if (state.currentAttacker?.pokemonId === "mewtwo_x" && state.attackerMewtwoXTeleportActive) {
-    globalDamageMult *= state.attackerLevel >= 13 ? 1.20 : 1.10;
+  // ── MEWTWO Y — Teleport: +20%/+30% dmg dealt for 2s after teleporting ──────
+  if (state.currentAttacker?.pokemonId === "mewtwo_y" && state.attackerMewtwoYTeleportActive) {
+    globalDamageMult *= state.attackerLevel >= 13 ? 1.30 : 1.20;
   }
 
   if (state.debuffGoodraMuddyWater)         globalDamageMult *= 0.85;

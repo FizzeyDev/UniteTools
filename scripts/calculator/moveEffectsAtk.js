@@ -1690,85 +1690,86 @@ function applyMeowscaradaTrailblaze(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
-// ── MEWTWO X — Future Sight (lock-on mark + additional explosion) ─────────────
+// ── MEWTWO Y — Future Sight (lock-on mark + additional explosion) ─────────────
 // "The locked-on enemy ... takes 10% increased damage from Mewtwo" (3s).
-// Level 11: increased to 20%. After 3s, an additional explosion deals damage
-// equal to 50% of any damage the target received while locked-on (cap 2000 vs players).
-function applyMewtwoXFutureSight(atkStats, defStats, card) {
+// Level 11: increased to 15%. After 3s, an additional explosion deals damage
+// equal to 50% of any damage the target received while locked-on (cap 1500).
+function applyMewtwoYFutureSight(atkStats, defStats, card) {
   const level = state.attackerLevel;
   if (level < 5) return; // Future Sight learned at level 5
   const upgraded = level >= 11;
-  const bonusPct = upgraded ? 20 : 10;
+  const bonusPct = upgraded ? 15 : 10;
 
-  const isActive     = state.attackerMewtwoXFutureSightMarkActive ?? false;
-  const damageTaken  = state.attackerMewtwoXFutureSightDamageTaken ?? 0;
-  const isVsPlayer   = state.attackerMewtwoXFutureSightVsPlayer ?? true;
+  const isActive     = state.attackerMewtwoYFutureSightMarkActive ?? false;
+  const damageTaken  = state.attackerMewtwoYFutureSightDamageTaken ?? 0;
+  const isVsPlayer   = state.attackerMewtwoYFutureSightVsPlayer ?? true;
   let additionalExplosion = Math.floor(damageTaken * 0.5);
-  if (isVsPlayer) additionalExplosion = Math.min(additionalExplosion, 2000);
+  if (isVsPlayer) additionalExplosion = Math.min(additionalExplosion, 1500);
 
   const line = document.createElement('div');
   line.className = 'global-bonus-line';
   line.innerHTML = wrap(`
-    ${icon('assets/moves/mega_mewtwo_x/future_sight.png')}
+    ${icon('assets/moves/mega_mewtwo_y/future_sight.png')}
     <div style="flex:1;">
       ${moveBadge(upgraded ? 'Future Sight+' : 'Future Sight', upgraded ? 11 : 5)}
       Target locked-on (3s) → <strong style="color:#fff;">+${bonusPct}% damage</strong> from Mewtwo<br>
-      <span style="font-size:0.8rem;color:${C}99;">Also −25% Movement Speed on the target for 3s — not modeled here</span><br>
-      <button class="mewtwo-x-futuresight-mark-toggle" style="
+      <span style="font-size:0.8rem;color:${C}99;">Also −35% Movement Speed on the target for 3s — not modeled here</span><br>
+      <button class="mewtwo-y-futuresight-mark-toggle" style="
         margin-top:8px;padding:6px 16px;
         background:${isActive ? C : '#0d2428'};
         color:${isActive ? '#000' : C};
         border:1px solid ${C};border-radius:6px;cursor:pointer;
         font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
       ">${isActive ? '✓ Target Locked-On' : 'Lock On Target'}</button>
-      <div style="margin-top:10px;font-size:0.8rem;color:${C}99;">Additional Explosion — 50% of damage dealt while locked-on${isVsPlayer ? ' (capped at 2000 vs players)' : ''}:</div>
+      <div style="margin-top:10px;font-size:0.8rem;color:${C}99;">Additional Explosion — 50% of damage dealt while locked-on${isVsPlayer ? ' (capped at 1500 vs players)' : ''}:</div>
       <div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
         <span style="font-size:0.85rem;color:${C};">Damage taken while locked-on:</span>
-        <input type="number" class="mewtwo-x-futuresight-dmg-input" value="${damageTaken}" min="0" step="10" style="
+        <input type="number" class="mewtwo-y-futuresight-dmg-input" value="${damageTaken}" min="0" step="10" style="
           width:90px;background:#0d2428;color:${C};border:1px solid ${C};border-radius:4px;padding:4px 6px;
           text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.9rem;">
-        <button class="mewtwo-x-futuresight-vsplayer-toggle" style="
+        <button class="mewtwo-y-futuresight-vsplayer-toggle" style="
           padding:4px 12px;background:${isVsPlayer ? C : '#0d2428'};color:${isVsPlayer ? '#000' : C};
           border:1px solid ${C};border-radius:6px;cursor:pointer;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.8rem;
-        ">${isVsPlayer ? 'vs Player (cap 2000)' : 'vs Wild (no cap)'}</button>
+        ">${isVsPlayer ? 'vs Player (cap 1500)' : 'vs Wild (no cap)'}</button>
       </div>
       <div style="margin-top:6px;font-size:0.9rem;color:#fff;">→ Additional Explosion: <strong style="color:${C};">${additionalExplosion}</strong> damage</div>
     </div>
   `);
-  line.querySelector('.mewtwo-x-futuresight-mark-toggle').onclick = () => {
-    state.attackerMewtwoXFutureSightMarkActive = !state.attackerMewtwoXFutureSightMarkActive;
+  line.querySelector('.mewtwo-y-futuresight-mark-toggle').onclick = () => {
+    state.attackerMewtwoYFutureSightMarkActive = !state.attackerMewtwoYFutureSightMarkActive;
     updateDamages();
   };
-  line.querySelector('.mewtwo-x-futuresight-dmg-input').onchange = (e) => {
-    state.attackerMewtwoXFutureSightDamageTaken = Math.max(0, parseInt(e.target.value, 10) || 0);
+  line.querySelector('.mewtwo-y-futuresight-dmg-input').onchange = (e) => {
+    state.attackerMewtwoYFutureSightDamageTaken = Math.max(0, parseInt(e.target.value, 10) || 0);
     updateDamages();
   };
-  line.querySelector('.mewtwo-x-futuresight-vsplayer-toggle').onclick = () => {
-    state.attackerMewtwoXFutureSightVsPlayer = !isVsPlayer;
+  line.querySelector('.mewtwo-y-futuresight-vsplayer-toggle').onclick = () => {
+    state.attackerMewtwoYFutureSightVsPlayer = !isVsPlayer;
     updateDamages();
   };
   card.appendChild(line);
 }
 
-// ── MEWTWO X — Teleport (post-dash damage buff) ────────────────────────────────
-// "For 5s, movement speed is increased by 30%, Mewtwo deals 10% more damage,
-// and the Mega gauge increases 50% faster." Level 13: damage bonus → 20%.
-function applyMewtwoXTeleportDash(atkStats, defStats, card) {
+// ── MEWTWO Y — Teleport (post-dash damage buff) ────────────────────────────────
+// "For 2s after the first cast of Teleport, movement speed is increased by 15%,
+// Mewtwo deals 20% more damage, and the Mega gauge increases 50% faster."
+// Level 13: damage bonus → 30%.
+function applyMewtwoYTeleportDash(atkStats, defStats, card) {
   const level = state.attackerLevel;
   if (level < 7) return; // Teleport learned at level 7
   const upgraded = level >= 13;
-  const bonusPct = upgraded ? 20 : 10;
+  const bonusPct = upgraded ? 30 : 20;
 
-  const isActive = state.attackerMewtwoXTeleportActive ?? false;
+  const isActive = state.attackerMewtwoYTeleportActive ?? false;
   const line = document.createElement('div');
   line.className = 'global-bonus-line';
   line.innerHTML = wrap(`
-    ${icon('assets/moves/mega_mewtwo_x/teleport.png')}
+    ${icon('assets/moves/mega_mewtwo_y/teleport.png')}
     <div style="flex:1;">
       ${moveBadge(upgraded ? 'Teleport+' : 'Teleport', upgraded ? 13 : 7)}
-      After teleporting (5s) → <strong style="color:#fff;">+${bonusPct}% damage dealt</strong><br>
-      <span style="font-size:0.8rem;color:${C}99;">Also +30% Movement Speed and faster Mega gauge gain — not modeled here</span><br>
-      <button class="mewtwo-x-teleport-toggle" style="
+      After teleporting (2s) → <strong style="color:#fff;">+${bonusPct}% damage dealt</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Also +15% Movement Speed and faster Mega gauge gain — not modeled here</span><br>
+      <button class="mewtwo-y-teleport-toggle" style="
         margin-top:8px;padding:6px 16px;
         background:${isActive ? C : '#0d2428'};
         color:${isActive ? '#000' : C};
@@ -1777,8 +1778,41 @@ function applyMewtwoXTeleportDash(atkStats, defStats, card) {
       ">${isActive ? '✓ Active' : 'Activate'}</button>
     </div>
   `);
-  line.querySelector('.mewtwo-x-teleport-toggle').onclick = () => {
-    state.attackerMewtwoXTeleportActive = !state.attackerMewtwoXTeleportActive;
+  line.querySelector('.mewtwo-y-teleport-toggle').onclick = () => {
+    state.attackerMewtwoYTeleportActive = !state.attackerMewtwoYTeleportActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── MEWTWO Y — Psystrike (distance-based damage bonus) ─────────────────────────
+// "Psystrike damage is increased based on distance from the target enemy;
+// dealing up to 40% increased damage when Mewtwo is attacking from slightly
+// beyond its basic attack range."
+function applyMewtwoYPsystrikeDistance(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Psystrike learned at level 5
+
+  const isActive = state.attackerMewtwoYPsystrikeDistanceActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/mega_mewtwo_y/psystrike.png')}
+    <div style="flex:1;">
+      ${moveBadge('Psystrike', 5)}
+      Attacking from near max range → <strong style="color:#fff;">up to +40% damage</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Scales with distance from the target; capped at max basic-attack range +</span><br>
+      <button class="mewtwo-y-psystrike-distance-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Max Range (+40%)' : 'Max Range Cast'}</button>
+    </div>
+  `);
+  line.querySelector('.mewtwo-y-psystrike-distance-toggle').onclick = () => {
+    state.attackerMewtwoYPsystrikeDistanceActive = !state.attackerMewtwoYPsystrikeDistanceActive;
     updateDamages();
   };
   card.appendChild(line);
@@ -1819,7 +1853,7 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     lucario:    [applyLucarioExtremeSpeed, applyLucarioAuraCannonPUP],
     machamp:    [applyMachampCloseCombatStatus, applyMachampCrossChopStacks, applyMachampBulkUp, applyMachampDynamicPunch, applyMachampBarrageBlowAtk],
     meowscarada: [applyMeowscaradaLeafage, applyMeowscaradaFlowerTrick, applyMeowscaradaNightSlash, applyMeowscaradaTrailblaze],
-    mewtwo_x:   [applyMewtwoXFutureSight, applyMewtwoXTeleportDash],
+    mewtwo_y:   [applyMewtwoYFutureSight, applyMewtwoYTeleportDash, applyMewtwoYPsystrikeDistance],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

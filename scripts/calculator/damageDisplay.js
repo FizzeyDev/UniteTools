@@ -1009,6 +1009,17 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         crit   = Math.floor(crit   * 1.15);
       }
 
+      // ── MEWTWO Y — Psystrike : up to +40% dmg on the per-wave hits when cast from near max range ──
+      if (
+        state.currentAttacker?.pokemonId === "mewtwo_y" &&
+        state.attackerMewtwoYPsystrikeDistanceActive &&
+        move.name === "Psystrike" &&
+        dmg.name === "Per Wave (x5)"
+      ) {
+        normal = Math.floor(normal * 1.40);
+        crit   = Math.floor(crit   * 1.40);
+      }
+
       const muscleMult = getBuzzwoleMuscleMultiplier(move.name, dmg.name);
       normal = Math.floor(normal * muscleMult);
       crit   = Math.floor(crit   * muscleMult);
