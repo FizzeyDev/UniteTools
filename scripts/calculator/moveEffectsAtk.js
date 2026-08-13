@@ -1825,6 +1825,162 @@ function applyMewtwoXTeleportDash(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── MEWTWO Y — Future Sight (lock-on mark + additional explosion) ─────────────
+// "The locked-on enemy ... takes 10% increased damage from Mewtwo" (3s).
+// Level 11: increased to 20%. After 3s, an additional explosion deals damage
+// equal to 50% of any damage the target received while locked-on (cap 2000 vs players).
+function applyMewtwoYFutureSight(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Future Sight learned at level 5
+  const upgraded = level >= 11;
+  const bonusPct = upgraded ? 20 : 10;
+
+  const isActive     = state.attackerMewtwoYFutureSightMarkActive ?? false;
+  const damageTaken  = state.attackerMewtwoYFutureSightDamageTaken ?? 0;
+  const isVsPlayer   = state.attackerMewtwoYFutureSightVsPlayer ?? true;
+  let additionalExplosion = Math.floor(damageTaken * 0.5);
+  if (isVsPlayer) additionalExplosion = Math.min(additionalExplosion, 2000);
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/mega_mewtwo_y/future_sight.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Future Sight+' : 'Future Sight', upgraded ? 11 : 5)}
+      Target locked-on (3s) → <strong style="color:#fff;">+${bonusPct}% damage</strong> from Mewtwo<br>
+      <span style="font-size:0.8rem;color:${C}99;">Also −25% Movement Speed on the target for 3s — not modeled here</span><br>
+      <button class="mewtwo-y-futuresight-mark-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Target Locked-On' : 'Lock On Target'}</button>
+      <div style="margin-top:10px;font-size:0.8rem;color:${C}99;">Additional Explosion — 50% of damage dealt while locked-on${isVsPlayer ? ' (capped at 2000 vs players)' : ''}:</div>
+      <div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:0.85rem;color:${C};">Damage taken while locked-on:</span>
+        <input type="number" class="mewtwo-y-futuresight-dmg-input" value="${damageTaken}" min="0" step="10" style="
+          width:90px;background:#0d2428;color:${C};border:1px solid ${C};border-radius:4px;padding:4px 6px;
+          text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.9rem;">
+        <button class="mewtwo-y-futuresight-vsplayer-toggle" style="
+          padding:4px 12px;background:${isVsPlayer ? C : '#0d2428'};color:${isVsPlayer ? '#000' : C};
+          border:1px solid ${C};border-radius:6px;cursor:pointer;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.8rem;
+        ">${isVsPlayer ? 'vs Player (cap 2000)' : 'vs Wild (no cap)'}</button>
+      </div>
+      <div style="margin-top:6px;font-size:0.9rem;color:#fff;">→ Additional Explosion: <strong style="color:${C};">${additionalExplosion}</strong> damage</div>
+    </div>
+  `);
+  line.querySelector('.mewtwo-y-futuresight-mark-toggle').onclick = () => {
+    state.attackerMewtwoYFutureSightMarkActive = !state.attackerMewtwoYFutureSightMarkActive;
+    updateDamages();
+  };
+  line.querySelector('.mewtwo-y-futuresight-dmg-input').onchange = (e) => {
+    state.attackerMewtwoYFutureSightDamageTaken = Math.max(0, parseInt(e.target.value, 10) || 0);
+    updateDamages();
+  };
+  line.querySelector('.mewtwo-y-futuresight-vsplayer-toggle').onclick = () => {
+    state.attackerMewtwoYFutureSightVsPlayer = !isVsPlayer;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── MEWTWO Y — Teleport (post-dash damage buff) ────────────────────────────────
+// "For 5s, movement speed is increased by 30%, Mewtwo deals 10% more damage,
+// and the Mega gauge increases 50% faster." Level 13: damage bonus → 20%.
+function applyMewtwoYTeleportDash(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 7) return; // Teleport learned at level 7
+  const upgraded = level >= 13;
+  const bonusPct = upgraded ? 20 : 10;
+
+  const isActive = state.attackerMewtwoYTeleportActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/mega_mewtwo_y/teleport.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Teleport+' : 'Teleport', upgraded ? 13 : 7)}
+      After teleporting (5s) → <strong style="color:#fff;">+${bonusPct}% damage dealt</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Also +30% Movement Speed and faster Mega gauge gain — not modeled here</span><br>
+      <button class="mewtwo-y-teleport-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.mewtwo-y-teleport-toggle').onclick = () => {
+    state.attackerMewtwoYTeleportActive = !state.attackerMewtwoYTeleportActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── MIMIKYU — Shadow Claw (stored additional hits) ─────────────────────────
+// "Whenever Mimikyu hits at least one enemy with a basic or boosted attack,
+// this move's cooldown is reduced by 1s, and the number of hits when this
+// move is used again increases. Up to 4 of these additional hits can be
+// stored and are lost after 5s without auto attacking or after using this
+// move." Modeled as a 0–4 stack counter driving the number of Leading
+// Additional Hits ticks (see damageDisplay.js).
+function applyMimikyuShadowClawStacks(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Shadow Claw learned at level 5
+
+  const stacks    = state.attackerMimikyuShadowClawStacks ?? 0;
+  const maxStacks = 4;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/mimikyu/shadow_claw.png')}
+    <div style="flex:1;">
+      ${moveBadge('Shadow Claw', 5)}
+      Stored hits (auto-attacks before casting): <button class="stack-btn minus sc-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus sc-plus">+</button><br>
+      → Leading Additional Hits: <strong style="color:${stacks > 0 ? '#88ff88' : '#888'};">${stacks}</strong>
+      ${stacks >= maxStacks ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ MAX</span>' : ''}<br>
+      <span style="font-size:0.8rem;color:${C}99;">Lost after 5s without auto-attacking, or after casting Shadow Claw</span>
+    </div>
+  `);
+  line.querySelector('.sc-minus').onclick = () => { if ((state.attackerMimikyuShadowClawStacks ?? 0) > 0)        { state.attackerMimikyuShadowClawStacks = (state.attackerMimikyuShadowClawStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.sc-plus').onclick  = () => { if ((state.attackerMimikyuShadowClawStacks ?? 0) < maxStacks) { state.attackerMimikyuShadowClawStacks = (state.attackerMimikyuShadowClawStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
+// ── MIRAIDON — Charge Beam (Sp. Atk stacks) ─────────────────────────────────
+// "If this move hits an enemy, Miraidon's Sp. Atk is increased by 10% for 6s
+// and stores electric power, stacking twice." Modeled as a 0–2 stack counter;
+// the actual +10%/stack Sp. Atk mutation is applied in statsManager.js.
+function applyMiraidonChargeBeamStacks(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Charge Beam learned at level 5
+
+  const stacks    = state.attackerMiraidonChargeBeamStacks ?? 0;
+  const maxStacks = 2;
+  const bonusPct  = stacks * 10;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/miraidon/charge_beam.png')}
+    <div style="flex:1;">
+      ${moveBadge('Charge Beam', 5)}
+      Stacks: <button class="stack-btn minus cb-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus cb-plus">+</button><br>
+      → Sp. Atk <strong style="color:${bonusPct > 0 ? '#88ff88' : '#888'};">+${bonusPct}%</strong> for 6s
+      ${stacks >= maxStacks ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ Boosted Charge Beam ready</span>' : ''}<br>
+      <span style="font-size:0.8rem;color:${C}99;">Stacking twice unlocks the continuous Boosted beam</span>
+    </div>
+  `);
+  line.querySelector('.cb-minus').onclick = () => { if ((state.attackerMiraidonChargeBeamStacks ?? 0) > 0)        { state.attackerMiraidonChargeBeamStacks = (state.attackerMiraidonChargeBeamStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.cb-plus').onclick  = () => { if ((state.attackerMiraidonChargeBeamStacks ?? 0) < maxStacks) { state.attackerMiraidonChargeBeamStacks = (state.attackerMiraidonChargeBeamStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -1862,6 +2018,9 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     machamp:    [applyMachampCloseCombatStatus, applyMachampCrossChopStacks, applyMachampBulkUp, applyMachampDynamicPunch, applyMachampBarrageBlowAtk],
     meowscarada: [applyMeowscaradaLeafage, applyMeowscaradaFlowerTrick, applyMeowscaradaNightSlash, applyMeowscaradaTrailblaze],
     mewtwo_x:   [applyMewtwoXFutureSight, applyMewtwoXTeleportDash],
+    mewtwo_y:   [applyMewtwoYFutureSight, applyMewtwoYTeleportDash],
+    mimikyu:    [applyMimikyuShadowClawStacks],
+    miraidon:   [applyMiraidonChargeBeamStacks],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

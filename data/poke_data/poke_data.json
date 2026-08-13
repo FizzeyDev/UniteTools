@@ -8655,8 +8655,8 @@
           {"name": "Heal - Additional (per hit)", "scaling": "hp", "multiplier": 3, "levelCoef": 0, "constant": 0, "target": "self"}
         ],
         "shields": [
-          {"name": "Shield +", "scaling": "sp_atk", "multiplier": 75, "levelCoef": 0, "constant": 300, "target": "self", "notes": "Starting at lvl 13"},
-          {"name": "Shield - Additional +", "scaling": "hp", "multiplier": 10, "levelCoef": 0, "constant": 0, "target": "self", "notes": "Starting at lvl 13"}
+          {"name": "Shield +", "scaling": "sp_atk", "multiplier": 75, "levelCoef": 0, "constant": 300, "target": "self", "upgrade_bonus": true},
+          {"name": "Shield - Additional +", "scaling": "hp", "multiplier": 10, "levelCoef": 0, "constant": 0, "target": "self", "upgrade_bonus": true}
         ]
       },
       {
@@ -8667,7 +8667,7 @@
         "can_crit": "false",
         "image": "assets/moves/miraidon/bright_future_meteor_storm.png",
         "damages": [
-          {"name": "Per Meteorite", "multiplier": 70, "levelCoef": 5, "constant": 400, "dealDamage": true, "is_tick": true, "tick_count": 5, "notes": "+20% per previous hit (up to +80%)"}
+          {"name": "Per Meteorite", "multiplier": 70, "levelCoef": 5, "constant": 400, "dealDamage": true, "is_tick": true, "tick_count": 5, "tick_scaling": [1.00, 1.20, 1.40, 1.60, 1.80], "notes": "+20% per previous hit (up to +80%)"}
         ],
         "shields": [
           {"name": "Shield", "scaling": "hp", "multiplier": 20, "levelCoef": 0, "constant": 0, "target": "self"}
@@ -9779,7 +9779,7 @@
         "damages": [
           {"name": "Damage", "multiplier": 178, "levelCoef": 0, "constant": 340, "dealDamage": true},
           {"name": "Activated by Thunderbolt", "multiplier": 187, "levelCoef": 0, "constant": 356, "dealDamage": true},
-          {"name": "Damage - Dot + (x8)", "multiplier": 7.8, "levelCoef": 0, "constant": 10, "dealDamage": true, "is_tick": true, "tick_count": 8, "notes": "Need at least level 11"}
+          {"name": "Damage - Dot + (x8)", "multiplier": 7.8, "levelCoef": 0, "constant": 10, "dealDamage": true, "is_tick": true, "tick_count": 8, "upgrade_bonus": true}
         ]
       },
       {

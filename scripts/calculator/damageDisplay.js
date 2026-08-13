@@ -1056,6 +1056,10 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         effectiveTickScaling = Array.from({ length: tickCount }, (_, i) => 1 + 0.05 * i);
       }
 
+      // ── MIRAIDON — Bright Future Meteor Storm (Unite) : progression des
+      // dégâts par météorite pilotée directement par le champ "tick_scaling"
+      // de la donnée du move (voir data Miraidon), harmonisé avec Articuno.
+
       // ── LATIAS / LATIOS — Dragon Pulse : nombre de projectiles + dégâts par
       // projectile (et bonus % HP manquants pour Latios lvl 11+) dépendent de
       // l'Eon Power accumulé (25/50/75/100 → 2/3/4/6 projectiles, -15%/projectile
@@ -1092,6 +1096,18 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           : 0;
         tickCount = getDracoMeteorCometCount(eonPower);
         effectiveTickScaling = getDracoMeteorCometScaling(eonPower);
+      }
+
+      // ── MIMIKYU — Shadow Claw : le nombre de "Leading Additional Hits"
+      // dépend des hits stockés via les auto-attaques (0 à 4, voir
+      // applyMimikyuShadowClawStacks dans moveEffectsAtk.js).
+      if (
+        state.currentAttacker?.pokemonId === "mimikyu" &&
+        move.name === "Shadow Claw" &&
+        dmg.name === "Leading Additional Hits" &&
+        isTick
+      ) {
+        tickCount = state.attackerMimikyuShadowClawStacks ?? 0;
       }
 
       const tickScalingAttr = effectiveTickScaling

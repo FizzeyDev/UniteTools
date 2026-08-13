@@ -5,6 +5,8 @@
  * small cards with the source Pokémon's portrait + color-coded values.
  */
 
+import { state } from './state.js';
+
 function baseKey(id) {
   const m = id.match(/^[a-z]+/);
   return m ? m[0] : '';
@@ -25,7 +27,7 @@ const PORTRAIT_RULES = [
   { test: id => baseKey(id) === 'hooh', keywords: ['ho-oh'] },
 ];
 
-function findPortrait(id, allPokemon) {
+export function findPortrait(id, allPokemon) {
   const key = baseKey(id);
   if (STATIC_ICONS[key]) return STATIC_ICONS[key];
 
@@ -97,5 +99,54 @@ export function enhanceBuffLabels(allPokemon) {
     label.appendChild(checkbox);
 
     label.dataset.enhanced = 'true';
+  });
+}
+
+// ── Mise en avant des buffs/debuffs liés aux Pokémon du combat en cours ─────
+// Pour chaque checkbox du panel Universal Buffs/Debuffs, on retrouve le
+// Pokémon source via la même résolution que pour le portrait (findPortrait,
+// qui s'appuie sur state.allPokemon — donc pas besoin de deviner les
+// pokemonId à la main : items (X-Attack) et boss de jungle (Registeel,
+// Groudon, Rayquaza) ne matchent naturellement aucun Pokémon jouable et ne
+// sont donc jamais mis en avant). Une checkbox est mise en avant dès que le
+// Pokémon qu'elle référence est l'attaquant OU le défenseur actuellement
+// sélectionné, puis les entrées mises en avant sont remontées en haut de
+// leur liste (ordre d'origine conservé au sein de chaque groupe).
+const RELEVANCE_LIST_IDS = ['atkBuffList', 'atkDebuffList', 'defBuffList', 'defDebuffList'];
+
+function sortDrawerList(listEl) {
+  const labels = Array.from(listEl.children).filter(el => el.classList.contains('buff-label'));
+  labels.forEach((label, i) => {
+    if (label.dataset.originalOrder === undefined) label.dataset.originalOrder = String(i);
+  });
+  const sorted = [...labels].sort((a, b) => {
+    const relA = a.classList.contains('buff-relevant') ? 0 : 1;
+    const relB = b.classList.contains('buff-relevant') ? 0 : 1;
+    if (relA !== relB) return relA - relB;
+    return Number(a.dataset.originalOrder) - Number(b.dataset.originalOrder);
+  });
+  sorted.forEach(label => listEl.appendChild(label));
+}
+
+export function updateBuffRelevance() {
+  const attackerId = state.currentAttacker?.pokemonId;
+  const defenderId = state.currentDefender?.pokemonId;
+
+  RELEVANCE_LIST_IDS.forEach(listId => {
+    const listEl = document.getElementById(listId);
+    if (!listEl) return;
+
+    listEl.querySelectorAll('.buff-label').forEach(label => {
+      const checkbox = label.querySelector('input[type="checkbox"]');
+      if (!checkbox) return;
+
+      const portrait = findPortrait(checkbox.id, state.allPokemon);
+      const isRelevant = !!portrait?.pokemonId &&
+        (portrait.pokemonId === attackerId || portrait.pokemonId === defenderId);
+
+      label.classList.toggle('buff-relevant', isRelevant);
+    });
+
+    sortDrawerList(listEl);
   });
 }

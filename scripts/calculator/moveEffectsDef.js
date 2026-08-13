@@ -1017,6 +1017,99 @@ function applyMewtwoXPsystrikeChannel(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── MEWTWO Y — Psystrike (channeling damage reduction) ────────────────────────
+// "While Mewtwo is directing psychic waves, it takes 15% reduced damage."
+function applyMewtwoYPsystrikeChannel(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 5) return; // Psystrike learned at level 5
+
+  const isActive = state.defenderMewtwoYPsystrikeChanneling ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/mega_mewtwo_y/psystrike.png')}
+    <div style="flex:1;">
+      ${moveBadge('Psystrike', 5)}
+      Directing psychic waves → <strong style="color:#fff;">−15% damage received</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Active only while channeling the move</span><br>
+      <button class="mewtwo-y-psystrike-channel-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.mewtwo-y-psystrike-channel-toggle').onclick = () => {
+    state.defenderMewtwoYPsystrikeChanneling = !state.defenderMewtwoYPsystrikeChanneling;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── MIMIKYU — Trick Room ─────────────────────────────────────────────────────
+// "While inside the Trick Room, Mimikyu receives 50% reduced damage from
+// enemies outside of the Trick Room."
+function applyMimikyuTrickRoom(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 7) return; // Trick Room learned at level 7
+
+  const isActive = state.defenderMimikyuTrickRoomActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/mimikyu/trick_room.png')}
+    <div style="flex:1;">
+      ${moveBadge('Trick Room', 7)}
+      Inside the Trick Room, attacker outside of it → <strong style="color:#fff;">−50% damage received</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Only applies to damage coming from outside the Trick Room area</span><br>
+      <button class="mimikyu-trickroom-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.mimikyu-trickroom-toggle').onclick = () => {
+    state.defenderMimikyuTrickRoomActive = !state.defenderMimikyuTrickRoomActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── MOLTRES — Sky Attack (Def / Sp. Def stacks) ─────────────────────────────
+// "Each hit increases the user's Def and SpDef by 8% for 4s, stacking up to
+// 5 times." Modeled as a 0–5 stack counter (only relevant when Moltres is
+// the defender — the actual +8%/stack Def & Sp. Def mutation is applied in
+// statsManager.js).
+function applyMoltresSkyAttackStacks(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 7) return; // Sky Attack learned at level 7
+
+  const stacks    = state.defenderMoltresSkyAttackStacks ?? 0;
+  const maxStacks = 5;
+  const bonusPct  = stacks * 8;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/moltres/sky_attack.png')}
+    <div style="flex:1;">
+      ${moveBadge('Sky Attack', 7)}
+      Stacks: <button class="stack-btn minus sa-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus sa-plus">+</button><br>
+      → Def & Sp. Def <strong style="color:${bonusPct > 0 ? '#88ff88' : '#888'};">+${bonusPct}%</strong> for 4s
+      ${stacks >= maxStacks ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ MAX</span>' : ''}
+    </div>
+  `);
+  line.querySelector('.sa-minus').onclick = () => { if ((state.defenderMoltresSkyAttackStacks ?? 0) > 0)        { state.defenderMoltresSkyAttackStacks = (state.defenderMoltresSkyAttackStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.sa-plus').onclick  = () => { if ((state.defenderMoltresSkyAttackStacks ?? 0) < maxStacks) { state.defenderMoltresSkyAttackStacks = (state.defenderMoltresSkyAttackStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -1043,6 +1136,9 @@ export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
     metagross: [applyMetagrossZenHeadbutt, applyMetagrossMagnetRise],
     mew:       [applyMewLightScreenWall],
     mewtwo_x:  [applyMewtwoXPsystrikeChannel],
+    mewtwo_y:  [applyMewtwoYPsystrikeChannel],
+    mimikyu:   [applyMimikyuTrickRoom],
+    moltres:   [applyMoltresSkyAttackStacks],
     palkia:    [applyPalkiaDragonClawDefStacks],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));

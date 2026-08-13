@@ -78,8 +78,26 @@ body::before {
 /* ─── LAYOUT ─────────────────────────────────────────────────────────────────── */
 .wrap { max-width: 960px; margin: 0 auto; padding: 0.5rem 0 3rem; position: relative; z-index: 1; }
 
-/* ─── HEADER ─────────────────────────────────────────────────────────────────── */
-.hdr      { margin-bottom: 2rem; display: flex; align-items: center; gap: 14px; }
+/* ─── FULL-WIDTH TOP BAR (title + actions) ──────────────────────────────────── */
+.pt-topbar {
+  width: calc(100% + 4rem);
+  margin: -2rem -2rem 1.5rem;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 100%);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  box-shadow: var(--shadow-md);
+}
+.pt-topbar-title { display: flex; align-items: center; gap: 14px; }
+.pt-topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; flex-shrink: 0; }
+
 .hdr-icon {
   width: 44px; height: 44px;
   background: linear-gradient(135deg, var(--violet), rgba(159,83,236,0.6));
@@ -102,6 +120,42 @@ body::before {
   color: var(--text-dim);
   margin-top: 1px;
   font-family: 'Rajdhani', sans-serif;
+}
+
+/* ── Topbar action buttons (shared visual language with map_timer/tierlist) ── */
+.ctrl-btn {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-md);
+  background: var(--surface-3);
+  color: var(--text-mid);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  white-space: nowrap;
+}
+.ctrl-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.ctrl-btn:focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
+.ctrl-btn:active { transform: translateY(0); box-shadow: none; }
+
+.htu-ctrl-btn {
+  background: var(--violet-dim);
+  border-color: rgba(159,83,236,0.4);
+  color: var(--violet);
+}
+.htu-ctrl-btn:hover {
+  background: rgba(159,83,236,0.24);
+  border-color: var(--violet);
+  color: var(--text-bright);
+  box-shadow: 0 4px 20px rgba(159,83,236,0.25);
 }
 
 /* ─── STATS BANNER ───────────────────────────────────────────────────────────── */
@@ -156,6 +210,7 @@ body::before {
 }
 .tab-btn.active             { background: var(--violet); color: var(--text-bright); box-shadow: 0 2px 10px var(--violet-dim); }
 .tab-btn:hover:not(.active) { color: var(--text); background: var(--surface-2); }
+.tab-btn:focus-visible      { outline: 2px solid var(--violet); outline-offset: 2px; }
 
 .search-row  { display: flex; gap: 10px; }
 .search-wrap { flex: 1; position: relative; }
@@ -197,6 +252,7 @@ body::before {
   transition: all .2s;
 }
 .filter-btn:hover  { border-color: var(--border-md); color: var(--text); }
+.filter-btn:focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
 .filter-btn.active { background: var(--violet); border-color: var(--violet); color: var(--text-bright); box-shadow: 0 2px 10px var(--violet-dim); }
 .sort-select       {
   background: var(--surface);
@@ -240,6 +296,7 @@ body::before {
   transition: border-color .2s, box-shadow .2s;
 }
 .patch-card:hover { border-color: rgba(159,83,236,0.35); box-shadow: var(--shadow-md); }
+.patch-header:focus-visible { outline: 2px solid var(--violet); outline-offset: -2px; border-radius: var(--radius-sm); }
 .patch-header     {
   display: flex; align-items: center; justify-content: space-between;
   padding: 13px 16px; cursor: pointer; gap: 12px; user-select: none;
@@ -332,6 +389,7 @@ body::before {
   transition: opacity .15s;
 }
 .poke-tag:hover   { opacity: .75; }
+.poke-tag:focus-visible { outline: 2px solid currentColor; outline-offset: 1px; }
 .poke-tag-buff    { background: var(--buff-bg);  color: var(--buff); }
 .poke-tag-nerf    { background: var(--nerf-bg);  color: var(--nerf); }
 .poke-tag-tweak   { background: var(--tweak-bg); color: var(--tweak); }
@@ -369,28 +427,73 @@ body::before {
 /* ─── POKÉMON GRID ───────────────────────────────────────────────────────────── */
 .poke-grid    {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
 }
 .poke-card    {
-  background: var(--surface);
+  --accent: var(--border-md);
+  background: linear-gradient(165deg, var(--surface) 0%, var(--surface-2) 130%);
   border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
   border-radius: var(--radius);
-  display: flex; align-items: center;
-  gap: 12px; padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 18px 14px 14px;
   cursor: pointer;
   box-shadow: var(--shadow-sm);
-  transition: border-color .2s, box-shadow .2s;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+  position: relative;
+  overflow: hidden;
 }
-.poke-card:hover { border-color: rgba(159,83,236,0.35); box-shadow: var(--shadow-md); }
+.poke-card::before {
+  content: '';
+  position: absolute;
+  top: -60%; right: -30%;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 72%);
+  pointer-events: none;
+}
+.poke-card:hover,
+.poke-card:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+  box-shadow: 0 10px 28px -12px color-mix(in srgb, var(--accent) 55%, transparent), var(--shadow-md);
+  transform: translateY(-3px);
+}
+.poke-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+.poke-card.role-atk { --accent: var(--red); }
+.poke-card.role-def { --accent: var(--green); }
+.poke-card.role-spe { --accent: var(--blue); }
+.poke-card.role-sup { --accent: var(--yellow); }
+.poke-card.role-all { --accent: var(--violet); }
+
+.poke-avatar-wrap { position: relative; flex-shrink: 0; z-index: 1; }
 .poke-avatar  {
   border-radius: 50%; flex-shrink: 0; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 32% 30%, var(--surface-3), var(--surface-2));
 }
-.poke-avatar img { width: 100%; height: 100%; object-fit: contain; }
+.poke-avatar img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
 
-.poke-info    { flex: 1; min-width: 0; }
+.mega-flag {
+  position: absolute; bottom: -3px; right: -8px; z-index: 2;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.52rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #3a1d00;
+  background: linear-gradient(135deg, var(--orange), #ffc055);
+  padding: 2px 6px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.45);
+}
+.mega-flag-lg { font-size: 0.62rem; padding: 3px 8px; bottom: -2px; right: -6px; }
+
+.poke-info    { width: 100%; min-width: 0; z-index: 1; }
 .poke-name    {
   font-family: 'Exo 2', sans-serif;
   font-size: 0.85rem;
@@ -401,25 +504,51 @@ body::before {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.poke-sub {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
 .poke-role    {
   font-family: 'Rajdhani', sans-serif;
   font-size: 0.72rem;
-  font-weight: 600;
-  margin-top: 1px;
-  color: var(--text-dim);
+  font-weight: 700;
   letter-spacing: 0.03em;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.poke-portee {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.poke-stats-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; flex-wrap: wrap;
+  z-index: 1;
 }
 
-.balance-bar  {
-  height: 3px; border-radius: 2px; width: 100%; margin-top: 5px;
-  background: var(--surface-3); overflow: hidden;
+.diff-pill {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  margin-top: 4px;
+  border-radius: 99px;
+  border: 1px solid transparent;
+  display: inline-block;
 }
+.diff-novice        { color: var(--green);  background: var(--green-dim);  border-color: rgba(76,175,130,0.3); }
+.diff-intermediaire { color: var(--yellow); background: var(--yellow-dim); border-color: rgba(255,215,64,0.3); }
+.diff-expert         { color: var(--red);    background: var(--red-dim);    border-color: rgba(239,83,80,0.3); }
+
+.balance-bar  { height: 3px; border-radius: 2px; width: 100%; margin-top: 2px; background: var(--surface-3); overflow: hidden; z-index: 1; }
 .bar-fill     { height: 100%; border-radius: 2px; transition: width .3s; }
 .bar-buff     { background: var(--buff); }
 .bar-nerf     { background: var(--nerf); }
 .bar-neutral  { background: var(--text-dim); }
 
-.poke-right   { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
 .stat-chip    {
   font-family: 'Rajdhani', sans-serif;
   font-size: 0.72rem;
@@ -431,10 +560,24 @@ body::before {
 }
 .chip-buff    { background: var(--buff-bg);  color: var(--buff); }
 .chip-nerf    { background: var(--nerf-bg);  color: var(--nerf); }
+.chip-tweak   { background: var(--tweak-bg); color: var(--tweak); }
 .trend        { font-family: 'Exo 2', sans-serif; font-size: 0.85rem; font-weight: 700; }
 .trend-up     { color: var(--buff); }
 .trend-down   { color: var(--nerf); }
 .trend-stable { color: var(--text-dim); }
+
+/* Role colors (couleurs officielles du jeu — cohérent avec pokedex.css) */
+.role-atk { color: var(--red); }
+.role-def { color: var(--green); }
+.role-spe { color: var(--blue); }
+.role-sup { color: var(--yellow); }
+.role-all { color: var(--violet); }
+.dot-atk  { background: var(--red); }
+.dot-def  { background: var(--green); }
+.dot-spe  { background: var(--blue); }
+.dot-sup  { background: var(--yellow); }
+.dot-all  { background: var(--violet); }
+.dot       { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
 
 /* ─── EMPTY STATE ────────────────────────────────────────────────────────────── */
 .empty {
@@ -484,7 +627,19 @@ body::before {
 .modal-close:hover { color: var(--text); border-color: var(--border-md); }
 
 /* ─── MODAL HEADER ───────────────────────────────────────────────────────────── */
-.m-header   { display: flex; align-items: center; gap: 14px; margin-bottom: 1.25rem; }
+.m-header   {
+  --accent: var(--violet);
+  display: flex; align-items: center; gap: 14px; margin-bottom: 1.25rem;
+  margin: -1.5rem -1.5rem 1.25rem;
+  padding: 1.25rem 1.5rem;
+  background: radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 62%);
+  border-bottom: 1px solid var(--border);
+}
+.m-header.role-atk { --accent: var(--red); }
+.m-header.role-def { --accent: var(--green); }
+.m-header.role-spe { --accent: var(--blue); }
+.m-header.role-sup { --accent: var(--yellow); }
+.m-header.role-all { --accent: var(--violet); }
 .m-avatar   {
   border-radius: 50%; flex-shrink: 0; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
@@ -503,11 +658,10 @@ body::before {
 .m-role     {
   font-family: 'Rajdhani', sans-serif;
   font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-dim);
+  font-weight: 700;
   margin-top: 2px;
-  text-transform: capitalize;
   letter-spacing: 0.04em;
+  display: inline-flex; align-items: center; gap: 6px;
 }
 .balance-score {
   display: inline-flex;
@@ -688,10 +842,15 @@ body::before {
 /* ─── RESPONSIVE ─────────────────────────────────────────────────────────────── */
 @media (max-width: 860px) {
   html, body { margin-left: 0; padding: 1rem 0.75rem 2rem; }
+  .pt-topbar { width: calc(100% + 1.5rem); margin-left: -0.75rem; margin-right: -0.75rem; }
 }
 
 @media (max-width: 768px) {
   html, body { padding: 1rem 0.75rem 2rem; }
+}
+
+@media (max-width: 700px) {
+  .poke-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 540px) {
@@ -700,4 +859,10 @@ body::before {
   .poke-grid { grid-template-columns: 1fr; }
   .stats     { gap: 8px; }
   .stat-card { min-width: calc(50% - 5px); }
+}
+
+@media (max-width: 480px) {
+  .pt-topbar { flex-wrap: wrap; gap: 0.5rem; }
+  .ctrl-label { display: none; }
+  .ctrl-btn { padding: 8px 10px; }
 }

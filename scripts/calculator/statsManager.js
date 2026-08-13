@@ -140,6 +140,14 @@ export function applyPokemonStatMutations(atkStats, defStats) {
     }
   }
 
+  // ── Miraidon — Charge Beam : +10% Sp. Atk per stack (max 2 stacks) ─────────
+  if (state.currentAttacker?.pokemonId === "miraidon") {
+    const cbStacks = state.attackerMiraidonChargeBeamStacks ?? 0;
+    if (cbStacks > 0) {
+      atkStats.sp_atk = Math.floor(atkStats.sp_atk * (1 + cbStacks * 0.10));
+    }
+  }
+
   // ── Move Effect stat buffs ──────────────────────────────────────────────────
   applyGreninjaSmokescreenStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyAegislashSacredSwordStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
@@ -182,6 +190,15 @@ export function applyPokemonStatMutations(atkStats, defStats) {
     const defBonus = 25 * (state.defenderLevel - 1) + 25;
     defStats.def    += defBonus;
     defStats.sp_def += defBonus;
+  }
+
+  // ── Moltres — Sky Attack : +8% Def & Sp. Def per stack (max 5 stacks) ──────
+  if (state.currentDefender?.pokemonId === 'moltres' && state.defenderLevel >= 7) {
+    const saStacks = state.defenderMoltresSkyAttackStacks ?? 0;
+    if (saStacks > 0) {
+      defStats.def    = Math.floor(defStats.def    * (1 + saStacks * 0.08));
+      defStats.sp_def = Math.floor(defStats.sp_def * (1 + saStacks * 0.08));
+    }
   }
 
   // ── Aegislash — Sacred Sword def penetration ───────────────────────────────

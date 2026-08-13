@@ -21,30 +21,40 @@
 <body>
   <div id="navbar-container"></div>
 
-  <h1 data-lang="tierlist_h1">Pokémon Unite Tier List</h1>
-
-  <!-- Import/Export Controls -->
-  <div class="tierlist-controls">
-    <div class="control-group">
-      <button id="import-btn" class="control-btn control-btn--import" title="Import tierlists from JSON file">
-        📥 Import
+  <!-- ── Full-width top bar: title + actions ── -->
+  <div class="tl-topbar">
+    <h1 data-lang="tierlist_h1">Pokémon Unite Tier List</h1>
+    <div class="tl-topbar-actions">
+      <button id="import-btn" class="ctrl-btn ctrl-btn--import" data-lang-title="tierlist_import_title_full" title="Import tierlists from JSON file">
+        <span class="ctrl-icon">📥</span>
+        <span class="ctrl-label" data-lang="tierlist_btn_import">Import</span>
       </button>
-      <button id="export-all" class="control-btn control-btn--export" title="Export all tierlists (Ctrl+Shift+E)">
-        📤 Export All
+      <button id="export-all" class="ctrl-btn ctrl-btn--export" data-lang-title="tierlist_export_all_title_full" title="Export all tierlists (Ctrl+Shift+E)">
+        <span class="ctrl-icon">📤</span>
+        <span class="ctrl-label" data-lang="tierlist_btn_export_all">Export All</span>
       </button>
-      <button id="export-current" class="control-btn control-btn--export" title="Export current tierlist only">
-        📤 Export Current
+      <button id="export-current" class="ctrl-btn ctrl-btn--export" data-lang-title="tierlist_export_current_title_full" title="Export current tierlist only">
+        <span class="ctrl-icon">📤</span>
+        <span class="ctrl-label" data-lang="tierlist_btn_export_current">Export Current</span>
       </button>
-      <button id="copy-current" class="control-btn control-btn--copy" title="Copy current tierlist as text">
-        📋 Copy as Text
+      <button id="copy-current" class="ctrl-btn ctrl-btn--copy" data-lang-title="tierlist_copy_title_full" title="Copy current tierlist as text">
+        <span class="ctrl-icon">📋</span>
+        <span class="ctrl-label" data-lang="tierlist_btn_copy">Copy as Text</span>
+      </button>
+      <button id="how-to-use-btn" class="ctrl-btn htu-ctrl-btn" data-lang-title="tierlist_help_title_full" title="Help (?)">
+        <span class="ctrl-icon">❓</span>
+        <span class="ctrl-label" data-lang="tierlist_help_btn">Help</span>
       </button>
     </div>
   </div>
 
-  <div class="tabs">
-    <div class="tab-list">
-      <button class="tab active" data-tab-id="1" data-lang="tierlist_tab_default">Tierlist 1</button>
-      <button id="add-tab" data-lang="tierlist_add_tab">+ Add Tierlist</button>
+  <!-- ── Full-width control bar: tierlist tabs ── -->
+  <div class="tl-control-bar">
+    <div class="tabs">
+      <div class="tab-list">
+        <button class="tab active" data-tab-id="1" data-lang="tierlist_tab_default">Tierlist 1</button>
+        <button id="add-tab" data-lang="tierlist_add_tab">+ Add Tierlist</button>
+      </div>
     </div>
   </div>
 
@@ -105,6 +115,59 @@
         <button id="tier-save" data-lang="tierlist_modal_save">Save</button>
         <button id="tier-delete" data-lang="tierlist_modal_tier_delete">Delete Tier</button>
         <button id="tier-cancel" data-lang="tierlist_modal_cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Modal: paste JSON text directly, or pick a file -->
+  <div id="import-modal" class="modal">
+    <div class="modal-content modal-content--import">
+      <h3 data-lang="tierlist_modal_import_title">Import Tierlist(s)</h3>
+      <p class="import-hint" data-lang="tierlist_modal_import_hint">Paste exported JSON below, or choose a file — then click Import.</p>
+      <textarea id="import-paste-area" class="import-textarea" rows="10"
+                data-lang-placeholder="tierlist_modal_import_placeholder"
+                placeholder="Paste your exported tierlist JSON here…"></textarea>
+      <div class="import-file-row">
+        <button id="import-choose-file-btn" type="button" data-lang="tierlist_modal_import_choose_file">📁 Choose a file instead</button>
+        <span id="import-file-name" class="import-file-name"></span>
+      </div>
+      <div class="modal-actions">
+        <button id="import-cancel" data-lang="tierlist_modal_cancel">Cancel</button>
+        <button id="import-confirm" data-lang="tierlist_modal_import_confirm">Import</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- How To Use Modal -->
+  <div id="how-to-use-modal" class="htu-overlay" aria-hidden="true">
+    <div class="htu-modal" role="dialog" aria-modal="true" aria-labelledby="htu-title">
+      <button class="htu-close" id="htu-close-btn" aria-label="Close">✕</button>
+      <h2 id="htu-title" data-lang="tierlist_htu_title">How to use the Tier List</h2>
+      <div class="htu-body">
+        <div class="htu-section">
+          <div class="htu-icon">🖱️</div>
+          <div><h3 data-lang="tierlist_htu_drag_title">Add Pokémon / items</h3><p data-lang="tierlist_htu_drag_desc"><strong>Drag</strong> a Pokémon, item or battle item from the gallery into a tier row (or <strong>click</strong> it to add to the first tier). Dragging a Pokémon opens a popup to configure its Move Combo, Unite Move and Passive.</p></div>
+        </div>
+        <div class="htu-section">
+          <div class="htu-icon">↔️</div>
+          <div><h3 data-lang="tierlist_htu_reorder_title">Reorder & remove</h3><p data-lang="tierlist_htu_reorder_desc">Drag items between tiers to move them, or onto the trash zone to remove. <strong>Double-click</strong> a placed Pokémon to edit its moves again.</p></div>
+        </div>
+        <div class="htu-section">
+          <div class="htu-icon">✏️</div>
+          <div><h3 data-lang="tierlist_htu_tiers_title">Edit tiers</h3><p data-lang="tierlist_htu_tiers_desc"><strong>Click</strong> a tier's label to rename it or change its color, duplicate it, or delete it.</p></div>
+        </div>
+        <div class="htu-section">
+          <div class="htu-icon">📋</div>
+          <div><h3 data-lang="tierlist_htu_tabs_title">Multiple tierlists</h3><p data-lang="tierlist_htu_tabs_desc">Use <strong>+ Add Tierlist</strong> to create a new tab, or duplicate an existing one. Everything auto-saves in your browser.</p></div>
+        </div>
+        <div class="htu-section">
+          <div class="htu-icon">💾</div>
+          <div><h3 data-lang="tierlist_htu_importexport_title">Import / Export</h3><p data-lang="tierlist_htu_importexport_desc"><strong>Export</strong> your tierlist(s) as a JSON file to back them up or share them, <strong>Import</strong> to load them back, or <strong>Copy as Text</strong> to paste a formatted summary anywhere.</p></div>
+        </div>
+        <div class="htu-section">
+          <div class="htu-icon">⌨️</div>
+          <div><h3 data-lang="tierlist_htu_keyboard_title">Keyboard shortcuts</h3><p data-lang="tierlist_htu_keyboard_desc"><kbd>F</kbd> Search &nbsp;·&nbsp; <kbd>P</kbd>/<kbd>I</kbd>/<kbd>B</kbd> Pokémon/Items/Battle Items &nbsp;·&nbsp; <kbd>Ctrl</kbd><kbd>M</kbd> New tierlist &nbsp;·&nbsp; <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>A</kbd> New tier &nbsp;·&nbsp; <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd> Export current &nbsp;·&nbsp; <kbd>Ctrl</kbd><kbd>Del</kbd> Clear current &nbsp;·&nbsp; <kbd>?</kbd>/<kbd>H</kbd> Help &nbsp;·&nbsp; <kbd>Esc</kbd> Close</p></div>
+        </div>
       </div>
     </div>
   </div>

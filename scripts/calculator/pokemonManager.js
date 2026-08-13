@@ -4,6 +4,7 @@ import { resetItems, autoEquipSpecialItem, disableItemSlots, enableItemSlots } f
 import { updateDamages } from './damageDisplay.js';
 import { t } from './i18n.js';
 import { resetAllies } from './allyManager.js';
+import { updateBuffRelevance } from './buff-visuals.js';
 
 const pokemonGridAttacker = document.getElementById("pokemonGridAttacker");
 const pokemonGridDefender = document.getElementById("pokemonGridDefender");
@@ -69,6 +70,7 @@ export function selectAttacker(id) {
   });
 
   resetAllies();
+  updateBuffRelevance();
   updateDamages();
 }
 
@@ -157,6 +159,7 @@ export function selectDefender(id) {
     if (hint) hint.style.display = 'none';
   }
 
+  updateBuffRelevance();
   updateDamages();
 }
 

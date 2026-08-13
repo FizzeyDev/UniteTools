@@ -5,7 +5,7 @@ import { loadGallery } from './gallery.js';
 import { setupDragDrop } from './dragdrop.js';
 import { hideMoveModal, hideTierModal, onMoveSave, onTierSave, onTierDelete } from './modals.js';
 import { loadFromLocalStorage, saveToLocalStorage, setupAutoSave } from './storage.js';
-import { exportTierlistsAsJSON, exportCurrentTierlist, importTierlistsFromJSON, copyToClipboard } from './importexport.js';
+import { exportTierlistsAsJSON, exportCurrentTierlist, showImportModal, hideImportModal, setupImportModal, copyToClipboard } from './importexport.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     await loadData();
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupDragDrop();
     setupStaticListeners();
     setupKeyboardShortcuts();
-    setupHowToPanel();
+    setupHowToUseModal();
     setupToastContainer();
 
     if (wasRestored) {
@@ -75,7 +75,8 @@ function setupStaticListeners() {
     // Import/Export buttons
     document.getElementById('export-all')    ?.addEventListener('click', () => exportTierlistsAsJSON());
     document.getElementById('export-current')?.addEventListener('click', () => exportCurrentTierlist());
-    document.getElementById('import-btn')    ?.addEventListener('click', () => importTierlistsFromJSON());
+    document.getElementById('import-btn')    ?.addEventListener('click', () => showImportModal());
+    setupImportModal();
     document.getElementById('copy-current')  ?.addEventListener('click', () => copyToClipboard(state.currentDraft));
 
     // Delegated listener: the reset button lives inside the tierlist container,
@@ -96,12 +97,12 @@ function setupStaticListeners() {
 
     // Close modals on backdrop click or Escape
     document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') { hideMoveModal(); hideTierModal(); }
+        if (e.key === 'Escape') { hideMoveModal(); hideTierModal(); hideImportModal(); closeHowTo(); }
     });
 
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', e => {
-            if (e.target === modal) { hideMoveModal(); hideTierModal(); }
+            if (e.target === modal) { hideMoveModal(); hideTierModal(); hideImportModal(); }
         });
     });
 }
@@ -186,79 +187,35 @@ function switchCategory(cat) {
     loadGallery(cat);
 }
 
-function setupHowToPanel() {
-    const btn = document.createElement('button');
-    btn.className = 'howto-toggle';
-    btn.title = 'How to use (?)';
-    btn.innerHTML = '?';
-    btn.addEventListener('click', toggleHowTo);
-    document.body.appendChild(btn);
+function setupHowToUseModal() {
+    const modal = document.getElementById('how-to-use-modal');
+    const btn   = document.getElementById('how-to-use-btn');
+    const close = document.getElementById('htu-close-btn');
+    if (!modal) return;
 
-    const panel = document.createElement('div');
-    panel.className = 'howto-panel';
-    panel.id = 'howto-panel';
-    panel.innerHTML = `
-        <h4>📖 How to Use</h4>
+    modal.addEventListener('click', e => { if (e.target === modal) closeHowTo(); });
+    btn?.addEventListener('click', toggleHowTo);
+    close?.addEventListener('click', closeHowTo);
 
-        <div class="howto-section">
-            <div class="howto-section-title">Basics</div>
-            <div class="howto-row"><span class="howto-icon">🖱️</span><span>Drag a Pokémon from the gallery into a tier row</span></div>
-            <div class="howto-row"><span class="howto-icon">🎯</span><span>A popup opens to configure Move Combo, Unite Move and Passif</span></div>
-            <div class="howto-row"><span class="howto-icon">↔️</span><span>Drag items between tiers to re-order them</span></div>
-            <div class="howto-row"><span class="howto-icon">🗑️</span><span>Drop onto the trash zone (bottom) to remove from tier</span></div>
-            <div class="howto-row"><span class="howto-icon">✏️</span><span>Click the tier label to edit its name and color</span></div>
-            <div class="howto-row"><span class="howto-icon">🖱️🖱️</span><span>Double-click a Pokémon in a tier to edit its moves</span></div>
-        </div>
-
-        <div class="howto-divider"></div>
-
-        <div class="howto-section">
-            <div class="howto-section-title">Keyboard Shortcuts</div>
-            <div class="howto-row"><kbd>Enter</kbd><span>Confirm</span></div>
-            <div class="howto-row"><kbd>F</kbd><span>Focus the search bar</span></div>
-            <div class="howto-row"><kbd>Esc</kbd><span>Close modals / clear search</span></div>
-            <div class="howto-row"><kbd>P</kbd><span>Show Pokémon gallery</span></div>
-            <div class="howto-row"><kbd>I</kbd><span>Show Items gallery</span></div>
-            <div class="howto-row"><kbd>B</kbd><span>Show Battle Items gallery</span></div>
-            <div class="howto-row"><kbd>Ctrl</kbd><kbd>M</kbd><span>Add a new tierlist tab</span></div>
-            <div class="howto-row"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>A</kbd><span>Add a new tier row</span></div>
-            <div class="howto-row"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd><span>Export current tierlist</span></div>
-            <div class="howto-row"><kbd>Ctrl</kbd><kbd>Del</kbd><span>Clear current tierlist</span></div>
-            <div class="howto-row"><kbd>?</kbd><span>Toggle this panel</span></div>
-        </div>
-
-        <div class="howto-divider"></div>
-
-        <div class="howto-section">
-            <div class="howto-section-title">Move Popup</div>
-            <div class="howto-row"><span class="howto-icon">⚔️</span><span><strong>Move Combo</strong> — select moves for slot 1 & 2</span></div>
-            <div class="howto-row"><span class="howto-icon">✨</span><span><strong>Unite Move</strong> — select the Unite Move</span></div>
-            <div class="howto-row"><span class="howto-icon">🔮</span><span><strong>Passif</strong> — select the passive ability</span></div>
-        </div>
-
-        <div class="howto-divider"></div>
-
-        <div class="howto-section">
-            <div class="howto-section-title">Import/Export</div>
-            <div class="howto-row"><span class="howto-icon">💾</span><span><strong>Auto-save</strong> — Your tierlists are saved automatically</span></div>
-            <div class="howto-row"><span class="howto-icon">📥</span><span><strong>Import</strong> — Load tierlists from a JSON file</span></div>
-            <div class="howto-row"><span class="howto-icon">📤</span><span><strong>Export</strong> — Download your tierlists as JSON</span></div>
-            <div class="howto-row"><span class="howto-icon">📋</span><span><strong>Copy as text</strong> — Share tierlists as formatted text</span></div>
-            <div class="howto-row"><span class="howto-icon">🗑️</span><span><strong>Reset All</strong> — Delete all data and start fresh</span></div>
-        </div>
-    `;
-    document.body.appendChild(panel);
-
-    document.addEventListener('click', e => {
-        if (!e.target.closest('#howto-panel') && !e.target.closest('.howto-toggle')) {
-            panel.classList.remove('open');
-        }
+    document.addEventListener('keydown', e => {
+        const tag = document.activeElement?.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        if (e.key === 'h' || e.key === 'H') toggleHowTo();
     });
 }
 
 function toggleHowTo() {
-    const panel = document.getElementById('howto-panel');
-    if (panel) panel.classList.toggle('open');
+    const modal = document.getElementById('how-to-use-modal');
+    if (!modal) return;
+    const isOpen = modal.classList.toggle('open');
+    modal.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+}
+
+function closeHowTo() {
+    const modal = document.getElementById('how-to-use-modal');
+    if (!modal) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
 }
 
 function adaptTierHeaders() {

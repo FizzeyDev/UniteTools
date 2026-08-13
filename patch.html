@@ -24,15 +24,24 @@
 
   <div id="navbar-container"></div>
 
-  <div class="wrap">
-
-    <header class="hdr">
+  <!-- ── Full-width top bar: title + actions ── -->
+  <div class="pt-topbar">
+    <div class="pt-topbar-title">
       <div class="hdr-icon">⚡</div>
       <div class="hdr-text">
         <h1 data-lang="patch_title">Patch Tracker</h1>
         <p data-lang="patch_subtitle">Pokémon Unite - Complete update history</p>
       </div>
-    </header>
+    </div>
+    <div class="pt-topbar-actions">
+      <button id="infoBtn" class="ctrl-btn htu-ctrl-btn" data-lang-title="patch_howto_label" title="How to use (?)">
+        <span class="ctrl-icon">❓</span>
+        <span class="ctrl-label" data-lang="patch_howto_label">How to use</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="wrap">
 
     <!-- Stats banner - injected by JS -->
     <div class="stats" id="stats"></div>

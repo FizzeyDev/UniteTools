@@ -48,18 +48,56 @@ let sortKey = 'buffs';
 let sortDir = 'desc';
 
 const ROLE_COLORS = {
-  'Attacker':    { bg: 'rgba(79,195,247,0.12)',  text: '#4fc3f7' },
-  'Defender':    { bg: 'rgba(76,175,130,0.12)',  text: '#4caf82' },
-  'Supporter':   { bg: 'rgba(159,83,236,0.12)',  text: '#b07ef5' },
-  'All-Rounder': { bg: 'rgba(255,157,0,0.12)',   text: '#ff9d00' },
-  'Speedster':   { bg: 'rgba(255,215,64,0.10)',  text: '#ffd740' },
+  atk: { bg: 'rgba(239,83,80,0.12)',  text: '#ef5350' },
+  def: { bg: 'rgba(76,175,130,0.12)', text: '#4caf82' },
+  spe: { bg: 'rgba(79,195,247,0.12)', text: '#4fc3f7' },
+  sup: { bg: 'rgba(255,215,64,0.10)', text: '#ffd740' },
+  all: { bg: 'rgba(159,83,236,0.12)', text: '#b07ef5' },
+};
+// English fallback text for t(), keyed by the abbreviated role codes used in
+// data/pokemons.json ('atk'/'def'/'spe'/'sup'/'all') — same convention as pokedex.js.
+const ROLE_FALLBACK = {
+  atk: 'Attacker', def: 'Defender', spe: 'Speedster', sup: 'Supporter', all: 'All-Rounder',
 };
 function rc(role) {
   return ROLE_COLORS[role] || { bg: 'rgba(255,255,255,0.05)', text: '#6a8587' };
 }
 
+// Map abbreviated role codes (as used in data/pokemons.json: atk/def/spe/sup/all)
+// to the existing "patch_role_*" translation keys (full-word based, already
+// present in en/fr/ja.json) so existing translations keep working.
+const ROLE_KEYS = {
+  atk: 'patch_role_attacker',
+  def: 'patch_role_defender',
+  spe: 'patch_role_speedster',
+  sup: 'patch_role_supporter',
+  all: 'patch_role_all_rounder',
+};
 function roleKey(role) {
-  return 'patch_role_' + role.toLowerCase().replace(/-/g, '_');
+  return ROLE_KEYS[role] || 'patch_role_unknown';
+}
+function roleLabel(role) {
+  return t(roleKey(role), ROLE_FALLBACK[role] || role || '—');
+}
+
+function diffClass(diff) {
+  if (diff === 'Novice') return 'diff-novice';
+  if (diff === 'Intermédiaire') return 'diff-intermediaire';
+  if (diff === 'Expert') return 'diff-expert';
+  return '';
+}
+function diffKey(diff) {
+  if (diff === 'Novice') return 'patch_diff_novice';
+  if (diff === 'Intermédiaire') return 'patch_diff_intermediate';
+  if (diff === 'Expert') return 'patch_diff_expert';
+  return null;
+}
+function porteeKey(portee) {
+  if (!portee) return null;
+  const v = portee.toLowerCase();
+  if (v.includes('mêlée') || v.includes('melee')) return 'patch_portee_melee';
+  if (v.includes('distance') || v.includes('ranged')) return 'patch_portee_ranged';
+  return null;
 }
 
 function spriteUrl(name) {
@@ -71,14 +109,23 @@ function avatar(name, role, size = 44) {
   const c        = rc(role);
   const initials = name.split(' ').map(w => w[0] || '').join('').slice(0, 2).toUpperCase();
   const url      = spriteUrl(name);
-  const base     = `width:${size}px;height:${size}px;`;
+  const isMega   = !!POKEMON_MAP[name]?.mega;
+  const ring     = `border:2px solid ${c.text};box-shadow:0 0 0 3px ${c.bg};`;
+  const base     = `width:${size}px;height:${size}px;${ring}`;
+  const megaFlag = isMega
+    ? `<span class="mega-flag${size >= 56 ? ' mega-flag-lg' : ''}" data-lang="patch_mega_flag">${t('patch_mega_flag','MEGA')}</span>`
+    : '';
   if (url) {
     const fb = `this.parentNode.innerHTML='<div style=\\'${base}background:${c.bg};color:${c.text};border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:${Math.round(size * 0.3)}px;\\'>${initials}</div>'`;
-    return `<div class="poke-avatar" style="${base}background:${c.bg};">
-      <img src="${url}" alt="${name}" loading="lazy" onerror="${fb}"/>
+    return `<div class="poke-avatar-wrap">
+      <div class="poke-avatar" style="${base}background:${c.bg};">
+        <img src="${url}" alt="${name}" loading="lazy" onerror="${fb}"/>
+      </div>${megaFlag}
     </div>`;
   }
-  return `<div class="poke-avatar" style="${base}background:${c.bg};color:${c.text};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:${Math.round(size * 0.3)}px;font-weight:700;">${initials}</div>`;
+  return `<div class="poke-avatar-wrap">
+    <div class="poke-avatar" style="${base}background:${c.bg};color:${c.text};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:${Math.round(size * 0.3)}px;font-weight:700;">${initials}</div>${megaFlag}
+  </div>`;
 }
 
 function tagSprite(name) {
@@ -161,19 +208,13 @@ function renderStats() {
     </div>
     ${mostBuffed ? `<div class="stat-card" title="${mostBuffed[0]} - ${mostBuffed[1]} buffs" style="cursor:pointer;" onclick="openModal('${mostBuffed[0]}')">
       <div class="stat-val v-buff" style="font-size:0.85rem;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${tagSprite(mostBuffed[0])} ${mostBuffed[0]}</div>
-      <div class="stat-lbl">▲ Most buffed (${mostBuffed[1]})</div>
+      <div class="stat-lbl"><span data-lang="patch_most_buffed_label">${t('patch_most_buffed_label','▲ Most buffed')}</span> (${mostBuffed[1]})</div>
     </div>` : ''}
     ${mostNerfed ? `<div class="stat-card" title="${mostNerfed[0]} - ${mostNerfed[1]} nerfs" style="cursor:pointer;" onclick="openModal('${mostNerfed[0]}')">
       <div class="stat-val v-nerf" style="font-size:0.85rem;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${tagSprite(mostNerfed[0])} ${mostNerfed[0]}</div>
-      <div class="stat-lbl">▼ Most nerfed (${mostNerfed[1]})</div>
+      <div class="stat-lbl"><span data-lang="patch_most_nerfed_label">${t('patch_most_nerfed_label','▼ Most nerfed')}</span> (${mostNerfed[1]})</div>
     </div>` : ''}
-    <button class="stat-card info-trigger" id="infoBtn" title="How to use" style="cursor:pointer;border:1px dashed rgba(255,255,255,0.15);background:transparent;">
-      <div class="stat-val" style="font-size:1.3rem;">?</div>
-      <div class="stat-lbl">How to use</div>
-    </button>
   `;
-
-  document.getElementById('infoBtn').addEventListener('click', openInfoModal);
 }
 
 /* ── Info / How-to-use modal ─────────────────────────────────────────────── */
@@ -193,65 +234,66 @@ function openInfoModal() {
       <div class="info-header">
         <span style="font-size:1.6rem;">⚡</span>
         <div>
-          <h2 style="margin:0;font-size:1.2rem;color:#e0e0e0;">Pokémon Unite - Patch Tracker</h2>
-          <p style="margin:0;font-size:0.8rem;color:#6a8587;">Community tool · Unofficial</p>
+          <h2 style="margin:0;font-size:1.2rem;color:#e0e0e0;" data-lang="patch_htu_title">${t('patch_htu_title','Pokémon Unite - Patch Tracker')}</h2>
+          <p style="margin:0;font-size:0.8rem;color:#6a8587;" data-lang="patch_htu_subtitle">${t('patch_htu_subtitle','Community tool · Unofficial')}</p>
         </div>
       </div>
 
       <section class="info-section">
-        <h3 class="info-section-title">📋 What is this?</h3>
-        <p>This tool lets you browse every balance patch in Pokémon Unite history. You can see which Pokémon were buffed, nerfed or tweaked in each update, filter by role or change type, search by name or version, and view the full history of any individual Pokémon.</p>
+        <h3 class="info-section-title" data-lang="patch_htu_what_title">${t('patch_htu_what_title','📋 What is this?')}</h3>
+        <p data-lang="patch_htu_what_desc">${t('patch_htu_what_desc','This tool lets you browse every balance patch in Pokémon Unite history. You can see which Pokémon were buffed, nerfed or tweaked in each update, filter by role or change type, search by name or version, and view the full history of any individual Pokémon.')}</p>
       </section>
 
       <section class="info-section">
-        <h3 class="info-section-title">🗂️ Views</h3>
+        <h3 class="info-section-title" data-lang="patch_htu_views_title">${t('patch_htu_views_title','🗂️ Views')}</h3>
         <ul class="info-list">
-          <li><strong>Patches</strong> - chronological list of all patches, grouped by year. Click a card to expand it and see all changes.</li>
-          <li><strong>By Pokémon</strong> - grid of all tracked Pokémon sorted by buff/nerf count. Click any card to see its full patch history.</li>
+          <li data-lang="patch_htu_views_patches"><strong>${t('patch_tab_patches','Patches')}</strong> - ${t('patch_htu_views_patches_desc','chronological list of all patches, grouped by year. Click a card to expand it and see all changes.')}</li>
+          <li data-lang="patch_htu_views_pokemon"><strong>${t('patch_tab_pokemon','By Pokémon')}</strong> - ${t('patch_htu_views_pokemon_desc','grid of all tracked Pokémon sorted by buff/nerf count. Click any card to see its full patch history.')}</li>
         </ul>
       </section>
 
       <section class="info-section">
-        <h3 class="info-section-title">⌨️ Keyboard shortcuts</h3>
+        <h3 class="info-section-title" data-lang="patch_htu_keyboard_title">${t('patch_htu_keyboard_title','⌨️ Keyboard shortcuts')}</h3>
         <div class="info-shortcuts">
-          <div class="shortcut-row"><kbd>/</kbd><span>Focus the search bar</span></div>
-          <div class="shortcut-row"><kbd>Esc</kbd><span>Close modal / clear search</span></div>
-          <div class="shortcut-row"><kbd>1</kbd><span>Switch to Patches view</span></div>
-          <div class="shortcut-row"><kbd>2</kbd><span>Switch to By Pokémon view</span></div>
-          <div class="shortcut-row"><kbd>Enter</kbd><span>Open focused patch / Pokémon</span></div>
-          <div class="shortcut-row"><kbd>B</kbd><span>Filter Buffs</span></div>
-          <div class="shortcut-row"><kbd>N</kbd><span>Filter Nerfs</span></div>
-          <div class="shortcut-row"><kbd>T</kbd><span>Filter Tweaks</span></div>
-          <div class="shortcut-row"><kbd>A</kbd><span>Reset filter to All</span></div>
-          <div class="shortcut-row"><kbd>?</kbd><span>Open this help panel</span></div>
+          <div class="shortcut-row"><kbd>/</kbd><span data-lang="patch_htu_kbd_search">${t('patch_htu_kbd_search','Focus the search bar')}</span></div>
+          <div class="shortcut-row"><kbd>Esc</kbd><span data-lang="patch_htu_kbd_esc">${t('patch_htu_kbd_esc','Close modal / clear search')}</span></div>
+          <div class="shortcut-row"><kbd>1</kbd><span data-lang="patch_htu_kbd_tab1">${t('patch_htu_kbd_tab1','Switch to Patches view')}</span></div>
+          <div class="shortcut-row"><kbd>2</kbd><span data-lang="patch_htu_kbd_tab2">${t('patch_htu_kbd_tab2','Switch to By Pokémon view')}</span></div>
+          <div class="shortcut-row"><kbd>↹ Tab</kbd><span data-lang="patch_htu_kbd_tabnav">${t('patch_htu_kbd_tabnav','Move focus between cards')}</span></div>
+          <div class="shortcut-row"><kbd>Enter</kbd><span data-lang="patch_htu_kbd_enter">${t('patch_htu_kbd_enter','Open focused patch / Pokémon')}</span></div>
+          <div class="shortcut-row"><kbd>B</kbd><span data-lang="patch_htu_kbd_buff">${t('patch_htu_kbd_buff','Filter Buffs')}</span></div>
+          <div class="shortcut-row"><kbd>N</kbd><span data-lang="patch_htu_kbd_nerf">${t('patch_htu_kbd_nerf','Filter Nerfs')}</span></div>
+          <div class="shortcut-row"><kbd>T</kbd><span data-lang="patch_htu_kbd_tweak">${t('patch_htu_kbd_tweak','Filter Tweaks')}</span></div>
+          <div class="shortcut-row"><kbd>A</kbd><span data-lang="patch_htu_kbd_all">${t('patch_htu_kbd_all','Reset filter to All')}</span></div>
+          <div class="shortcut-row"><kbd>?</kbd><span data-lang="patch_htu_kbd_help">${t('patch_htu_kbd_help','Open this help panel')}</span></div>
         </div>
       </section>
 
       <section class="info-section">
-        <h3 class="info-section-title">🔍 Search tips</h3>
+        <h3 class="info-section-title" data-lang="patch_htu_search_title">${t('patch_htu_search_title','🔍 Search tips')}</h3>
         <ul class="info-list">
-          <li>Search by <strong>Pokémon name</strong> (e.g. <em>Charizard</em>) to find all patches it appeared in.</li>
-          <li>Search by <strong>version number</strong> (e.g. <em>1.22</em>) to filter patches.</li>
-          <li>Search by <strong>patch name</strong> (e.g. <em>Balance</em>) to find seasonal patches.</li>
-          <li>Click any Pokémon tag inside a patch to open its full history modal.</li>
+          <li data-lang="patch_htu_search_1">${t('patch_htu_search_1','Search by <strong>Pokémon name</strong> (e.g. <em>Charizard</em>) to find all patches it appeared in.')}</li>
+          <li data-lang="patch_htu_search_2">${t('patch_htu_search_2','Search by <strong>version number</strong> (e.g. <em>1.22</em>) to filter patches.')}</li>
+          <li data-lang="patch_htu_search_3">${t('patch_htu_search_3','Search by <strong>patch name</strong> (e.g. <em>Balance</em>) to find seasonal patches.')}</li>
+          <li data-lang="patch_htu_search_4">${t('patch_htu_search_4','Click any Pokémon tag inside a patch to open its full history modal.')}</li>
         </ul>
       </section>
 
       <section class="info-section">
-        <h3 class="info-section-title">📊 Legend</h3>
+        <h3 class="info-section-title" data-lang="patch_htu_legend_title">${t('patch_htu_legend_title','📊 Legend')}</h3>
         <div class="info-legend">
-          <span class="pill pill-buff">▲ Buff</span> <span>The Pokémon received a positive balance change.</span>
-          <span class="pill pill-nerf">▼ Nerf</span> <span>The Pokémon received a negative balance change.</span>
-          <span class="pill pill-tweak">● Tweak</span> <span>A neutral adjustment (rework, number change with unclear impact).</span>
-          <span class="pill pill-misc">⚙ QoL</span> <span>Patch with no Pokémon balance changes (bug fixes, shop updates, etc).</span>
+          <span class="pill pill-buff">▲ ${t('patch_badge_buff','Buff')}</span> <span data-lang="patch_htu_legend_buff">${t('patch_htu_legend_buff','The Pokémon received a positive balance change.')}</span>
+          <span class="pill pill-nerf">▼ ${t('patch_badge_nerf','Nerf')}</span> <span data-lang="patch_htu_legend_nerf">${t('patch_htu_legend_nerf','The Pokémon received a negative balance change.')}</span>
+          <span class="pill pill-tweak">● ${t('patch_badge_tweak','Tweak')}</span> <span data-lang="patch_htu_legend_tweak">${t('patch_htu_legend_tweak','A neutral adjustment (rework, number change with unclear impact).')}</span>
+          <span class="pill pill-misc">⚙ ${t('patch_qol_label','QoL')}</span> <span data-lang="patch_htu_legend_qol">${t('patch_htu_legend_qol','Patch with no Pokémon balance changes (bug fixes, shop updates, etc).')}</span>
         </div>
-        <p style="margin-top:8px;font-size:0.8rem;color:#6a8587;">The <strong>balance bar</strong> on Pokémon cards shows buff % vs nerf %. The <strong>trend arrow</strong> (↑ ↓ -) reflects the last 5 patches only.</p>
+        <p style="margin-top:8px;font-size:0.8rem;color:#6a8587;" data-lang="patch_htu_legend_bar">${t('patch_htu_legend_bar','The <strong>balance bar</strong> on Pokémon cards shows buff % vs nerf %. The <strong>trend arrow</strong> (↑ ↓ -) reflects the last 5 patches only.')}</p>
       </section>
 
       <section class="info-section info-disclaimer">
-        <h3 class="info-section-title">⚠️ Disclaimer</h3>
-        <p>This tracker is <strong>community-maintained and unofficial</strong>. Some data may be incomplete, inaccurate or missing - especially for older patches. Buff/nerf/tweak categorisation is subjective and based on available information at the time of entry.</p>
-        <p>For official and authoritative patch notes, always refer to the <a href="https://community.pokemon.com/en-us/categories/pokemon-unite" target="_blank" rel="noopener">official Pokémon Unite community forum</a>.</p>
+        <h3 class="info-section-title" data-lang="patch_htu_disclaimer_title">${t('patch_htu_disclaimer_title','⚠️ Disclaimer')}</h3>
+        <p data-lang="patch_htu_disclaimer_1">${t('patch_htu_disclaimer_1','This tracker is <strong>community-maintained and unofficial</strong>. Some data may be incomplete, inaccurate or missing - especially for older patches. Buff/nerf/tweak categorisation is subjective and based on available information at the time of entry.')}</p>
+        <p data-lang="patch_htu_disclaimer_2">${t('patch_htu_disclaimer_2','For official and authoritative patch notes, always refer to the')} <a href="https://community.pokemon.com/en-us/categories/pokemon-unite" target="_blank" rel="noopener" data-lang="patch_htu_disclaimer_link">${t('patch_htu_disclaimer_link','official Pokémon Unite community forum')}</a>.</p>
       </section>
     </div>
   `;
@@ -297,12 +339,12 @@ function buildFilterBar() {
 
   } else {
     const roleFilters = [
-      ['all',          'patch_filter_all_role',  'All'],
-      ['Attacker',     'patch_filter_atk',       'Attacker'],
-      ['Defender',     'patch_filter_def',       'Defender'],
-      ['Supporter',    'patch_filter_sup',       'Supporter'],
-      ['All-Rounder',  'patch_filter_all_round', 'All-Rounder'],
-      ['Speedster',    'patch_filter_spe',       'Speedster'],
+      ['any', 'patch_filter_all_role',  'All'],
+      ['atk', 'patch_filter_atk',       'Attacker'],
+      ['def', 'patch_filter_def',       'Defender'],
+      ['sup', 'patch_filter_sup',       'Supporter'],
+      ['all', 'patch_filter_all_round', 'All-Rounder'],
+      ['spe', 'patch_filter_spe',       'Speedster'],
     ];
 
     const sortOptions = [
@@ -387,6 +429,7 @@ function renderPatches() {
       const body = card.querySelector('.patch-body');
       const open = card.classList.toggle('open');
       body.style.display = open ? 'block' : 'none';
+      h.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
   });
 
@@ -409,7 +452,7 @@ function patchCardHTML(p) {
   const makeCol = (items, cls, icon, lk, lf) => items.length ? `
     <div class="change-col col-${cls}">
       <div class="col-title" data-lang="${lk}">${icon} ${t(lk, lf)}</div>
-      ${items.map(n => `<span class="poke-tag poke-tag-${cls}" data-poke="${n}">${tagSprite(n)} ${n}</span>`).join('')}
+      ${items.map(n => `<span class="poke-tag poke-tag-${cls}" data-poke="${n}" tabindex="0" role="button">${tagSprite(n)} ${n}</span>`).join('')}
     </div>` : '';
 
   const cols = makeCol(p.buffs,  'buff',  '▲', 'patch_buffs_label',  'Buffs')
@@ -418,7 +461,7 @@ function patchCardHTML(p) {
 
   return `
   <div class="patch-card">
-    <div class="patch-header">
+    <div class="patch-header" tabindex="0" role="button" aria-expanded="false" aria-label="${p.name} ${p.version}">
       <div class="patch-left">
         <span class="ver-badge">${p.version}</span>
         <div class="patch-meta">
@@ -453,7 +496,7 @@ function renderPoke() {
   const list = POKEMON
     .filter(p => {
       if (q && !p.name.toLowerCase().includes(q)) return false;
-      if (filter !== 'all' && p.role !== filter)  return false;
+      if (filter !== 'any' && p.role !== filter)  return false;
       return true;
     })
     .map(p => {
@@ -483,33 +526,44 @@ function pokeCardHTML(p) {
   const c       = rc(p.role);
   const trend   = getTrend(p.name);
   const trendEl = trend > 0
-    ? `<span class="trend trend-up">↑</span>`
+    ? `<span class="trend trend-up" title="${t('patch_trend_up','Trending up')}">↑</span>`
     : trend < 0
-    ? `<span class="trend trend-down">↓</span>`
-    : `<span class="trend trend-stable">-</span>`;
+    ? `<span class="trend trend-down" title="${t('patch_trend_down','Trending down')}">↓</span>`
+    : `<span class="trend trend-stable" title="${t('patch_trend_stable','Stable')}">-</span>`;
 
   const total    = p.buffs + p.nerfs;
   const barPct   = total > 0 ? Math.round(p.buffs / total * 100) : 50;
   const barClass = p.buffs > p.nerfs ? 'bar-buff' : p.nerfs > p.buffs ? 'bar-nerf' : 'bar-neutral';
 
+  const dKey     = diffKey(p.difficulte);
+  const diffPill = dKey ? `<span class="diff-pill ${diffClass(p.difficulte)}" data-lang="${dKey}">${t(dKey, p.difficulte)}</span>` : '';
+
+  const pKey     = porteeKey(p.portee);
+  const porteeEl = pKey ? `<span class="poke-portee" data-lang="${pKey}">${t(pKey, p.portee)}</span>` : '';
+
   return `
-  <div class="poke-card" data-name="${p.name}">
-    ${avatar(p.name, p.role, 44)}
+  <div class="poke-card role-${p.role || 'none'}" data-name="${p.name}" tabindex="0" role="button" aria-label="${p.name}">
+    ${avatar(p.name, p.role, 64)}
     <div class="poke-info">
       <div class="poke-name">${p.name}</div>
-      <div class="poke-role" style="color:${c.text};" data-lang="${roleKey(p.role)}">${t(roleKey(p.role), p.role)}</div>
-      <div class="balance-bar"><div class="bar-fill ${barClass}" style="width:${barPct}%"></div></div>
+      <div class="poke-sub">
+        <span class="poke-role role-${p.role}"><span class="dot dot-${p.role}"></span><span data-lang="${roleKey(p.role)}">${roleLabel(p.role)}</span></span>
+        ${porteeEl}
+      </div>
+      ${diffPill}
     </div>
-    <div class="poke-right">
+    <div class="balance-bar"><div class="bar-fill ${barClass}" style="width:${barPct}%"></div></div>
+    <div class="poke-stats-row">
       <span class="stat-chip chip-buff">▲ ${p.buffs}</span>
       <span class="stat-chip chip-nerf">▼ ${p.nerfs}</span>
+      ${p.tweaks ? `<span class="stat-chip chip-tweak">● ${p.tweaks}</span>` : ''}
       ${trendEl}
     </div>
   </div>`;
 }
 
 function openModal(name) {
-  const poke    = POKEMON_MAP[name] || { name, role: 'All-Rounder', type: 'melee' };
+  const poke    = POKEMON_MAP[name] || { name, role: 'all' };
   const history = getHistory(name);
   const stats   = getStats(name);
   const balance = stats.buffs - stats.nerfs;
@@ -541,12 +595,15 @@ function openModal(name) {
         </div>`;
       }).join('');
 
+  const pKey      = porteeKey(poke.portee);
+  const porteeTxt = pKey ? ` · ${t(pKey, poke.portee)}` : '';
+
   document.getElementById('modalBody').innerHTML = `
-    <div class="m-header">
+    <div class="m-header role-${poke.role || 'none'}">
       ${avatar(name, poke.role, 60)}
       <div>
         <div class="m-name" id="modalPokeName">${name}</div>
-        <div class="m-role" data-lang="${roleKey(poke.role)}">${t(roleKey(poke.role), poke.role)}${poke.type ? ' · ' + poke.type : ''}</div>
+        <div class="m-role role-${poke.role}" data-lang="${roleKey(poke.role)}">${roleLabel(poke.role)}${porteeTxt}</div>
         <span class="balance-score ${bc}">${bLabel}</span>
       </div>
     </div>
@@ -640,6 +697,21 @@ function closeModal() {
 }
 document.getElementById('overlay').addEventListener('click', closeModal);
 document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('infoBtn')?.addEventListener('click', openInfoModal);
+
+// ── Keyboard activation for focusable, non-native interactive elements ────
+// (.poke-card, .patch-header and .poke-tag are divs/spans with tabindex="0",
+// so Enter/Space need to be wired manually to trigger their click handler.)
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const el = document.activeElement;
+  if (!el) return;
+  if (el.classList.contains('poke-card') || el.classList.contains('patch-header') || el.classList.contains('poke-tag')) {
+    e.preventDefault();
+    el.click();
+  }
+});
+
 document.addEventListener('keydown', e => {
   const tag = document.activeElement.tagName;
   const typing = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
@@ -673,7 +745,7 @@ document.addEventListener('keydown', e => {
     case '2':
       if (!e.ctrlKey && !e.metaKey) activateTab('pokemon');
       break;
-    case 'a': case 'A': setFilter('all');   break;
+    case 'a': case 'A': setFilter(view === 'pokemon' ? 'any' : 'all'); break;
     case 'b': case 'B': setFilter('buff');  break;
     case 'n': case 'N': setFilter('nerf');  break;
     case 't': case 'T': setFilter('tweak'); break;
@@ -695,7 +767,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    view = btn.dataset.view; search = ''; filter = 'all';
+    view = btn.dataset.view; search = ''; filter = view === 'pokemon' ? 'any' : 'all';
     document.getElementById('searchInput').value = '';
     buildFilterBar();
     view === 'patches' ? renderPatches() : renderPoke();

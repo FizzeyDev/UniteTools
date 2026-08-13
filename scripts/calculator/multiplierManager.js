@@ -46,6 +46,16 @@ export function computeDefenderDamageMult() {
     defenderDamageMult *= 0.85;
   }
 
+  // Mewtwo Y — Psystrike: -15% damage received while channeling
+  if (state.currentDefender?.pokemonId === "mewtwo_y" && state.defenderMewtwoYPsystrikeChanneling) {
+    defenderDamageMult *= 0.85;
+  }
+
+  // Mimikyu — Trick Room: -50% dmg taken from attackers outside the Trick Room
+  if (state.currentDefender?.pokemonId === "mimikyu" && state.defenderMimikyuTrickRoomActive) {
+    defenderDamageMult *= 0.50;
+  }
+
   // Snow Cloak (Articuno)
   if (state.currentDefender?.pokemonId === "articuno") {
     const snowCloakState = state.defenderSnowCloakState || "none";
@@ -93,6 +103,16 @@ export function computeGlobalDamageMult() {
 
   // ── MEWTWO X — Teleport: +10%/+20% dmg dealt for 5s after teleporting ──────
   if (state.currentAttacker?.pokemonId === "mewtwo_x" && state.attackerMewtwoXTeleportActive) {
+    globalDamageMult *= state.attackerLevel >= 13 ? 1.20 : 1.10;
+  }
+
+  // ── MEWTWO Y — Future Sight: +10%/+20% dmg vs locked-on target ─────────────
+  if (state.currentAttacker?.pokemonId === "mewtwo_y" && state.attackerMewtwoYFutureSightMarkActive) {
+    globalDamageMult *= state.attackerLevel >= 11 ? 1.20 : 1.10;
+  }
+
+  // ── MEWTWO Y — Teleport: +10%/+20% dmg dealt for 5s after teleporting ──────
+  if (state.currentAttacker?.pokemonId === "mewtwo_y" && state.attackerMewtwoYTeleportActive) {
     globalDamageMult *= state.attackerLevel >= 13 ? 1.20 : 1.10;
   }
 

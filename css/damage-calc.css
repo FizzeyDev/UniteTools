@@ -780,6 +780,51 @@ h1::after {
 #defBuffsDrawer .buff-label:has(input:checked) { border-left-color: var(--green); }
 #defDebuffsDrawer .buff-label:has(input:checked) { border-left-color: var(--red); }
 
+/* ── Mise en avant des buffs/debuffs liés aux Pokémon du combat en cours ── */
+/* Violet côté attaquant (buffs & debuffs offensifs), orange côté défenseur
+   (buffs & debuffs défensifs) — cohérent avec l'accent déjà utilisé sur les
+   drawers eux-mêmes. Les entrées concernées sont aussi remontées en haut de
+   leur liste par buff-visuals.js (updateBuffRelevance). */
+.buff-label.buff-relevant {
+  position: relative;
+  order: -1;
+}
+#atkBuffsDrawer .buff-label.buff-relevant,
+#atkDebuffsDrawer .buff-label.buff-relevant {
+  border: 1px solid var(--violet);
+  box-shadow: 0 0 0 1px var(--violet), 0 0 10px rgba(159,83,236,0.35);
+  background: linear-gradient(90deg, var(--violet-dim) 0%, var(--surface-2) 55%);
+}
+#defBuffsDrawer .buff-label.buff-relevant,
+#defDebuffsDrawer .buff-label.buff-relevant {
+  border: 1px solid var(--orange);
+  box-shadow: 0 0 0 1px var(--orange), 0 0 10px rgba(255,157,0,0.35);
+  background: linear-gradient(90deg, var(--orange-dim) 0%, var(--surface-2) 55%);
+}
+.buff-label.buff-relevant::before {
+  content: "★";
+  position: absolute;
+  top: 2px; left: 2px;
+  font-size: 0.55rem;
+  line-height: 1;
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 900;
+  z-index: 1;
+}
+#atkBuffsDrawer .buff-label.buff-relevant::before,
+#atkDebuffsDrawer .buff-label.buff-relevant::before {
+  color: #000; background: var(--violet);
+}
+#defBuffsDrawer .buff-label.buff-relevant::before,
+#defDebuffsDrawer .buff-label.buff-relevant::before {
+  color: #000; background: var(--orange);
+}
+/* Checked + relevant : on garde le liseré jaune de sélection à l'intérieur du cadre */
+.buff-label.buff-relevant:has(input:checked) { box-shadow: inset 0 0 0 1px var(--yellow), 0 0 0 1px currentColor; }
+
+
 /* ─── COLONNE MOVES ──────────────────────────────────────────────── */
 .moves-col-header {
   font-family: 'Exo 2', sans-serif; text-align: center;

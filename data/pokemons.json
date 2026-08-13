@@ -13,7 +13,8 @@
     "mega": false,
     "unite_move_cost": 100,
     "evolution_levels": null,
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "アブソル"
   },
   {
     "name": "Blastoise",
@@ -32,7 +33,8 @@
       5,
       7
     ],
-    "date": "01/09"
+    "date": "01/09",
+    "name_ja": "カメックス"
   },
   {
     "name": "Chandelure",
@@ -51,7 +53,8 @@
       5,
       7
     ],
-    "date": "27/04"
+    "date": "27/04",
+    "name_ja": "シャンデラ"
   },
   {
     "name": "Cramorant",
@@ -67,7 +70,8 @@
     "mega": false,
     "unite_move_cost": 123,
     "evolution_levels": null,
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "ウッウ"
   },
   {
     "name": "Dhelmise",
@@ -83,7 +87,8 @@
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": null,
-    "date": "14/11"
+    "date": "14/11",
+    "name_ja": "ダダリン"
   },
   {
     "name": "Eldegoss",
@@ -101,7 +106,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "ワタシラガ"
   },
   {
     "name": "Gardevoir",
@@ -120,7 +126,8 @@
       5,
       7
     ],
-    "date": "28/07"
+    "date": "28/07",
+    "name_ja": "サーナイト"
   },
   {
     "name": "Greninja",
@@ -139,7 +146,8 @@
       5,
       7
     ],
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "ゲッコウガ"
   },
   {
     "name": "Lapras",
@@ -155,7 +163,8 @@
     "mega": false,
     "unite_move_cost": 100,
     "evolution_levels": null,
-    "date": "13/04"
+    "date": "13/04",
+    "name_ja": "ラプラス"
   },
   {
     "name": "Machamp",
@@ -174,7 +183,8 @@
       5,
       9
     ],
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "カイリキー"
   },
   {
     "name": "Mewtwo X",
@@ -190,7 +200,8 @@
     "mega": true,
     "unite_move_cost": 134,
     "evolution_levels": null,
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "メガミュウツーX"
   },
   {
     "name": "Ninetales",
@@ -208,7 +219,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "キュウコン"
   },
   {
     "name": "Rapidash",
@@ -226,7 +238,8 @@
     "evolution_levels": [
       5
     ],
-    "date": "23/01"
+    "date": "23/01",
+    "name_ja": "ギャロップ"
   },
   {
     "name": "Suicune",
@@ -242,7 +255,8 @@
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": null,
-    "date": "01/03"
+    "date": "01/03",
+    "name_ja": "スイクン"
   },
   {
     "name": "Tsareena",
@@ -261,7 +275,8 @@
       4,
       6
     ],
-    "date": "09/12"
+    "date": "09/12",
+    "name_ja": "アマージョ"
   },
   {
     "name": "Venusaur",
@@ -280,7 +295,8 @@
       5,
       7
     ],
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "フシギバナ"
   },
   {
     "name": "Aegislash",
@@ -299,7 +315,8 @@
       5,
       7
     ],
-    "date": "11/02"
+    "date": "11/02",
+    "name_ja": "ギルガルド"
   },
   {
     "name": "Blaziken",
@@ -318,7 +335,8 @@
       5,
       7
     ],
-    "date": "14/09"
+    "date": "14/09",
+    "name_ja": "バシャーモ"
   },
   {
     "name": "Charizard",
@@ -337,7 +355,8 @@
       5,
       7
     ],
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "リザードン"
   },
   {
     "name": "Mega-Charizard X",
@@ -356,7 +375,8 @@
       5,
       7
     ],
-    "date": "24/10"
+    "date": "24/10",
+    "name_ja": "メガリザードンX"
   },
   {
     "name": "Mega-Charizard Y",
@@ -375,7 +395,8 @@
       5,
       7
     ],
-    "date": "19/12"
+    "date": "19/12",
+    "name_ja": "メガリザードンY"
   },
   {
     "name": "Crustle",
@@ -393,7 +414,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "イワパレス"
   },
   {
     "name": "Dodrio",
@@ -411,7 +433,8 @@
     "evolution_levels": [
       5
     ],
-    "date": "15/09"
+    "date": "15/09",
+    "name_ja": "ドードリオ"
   },
   {
     "name": "Empoleon",
@@ -430,7 +453,8 @@
       5,
       7
     ],
-    "date": "19/09"
+    "date": "19/09",
+    "name_ja": "エンペルト"
   },
   {
     "name": "Gengar",
@@ -449,7 +473,8 @@
       5,
       9
     ],
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "ゲンガー"
   },
   {
     "name": "Gyarados",
@@ -467,7 +492,8 @@
     "evolution_levels": [
       7
     ],
-    "date": "25/01"
+    "date": "25/01",
+    "name_ja": "ギャラドス"
   },
   {
     "name": "Mega Gyarados",
@@ -485,7 +511,8 @@
     "evolution_levels": [
       7
     ],
-    "date": "05/12"
+    "date": "05/12",
+    "name_ja": "メガギャラドス"
   },
   {
     "name": "Latias",
@@ -501,7 +528,8 @@
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": null,
-    "date": "08/08"
+    "date": "08/08",
+    "name_ja": "ラティアス"
   },
   {
     "name": "Mamoswine",
@@ -520,7 +548,8 @@
       5,
       9
     ],
-    "date": "29/09"
+    "date": "29/09",
+    "name_ja": "マンムー"
   },
   {
     "name": "Mewtwo Y",
@@ -536,7 +565,8 @@
     "mega": true,
     "unite_move_cost": 134,
     "evolution_levels": null,
-    "date": "17/08"
+    "date": "17/08",
+    "name_ja": "メガミュウツーY"
   },
   {
     "name": "Pawmot",
@@ -555,7 +585,8 @@
       5,
       7
     ],
-    "date": "04/09"
+    "date": "04/09",
+    "name_ja": "パルスワン"
   },
   {
     "name": "Sableye",
@@ -571,7 +602,8 @@
     "mega": false,
     "unite_move_cost": 100,
     "evolution_levels": null,
-    "date": "16/11"
+    "date": "16/11",
+    "name_ja": "ヤミラミ"
   },
   {
     "name": "Sylveon",
@@ -589,7 +621,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "06/10"
+    "date": "06/10",
+    "name_ja": "ニンフィア"
   },
   {
     "name": "Tyranitar",
@@ -608,7 +641,8 @@
       5,
       9
     ],
-    "date": "16/08"
+    "date": "16/08",
+    "name_ja": "バンギラス"
   },
   {
     "name": "Wigglytuff",
@@ -626,7 +660,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "プクリン"
   },
   {
     "name": "Alcremie",
@@ -644,7 +679,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "12/06"
+    "date": "12/06",
+    "name_ja": "マホイップ"
   },
   {
     "name": "Blissey",
@@ -662,7 +698,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "18/08"
+    "date": "18/08",
+    "name_ja": "ハピナス"
   },
   {
     "name": "Cinderace",
@@ -681,7 +718,8 @@
       5,
       7
     ],
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "エースバーン"
   },
   {
     "name": "Darkrai",
@@ -697,7 +735,8 @@
     "mega": false,
     "unite_move_cost": 100,
     "evolution_levels": null,
-    "date": "17/10"
+    "date": "17/10",
+    "name_ja": "ダークライ"
   },
   {
     "name": "Dragapult",
@@ -716,7 +755,8 @@
       5,
       9
     ],
-    "date": "29/12"
+    "date": "29/12",
+    "name_ja": "ドラパルト"
   },
   {
     "name": "Espeon",
@@ -734,7 +774,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "16/05"
+    "date": "16/05",
+    "name_ja": "エーフィ"
   },
   {
     "name": "Glaceon",
@@ -752,7 +793,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "グレイシア"
   },
   {
     "name": "Ho-Oh",
@@ -768,7 +810,8 @@
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": null,
-    "date": "19/07"
+    "date": "19/07",
+    "name_ja": "ホウオウ"
   },
   {
     "name": "Latios",
@@ -784,7 +827,8 @@
     "mega": false,
     "unite_move_cost": 100,
     "evolution_levels": null,
-    "date": "18/07"
+    "date": "18/07",
+    "name_ja": "ラティオス"
   },
   {
     "name": "Meowscarada",
@@ -803,7 +847,8 @@
       4,
       6
     ],
-    "date": "07/12"
+    "date": "07/12",
+    "name_ja": "マスカーニャ"
   },
   {
     "name": "Meowth",
@@ -819,7 +864,8 @@
     "mega": false,
     "unite_move_cost": 100,
     "evolution_levels": null,
-    "date": "09/01"
+    "date": "09/01",
+    "name_ja": "ニャース"
   },
   {
     "name": "Mimikyu",
@@ -835,7 +881,8 @@
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": null,
-    "date": "19/10"
+    "date": "19/10",
+    "name_ja": "ミミッキュ"
   },
   {
     "name": "Pikachu",
@@ -851,7 +898,8 @@
     "mega": false,
     "unite_move_cost": 89,
     "evolution_levels": null,
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "ピカチュウ"
   },
   {
     "name": "Scyther",
@@ -869,7 +917,8 @@
     "evolution_levels": [
       5
     ],
-    "date": "29/09"
+    "date": "29/09",
+    "name_ja": "ストライク"
   },
   {
     "name": "Scizor",
@@ -887,7 +936,8 @@
     "evolution_levels": [
       5
     ],
-    "date": "29/09"
+    "date": "29/09",
+    "name_ja": "ハッサム"
   },
   {
     "name": "Skeledirge",
@@ -906,7 +956,8 @@
       5,
       7
     ],
-    "date": "04/06"
+    "date": "04/06",
+    "name_ja": "ラウドボーン"
   },
   {
     "name": "Talonflame",
@@ -925,7 +976,8 @@
       5,
       7
     ],
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "ファイアロー"
   },
   {
     "name": "Umbreon",
@@ -943,7 +995,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "25/05"
+    "date": "25/05",
+    "name_ja": "ブラッキー"
   },
   {
     "name": "Zacian",
@@ -959,7 +1012,8 @@
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": null,
-    "date": "27/02"
+    "date": "27/02",
+    "name_ja": "ザシアン"
   },
   {
     "name": "Armarouge",
@@ -977,7 +1031,8 @@
     "evolution_levels": [
       5
     ],
-    "date": "12/09"
+    "date": "12/09",
+    "name_ja": "グレンアルマ"
   },
   {
     "name": "Buzzwole",
@@ -993,7 +1048,8 @@
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": null,
-    "date": "04/08"
+    "date": "04/08",
+    "name_ja": "マッシブーン"
   },
   {
     "name": "Clefable",
@@ -1011,7 +1067,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "13/10"
+    "date": "13/10",
+    "name_ja": "ピクシー"
   },
   {
     "name": "Decidueye",
@@ -1030,7 +1087,8 @@
       5,
       7
     ],
-    "date": "19/11"
+    "date": "19/11",
+    "name_ja": "ジュナイパー"
   },
   {
     "name": "Dragonite",
@@ -1049,7 +1107,8 @@
       5,
       8
     ],
-    "date": "20/12"
+    "date": "20/12",
+    "name_ja": "カイリュー"
   },
   {
     "name": "Falinks",
@@ -1065,7 +1124,8 @@
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": null,
-    "date": "25/04"
+    "date": "25/04",
+    "name_ja": "タイレーツ"
   },
   {
     "name": "Goodra",
@@ -1084,7 +1144,8 @@
       5,
       8
     ],
-    "date": "16/03"
+    "date": "16/03",
+    "name_ja": "ヌメルゴン"
   },
   {
     "name": "Hoopa",
@@ -1100,7 +1161,8 @@
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": null,
-    "date": "24/02"
+    "date": "24/02",
+    "name_ja": "フーパ"
   },
   {
     "name": "Leafeon",
@@ -1118,7 +1180,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "08/06"
+    "date": "08/06",
+    "name_ja": "リーフィア"
   },
   {
     "name": "Metagross",
@@ -1137,7 +1200,8 @@
       5,
       9
     ],
-    "date": "26/12"
+    "date": "26/12",
+    "name_ja": "メタグロス"
   },
   {
     "name": "Miraidon",
@@ -1153,7 +1217,8 @@
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": null,
-    "date": "27/02"
+    "date": "27/02",
+    "name_ja": "ミライドン"
   },
   {
     "name": "Psyduck",
@@ -1169,7 +1234,8 @@
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": null,
-    "date": "14/11"
+    "date": "14/11",
+    "name_ja": "コダック"
   },
   {
     "name": "Feraligatr",
@@ -1188,7 +1254,8 @@
       5,
       7
     ],
-    "date": "08/05"
+    "date": "08/05",
+    "name_ja": "オーダイル"
   },
   {
     "name": "Slowbro",
@@ -1206,7 +1273,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "ヤドラン"
   },
   {
     "name": "Tinkaton",
@@ -1225,7 +1293,8 @@
       5,
       7
     ],
-    "date": "12/12"
+    "date": "12/12",
+    "name_ja": "デカヌチャン"
   },
   {
     "name": "Urshifu",
@@ -1243,7 +1312,8 @@
     "evolution_levels": [
       5
     ],
-    "date": "01/12"
+    "date": "01/12",
+    "name_ja": "ウーラオス"
   },
   {
     "name": "Zeraora",
@@ -1259,7 +1329,8 @@
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": null,
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "ゼラオラ"
   },
   {
     "name": "Azumarill",
@@ -1277,7 +1348,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "08/04"
+    "date": "08/04",
+    "name_ja": "マリルリ"
   },
   {
     "name": "Ceruledge",
@@ -1295,7 +1367,8 @@
     "evolution_levels": [
       5
     ],
-    "date": "13/06"
+    "date": "13/06",
+    "name_ja": "ソウブレイズ"
   },
   {
     "name": "Comfey",
@@ -1311,7 +1384,8 @@
     "mega": false,
     "unite_move_cost": 89,
     "evolution_levels": null,
-    "date": "02/02"
+    "date": "02/02",
+    "name_ja": "キュワワー"
   },
   {
     "name": "Delphox",
@@ -1330,7 +1404,8 @@
       4,
       6
     ],
-    "date": "09/06"
+    "date": "09/06",
+    "name_ja": "マフォクシー"
   },
   {
     "name": "Duraludon",
@@ -1346,7 +1421,8 @@
     "mega": false,
     "unite_move_cost": 134,
     "evolution_levels": null,
-    "date": "15/03"
+    "date": "15/03",
+    "name_ja": "ジュラルドン"
   },
   {
     "name": "Garchomp",
@@ -1365,7 +1441,8 @@
       5,
       9
     ],
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "ガブリアス"
   },
   {
     "name": "Greedent",
@@ -1383,7 +1460,8 @@
     "evolution_levels": [
       5
     ],
-    "date": "20/10"
+    "date": "20/10",
+    "name_ja": "ヨクバリス"
   },
   {
     "name": "Inteleon",
@@ -1402,7 +1480,8 @@
       5,
       7
     ],
-    "date": "04/07"
+    "date": "04/07",
+    "name_ja": "インテレオン"
   },
   {
     "name": "Lucario",
@@ -1418,7 +1497,8 @@
     "mega": false,
     "unite_move_cost": 100,
     "evolution_levels": null,
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "ルカリオ"
   },
   {
     "name": "Mega Lucario",
@@ -1434,7 +1514,8 @@
     "mega": true,
     "unite_move_cost": 112,
     "evolution_levels": null,
-    "date": "28/09"
+    "date": "28/09",
+    "name_ja": "メガルカリオ"
   },
   {
     "name": "Mew",
@@ -1450,7 +1531,8 @@
     "mega": false,
     "unite_move_cost": 123,
     "evolution_levels": null,
-    "date": "02/09"
+    "date": "02/09",
+    "name_ja": "ミュウ"
   },
   {
     "name": "Mr. Mime",
@@ -1466,7 +1548,8 @@
     "mega": false,
     "unite_move_cost": 100,
     "evolution_levels": null,
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "バリヤード"
   },
   {
     "name": "Raichu",
@@ -1484,7 +1567,8 @@
     "evolution_levels": [
       5
     ],
-    "date": "17/04"
+    "date": "17/04",
+    "name_ja": "ライチュウ"
   },
   {
     "name": "Snorlax",
@@ -1500,7 +1584,8 @@
     "mega": false,
     "unite_move_cost": 89,
     "evolution_levels": null,
-    "date": "21/07"
+    "date": "21/07",
+    "name_ja": "カビゴン"
   },
   {
     "name": "Trevenant",
@@ -1518,7 +1603,8 @@
     "evolution_levels": [
       5
     ],
-    "date": "20/01"
+    "date": "20/01",
+    "name_ja": "オーロット"
   },
   {
     "name": "Vaporeon",
@@ -1536,7 +1622,8 @@
     "evolution_levels": [
       4
     ],
-    "date": "20/11"
+    "date": "20/11",
+    "name_ja": "シャワーズ"
   },
   {
     "name": "Zoroark",
@@ -1554,7 +1641,8 @@
     "evolution_levels": [
       5
     ],
-    "date": "27/10"
+    "date": "27/10",
+    "name_ja": "ゾロアーク"
   },
   {
     "name": "Sirfetchd",
@@ -1572,7 +1660,8 @@
     "evolution_levels": [
       5
     ],
-    "date": "30/01"
+    "date": "30/01",
+    "name_ja": "ネギガナイト"
   },
   {
     "name": "Articuno",
@@ -1588,7 +1677,8 @@
     "mega": false,
     "unite_move_cost": 100,
     "evolution_levels": null,
-    "date": "10/04"
+    "date": "10/04",
+    "name_ja": "フリーザー"
   },
   {
     "name": "Zapdos",
@@ -1604,7 +1694,8 @@
     "mega": false,
     "unite_move_cost": 89,
     "evolution_levels": null,
-    "date": "27/02"
+    "date": "27/02",
+    "name_ja": "サンダー"
   },
   {
     "name": "Moltres",
@@ -1620,7 +1711,8 @@
     "mega": false,
     "unite_move_cost": 112,
     "evolution_levels": null,
-    "date": "13/03"
+    "date": "13/03",
+    "name_ja": "ファイヤー"
   },
   {
     "name": "Typhlosion",
@@ -1639,7 +1731,8 @@
       5,
       7
     ],
-    "date": "24/04"
+    "date": "24/04",
+    "name_ja": "バクフーン"
   },
   {
     "name": "Meganium",
@@ -1658,7 +1751,8 @@
       5,
       7
     ],
-    "date": "22/05"
+    "date": "22/05",
+    "name_ja": "メガニウム"
   },
   {
     "name": "Quaquaval",
@@ -1677,7 +1771,8 @@
       5,
       7
     ],
-    "date": "19/06"
+    "date": "19/06",
+    "name_ja": "ウェーニバル"
   },
   {
     "name": "Palkia",
@@ -1693,7 +1788,8 @@
     "mega": false,
     "unite_move_cost": 38,
     "evolution_levels": null,
-    "date": "17/07"
+    "date": "17/07",
+    "name_ja": "パルキア"
   },
   {
     "name": "Yveltal",
@@ -1709,7 +1805,8 @@
     "mega": false,
     "unite_move_cost": 100,
     "evolution_levels": null,
-    "date": "03/07"
+    "date": "03/07",
+    "name_ja": "イベルタル"
   },
   {
     "name": "Reshiram",
@@ -1725,6 +1822,7 @@
     "mega": false,
     "unite_move_cost": 8,
     "evolution_levels": null,
-    "date": "07/08"
+    "date": "07/08",
+    "name_ja": "レシラム"
   }
 ]
