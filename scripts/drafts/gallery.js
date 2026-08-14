@@ -58,7 +58,7 @@ export function renderGallery() {
   updateFearlessRestrictions();
 }
 
-function onPokemonClick(img) {
+async function onPokemonClick(img) {
   const myTurn = window._mpIsMyTurn ? window._mpIsMyTurn() : true;
   if (!myTurn) { _showToast(); return; }
 
@@ -101,17 +101,22 @@ function onPokemonClick(img) {
   const isDraftDone = state.currentStep >= state.currentDraftOrder.length;
 
   if (isDraftDone) {
-    // Appeler endDraft AVANT de publier le pick pour éviter que le SSE
-    // revienne et tente de sync pendant/après endDraft()
+    // IMPORTANT : on publie le dernier pick et on ATTEND que l'écriture
+    // Firebase soit terminée AVANT d'appeler endDraft() (qui publie
+    // status:"recap"). Sinon les deux écritures partent en parallèle et
+    // rien ne garantit leur ordre d'arrivée sur Firebase : l'adversaire
+    // peut recevoir "recap" avant les données du dernier pick, et ne
+    // jamais voir ce dernier pick dans son récap (bug "first pick ne
+    // voit pas le last pick adverse").
+    if (window._mpPublishPick) await window._mpPublishPick(state.currentStep - 1, img.dataset.file);
     endDraft();
-  } else if (document.getElementById("enable-timer").checked) {
-    state.timeLeft = parseInt(document.getElementById("timer-value").value) || 20;
-    document.getElementById("bubble-timer").textContent = `${state.timeLeft}s`;
+  } else {
+    if (document.getElementById("enable-timer").checked) {
+      state.timeLeft = parseInt(document.getElementById("timer-value").value) || 20;
+      document.getElementById("bubble-timer").textContent = `${state.timeLeft}s`;
+    }
+    if (window._mpPublishPick) window._mpPublishPick(state.currentStep - 1, img.dataset.file);
   }
-
-  // Publier après endDraft pour que localStatus soit déjà "recap"
-  // quand le SSE du pick reviendra
-  if (window._mpPublishPick) window._mpPublishPick(state.currentStep - 1, img.dataset.file);
 }
 
 function _showToast() {

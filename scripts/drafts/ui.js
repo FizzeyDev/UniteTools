@@ -92,12 +92,15 @@ export function highlightCurrentSlot() {
 export function updateFearlessRestrictions() {
   state.allImages.forEach(img => img.classList.remove("fearless-blocked"));
   if (state.currentStep >= state.currentDraftOrder.length) return;
+  const step = state.currentDraftOrder[state.currentStep];
 
   // All-Star mode: mons picked in a PREVIOUS draft of the series stay
-  // blocked (greyed + unclickable) during BOTH the ban and the pick phase.
-  // Real bans from earlier drafts are never in allStarPicked (only picks
-  // are tracked there), so they remain fully available as expected.
+  // blocked (greyed + unclickable) ONLY during the pick phase. Blocking
+  // them during the ban phase too used to silently eat the click (the
+  // mon is already unavailable for picking anyway, so banning it is
+  // pointless but should never be a dead click for the player).
   if (state.allStarMode) {
+    if (step.type === "ban") return;
     state.allImages.forEach(img => {
       if (allStarPicked.has(img.dataset.file) && !img.classList.contains("used"))
         img.classList.add("fearless-blocked");
@@ -107,7 +110,6 @@ export function updateFearlessRestrictions() {
 
   // Fearless mode: team-specific restriction, also enforced during bans.
   if (!state.fearlessMode) return;
-  const step = state.currentDraftOrder[state.currentStep];
   const teamSet = step.team === "teamA" ? fearlessTeamA : fearlessTeamB;
   state.allImages.forEach(img => {
     if (teamSet.has(img.dataset.file) && !img.classList.contains("used"))
