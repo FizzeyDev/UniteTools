@@ -734,6 +734,39 @@ function applyPalkiaAttacker(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── SLOWBRO ───────────────────────────────────────────────────────────────────
+// "Slowbro stores up lost HP for a short time (blue HP). Slowbro's Oblivious
+// health remains for 6s and then decreases by 3% max HP every second."
+// This is a manually-tracked reserve (it depends on damage taken, timing and
+// decay, none of which this calculator simulates), so we expose a plain
+// number input for the current blue HP value. Downstream, statsManager.js
+// copies this into atkStats.blueHp so any heal using "scaling": "blue_hp"
+// (Water Gun / Scald / Surf / Amnesia / Telekinesis) can read it.
+function applySlowbroAttacker(atkStats, defStats, card) {
+  const blueHp = state.attackerSlowbroObliviousHP ?? 0;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/slowbro/oblivious.png')}
+    <div style="flex:1;">
+      ${passiveBadge('Oblivious', null, PASSIVE_ATK)}
+      <span style="font-size:0.85rem;color:#ccc;">Stores lost HP as "blue HP" for 6s (then decays 3% Max HP/s)</span><br>
+      <div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:0.85rem;color:${C};">Current blue HP:</span>
+        <input type="number" class="slowbro-oblivious-input" value="${blueHp}" min="0" step="10" style="
+          width:100px;background:#0d2428;color:${C};border:1px solid ${C};border-radius:4px;padding:4px 6px;
+          text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.9rem;">
+      </div>
+      <span style="font-size:0.8rem;color:${C}99;">Drives the "Oblivious HP" heals shown on Water Gun / Scald / Surf / Amnesia / Telekinesis below</span>
+    </div>
+  `);
+  line.querySelector('.slowbro-oblivious-input').onchange = (e) => {
+    state.attackerSlowbroObliviousHP = Math.max(0, parseInt(e.target.value, 10) || 0);
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 export {
   applyBuzzwoleAttacker, applyCeruledgeAttacker, applyChandelureAttacker,
   applyDarkraiAttacker, applyDecidueyeAttacker, applyZardyAttacker,
@@ -745,5 +778,6 @@ export {
   applyZeraoraAttacker, applyMoltresAttacker,
   applyTyphlosionAttacker, applySkeledirgAttacker, applyQuaquavalAttacker,
   applyYveltalAttacker,
-  applyPalkiaAttacker,    // ← PALKIA
+  applyPalkiaAttacker,
+  applySlowbroAttacker,
 };

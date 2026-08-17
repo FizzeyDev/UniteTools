@@ -1981,6 +1981,639 @@ function applyMiraidonChargeBeamStacks(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── SCIZOR — Swords Dance (dash Attack buff) ────────────────────────────────
+// "Dashes a short distance, increasing Attack by 15% for 5s." Level 13 adds a
+// separate −50% damage-received effect while dashing, modeled in
+// moveEffectsDef.js / multiplierManager.js since it affects damage taken.
+function applyScizorSwordsDance(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 7) return; // Swords Dance learned at level 7
+
+  const isActive = state.attackerScizorSwordsDanceActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/scizor/swords_dance.png')}
+    <div style="flex:1;">
+      ${moveBadge('Swords Dance', 7)}
+      After the dash → <strong style="color:#fff;">+15% Attack</strong> for 5s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Eighth-hit AoE damage is calculated separately above</span><br>
+      <button class="scizor-swords-dance-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.scizor-swords-dance-toggle').onclick = () => {
+    state.attackerScizorSwordsDanceActive = !state.attackerScizorSwordsDanceActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyScizorSwordsDanceStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'scizor') return;
+  if (level < 7) return;
+  if (!state.attackerScizorSwordsDanceActive) return;
+  atkStats.atk = Math.floor(atkStats.atk * 1.15);
+}
+
+// ── SCYTHER — Swords Dance (dash Attack buff) ───────────────────────────────
+// Same effect as Scizor's Swords Dance: "Dashes a short distance, increasing
+// Attack by 15% for 5s." Level 13's −50% damage-received while dashing is
+// modeled in moveEffectsDef.js / multiplierManager.js.
+function applyScytherSwordsDance(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 7) return; // Swords Dance learned at level 7
+
+  const isActive = state.attackerScytherSwordsDanceActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/scyther/swords_dance.png')}
+    <div style="flex:1;">
+      ${moveBadge('Swords Dance', 7)}
+      After the dash → <strong style="color:#fff;">+15% Attack</strong> for 5s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Eighth-hit AoE damage is calculated separately above</span><br>
+      <button class="scyther-swords-dance-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.scyther-swords-dance-toggle').onclick = () => {
+    state.attackerScytherSwordsDanceActive = !state.attackerScytherSwordsDanceActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyScytherSwordsDanceStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'scyther') return;
+  if (level < 7) return;
+  if (!state.attackerScytherSwordsDanceActive) return;
+  atkStats.atk = Math.floor(atkStats.atk * 1.15);
+}
+
+// ── SNORLAX — Flail+ (heal below 40% Max HP) ────────────────────────────────
+// "When the user is below 40% max HP, auto attacks also restore the user's
+// HP for 30% of damage dealt." Toggle-gated since the threshold isn't tracked
+// automatically; the heal itself is computed inline in damageDisplay.js
+// against the Flail+ Basic/Boosted damage lines.
+function applySnorlaxFlailHeal(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 11) return; // Upgrade at level 11
+
+  const isActive = state.attackerSnorlaxFlailHealActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/snorlax/flail.png')}
+    <div style="flex:1;">
+      ${moveBadge('Flail+', 11)}
+      Below 40% Max HP → <strong style="color:#fff;">auto attacks heal 30% of damage dealt</strong><br>
+      <button class="snorlax-flail-heal-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.snorlax-flail-heal-toggle').onclick = () => {
+    state.attackerSnorlaxFlailHealActive = !state.attackerSnorlaxFlailHealActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── SYLVEON — Calm Mind (Sp. Atk buff) ──────────────────────────────────────
+// "Increases movement speed by 30%, Sp. Attack by 40% and Sp. Defense by 10%.
+// All buffs last for 3s." The Sp. Defense side of this buff is modeled in
+// moveEffectsDef.js / statsManager.js (defStats) since it only matters when
+// Sylveon is on the receiving end. Movement speed isn't modeled. Level 12's
+// "block one move + shield" isn't a damage-calc value either — the shield
+// itself is already covered by the move's "shields" JSON entry.
+function applySylveonCalmMind(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 6) return; // Calm Mind learned at level 6
+
+  const upgraded = level >= 12;
+  const isActive = state.attackerSylveonCalmMindActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/sylveon/calm_mind.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Calm Mind+' : 'Calm Mind', upgraded ? 12 : 6)}
+      For 3s → <strong style="color:#fff;">+40% Sp. Attack</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Also +10% Sp. Defense (see Defender tab) & +30% Movement Speed — not modeled here${upgraded ? '. Level 12 blocks one move + grants a shield (calculated separately above) — not modeled here either' : ''}</span><br>
+      <button class="sylveon-calm-mind-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.sylveon-calm-mind-toggle').onclick = () => {
+    state.attackerSylveonCalmMindActive = !state.attackerSylveonCalmMindActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applySylveonCalmMindStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'sylveon') return;
+  if (level < 6) return;
+  if (!state.attackerSylveonCalmMindActive) return;
+  atkStats.sp_atk = Math.floor(atkStats.sp_atk * 1.40);
+}
+
+// ── SYLVEON — Fairy Frolic (Unite) buff (damage → HP conversion) ───────────
+// "Fairy Frolic buff: for 10s, 50% of the damage dealt by Sylveon is
+// converted into HP. No HP is recovered if the damage is dealt to shields."
+// The landing hit's own 60% heal is computed separately in damageDisplay.js
+// against the move's "Damage" entry (doesn't need this toggle).
+function applySylveonFairyFrolicBuff(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 8) return; // Fairy Frolic learned at level 8
+
+  const isActive = state.attackerSylveonFairyFrolicBuffActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/sylveon/fairy_frolic.png')}
+    <div style="flex:1;">
+      ${moveBadge('Fairy Frolic', 8)}
+      After landing, for 10s → <strong style="color:#fff;">50% of all damage dealt is converted into HP</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">No heal on damage dealt to shields — not modeled here (applied to every hit below)</span><br>
+      <button class="sylveon-fairy-frolic-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.sylveon-fairy-frolic-toggle').onclick = () => {
+    state.attackerSylveonFairyFrolicBuffActive = !state.attackerSylveonFairyFrolicBuffActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── TALONFLAME — Flame Charge+ (Defense Pierce) ─────────────────────────────
+// "Increases the user's Defense penetration for 3s ... if this move hits."
+// Defense Pierce: 0% Atk + 3×(Level-1) + 60 — a FLAT amount subtracted from
+// the target's effective Defense (not a percentage), applied in statsManager.js.
+function applyTalonflameFlameCharge(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 11) return; // Upgrade at level 11
+
+  const pierceValue = 3 * (level - 1) + 60;
+  const isActive = state.attackerTalonflameFlameChargeDefPierceActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/talonflame/flame_charge.png')}
+    <div style="flex:1;">
+      ${moveBadge('Flame Charge+', 11)}
+      For 3s after hitting → <strong style="color:#fff;">−${pierceValue} target Defense</strong> (flat pierce)<br>
+      <span style="font-size:0.8rem;color:${C}99;">Also −30% Movement Speed on hit targets for 5s — not modeled here</span><br>
+      <button class="talonflame-flame-charge-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.talonflame-flame-charge-toggle').onclick = () => {
+    state.attackerTalonflameFlameChargeDefPierceActive = !state.attackerTalonflameFlameChargeDefPierceActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── TINKATON — Thief (Def / Sp. Def debuff on hit target) ──────────────────
+// "Pokémon from the opposing team hit with Thief empowered basic attacks have
+// a separate Thief debuff applied to them for 5s, decreasing their Defense
+// and Sp. Def by 10%." Level 11 strengthens this to 25%. The companion
+// self-buff (Def/Sp. Def increase on Tinkaton) is modeled in
+// moveEffectsDef.js / statsManager.js since it only matters when Tinkaton is
+// the one taking damage.
+function applyTinkatonThiefDebuff(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Thief learned at level 5
+
+  const upgraded = level >= 11;
+  const percent  = upgraded ? 25 : 10;
+
+  const isActive = state.attackerTinkatonThiefDebuffActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/tinkaton/thief.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Thief+' : 'Thief', upgraded ? 11 : 5)}
+      Empowered basic attack hits → <strong style="color:#fff;">−${percent}% target Def & Sp. Def</strong> for 5s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Also grants a movement speed buff & readies the empowered attack — not modeled here</span><br>
+      <button class="tinkaton-thief-debuff-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.tinkaton-thief-debuff-toggle').onclick = () => {
+    state.attackerTinkatonThiefDebuffActive = !state.attackerTinkatonThiefDebuffActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── TREVENANT — Wood Hammer (self-damage) ───────────────────────────────────
+// "Every time this move is used, it consumes 5% of Trevenant's current HP."
+// Purely informational — doesn't affect the damage calc, just displayed here.
+function applyTrevenantWoodHammer(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Wood Hammer learned at level 5
+
+  const hpPercent  = state.attackerHPPercent ?? 100;
+  const currentHP  = Math.floor(atkStats.hp * hpPercent / 100);
+  const selfDamage = Math.floor(currentHP * 0.05);
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/trevenant/wood_hammer.png')}
+    <div style="flex:1;">
+      ${moveBadge('Wood Hammer', 5)}
+      Each use costs <strong style="color:#ff8a80;">5% of current HP</strong><br>
+      <span style="font-size:0.85rem;color:${C};">→ Self-damage: <strong>${selfDamage.toLocaleString()}</strong> <span style="color:${C}99;">(at ${hpPercent}% HP)</span></span>
+    </div>
+  `);
+  card.appendChild(line);
+}
+
+// ── TREVENANT — Curse (self-damage) ─────────────────────────────────────────
+// "Trevenant creates a cursed zone in exchange for 2% max HP per second for
+// 6s." Purely informational.
+function applyTrevenantCurse(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Curse learned at level 5
+
+  const perSecond   = Math.floor(atkStats.hp * 0.02);
+  const totalOver6s = perSecond * 6;
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/trevenant/curse.png')}
+    <div style="flex:1;">
+      ${moveBadge('Curse', 5)}
+      Costs <strong style="color:#ff8a80;">2% Max HP/s</strong> for 6s while active<br>
+      <span style="font-size:0.85rem;color:${C};">→ Self-damage: <strong>${perSecond.toLocaleString()}</strong>/s <span style="color:${C}99;">(${totalOver6s.toLocaleString()} total over 6s)</span></span>
+    </div>
+  `);
+  card.appendChild(line);
+}
+
+// ── TYRANITAR — Rock Polish (self damage buff) ──────────────────────────────
+// "If this move hits any enemy, all damage is increased by 15% for 3s."
+function applyTyranitarRockPolish(atkStats, defStats, card) {
+  const isActive = state.attackerTyranitarRockPolishActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/tyranitar/rock_polish.png')}
+    <div style="flex:1;">
+      ${moveBadge('Rock Polish', 1)}
+      On hit → <strong style="color:#fff;">+15% all damage</strong> for 3s<br>
+      <button class="tyranitar-rock-polish-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.tyranitar-rock-polish-toggle').onclick = () => {
+    state.attackerTyranitarRockPolishActive = !state.attackerTyranitarRockPolishActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── TYRANITAR — Sand Tomb (ignore target Defense, in the dust cloud) ───────
+// "while the user is in the cloud of dust... can ignore the Defense and
+// shield effects of enemies." The −15% damage received side is modeled in
+// moveEffectsDef.js. Shield-ignoring isn't modeled.
+function applyTyranitarSandTombIgnoreDef(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 9) return; // Sand Tomb learned at level 9
+
+  const upgraded = level >= 13;
+  const isActive = state.attackerTyranitarSandTombDustActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/tyranitar/sand_tomb.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Sand Tomb+' : 'Sand Tomb', upgraded ? 13 : 9)}
+      In the dust cloud (${upgraded ? '8s' : '6s'}) → <strong style="color:#fff;">ignores target's Defense</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Also ignores shield effects — not modeled here. −15% damage received is in the Defender tab</span><br>
+      <button class="tyranitar-sand-tomb-atk-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.tyranitar-sand-tomb-atk-toggle').onclick = () => {
+    state.attackerTyranitarSandTombDustActive = !state.attackerTyranitarSandTombDustActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── TYRANITAR — Tyrannical Rampage (Unite, true damage execute) ────────────
+// "Damaging a Pokémon from the opposing team below 20% max HP with these
+// auto attacks deals 40% max HP as true damage to the target."
+function applyTyranitarRampage(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 9) return; // Tyrannical Rampage learned at level 9
+
+  const executeReady = state.attackerTyranitarRampageExecuteReady ?? false;
+  const trueDamage = defStats?.hp != null ? Math.floor(defStats.hp * 0.40) : null;
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/tyranitar/tyrannical_rampage.png')}
+    <div style="flex:1;">
+      ${moveBadge('Tyrannical Rampage', 9)}
+      While rampaging (10s) → <strong style="color:#fff;">changed auto attacks</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Also 50% Tenacity — not modeled here</span><br>
+      <span style="font-size:0.85rem;color:#ccc;">Target ≤20% Max HP:</span>
+      <button class="tyranitar-rampage-execute-toggle" style="
+        margin-top:6px;padding:6px 14px;background:${executeReady ? '#27ae60' : '#7f8c8d'};color:white;border:none;border-radius:6px;cursor:pointer;
+      ">${executeReady ? 'Ready' : 'Not ready'}</button>
+      ${executeReady ? `
+        <div style="margin-top:8px;font-size:0.85rem;color:#e74c3c;">
+          True damage on hit: <strong>${trueDamage !== null ? trueDamage.toLocaleString() : '—'}</strong>
+          <span style="color:#e74c3c99;">(40% Max HP)</span>
+        </div>
+      ` : ''}
+    </div>
+  `);
+  line.querySelector('.tyranitar-rampage-execute-toggle').onclick = () => {
+    state.attackerTyranitarRampageExecuteReady = !executeReady;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── TYRANITAR — Ancient Power (piercing strength, ignore Defense) ──────────
+// "If any enemies are hit by the shock wave, Tyranitar is granted piercing
+// strength allowing damage dealt to ignore enemy Defense and shield effects
+// for 8s." Same "ignore Defense" pipeline as Sand Tomb+ (shares the flag
+// downstream in damageDisplay.js). Shields (already in the move's JSON),
+// hindrance resistance and movement speed aren't modeled here.
+function applyTyranitarAncientPower(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 9) return; // Ancient Power learned at level 9
+
+  const upgraded = level >= 13;
+  const isActive = state.attackerTyranitarAncientPowerPierceActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/tyranitar/ancient_power.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Ancient Power+' : 'Ancient Power', upgraded ? 13 : 9)}
+      Shock wave hits → <strong style="color:#fff;">ignores target's Defense</strong> for 8s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Also ignores shield effects, +Hindrance resistance & Movement Speed while charging — not modeled here. Shields are calculated separately above</span><br>
+      <button class="tyranitar-ancient-power-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.tyranitar-ancient-power-toggle').onclick = () => {
+    state.attackerTyranitarAncientPowerPierceActive = !state.attackerTyranitarAncientPowerPierceActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── URSHIFU — Flowing Fists (Unite, variable consecutive blows) ────────────
+// "every 2 times the user hits a Pokémon from the opposing team, the number
+// of consecutive blows for the follow-up attack increases by 1 (up to 10
+// hits for an additional 5 blows; maximum 10 consecutive blows)." Base is 5
+// blows; this stack (0-5) adds up to 5 more, read by damageDisplay.js to
+// override the tick_count of the "Hits during follow-up" damage line.
+function applyUrshifuFlowingFists(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 9) return; // Flowing Fists learned at level 9
+
+  const stacks    = state.attackerUrshifuFlowingFistsStacks ?? 0;
+  const maxStacks = 5;
+  const totalHits = 5 + stacks;
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/urshifu/flowing_fists.png')}
+    <div style="flex:1;">
+      ${moveBadge('Flowing Fists', 9)}
+      Extra blows earned (2 hits = +1, max 5): <button class="stack-btn minus urshifu-ff-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus urshifu-ff-plus">+</button><br>
+      → Consecutive blows: <strong style="color:${C};">${totalHits}</strong>/10
+      ${stacks >= maxStacks ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ MAX</span>' : ''}<br>
+      <span style="font-size:0.8rem;color:${C}99;">While unleashing → −30% damage received (see Defender tab)</span>
+    </div>
+  `);
+  line.querySelector('.urshifu-ff-minus').onclick = () => { if ((state.attackerUrshifuFlowingFistsStacks ?? 0) > 0)        { state.attackerUrshifuFlowingFistsStacks = (state.attackerUrshifuFlowingFistsStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.urshifu-ff-plus').onclick  = () => { if ((state.attackerUrshifuFlowingFistsStacks ?? 0) < maxStacks) { state.attackerUrshifuFlowingFistsStacks = (state.attackerUrshifuFlowingFistsStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
+// ── ZACIAN — Sacred Sword (post-flurry Attack buff + Defense pierce) ───────
+// "After a flurry attack hits an opposing Pokémon, the user's Attack is
+// increased by 20% for 3s, and damage dealt by the user's moves and basic
+// attacks ignores 10% of the opposing Pokémon's Defense." The damage-taken
+// reduction during the slash is modeled in moveEffectsDef.js.
+function applyZacianSacredSword(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 5) return; // Sacred Sword learned at level 5
+
+  const isActive = state.attackerZacianSacredSwordActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/zacian/sacred_sword.png')}
+    <div style="flex:1;">
+      ${moveBadge('Sacred Sword', 5)}
+      Flurry hits → <strong style="color:#fff;">+20% Attack</strong> & <strong style="color:#fff;">10% Defense Pierce</strong> for 3s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Applies to all following moves & basic attacks</span><br>
+      <button class="zacian-sacred-sword-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.zacian-sacred-sword-toggle').onclick = () => {
+    state.attackerZacianSacredSwordActive = !state.attackerZacianSacredSwordActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+export function applyZacianSacredSwordStatBuff(pokemon, atkStats, level) {
+  if (pokemon?.pokemonId !== 'zacian') return;
+  if (level < 5) return;
+  if (!state.attackerZacianSacredSwordActive) return;
+  atkStats.atk = Math.floor(atkStats.atk * 1.20);
+}
+
+// ── ZACIAN — Sovereign Sword (Unite, multi-target damage falloff) ──────────
+// "This move deals 15% decreased damage per additional target hit, capping
+// at 30% less damage from hitting 3 targets."
+function applyZacianSovereignSword(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 9) return; // Sovereign Sword learned at level 9
+
+  const targets = state.attackerZacianSovereignSwordTargets ?? 1;
+  const options = [1, 2, 3];
+  const reducPct = (targets - 1) * 15;
+
+  const buttonsHtml = options.map(n => `
+    <button class="zacian-ss-targets-btn" data-targets="${n}" style="
+      padding:6px 12px;margin:2px;
+      background:${targets === n ? C : '#0d2428'};
+      color:${targets === n ? '#000' : C};
+      border:1px solid ${C};border-radius:6px;cursor:pointer;
+      font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.8rem;
+    ">${n} target${n > 1 ? 's' : ''}</button>
+  `).join('');
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/zacian/sovereign_sword.png')}
+    <div style="flex:1;">
+      ${moveBadge('Sovereign Sword', 9)}
+      Targets hit: <div style="margin-top:6px;">${buttonsHtml}</div>
+      → Damage <strong style="color:${reducPct > 0 ? '#ff8a80' : '#888'};">−${reducPct}%</strong>
+    </div>
+  `);
+  line.querySelectorAll('.zacian-ss-targets-btn').forEach(btn => {
+    btn.onclick = () => {
+      state.attackerZacianSovereignSwordTargets = parseInt(btn.dataset.targets, 10);
+      updateDamages();
+    };
+  });
+  card.appendChild(line);
+}
+
+// ── ZERAORA — Wild Charge (variable combo length + recoil) ─────────────────
+// "unleash a combo of at least 3 attacks... each stack of the buff adds 1
+// additional attack to the next use of Wild Charge (for up to 6 total
+// hits)." Base = 1 Initial + 2 Subsequent (3 total); each stack (0-3) adds
+// 1 Subsequent hit, up to 1 Initial + 5 Subsequent (6 total). Also shows the
+// recoil self-damage (1% remaining HP per attack, 2 instances on the
+// initial hit) — informational only.
+function applyZeraoraWildCharge(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 7) return; // Wild Charge learned at level 7
+
+  const stacks      = state.attackerZeraoraWildChargeStacks ?? 0;
+  const maxStacks    = 3;
+  const subsequentHits = 2 + stacks;
+  const totalHits    = 1 + subsequentHits;
+
+  const hpPercent  = state.attackerHPPercent ?? 100;
+  const currentHP  = Math.floor(atkStats.hp * hpPercent / 100);
+  const recoilPerAttack = Math.floor(currentHP * 0.01);
+  const recoilInstances  = totalHits + 1; // initial hit deals 2 instances
+  const recoilTotal = recoilPerAttack * recoilInstances;
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/zeraora/wild_charge.png')}
+    <div style="flex:1;">
+      ${moveBadge('Wild Charge', 7)}
+      Wild Charge buff stacks: <button class="stack-btn minus zeraora-wc-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus zeraora-wc-plus">+</button><br>
+      → Subsequent Hits: <strong style="color:${C};">${subsequentHits}</strong> (${totalHits} total, incl. Initial)
+      ${stacks >= maxStacks ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ MAX</span>' : ''}<br>
+      <span style="font-size:0.85rem;color:#ff8a80;">Recoil: ~${recoilPerAttack.toLocaleString()}/attack × ${recoilInstances} instances ≈ ${recoilTotal.toLocaleString()} total</span><br>
+      <span style="font-size:0.8rem;color:${C}99;">Recoil is 1% of current remaining HP, recalculated each hit — this is an approximation using current HP</span>
+    </div>
+  `);
+  line.querySelector('.zeraora-wc-minus').onclick = () => { if ((state.attackerZeraoraWildChargeStacks ?? 0) > 0)        { state.attackerZeraoraWildChargeStacks = (state.attackerZeraoraWildChargeStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.zeraora-wc-plus').onclick  = () => { if ((state.attackerZeraoraWildChargeStacks ?? 0) < maxStacks) { state.attackerZeraoraWildChargeStacks = (state.attackerZeraoraWildChargeStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
+// ── ZERAORA — Plasma Gale (auto attack damage buff in zone) ────────────────
+// "While in the zone, also increases the user's auto attack range, and auto
+// attack damage by 20%." (Range not modeled.)
+function applyZeraoraPlasmaGale(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 9) return; // Plasma Gale learned at level 9
+
+  const isActive = state.attackerZeraoraPlasmaGaleZoneActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/zeraora/plasma_gale.png')}
+    <div style="flex:1;">
+      ${moveBadge('Plasma Gale', 9)}
+      In the plasma zone (5s) → <strong style="color:#fff;">+20% auto attack damage</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Also increased auto attack range — not modeled here</span><br>
+      <button class="zeraora-plasma-gale-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.zeraora-plasma-gale-toggle').onclick = () => {
+    state.attackerZeraoraPlasmaGaleZoneActive = !state.attackerZeraoraPlasmaGaleZoneActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -2021,6 +2654,17 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     mewtwo_y:   [applyMewtwoYFutureSight, applyMewtwoYTeleportDash],
     mimikyu:    [applyMimikyuShadowClawStacks],
     miraidon:   [applyMiraidonChargeBeamStacks],
+    scizor:     [applyScizorSwordsDance],
+    scyther:    [applyScytherSwordsDance],
+    snorlax:    [applySnorlaxFlailHeal],
+    sylveon:    [applySylveonCalmMind, applySylveonFairyFrolicBuff],
+    talonflame: [applyTalonflameFlameCharge],
+    tinkaton:   [applyTinkatonThiefDebuff],
+    trevenant:  [applyTrevenantWoodHammer, applyTrevenantCurse],
+    tyranitar:  [applyTyranitarRockPolish, applyTyranitarSandTombIgnoreDef, applyTyranitarAncientPower, applyTyranitarRampage],
+    urshifu:    [applyUrshifuFlowingFists],
+    zacian:     [applyZacianSacredSword, applyZacianSovereignSword],
+    zeraora:    [applyZeraoraWildCharge, applyZeraoraPlasmaGale],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

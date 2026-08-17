@@ -34,10 +34,11 @@ export function calculateHeal(heal, atkStats, level, casterCurrentHP = null) {
 
   let relevantStat;
   switch (heal.scaling) {
-    case "atk":    relevantStat = atkStats.atk;    break;
-    case "hp":     relevantStat = atkStats.hp;     break;
+    case "atk":     relevantStat = atkStats.atk;          break;
+    case "hp":      relevantStat = atkStats.hp;           break;
+    case "blue_hp": relevantStat = atkStats.blueHp ?? 0;  break; // ── SLOWBRO — Oblivious (blue HP) ──
     case "sp_atk":
-    default:       relevantStat = atkStats.sp_atk; break;
+    default:        relevantStat = atkStats.sp_atk;       break;
   }
 
   const statPart  = Math.floor(relevantStat * (heal.multiplier || 0) / 100);

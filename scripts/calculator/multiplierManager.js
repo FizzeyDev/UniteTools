@@ -80,6 +80,7 @@ export function computeGlobalDamageMult() {
   }
   if (state.currentAttacker?.pokemonId === "mega-charizard-y" && state.attackerDroughtActive) globalDamageMult *= 1.10;
 
+  if (state.currentAttacker?.pokemonId === "tyranitar" && state.attackerTyranitarRockPolishActive) globalDamageMult *= 1.15;
   if (state.currentAttacker?.pokemonId === "inteleon" && state.attackerInteleonLiquidationStacked) globalDamageMult *= 1.20;
 
   // ── MEOWSCARADA — Flower Trick: Increased Explosion (bomb re-hit before detonation) ──
@@ -140,6 +141,78 @@ export function computeGlobalDamageMult() {
 
   if (state.currentDefender?.pokemonId === 'leafeon' && state.defenderLevel >= 10 && state.defenderLeafeonSolarBladeDmgReduc) {
     globalDamageMult *= 0.50;
+  }
+
+  if (state.currentDefender?.pokemonId === 'sableye' && state.defenderLevel >= 4 && state.defenderSableyeKnockOffActive) {
+    globalDamageMult *= 0.60;
+  }
+
+  if (state.currentDefender?.pokemonId === 'scizor' && state.defenderLevel >= 13 && state.defenderScizorSwordsDanceDashActive) {
+    globalDamageMult *= 0.50;
+  }
+
+  if (state.currentDefender?.pokemonId === 'scyther' && state.defenderLevel >= 13 && state.defenderScytherSwordsDanceDashActive) {
+    globalDamageMult *= 0.50;
+  }
+
+  if (state.currentDefender?.pokemonId === 'sirfetchd' && state.defenderLevel >= 7 && state.defenderSirfetchdDetectActive) {
+    globalDamageMult *= 0.70;
+  }
+
+  if (state.currentDefender?.pokemonId === 'skeledirge' && state.defenderLevel >= 7 && state.defenderSkeledirgeSnarlActive) {
+    globalDamageMult *= state.defenderLevel >= 13 ? 0.70 : 0.80;
+  }
+
+  if (state.currentDefender?.pokemonId === 'talonflame' && state.defenderLevel >= 13) {
+    const bbStacks = Math.min(3, state.defenderTalonflameBraveBirdStacks ?? 0);
+    if (bbStacks > 0) globalDamageMult *= (1 - bbStacks * 0.25);
+  }
+
+  if (state.currentDefender?.pokemonId === 'talonflame' && state.defenderLevel >= 9 && state.defenderTalonflameFlameSweepActive) {
+    globalDamageMult *= 0.50;
+  }
+
+  // ── Trevenant — Pain Split : mitigation par palier de HP (30/40/50%) ───────
+  if (state.currentDefender?.pokemonId === 'trevenant' && state.defenderLevel >= 7) {
+    const band = state.defenderTrevenantPainSplitBand || 'none';
+    const mult = { none: 1.0, high: 0.70, mid: 0.60, low: 0.50 }[band] ?? 1.0;
+    globalDamageMult *= mult;
+  }
+
+  if (state.currentDefender?.pokemonId === 'tyranitar' && state.defenderLevel >= 9 && state.defenderTyranitarSandTombDustActive) {
+    globalDamageMult *= 0.85;
+  }
+
+  if (state.currentDefender?.pokemonId === 'urshifu' && state.defenderLevel >= 1 && state.defenderUrshifuRockSmashActive) {
+    globalDamageMult *= 0.80;
+  }
+
+  if (state.currentDefender?.pokemonId === 'urshifu' && state.defenderLevel >= 5 && state.defenderUrshifuWickedBlowActive) {
+    globalDamageMult *= state.defenderLevel >= 11 ? 0.60 : 0.80;
+  }
+
+  if (state.currentDefender?.pokemonId === 'urshifu' && state.defenderLevel >= 11 && state.defenderUrshifuSurgingStrikesActive) {
+    globalDamageMult *= 0.70;
+  }
+
+  if (state.currentDefender?.pokemonId === 'urshifu' && state.defenderLevel >= 9 && state.defenderUrshifuFlowingFistsActive) {
+    globalDamageMult *= 0.70;
+  }
+
+  if (state.currentDefender?.pokemonId === 'vaporeon' && state.defenderLevel >= 6 && state.defenderVaporeonFlipTurnActive) {
+    globalDamageMult *= state.defenderLevel >= 12 ? 0.70 : 0.85;
+  }
+
+  if (state.currentDefender?.pokemonId === 'venusaur' && state.defenderLevel >= 5 && state.defenderVenusaurGigaDrainActive) {
+    globalDamageMult *= 0.60;
+  }
+
+  if (state.currentDefender?.pokemonId === 'zacian' && state.defenderLevel >= 5 && state.defenderZacianSacredSwordActive) {
+    globalDamageMult *= 0.70;
+  }
+
+  if (state.currentDefender?.pokemonId === 'zacian' && state.defenderLevel >= 7 && state.defenderZacianPlayRoughActive) {
+    globalDamageMult *= 0.75;
   }
 
   return globalDamageMult;

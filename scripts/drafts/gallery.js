@@ -160,4 +160,4 @@ export function initHideBlockedToggle() {
     const active = btn.classList.toggle("active");
     gallery.classList.toggle("hide-blocked", active);
   });
-}
+} 

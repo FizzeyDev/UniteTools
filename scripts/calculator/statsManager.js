@@ -28,6 +28,10 @@ import {
   applyMachampDynamicPunchStatBuff,
   applyMachampBarrageBlowStatBuff,
   applyReshiramDragonDanceStatBuff,
+  applyScizorSwordsDanceStatBuff,
+  applyScytherSwordsDanceStatBuff,
+  applySylveonCalmMindStatBuff,
+  applyZacianSacredSwordStatBuff,
 } from './moveEffectsAtk.js';
 
 export function applyPokemonStatMutations(atkStats, defStats) {
@@ -171,6 +175,10 @@ export function applyPokemonStatMutations(atkStats, defStats) {
   applyMachampDynamicPunchStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyMachampBarrageBlowStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
   applyReshiramDragonDanceStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyScizorSwordsDanceStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyScytherSwordsDanceStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applySylveonCalmMindStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
+  applyZacianSacredSwordStatBuff(state.currentAttacker, atkStats, state.attackerLevel);
 
   // ── Armarouge — Armor Cannon cooldown def debuff ───────────────────────────
   if (state.currentDefender?.pokemonId === 'armarouge' && state.defenderLevel >= 5 && state.defenderArmarougeArmorCannonDebuff) {
@@ -209,5 +217,60 @@ export function applyPokemonStatMutations(atkStats, defStats) {
   // ── Feraligatr — Crunch : Destructive Fangs (−30% Def cible) ────────────────
   if (state.currentAttacker?.pokemonId === 'feraligatr' && state.attackerLevel >= 5 && state.attackerFeraligatrDestructiveFangsActive) {
     defStats.def = Math.floor(defStats.def * 0.70);
+  }
+
+  // ── Talonflame — Flame Charge+ : Defense Pierce plat (3×(Lvl-1)+60) ────────
+  if (state.currentAttacker?.pokemonId === 'talonflame' && state.attackerLevel >= 11 && state.attackerTalonflameFlameChargeDefPierceActive) {
+    const pierceValue = 3 * (state.attackerLevel - 1) + 60;
+    defStats.def = Math.max(0, defStats.def - pierceValue);
+  }
+
+  // ── Tinkaton — Thief (debuff) : −10%/−25% Def & Sp. Def sur la cible ───────
+  if (state.currentAttacker?.pokemonId === 'tinkaton' && state.attackerLevel >= 5 && state.attackerTinkatonThiefDebuffActive) {
+    const percent = state.attackerLevel >= 11 ? 0.25 : 0.10;
+    defStats.def    = Math.floor(defStats.def    * (1 - percent));
+    defStats.sp_def = Math.floor(defStats.sp_def * (1 - percent));
+  }
+
+  // ── Scizor — Boosted Auto Attack : +40% Def per stack (additive, max 3) ────
+  if (state.currentDefender?.pokemonId === 'scizor') {
+    const aaStacks = state.defenderScizorAutoAttackDefStacks ?? 0;
+    if (aaStacks > 0) {
+      defStats.def = Math.floor(defStats.def * (1 + aaStacks * 0.40));
+    }
+  }
+
+  // ── Slowbro — Amnesia : +250 Def (Lv6), +125 Sp. Def also at Lv13 ──────────
+  if (state.currentDefender?.pokemonId === 'slowbro' && state.defenderLevel >= 6 && state.defenderSlowbroAmnesiaActive) {
+    defStats.def += 250;
+    if (state.defenderLevel >= 13) defStats.sp_def += 125;
+  }
+
+  // ── Slowbro — Oblivious : expose the manually-set blue HP value on
+  // atkStats so heals using "scaling": "blue_hp" (Water Gun, Scald, Surf,
+  // Amnesia, Telekinesis) can read it in healCalculator.js.
+  if (state.currentAttacker?.pokemonId === 'slowbro') {
+    atkStats.blueHp = state.attackerSlowbroObliviousHP ?? 0;
+  }
+
+  // ── Snorlax — Block+ : +35% Def & Sp. Def while holding the wall (Lv13) ────
+  if (state.currentDefender?.pokemonId === 'snorlax' && state.defenderLevel >= 13 && state.defenderSnorlaxBlockActive) {
+    defStats.def    = Math.floor(defStats.def    * 1.35);
+    defStats.sp_def = Math.floor(defStats.sp_def * 1.35);
+  }
+
+  // ── Sylveon — Calm Mind : +10% Sp. Def for 3s (Lv6) ─────────────────────────
+  if (state.currentDefender?.pokemonId === 'sylveon' && state.defenderLevel >= 6 && state.defenderSylveonCalmMindActive) {
+    defStats.sp_def = Math.floor(defStats.sp_def * 1.10);
+  }
+
+  // ── Tinkaton — Thief (buff) : +10%/+25% Def & Sp. Def per target hit, max 5 ─
+  if (state.currentDefender?.pokemonId === 'tinkaton' && state.defenderLevel >= 5) {
+    const stacks = Math.min(5, state.defenderTinkatonThiefStacks ?? 0);
+    if (stacks > 0) {
+      const perStackPct = state.defenderLevel >= 11 ? 0.25 : 0.10;
+      defStats.def    = Math.floor(defStats.def    * (1 + stacks * perStackPct));
+      defStats.sp_def = Math.floor(defStats.sp_def * (1 + stacks * perStackPct));
+    }
   }
 }

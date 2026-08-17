@@ -37,6 +37,7 @@ import {
   applyQuaquavalAttacker,
   applyYveltalAttacker,
   applyPalkiaAttacker,
+  applySlowbroAttacker,
 } from './passiveEffectsAtk.js';
 
 import {
@@ -287,6 +288,10 @@ export function updateDamages() {
     moldBreakerDefPen: state.currentAttacker?.pokemonId === "mega-gyarados" && state.attackerMoldBreakerActive
       ? state.currentAttacker.passive.bonusDefPen / 100 : 0,
     skeledirgeBlazeIgnore,   // ← SKELEDIRGE
+    tyranitarSandTombIgnore: state.currentAttacker?.pokemonId === "tyranitar" && ((state.attackerTyranitarSandTombDustActive ?? false) || (state.attackerTyranitarAncientPowerPierceActive ?? false))
+      ? 1.0 : 0,   // ← TYRANITAR — Sand Tomb+ / Ancient Power+ ignorent la Defense de la cible
+    zacianSacredSwordPierce: state.currentAttacker?.pokemonId === "zacian" && (state.attackerZacianSacredSwordActive ?? false)
+      ? 0.10 : 0,  // ← ZACIAN — Sacred Sword : 10% Defense Pierce sur tous les coups suivants
     defenderDamageMult: finalDefenderDamageMult   // ← includes CLEFABLE Block −25%
   };
 
@@ -702,6 +707,7 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
     quaquaval: applyQuaquavalAttacker,    // ← QUAQUAVAL
     yveltal: applyYveltalAttacker,        // ← YVELTAL
     palkia: applyPalkiaAttacker,           // ← PALKIA
+    slowbro: applySlowbroAttacker,         // ← SLOWBRO
   };
   handlers[pokemonId]?.(atkStats, defStats, card);
 }
@@ -815,6 +821,8 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
     slickIgnore, scopeCritBonus, globalDamageMult,
     infiltratorIgnore, defenderFlashFireReduction,
     skeledirgeBlazeIgnore,   // ← SKELEDIRGE
+    tyranitarSandTombIgnore, // ← TYRANITAR
+    zacianSacredSwordPierce, // ← ZACIAN
     defenderDamageMult
   } = effects;
   const aaResults = getAutoAttackResults(atkStats, defStats, currentDefHP, globalDamageMult);
@@ -882,6 +890,17 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       if (dmg.scaling === "physical") { relevantAtk = atkStats.atk;    relevantDef = defStats.def;    }
       if (dmg.scaling === "special")  { relevantAtk = atkStats.sp_atk; relevantDef = defStats.sp_def; }
 
+      // ── UMBREON — Foul Play (Second Hit) : utilise le plus haut entre l'Attaque
+      // d'Umbreon et celle de la cible ("noted" au premier hit). Comme les deux
+      // valeurs sont déjà connues ici, pas besoin de saisie manuelle : max() suffit.
+      if (
+        state.currentAttacker?.pokemonId === "umbreon" &&
+        move.name === "Foul Play" &&
+        dmg.name === "Damage (Second Hit)"
+      ) {
+        relevantAtk = Math.max(atkStats.atk, defStats.atk);
+      }
+
       let effectiveDef = relevantDef;
       if (slickIgnore > 0)                effectiveDef = Math.floor(effectiveDef * (1 - slickIgnore));
       if (infiltratorIgnore > 0)          effectiveDef = Math.floor(effectiveDef * (1 - infiltratorIgnore));
@@ -892,6 +911,16 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       }
       if (dmg.sp_def_ignore != null && relevantDef === defStats.sp_def) {
         effectiveDef = Math.floor(effectiveDef * (1 - dmg.sp_def_ignore));
+      }
+
+      // ── TYRANITAR — Sand Tomb+ : ignore entièrement la Defense (physique) ──
+      if (tyranitarSandTombIgnore > 0 && relevantDef === defStats.def) {
+        effectiveDef = Math.floor(effectiveDef * (1 - tyranitarSandTombIgnore));
+      }
+
+      // ── ZACIAN — Sacred Sword : 10% Defense Pierce (physique) ──────────────
+      if (zacianSacredSwordPierce > 0 && relevantDef === defStats.def) {
+        effectiveDef = Math.floor(effectiveDef * (1 - zacianSacredSwordPierce));
       }
 
       // ── SKELEDIRGE — Blaze : 35% Sp. Def Pierce sur le move suivant ──────
@@ -945,10 +974,24 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         dragonDanceFlightMult = 0.90;
       }
 
-      const effectiveGlobalMult = globalDamageMult * moltresBurnMult * lavaPlumeMult * flamethrowerPlusMult * fireSpinPlusMult * dragonDanceFlightMult * auraCannonPUPMult * machampCloseCombatMult;
+      // ── Zacian : Sovereign Sword → −15%/cible additionnelle (cap −30% à 3 cibles) ──
+      let zacianSovereignSwordMult = 1.0;
+      if (state.currentAttacker?.pokemonId === "zacian" && move.name === "Sovereign Sword (Unite)") {
+        const targets = state.attackerZacianSovereignSwordTargets ?? 1;
+        const reducPct = Math.min(2, targets - 1) * 15;
+        if (reducPct > 0) zacianSovereignSwordMult = 1 - reducPct / 100;
+      }
 
-      let normal = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0,           effectiveGlobalMult, defStats.hp, currentDefHP);
-      let crit   = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, true,  state.currentAttacker.pokemonId, scopeCritBonus, effectiveGlobalMult, defStats.hp, currentDefHP);
+      // ── Zeraora : Plasma Gale → +20% dégâts des auto-attaques dans la zone ──
+      let zeraoraPlasmaGaleMult = 1.0;
+      if (state.currentAttacker?.pokemonId === "zeraora" && move.name === "Auto-attack" && state.attackerZeraoraPlasmaGaleZoneActive) {
+        zeraoraPlasmaGaleMult = 1.20;
+      }
+
+      const effectiveGlobalMult = globalDamageMult * moltresBurnMult * lavaPlumeMult * flamethrowerPlusMult * fireSpinPlusMult * dragonDanceFlightMult * auraCannonPUPMult * machampCloseCombatMult * zacianSovereignSwordMult * zeraoraPlasmaGaleMult;
+
+      let normal = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0,           effectiveGlobalMult, defStats.hp, currentDefHP, atkStats.hp);
+      let crit   = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, true,  state.currentAttacker.pokemonId, scopeCritBonus, effectiveGlobalMult, defStats.hp, currentDefHP, atkStats.hp);
 
       // ── LATIAS — Dragon Breath : +0.5% dmg / Eon power au-delà de 60 (cap 1059) ──
       // Actif uniquement si le mode Eon Power sélectionné est "dragonBreath"
@@ -1096,6 +1139,30 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           : 0;
         tickCount = getDracoMeteorCometCount(eonPower);
         effectiveTickScaling = getDracoMeteorCometScaling(eonPower);
+      }
+
+      // ── URSHIFU — Flowing Fists : nombre de coups du follow-up piloté par
+      // les stacks (5 de base, +1 par palier jusqu'à 10, voir
+      // applyUrshifuFlowingFists dans moveEffectsAtk.js).
+      if (
+        state.currentAttacker?.pokemonId === "urshifu" &&
+        move.name === "Flowing Fists (Unite)" &&
+        dmg.name === "Hits during follow-up" &&
+        isTick
+      ) {
+        tickCount = 5 + Math.min(5, state.attackerUrshifuFlowingFistsStacks ?? 0);
+      }
+
+      // ── ZERAORA — Wild Charge : nombre de "Subsequent Hit" piloté par les
+      // stacks du buff (2 de base, +1/stack jusqu'à 5, voir
+      // applyZeraoraWildCharge dans moveEffectsAtk.js).
+      if (
+        state.currentAttacker?.pokemonId === "zeraora" &&
+        move.name === "Wild Charge" &&
+        dmg.name === "Damage - Subsequent Hit" &&
+        isTick
+      ) {
+        tickCount = 2 + Math.min(3, state.attackerZeraoraWildChargeStacks ?? 0);
       }
 
       // ── MIMIKYU — Shadow Claw : le nombre de "Leading Additional Hits"
@@ -1434,6 +1501,131 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
           <div class="dmg-values">
             <span class="dmg-heal">${healNormal.toLocaleString()}</span>
             <span class="dmg-heal" style="opacity:0.75;">(${healCrit.toLocaleString()})</span>
+          </div>
+        `;
+        card.appendChild(healLine);
+      }
+
+      // ── TREVENANT — Pain Split : True damage redirigé (dérivé du montant final) ──
+      if (
+        state.currentDefender?.pokemonId === "trevenant" &&
+        state.defenderLevel >= 7 &&
+        state.defenderTrevenantPainSplitBand &&
+        state.defenderTrevenantPainSplitBand !== "none" &&
+        dmg.dealDamage
+      ) {
+        const redirectPct = { high: 0.30, mid: 0.40, low: 0.50 }[state.defenderTrevenantPainSplitBand] ?? 0;
+        if (redirectPct > 0) {
+          const computeTotal = (base, scaling, n) => {
+            if (!scaling) return base * n;
+            let sum = 0;
+            for (let i = 0; i < n; i++) sum += Math.floor(base * (scaling[i] ?? scaling[scaling.length - 1]));
+            return sum;
+          };
+          const totalNormal = isTick ? computeTotal(displayedNormal, effectiveTickScaling, tickCount) : displayedNormal;
+          const totalCrit    = isTick ? computeTotal(displayedCrit,   effectiveTickScaling, tickCount) : displayedCrit;
+
+          const ratio = redirectPct / (1 - redirectPct);
+          const redirectedNormal = Math.floor(totalNormal * ratio);
+          const redirectedCrit   = Math.floor(totalCrit   * ratio);
+
+          const redirLine = document.createElement("div");
+          redirLine.className = "damage-line";
+          redirLine.innerHTML = `
+            <span class="dmg-name" style="color:#cc99ff;">
+              True damage redirected (Pain Split)
+              <br><i style="font-size:0.8em;color:#cc99ff99;">${(redirectPct * 100).toFixed(0)}% of this hit, sent to the linked enemy instead of Trevenant</i>
+            </span>
+            <div class="dmg-values">
+              <span class="dmg-normal" style="color:#cc99ff;">${redirectedNormal.toLocaleString()}</span>
+              ${canCrit ? `<span class="dmg-crit" style="color:#cc99ff;opacity:0.75;">(${redirectedCrit.toLocaleString()})</span>` : ""}
+            </div>
+          `;
+          card.appendChild(redirLine);
+        }
+      }
+
+      // ── SYLVEON — Fairy Frolic (Unite) : heal 60% sur le hit d'atterrissage ──
+      if (
+        state.currentAttacker?.pokemonId === "sylveon" &&
+        move.name === "Fairy Frolic (Unite)" &&
+        dmg.name === "Damage"
+      ) {
+        const healPct    = 0.60;
+        const healNormal = Math.floor(displayedNormal * healPct);
+
+        const healLine = document.createElement("div");
+        healLine.className = "damage-line";
+        healLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;">
+            Heal (Fairy Frolic)
+            <br><i style="font-size:0.8em;color:#4caf8299;">60% of landing damage dealt</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${healNormal.toLocaleString()}</span>
+          </div>
+        `;
+        card.appendChild(healLine);
+      }
+
+      // ── SYLVEON — Fairy Frolic buff (10s) : 50% de TOUS les dégâts → heal ──
+      // Ne s'applique pas au hit d'atterrissage lui-même (déjà couvert au-dessus).
+      if (
+        state.currentAttacker?.pokemonId === "sylveon" &&
+        state.attackerSylveonFairyFrolicBuffActive &&
+        dmg.dealDamage &&
+        !(move.name === "Fairy Frolic (Unite)" && dmg.name === "Damage")
+      ) {
+        const computeTotal = (base, scaling, n) => {
+          if (!scaling) return base * n;
+          let sum = 0;
+          for (let i = 0; i < n; i++) sum += Math.floor(base * (scaling[i] ?? scaling[scaling.length - 1]));
+          return sum;
+        };
+        const totalNormal = isTick ? computeTotal(displayedNormal, effectiveTickScaling, tickCount) : displayedNormal;
+        const totalCrit    = isTick ? computeTotal(displayedCrit,   effectiveTickScaling, tickCount) : displayedCrit;
+
+        const healPct    = 0.50;
+        const healNormal = Math.floor(totalNormal * healPct);
+        const healCrit   = Math.floor(totalCrit   * healPct);
+
+        const healLine = document.createElement("div");
+        healLine.className = "damage-line";
+        healLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;">
+            Heal (Fairy Frolic buff)
+            <br><i style="font-size:0.8em;color:#4caf8299;">50% of damage dealt · 10s after landing · no heal on shields</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${healNormal.toLocaleString()}</span>
+            ${canCrit ? `<span class="dmg-heal" style="opacity:0.75;">(${healCrit.toLocaleString()})</span>` : ""}
+          </div>
+        `;
+        card.appendChild(healLine);
+      }
+
+      // ── SNORLAX — Flail+ (lvl 11) : heal 30% sur les hits <40% Max HP ───────
+      if (
+        state.currentAttacker?.pokemonId === "snorlax" &&
+        state.attackerLevel >= 11 &&
+        state.attackerSnorlaxFlailHealActive &&
+        move.name === "Flail" &&
+        dmg.name?.includes("+")
+      ) {
+        const healPct    = 0.30;
+        const healNormal = Math.floor(displayedNormal * healPct);
+        const healCrit   = Math.floor(displayedCrit   * healPct);
+
+        const healLine = document.createElement("div");
+        healLine.className = "damage-line";
+        healLine.innerHTML = `
+          <span class="dmg-name" style="color:#4caf82;">
+            Heal (Flail+)
+            <br><i style="font-size:0.8em;color:#4caf8299;">30% of damage dealt · only while below 40% Max HP</i>
+          </span>
+          <div class="dmg-values">
+            <span class="dmg-heal">${healNormal.toLocaleString()}</span>
+            ${canCrit ? `<span class="dmg-heal" style="opacity:0.75;">(${healCrit.toLocaleString()})</span>` : ""}
           </div>
         `;
         card.appendChild(healLine);

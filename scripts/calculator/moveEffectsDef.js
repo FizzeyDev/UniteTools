@@ -1110,6 +1110,720 @@ function applyMoltresSkyAttackStacks(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── SCIZOR — Boosted Auto Attack (Defense stacks) ───────────────────────────
+// "Becomes a boosted attack with every third attack, decreasing enemy
+// movement speed by 30% for 2s when it hits and increasing Scizor's Defense
+// by 40% for 6s. This Defense increase can stack additively up to 3 times
+// and the duration refreshes when gaining another stack." Movement speed
+// debuff on the enemy isn't modeled here (no damage impact); the Defense
+// stacking is applied to defStats in statsManager.js.
+function applyScizorAutoAttackDefStacks(atkStats, defStats, card) {
+  const stacks    = state.defenderScizorAutoAttackDefStacks ?? 0;
+  const maxStacks = 3;
+  const bonusPct  = stacks * 40;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/scizor/technician.png')}
+    <div style="flex:1;">
+      ${moveBadge('Boosted Auto Attack', 1)}
+      Stacks: <button class="stack-btn minus scizor-aa-def-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus scizor-aa-def-plus">+</button><br>
+      → Def <strong style="color:${bonusPct > 0 ? '#88ff88' : '#888'};">+${bonusPct}%</strong> for 6s
+      ${stacks >= maxStacks ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ MAX</span>' : ''}<br>
+      <span style="font-size:0.8rem;color:${C}99;">Also slows the attacker hit by 30% for 2s — not modeled here</span>
+    </div>
+  `);
+  line.querySelector('.scizor-aa-def-minus').onclick = () => { if ((state.defenderScizorAutoAttackDefStacks ?? 0) > 0)        { state.defenderScizorAutoAttackDefStacks = (state.defenderScizorAutoAttackDefStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.scizor-aa-def-plus').onclick  = () => { if ((state.defenderScizorAutoAttackDefStacks ?? 0) < maxStacks) { state.defenderScizorAutoAttackDefStacks = (state.defenderScizorAutoAttackDefStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
+// ── SCIZOR — Swords Dance+ (dash damage reduction) ──────────────────────────
+function applyScizorSwordsDanceDashReduc(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const isActive = state.defenderScizorSwordsDanceDashActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/scizor/swords_dance.png')}
+    <div style="flex:1;">
+      ${moveBadge('Swords Dance+', 13)}
+      While dashing → <strong style="color:#fff;">−50% damage received</strong><br>
+      <button class="scizor-swords-dance-dash-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.scizor-swords-dance-dash-toggle').onclick = () => {
+    state.defenderScizorSwordsDanceDashActive = !state.defenderScizorSwordsDanceDashActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── SCYTHER — Swords Dance+ (dash damage reduction) ─────────────────────────
+function applyScytherSwordsDanceDashReduc(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const isActive = state.defenderScytherSwordsDanceDashActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/scyther/swords_dance.png')}
+    <div style="flex:1;">
+      ${moveBadge('Swords Dance+', 13)}
+      While dashing → <strong style="color:#fff;">−50% damage received</strong><br>
+      <button class="scyther-swords-dance-dash-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.scyther-swords-dance-dash-toggle').onclick = () => {
+    state.defenderScytherSwordsDanceDashActive = !state.defenderScytherSwordsDanceDashActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── SIRFETCH'D — Detect (damage reduction after Impervious) ────────────────
+// "For 0.6s the user is Impervious, negating damage received, afterwards the
+// user instead reduces damage received by 30% for up to 2.4s." Only the
+// −30% window is modeled here (the Impervious 0.6s is a full negation, not a
+// damage-calc multiplier); the level 13 upgrade only affects cooldown.
+function applySirfetchdDetect(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 7) return; // Detect learned at level 7
+
+  const isActive = state.defenderSirfetchdDetectActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/sirfetchd/detect.png')}
+    <div style="flex:1;">
+      ${moveBadge('Detect', 7)}
+      After the Impervious window (2.4s) → <strong style="color:#fff;">−30% damage received</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">The first 0.6s (Impervious, full negation) isn't modeled here</span><br>
+      <button class="sirfetchd-detect-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.sirfetchd-detect-toggle').onclick = () => {
+    state.defenderSirfetchdDetectActive = !state.defenderSirfetchdDetectActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── SKELEDIRGE — Snarl (fear damage debuff) ─────────────────────────────────
+// "For 2.5s opposing Pokémon hit by this move deal 20% less damage to the
+// user." Level 13 increases the debuff to 30%.
+function applySkeledirgeSnarl(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 7) return; // Snarl learned at level 7
+
+  const upgraded = level >= 13;
+  const percent  = upgraded ? 30 : 20;
+
+  const isActive = state.defenderSkeledirgeSnarlActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/skeledirge/snarl.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Snarl+' : 'Snarl', upgraded ? 13 : 7)}
+      Hit target → <strong style="color:#fff;">−${percent}% damage dealt to Skeledirge</strong> for 2.5s<br>
+      <button class="skeledirge-snarl-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.skeledirge-snarl-toggle').onclick = () => {
+    state.defenderSkeledirgeSnarlActive = !state.defenderSkeledirgeSnarlActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── SLOWBRO — Amnesia (Def / Sp. Def buff + HP regen) ───────────────────────
+// "Slowbro briefly becomes unstoppable, gaining +250 Defense for 4s and
+// restoring 17.5% of Slowbro's Oblivious health (blue HP) every second for
+// 4s." Level 13 adds +125 Sp. Defense. Only the flat Def/Sp.Def buff is
+// modeled here (applied in statsManager.js); the Oblivious-HP regen isn't a
+// damage-calc value.
+function applySlowbroAmnesia(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 6) return; // Amnesia learned at level 6
+
+  const upgraded = level >= 13;
+  const isActive = state.defenderSlowbroAmnesiaActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/slowbro/amnesia.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Amnesia+' : 'Amnesia', upgraded ? 13 : 6)}
+      Unstoppable → <strong style="color:#fff;">+250 Defense</strong>${upgraded ? ' & <strong style="color:#fff;">+125 Sp. Defense</strong>' : ''} for 4s<br>
+      <span style="font-size:0.8rem;color:${C}99;">Also restores 17.5% Oblivious HP/s for 4s — not modeled here</span><br>
+      <button class="slowbro-amnesia-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.slowbro-amnesia-toggle').onclick = () => {
+    state.defenderSlowbroAmnesiaActive = !state.defenderSlowbroAmnesiaActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── SNORLAX — Block+ (Def / Sp. Def buff while walling) ────────────────────
+// "Increases the user's Defense and Sp. Def by 35% while holding up the
+// wall." Only the level 13 upgrade has a stat effect — the base level 7
+// version is just the shield/wall/stun, already covered by the "shields"
+// entry in the move data.
+function applySnorlaxBlock(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const isActive = state.defenderSnorlaxBlockActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/snorlax/block.png')}
+    <div style="flex:1;">
+      ${moveBadge('Block+', 13)}
+      While holding up the wall → <strong style="color:#fff;">+35% Def & Sp. Def</strong><br>
+      <button class="snorlax-block-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.snorlax-block-toggle').onclick = () => {
+    state.defenderSnorlaxBlockActive = !state.defenderSnorlaxBlockActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── SYLVEON — Calm Mind (Sp. Def buff) ──────────────────────────────────────
+// Sp. Def side of the +10% Sp. Defense (3s) granted by Calm Mind. The
+// Sp. Attack side is modeled in moveEffectsAtk.js / statsManager.js.
+function applySylveonCalmMindDef(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 6) return; // Calm Mind learned at level 6
+
+  const upgraded = level >= 12;
+  const isActive = state.defenderSylveonCalmMindActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/sylveon/calm_mind.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Calm Mind+' : 'Calm Mind', upgraded ? 12 : 6)}
+      For 3s → <strong style="color:#fff;">+10% Sp. Defense</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Also +40% Sp. Attack (see Attacker tab) & +30% Movement Speed — not modeled here${upgraded ? '. Level 12 blocks one move + grants a shield (calculated separately above) — not modeled here either' : ''}</span><br>
+      <button class="sylveon-calm-mind-def-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.sylveon-calm-mind-def-toggle').onclick = () => {
+    state.defenderSylveonCalmMindActive = !state.defenderSylveonCalmMindActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── TALONFLAME — Brave Bird+ (damage reduction stacks) ──────────────────────
+// "Reduces damage received by 25% per opposing Pokémon hit for 5s (up to 3
+// times; maximum 75%)."
+function applyTalonflameBraveBird(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 13) return; // Upgrade at level 13
+
+  const stacks    = state.defenderTalonflameBraveBirdStacks ?? 0;
+  const maxStacks = 3;
+  const bonusPct  = stacks * 25;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/talonflame/brave_bird.png')}
+    <div style="flex:1;">
+      ${moveBadge('Brave Bird+', 13)}
+      Opposing Pokémon hit: <button class="stack-btn minus talonflame-bb-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus talonflame-bb-plus">+</button><br>
+      → Damage received <strong style="color:${bonusPct > 0 ? '#88ff88' : '#888'};">−${bonusPct}%</strong> for 5s
+      ${stacks >= maxStacks ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ MAX</span>' : ''}
+    </div>
+  `);
+  line.querySelector('.talonflame-bb-minus').onclick = () => { if ((state.defenderTalonflameBraveBirdStacks ?? 0) > 0)        { state.defenderTalonflameBraveBirdStacks = (state.defenderTalonflameBraveBirdStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.talonflame-bb-plus').onclick  = () => { if ((state.defenderTalonflameBraveBirdStacks ?? 0) < maxStacks) { state.defenderTalonflameBraveBirdStacks = (state.defenderTalonflameBraveBirdStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
+// ── TALONFLAME — Flame Sweep (Unite, damage reduction while active) ────────
+// "becoming unstoppable, receiving 50% reduced damage" during the sweep.
+function applyTalonflameFlameSweep(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 9) return; // Flame Sweep learned at level 9
+
+  const isActive = state.defenderTalonflameFlameSweepActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/talonflame/flame_sweep.png')}
+    <div style="flex:1;">
+      ${moveBadge('Flame Sweep', 9)}
+      While sweeping → <strong style="color:#fff;">−50% damage received</strong><br>
+      <button class="talonflame-flame-sweep-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.talonflame-flame-sweep-toggle').onclick = () => {
+    state.defenderTalonflameFlameSweepActive = !state.defenderTalonflameFlameSweepActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── TINKATON — Thief (Def / Sp. Def buff, self stacks) ──────────────────────
+// "the user gains a Thief buff for 5s, increasing their Defense and Sp. Def
+// by 10% per target hit (up to 5 times; maximum 50%)." Level 11 strengthens
+// this to 25% per target hit (maximum 125%). The target-side debuff is
+// modeled in moveEffectsAtk.js / statsManager.js.
+function applyTinkatonThiefBuff(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 5) return; // Thief learned at level 5
+
+  const perStackPct = level >= 11 ? 25 : 10;
+  const stacks       = state.defenderTinkatonThiefStacks ?? 0;
+  const maxStacks    = 5;
+  const bonusPct     = stacks * perStackPct;
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/tinkaton/thief.png')}
+    <div style="flex:1;">
+      ${moveBadge(level >= 11 ? 'Thief+' : 'Thief', level >= 11 ? 11 : 5)}
+      Opposing Pokémon hit: <button class="stack-btn minus tinkaton-thief-minus">−</button>
+      <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+      <button class="stack-btn plus tinkaton-thief-plus">+</button><br>
+      → Def & Sp. Def <strong style="color:${bonusPct > 0 ? '#88ff88' : '#888'};">+${bonusPct}%</strong> for 5s
+      ${stacks >= maxStacks ? '<span style="color:#ffd740;font-size:0.8rem;"> ✦ MAX</span>' : ''}
+    </div>
+  `);
+  line.querySelector('.tinkaton-thief-minus').onclick = () => { if ((state.defenderTinkatonThiefStacks ?? 0) > 0)        { state.defenderTinkatonThiefStacks = (state.defenderTinkatonThiefStacks ?? 0) - 1; updateDamages(); } };
+  line.querySelector('.tinkaton-thief-plus').onclick  = () => { if ((state.defenderTinkatonThiefStacks ?? 0) < maxStacks) { state.defenderTinkatonThiefStacks = (state.defenderTinkatonThiefStacks ?? 0) + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
+// ── TREVENANT — Pain Split (mitigation tier, redirected as True damage) ────
+// "While the link holds, a percentage of damage that Trevenant would take is
+// mitigated and instead redirected to the linked enemy as True damage. The
+// lower Trevenant's remaining HP, the greater the percentage redirected."
+// The mitigation itself is applied as a multiplier in multiplierManager.js;
+// the redirected True damage amount is displayed inline in damageDisplay.js
+// against each incoming damage line, derived from the already-computed value.
+function applyTrevenantPainSplit(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 7) return; // Pain Split learned at level 7
+
+  const upgraded = level >= 13;
+  const band = state.defenderTrevenantPainSplitBand || 'none';
+
+  const bands = [
+    { key: 'none', label: 'No Link', pct: 0 },
+    { key: 'high', label: 'Above 70% HP', pct: 30 },
+    { key: 'mid',  label: '40%–70% HP',   pct: 40 },
+    { key: 'low',  label: 'Below 40% HP', pct: 50 },
+  ];
+
+  const buttonsHtml = bands.map(b => `
+    <button class="pain-split-band-btn" data-band="${b.key}" style="
+      padding:6px 12px;margin:2px;
+      background:${band === b.key ? C : '#0d2428'};
+      color:${band === b.key ? '#000' : C};
+      border:1px solid ${C};border-radius:6px;cursor:pointer;
+      font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.8rem;
+    ">${b.label}${b.pct > 0 ? ` (${b.pct}%)` : ''}</button>
+  `).join('');
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/trevenant/pain_split.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Pain Split+' : 'Pain Split', upgraded ? 13 : 7)}
+      Linked (${upgraded ? '8.5s' : '6s'}) → <strong style="color:#fff;">damage taken redirected as True damage</strong>, by Trevenant's remaining HP<br>
+      <div style="margin-top:8px;">${buttonsHtml}</div>
+      <span style="font-size:0.8rem;color:${C}99;">Redirected amount shown on each incoming damage line below</span>
+    </div>
+  `);
+  line.querySelectorAll('.pain-split-band-btn').forEach(btn => {
+    btn.onclick = () => {
+      state.defenderTrevenantPainSplitBand = btn.dataset.band;
+      updateDamages();
+    };
+  });
+  card.appendChild(line);
+}
+
+// ── TYRANITAR — Sand Tomb (damage reduction, in the dust cloud) ────────────
+// "while the user is in the cloud of dust, they take 15% reduced damage."
+function applyTyranitarSandTombDefense(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 9) return; // Sand Tomb learned at level 9
+
+  const upgraded = level >= 13;
+  const isActive = state.defenderTyranitarSandTombDustActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/tyranitar/sand_tomb.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Sand Tomb+' : 'Sand Tomb', upgraded ? 13 : 9)}
+      In the dust cloud (${upgraded ? '8s' : '6s'}) → <strong style="color:#fff;">−15% damage received</strong><br>
+      <button class="tyranitar-sand-tomb-def-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.tyranitar-sand-tomb-def-toggle').onclick = () => {
+    state.defenderTyranitarSandTombDustActive = !state.defenderTyranitarSandTombDustActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── URSHIFU — Rock Smash (damage reduction while charging) ─────────────────
+// "The user receives 20% reduced damage as they charge power for up to 2s."
+function applyUrshifuRockSmash(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 1) return; // Rock Smash learned at level 1
+
+  const isActive = state.defenderUrshifuRockSmashActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/urshifu/rock_smash.png')}
+    <div style="flex:1;">
+      ${moveBadge('Rock Smash', 1)}
+      While charging (up to 2s) → <strong style="color:#fff;">−20% damage received</strong><br>
+      <button class="urshifu-rock-smash-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.urshifu-rock-smash-toggle').onclick = () => {
+    state.defenderUrshifuRockSmashActive = !state.defenderUrshifuRockSmashActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── URSHIFU — Wicked Blow (damage reduction while charging) ────────────────
+// "receives 20% reduced damage ... as they charge power." Level 11:
+// "Strengthens damage reduction while charging this move to 40%."
+function applyUrshifuWickedBlow(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 5) return; // Wicked Blow learned at level 5
+
+  const upgraded = level >= 11;
+  const percent  = upgraded ? 40 : 20;
+
+  const isActive = state.defenderUrshifuWickedBlowActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/urshifu/wicked_blow.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Wicked Blow+' : 'Wicked Blow', upgraded ? 11 : 5)}
+      While charging (up to 2.5s) → <strong style="color:#fff;">−${percent}% damage received</strong><br>
+      <button class="urshifu-wicked-blow-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.urshifu-wicked-blow-toggle').onclick = () => {
+    state.defenderUrshifuWickedBlowActive = !state.defenderUrshifuWickedBlowActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── URSHIFU — Surging Strikes+ (damage reduction while striking) ───────────
+// "Receives 30% reduced damage while using this move." (level 11 upgrade)
+function applyUrshifuSurgingStrikes(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 11) return; // Upgrade at level 11
+
+  const isActive = state.defenderUrshifuSurgingStrikesActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/urshifu/surging_strikes.png')}
+    <div style="flex:1;">
+      ${moveBadge('Surging Strikes+', 11)}
+      While striking → <strong style="color:#fff;">−30% damage received</strong><br>
+      <button class="urshifu-surging-strikes-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.urshifu-surging-strikes-toggle').onclick = () => {
+    state.defenderUrshifuSurgingStrikesActive = !state.defenderUrshifuSurgingStrikesActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── URSHIFU — Flowing Fists (Unite, damage reduction while unleashing) ─────
+// "the user becomes unstoppable and receives 30% reduced damage as they
+// unleash a minimum of 5 consecutive blows."
+function applyUrshifuFlowingFistsDef(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 9) return; // Flowing Fists learned at level 9
+
+  const isActive = state.defenderUrshifuFlowingFistsActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/urshifu/flowing_fists.png')}
+    <div style="flex:1;">
+      ${moveBadge('Flowing Fists', 9)}
+      While unleashing consecutive blows → <strong style="color:#fff;">−30% damage received</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Number of blows is set in the Attacker tab</span><br>
+      <button class="urshifu-ff-def-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.urshifu-ff-def-toggle').onclick = () => {
+    state.defenderUrshifuFlowingFistsActive = !state.defenderUrshifuFlowingFistsActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── VAPOREON — Flip Turn (damage reduction while cloaked) ──────────────────
+// "reducing damage received by 15% ... while cloaked in water." Level 12:
+// "Increases the damage reduction to 30%."
+function applyVaporeonFlipTurn(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 6) return; // Flip Turn learned at level 6
+
+  const upgraded = level >= 12;
+  const percent  = upgraded ? 30 : 15;
+
+  const isActive = state.defenderVaporeonFlipTurnActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/vaporeon/flip_turn.png')}
+    <div style="flex:1;">
+      ${moveBadge(upgraded ? 'Flip Turn+' : 'Flip Turn', upgraded ? 12 : 6)}
+      While cloaked in water (up to 3s) → <strong style="color:#fff;">−${percent}% damage received</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Also +40%→60% Movement Speed — not modeled here. Shield is calculated separately above</span><br>
+      <button class="vaporeon-flip-turn-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.vaporeon-flip-turn-toggle').onclick = () => {
+    state.defenderVaporeonFlipTurnActive = !state.defenderVaporeonFlipTurnActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── VENUSAUR — Giga Drain (damage reduction on cast) ────────────────────────
+// "Venusaur also takes 40% reduced damage for 2.5s."
+function applyVenusaurGigaDrain(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 5) return; // Giga Drain learned at level 5
+
+  const isActive = state.defenderVenusaurGigaDrainActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/venusaur/giga_drain.png')}
+    <div style="flex:1;">
+      ${moveBadge('Giga Drain', 5)}
+      On cast → <strong style="color:#fff;">−40% damage received</strong> for 2.5s<br>
+      <span style="font-size:0.8rem;color:${C}99;">This move's healing isn't boosted by Overgrow — heal is calculated separately above</span><br>
+      <button class="venusaur-giga-drain-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.venusaur-giga-drain-toggle').onclick = () => {
+    state.defenderVenusaurGigaDrainActive = !state.defenderVenusaurGigaDrainActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── ZACIAN — Sacred Sword (damage reduction during the slash) ──────────────
+// "During this slash, Zacian briefly becomes unstoppable and reduces damage
+// taken by 30%."
+function applyZacianSacredSwordDef(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 5) return; // Sacred Sword learned at level 5
+
+  const isActive = state.defenderZacianSacredSwordActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/zacian/sacred_sword.png')}
+    <div style="flex:1;">
+      ${moveBadge('Sacred Sword', 5)}
+      During the slash → <strong style="color:#fff;">−30% damage received</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">+20% Attack & Defense Pierce buff shown in the Attacker tab</span><br>
+      <button class="zacian-sacred-sword-def-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.zacian-sacred-sword-def-toggle').onclick = () => {
+    state.defenderZacianSacredSwordActive = !state.defenderZacianSacredSwordActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── ZACIAN — Play Rough (damage reduction from hit targets) ────────────────
+// "If Play Rough connects, Zacian receives 25% reduced damage from the
+// enemies hit for 3s after landing."
+function applyZacianPlayRough(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 7) return; // Play Rough learned at level 7
+
+  const isActive = state.defenderZacianPlayRoughActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/zacian/play_rough.png')}
+    <div style="flex:1;">
+      ${moveBadge('Play Rough', 7)}
+      On hit, for 3s → <strong style="color:#fff;">−25% damage received</strong> from hit targets<br>
+      <button class="zacian-play-rough-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.zacian-play-rough-toggle').onclick = () => {
+    state.defenderZacianPlayRoughActive = !state.defenderZacianPlayRoughActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── SABLEYE — Knock Off ───────────────────────────────────────────────────────
+function applySableyeKnockOff(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 4) return; // Knock Off learned at level 4
+
+  const isActive = state.defenderSableyeKnockOffActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/sableye/knock_off.png')}
+    <div style="flex:1;">
+      ${moveBadge('Knock Off', 4)}
+      While using this move → <strong style="color:#fff;">−40% damage received</strong><br>
+      <button class="sableye-knockoff-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.sableye-knockoff-toggle').onclick = () => {
+    state.defenderSableyeKnockOffActive = !state.defenderSableyeKnockOffActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -1140,6 +1854,22 @@ export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
     mimikyu:   [applyMimikyuTrickRoom],
     moltres:   [applyMoltresSkyAttackStacks],
     palkia:    [applyPalkiaDragonClawDefStacks],
+    sableye:   [applySableyeKnockOff],
+    scizor:    [applyScizorAutoAttackDefStacks, applyScizorSwordsDanceDashReduc],
+    scyther:   [applyScytherSwordsDanceDashReduc],
+    sirfetchd: [applySirfetchdDetect],
+    skeledirge: [applySkeledirgeSnarl],
+    slowbro:   [applySlowbroAmnesia],
+    snorlax:   [applySnorlaxBlock],
+    sylveon:   [applySylveonCalmMindDef],
+    talonflame: [applyTalonflameBraveBird, applyTalonflameFlameSweep],
+    tinkaton:   [applyTinkatonThiefBuff],
+    trevenant:  [applyTrevenantPainSplit],
+    tyranitar:  [applyTyranitarSandTombDefense],
+    urshifu:    [applyUrshifuRockSmash, applyUrshifuWickedBlow, applyUrshifuSurgingStrikes, applyUrshifuFlowingFistsDef],
+    vaporeon:   [applyVaporeonFlipTurn],
+    venusaur:   [applyVenusaurGigaDrain],
+    zacian:     [applyZacianSacredSwordDef, applyZacianPlayRough],
   };
   (handlers[pokemonId] ?? []).forEach(fn => fn(atkStats, defStats, card));
 }

@@ -9898,7 +9898,7 @@
         "can_crit": "false",
         "image": "assets/moves/rapidash/dazzling_gleam.png",
         "damages": [
-          {"name": "Damage", "multiplier": 131, "levelCoef": 13, "constant": 184, "dealDamage": true}
+          {"name": "Damage", "multiplier": 131, "levelCoef": 13, "constant": 184, "wild_cap": 2500, "dealDamage": true}
         ]
       },
       {
@@ -9931,7 +9931,10 @@
         "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/rapidash/agility.png",
-        "damages": []
+        "damages": [],
+        "heals": [
+          {"name": "Heal during Agility", "scaling": "hp", "multiplier": 2, "is_tick": true, "tick_count": 21, "upgrade_bonus": true}
+        ]
       },
       {
         "name": "Triad Blitz (Unite)",
@@ -10122,6 +10125,9 @@
         "image": "assets/moves/sableye/knock_off.png",
         "damages": [
           {"name": "Per Hit (x3)", "multiplier": 56, "levelCoef": 6, "constant": 240, "dealDamage": true, "is_tick": true, "tick_count": 3}
+        ],
+        "heals": [
+          {"name": "Heal on Aoes energy picked up", "scaling": "hp", "multiplier": 9, "upgrade_bonus": true}
         ]
       },
       {
@@ -10133,6 +10139,9 @@
         "image": "assets/moves/sableye/shadow_sneak.png",
         "damages": [
           {"name": "Additional", "multiplier": 113, "levelCoef": 12, "constant": 480, "dealDamage": true}
+        ],
+        "heals": [
+          {"name": "Heal when in stealth", "scaling": "hp", "multiplier": 1, "is_tick": true, "tick_count": 10, "upgrade_bonus": true}
         ]
       },
       {
@@ -10520,8 +10529,20 @@
         "can_crit": "true",
         "image": "assets/moves/sirfetchd/fury_cutter.png",
         "damages": [
-          {"name": "Flurry Hit (6x)", "multiplier": 72, "levelCoef": 0, "constant": 122, "dealDamage": true, "is_tick": true, "tick_count": 6, "notes": "Damage increases by 3% per hit (up to 6% max)"},
-          {"name": "Flurry Hit + (6x)", "multiplier": 83, "levelCoef": 0, "constant": 140, "dealDamage": true, "is_tick": true, "tick_count": 6, "upgraded": true, "notes": "Damage increases by 3% per hit (up to 6% max)"},
+          {
+            "name": "Flurry Hit (6x)",
+            "multiplier": 72, "levelCoef": 0, "constant": 122,
+            "dealDamage": true, "is_tick": true, "tick_count": 6,
+            "tick_scaling": [1.00, 1.03, 1.06, 1.06, 1.06, 1.06],
+            "notes": "Damage increases by 3% per hit (up to 6% max)"
+          },
+          {
+            "name": "Flurry Hit + (6x)",
+            "multiplier": 83, "levelCoef": 0, "constant": 140,
+            "dealDamage": true, "is_tick": true, "tick_count": 6, "upgraded": true,
+            "tick_scaling": [1.00, 1.03, 1.06, 1.06, 1.06, 1.06],
+            "notes": "Damage increases by 3% per hit (up to 6% max)"
+          },
           {"name": "Final Hit", "multiplier": 108, "levelCoef": 0, "constant": 183, "dealDamage": true},
           {"name": "Final Hit +", "multiplier": 124.5, "levelCoef": 0, "constant": 210, "upgraded": true, "dealDamage": true}
         ]
@@ -10726,6 +10747,9 @@
           {"name": "Low Charge", "multiplier": 196, "levelCoef": 17, "constant": 320, "dealDamage": true},
           {"name": "Mid Charge", "multiplier": 245, "levelCoef": 22, "constant": 400, "dealDamage": true},
           {"name": "High Charge", "multiplier": 294, "levelCoef": 26, "constant": 480, "dealDamage": true}
+        ],
+        "heals": [
+          { "name": "Heal - Oblivious HP", "scaling": "blue_hp", "multiplier": 10, "levelCoef": 0, "constant": 0, "target": "self" }
         ]
       },
       {
@@ -10756,6 +10780,9 @@
         "damages": [
           {"name": "Per Hit (3 Hits)", "multiplier": 97, "levelCoef": 7, "constant": 150, "dealDamage": true, "is_tick": true, "tick_count": 3},
           {"name": "Burn (5 Ticks)", "multiplier": 17, "levelCoef": 1, "constant": 28, "dealDamage": true, "is_tick": true, "tick_count": 5}
+        ],
+        "heals": [
+          { "name": "Heal - Oblivious HP (x3)", "scaling": "blue_hp", "multiplier": 10, "levelCoef": 0, "constant": 0, "is_tick": true, "tick_count": 3, "target": "self" }
         ]
       },
       {
@@ -10767,6 +10794,9 @@
         "image": "assets/moves/slowbro/surf.png",
         "damages": [
           {"name": "Per Wave (3 Waves)", "multiplier": 103, "levelCoef": 6, "constant": 210, "dealDamage": true, "is_tick": true, "tick_count": 3}
+        ],
+        "heals": [
+          { "name": "Heal - Oblivious HP (x3 waves)", "scaling": "blue_hp", "multiplier": 10, "levelCoef": 0, "constant": 0, "is_tick": true, "tick_count": 3, "target": "self" }
         ]
       },
       {
@@ -10776,7 +10806,10 @@
         "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/slowbro/amnesia.png",
-        "damages": []
+        "damages": [],
+        "heals": [
+          { "name": "Heal - Oblivious HP (4s)", "scaling": "blue_hp", "multiplier": 17.5, "levelCoef": 0, "constant": 0, "is_tick": true, "tick_count": 4, "target": "self" }
+        ]
       },
       {
         "name": "Telekinesis",
@@ -10785,7 +10818,10 @@
         "upgradeLevel": 13,
         "can_crit": "false",
         "image": "assets/moves/slowbro/telekinesis.png",
-        "damages": []
+        "damages": [],
+        "heals": [
+          { "name": "Heal - Oblivious HP (5s)", "scaling": "blue_hp", "multiplier": 15, "levelCoef": 0, "constant": 0, "is_tick": true, "tick_count": 5, "target": "self" }
+        ]
       },
       {
         "name": "Slowbeam (Unite)",
@@ -10799,6 +10835,13 @@
             "name": "Shield",
             "scaling": "hp",
             "multiplier": 40,
+            "levelCoef": 0,
+            "constant": 0
+          },
+          {
+            "name": "Shield - Unite",
+            "scaling": "hp",
+            "multiplier": 10,
             "levelCoef": 0,
             "constant": 0
           }
@@ -10887,10 +10930,10 @@
         "can_crit": "false",
         "image": "assets/moves/snorlax/flail.png",
         "damages": [
-          {"name": "Basic Attack - Above 80% HP", "multiplier": 45, "levelCoef": 7, "constant": 90, "wild_cap": 2000, "dealDamage": true},
-          {"name": "Basic Attack - Above 80% HP +", "multiplier": 81, "levelCoef": 7, "constant": 100, "wild_cap": 2000, "dealDamage": true, "upgraded": true},
-          {"name": "Boosted Attack - Above 80% HP", "multiplier": 67.5, "levelCoef": 10, "constant": 135, "wild_cap": 2500, "dealDamage": true},
-          {"name": "Boosted Attack - Above 80% HP +", "multiplier": 121.5, "levelCoef": 10, "constant": 150, "wild_cap": 2500, "dealDamage": true, "upgraded": true}
+          {"name": "Basic Attack - Above 80% HP", "multiplier": 45, "levelCoef": 7, "constant": 90, "self_max_hp_percent": 5, "wild_cap": 2000, "dealDamage": true},
+          {"name": "Basic Attack - Above 80% HP +", "multiplier": 81, "levelCoef": 7, "constant": 100, "self_max_hp_percent": 5, "wild_cap": 2000, "dealDamage": true, "upgraded": true},
+          {"name": "Boosted Attack - Above 80% HP", "multiplier": 67.5, "levelCoef": 10, "constant": 135, "self_max_hp_percent": 6, "wild_cap": 2500, "dealDamage": true},
+          {"name": "Boosted Attack - Above 80% HP +", "multiplier": 121.5, "levelCoef": 10, "constant": 150, "self_max_hp_percent": 6, "wild_cap": 2500, "dealDamage": true, "upgraded": true}
         ]
       },
       {
@@ -11530,6 +11573,7 @@
         "image": "assets/moves/trevenant/will_o_wisp.png",
         "damages": [
           {"name": "Damage", "multiplier": 58, "levelCoef": 10, "constant": 190, "dealDamage": true},
+          {"name": "Damage - Subsequent Hit", "multiplier": 29, "levelCoef": 5, "constant": 95, "dealDamage": true},
           {"name": "Burn (3 Ticks)", "multiplier": 14.5, "levelCoef": 3, "constant": 48, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
@@ -12210,7 +12254,9 @@
         "can_crit": "false",
         "image": "assets/moves/umbreon/foul_play.png",
         "damages": [
-          {"name": "Damage", "multiplier": 58, "levelCoef": 6, "constant": 145, "dealDamage": true}
+          {"name": "Damage", "multiplier": 58, "levelCoef": 6, "constant": 145, "dealDamage": true},
+          {"name": "Damage (Second Hit)", "multiplier": 237.6, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "Uses the higher of Umbreon's Attack or the noted target's Attack"
+          }
         ]
       },
       {
@@ -13326,7 +13372,7 @@
           {"name": "Damage - Additional", "multiplier": 110, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "If an auto attack is used before the leap ends"}
         ],
         "heals": [
-          {"name": "Heal", "scaling": "hp", "multiplier": 15, "levelCoef": 0, "constant": 0, "upgraded": true, "notes": "If leaping to an opposing Pokémon with an auto attack before reaching them with the dash."}
+          {"name": "Heal", "scaling": "hp", "multiplier": 15, "levelCoef": 0, "constant": 0, "upgrade_bonus": true, "notes": "If leaping to an opposing Pokémon with an auto attack before reaching them with the dash."}
         ]
       },
       {

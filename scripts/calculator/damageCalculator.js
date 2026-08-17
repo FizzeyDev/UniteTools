@@ -270,6 +270,7 @@ function applyDefenderDamagePassives(damage, defenderId, defenderMaxHP) {
  * @param {number}  globalDamageMult  - multiplicateur global (buffs, debuffs…)
  * @param {number}  defenderMaxHP     - HP MAX du défenseur
  * @param {number}  defenderCurrentHP - HP ACTUELS du défenseur (après slider %)
+ * @param {number}  attackerMaxHP     - HP MAX de l'attaquant (pour "self_max_hp_percent", ex: Snorlax Flail)
  */
 export function calculateDamage(
   dmg,
@@ -281,7 +282,8 @@ export function calculateDamage(
   extraCritMult = 1.0,
   globalDamageMult = 1.0,
   defenderMaxHP = null,
-  defenderCurrentHP = null
+  defenderCurrentHP = null,
+  attackerMaxHP = null
 ) {
 
   const applyCrit = (value) => {
@@ -339,6 +341,11 @@ export function calculateDamage(
   const atkScaling = Math.floor(atkStat * (dmg.multiplier / 100));
   const levelScaling = (level - 1) * dmg.levelCoef;
   let baseDamage = dmg.constant + atkScaling + levelScaling;
+
+  // ── % HP MAX de l'ATTAQUANT (additif) — ex: Snorlax Flail "+5% Max HP" ─────
+  if (dmg.self_max_hp_percent != null && attackerMaxHP != null) {
+    baseDamage += Math.floor(attackerMaxHP * dmg.self_max_hp_percent / 100);
+  }
 
   let effectiveDef = defStat;
 
