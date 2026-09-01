@@ -767,6 +767,29 @@ function applySlowbroAttacker(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── SOLGALEO — Full Metal Body (Attack debuff immunity, permanent) ─────────
+// "Solgaleo's Attack stat cannot be lowered through debuffs." Purely
+// informational here — the immunity itself is already applied automatically
+// to the ATK stat in damageCalculator.js (applyDebuffs). Only shown once
+// evolved into the final stage (Lv7+); before that, Unaware/Sturdy don't
+// grant this immunity yet.
+function applySolgaleoAttacker(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 7) return; // Full Metal Body active only as final-stage Solgaleo
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/solgaleo/full_metal_body.png')}
+    <div style="flex:1;">
+      ${passiveBadge('Full Metal Body', 7, PASSIVE_ATK)}
+      <strong style="color:#fff;">Attack stat cannot be lowered by debuffs</strong> (Sp. Atk unaffected)<br>
+      <span style="font-size:0.8rem;color:${C}99;">Applied automatically — the ATK stat shown already ignores enemy Attack-reducing debuffs</span>
+    </div>
+  `);
+  card.appendChild(line);
+}
+
 export {
   applyBuzzwoleAttacker, applyCeruledgeAttacker, applyChandelureAttacker,
   applyDarkraiAttacker, applyDecidueyeAttacker, applyZardyAttacker,
@@ -780,4 +803,5 @@ export {
   applyYveltalAttacker,
   applyPalkiaAttacker,
   applySlowbroAttacker,
+  applySolgaleoAttacker,
 };

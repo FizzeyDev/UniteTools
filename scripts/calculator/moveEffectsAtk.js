@@ -2614,6 +2614,94 @@ function applyZeraoraPlasmaGale(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── SOLGALEO ─────────────────────────────────────────────────────────────────
+// Evolution stage is derived from level (evolves at Lv5 → Cosmoem, Lv7 →
+// Solgaleo), matching evolution_levels [5,7] in pokemons.json.
+function getSolgaleoStage(level) {
+  if (level >= 7) return { key: 'solgaleo', label: 'Solgaleo', maxCharges: 2 };
+  if (level >= 5) return { key: 'cosmoem',  label: 'Cosmoem',  maxCharges: 3 };
+  return { key: 'cosmog', label: 'Cosmog', maxCharges: 1 };
+}
+
+// ── SOLGALEO — Boosted Attack charge tracker ────────────────────────────────
+// Cosmog: every 3rd auto attack is boosted (no charge system).
+// Cosmoem: gain a charge (max 3, held 5s) on move use; boosted hits 3x in a cone.
+// Solgaleo: gain a charge (max 2, held 5s) on move use; both consumed together
+// for a guaranteed-crit boosted attack.
+function applySolgaleoBoostedAttack(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  const stage = getSolgaleoStage(level);
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+
+  if (stage.key === 'cosmog') {
+    const hitCount = Math.min(2, state.attackerSolgaleoHitCounter ?? 0);
+    line.innerHTML = wrap(`
+      ${icon('assets/moves/basic_attack.png')}
+      <div style="flex:1;">
+        ${moveBadge('Attack — Cosmog', 1)}
+        Auto attack count towards Boosted: <button class="stack-btn minus solgaleo-hit-minus">−</button>
+        <strong style="color:${C};">${hitCount}</strong>/2
+        <button class="stack-btn plus solgaleo-hit-plus">+</button><br>
+        <span style="font-size:0.8rem;color:${C}99;">Every 3rd auto attack is Boosted (+309 flat, see damage list below)</span>
+      </div>
+    `);
+    line.querySelector('.solgaleo-hit-minus').onclick = () => { if ((state.attackerSolgaleoHitCounter ?? 0) > 0) { state.attackerSolgaleoHitCounter = (state.attackerSolgaleoHitCounter ?? 0) - 1; updateDamages(); } };
+    line.querySelector('.solgaleo-hit-plus').onclick  = () => { state.attackerSolgaleoHitCounter = ((state.attackerSolgaleoHitCounter ?? 0) + 1) % 3; updateDamages(); };
+  } else {
+    const stacks = Math.min(stage.maxCharges, state.attackerSolgaleoBoostedCharges ?? 0);
+    const desc = stage.key === 'cosmoem'
+      ? 'Boosted attack sprays cosmic energy, hitting 3x in a cone (34% Atk +102 per hit)'
+      : 'Both charges consumed together → guaranteed critical-hit Boosted attack in front of the user';
+    line.innerHTML = wrap(`
+      ${icon(stage.key === 'cosmoem' ? 'assets/moves/basic_attack.png' : 'assets/moves/basic_attack.png')}
+      <div style="flex:1;">
+        ${moveBadge(`Attack — ${stage.label}`, stage.key === 'cosmoem' ? 5 : 7)}
+        Boosted charges (gained on move use, held 5s): <button class="stack-btn minus solgaleo-charge-minus">−</button>
+        <strong style="color:${C};">${stacks}</strong>/${stage.maxCharges}
+        <button class="stack-btn plus solgaleo-charge-plus">+</button><br>
+        <span style="font-size:0.8rem;color:${C}99;">${desc}</span>
+      </div>
+    `);
+    line.querySelector('.solgaleo-charge-minus').onclick = () => { if ((state.attackerSolgaleoBoostedCharges ?? 0) > 0) { state.attackerSolgaleoBoostedCharges = (state.attackerSolgaleoBoostedCharges ?? 0) - 1; updateDamages(); } };
+    line.querySelector('.solgaleo-charge-plus').onclick  = () => { if ((state.attackerSolgaleoBoostedCharges ?? 0) < stage.maxCharges) { state.attackerSolgaleoBoostedCharges = (state.attackerSolgaleoBoostedCharges ?? 0) + 1; updateDamages(); } };
+  }
+  card.appendChild(line);
+}
+
+// ── SOLGALEO — Shining Meteor Crush (Unite) : Radiant Sun phase ────────────
+// "Solgaleo's auto attacks and moves deal True type damage" for 10s — this
+// bypasses flat % damage-reduction effects on the defender (handled in
+// multiplierManager.js). Def/Sp.Def stat itself is not ignored here.
+function applySolgaleoRadiantSun(atkStats, defStats, card) {
+  const level = state.attackerLevel;
+  if (level < 7) return; // Unite move learned at level 7
+
+  const isActive = state.attackerSolgaleoRadiantSunActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/solgaleo/shining_meteor_crush.png')}
+    <div style="flex:1;">
+      ${moveBadge('Shining Meteor Crush (Unite)', 7)}
+      Radiant Sun phase (10s) → <strong style="color:#fff;">auto attacks & moves deal True type damage</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Bypasses the defender's flat % damage-reduction effects (Unaware included). Def/Sp.Def stat mitigation isn't ignored here.</span><br>
+      <button class="solgaleo-radiant-sun-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.solgaleo-radiant-sun-toggle').onclick = () => {
+    state.attackerSolgaleoRadiantSunActive = !state.attackerSolgaleoRadiantSunActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
@@ -2657,6 +2745,7 @@ export function applyAttackerMoveEffects(pokemonId, atkStats, defStats, card) {
     scizor:     [applyScizorSwordsDance],
     scyther:    [applyScytherSwordsDance],
     snorlax:    [applySnorlaxFlailHeal],
+    solgaleo:   [applySolgaleoBoostedAttack, applySolgaleoRadiantSun],
     sylveon:    [applySylveonCalmMind, applySylveonFairyFrolicBuff],
     talonflame: [applyTalonflameFlameCharge],
     tinkaton:   [applyTinkatonThiefDebuff],

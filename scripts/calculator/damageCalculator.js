@@ -161,10 +161,14 @@ function applyDebuffs(pokemon, stats) {
     if(state.debuffUmbreonSnarl) { const s=Math.min(state.umbreonSnarlStacks||0, state.umbreonSnarlStacksMax ?? 6); atkMult*=Math.pow(0.97,s); spMult*=Math.pow(0.97,s); }
     if(state.debuffSylveonMysticalFire) spMult*=Math.pow(0.85, Math.min(state.sylveonMysticalFireStacks||0, state.sylveonMysticalFireStacksMax ?? 4));
 
-    atk = Math.floor(atk*atkMult);
+    // ── Solgaleo — Full Metal Body : Attack stat cannot be lowered by debuffs ──
+    // (Sp. Atk is still affected normally.)
+    const isSolgaleoFMB = pokemon?.pokemonId === "solgaleo";
+
+    atk = isSolgaleoFMB ? atk : Math.floor(atk*atkMult);
     sp_atk = Math.floor(sp_atk*spMult);
 
-    if(state.debuffAlcremieCharm){ atk-=30; sp_atk-=20; }
+    if(state.debuffAlcremieCharm){ if (!isSolgaleoFMB) atk-=30; sp_atk-=20; }
 
     atk = Math.max(1, atk);
     sp_atk = Math.max(1, sp_atk);

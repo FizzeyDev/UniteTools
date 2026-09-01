@@ -10996,6 +10996,134 @@
     ]
   },
   {
+    "pokemonId": "solgaleo",
+    "dex": 791,
+    "role": "all-rounder",
+    "style": "physical",
+    "stats": [
+        { "level": 1, "hp": 3200, "atk": 160, "def": 70, "sp_atk": 20, "sp_def": 54, "crit": 0, "lifesteal": 0 },
+        { "level": 2, "hp": 3264, "atk": 165, "def": 75, "sp_atk": 21, "sp_def": 58, "crit": 0, "lifesteal": 0 },
+        { "level": 3, "hp": 3341, "atk": 172, "def": 81, "sp_atk": 23, "sp_def": 63, "crit": 0, "lifesteal": 0 },
+        { "level": 4, "hp": 3434, "atk": 179, "def": 88, "sp_atk": 25, "sp_def": 68, "crit": 0, "lifesteal": 0 },
+        { "level": 5, "hp": 3771, "atk": 207, "def": 121, "sp_atk": 32, "sp_def": 95, "crit": 10, "lifesteal": 5 },
+        { "level": 6, "hp": 3905, "atk": 218, "def": 131, "sp_atk": 35, "sp_def": 103, "crit": 10, "lifesteal": 5 },
+        { "level": 7, "hp": 4839, "atk": 268, "def": 206, "sp_atk": 48, "sp_def": 185, "crit": 10, "lifesteal": 5 },
+        { "level": 8, "hp": 5079, "atk": 284, "def": 226, "sp_atk": 52, "sp_def": 204, "crit": 10, "lifesteal": 5 },
+        { "level": 9, "hp": 5367, "atk": 303, "def": 250, "sp_atk": 57, "sp_def": 227, "crit": 20, "lifesteal": 10 },
+        { "level": 10, "hp": 5712, "atk": 326, "def": 279, "sp_atk": 63, "sp_def": 254, "crit": 20, "lifesteal": 10 },
+        { "level": 11, "hp": 6127, "atk": 353, "def": 313, "sp_atk": 70, "sp_def": 287, "crit": 20, "lifesteal": 10 },
+        { "level": 12, "hp": 6625, "atk": 386, "def": 354, "sp_atk": 79, "sp_def": 327, "crit": 20, "lifesteal": 10 },
+        { "level": 13, "hp": 7223, "atk": 426, "def": 404, "sp_atk": 89, "sp_def": 374, "crit": 20, "lifesteal": 15 },
+        { "level": 14, "hp": 7940, "atk": 473, "def": 464, "sp_atk": 101, "sp_def": 431, "crit": 20, "lifesteal": 15 },
+        { "level": 15, "hp": 8800, "atk": 530, "def": 535, "sp_atk": 116, "sp_def": 500, "crit": 20, "lifesteal": 15 }
+    ],
+    "passive": {
+        "name": "Unaware",
+        "image": "assets/moves/solgaleo/unaware.png",
+        "description": "Reduces physical and special type damage taken by 30%. True type damage bypasses this.",
+        "stage2_name": "Sturdy",
+        "stage2_description": "30% damage reduction. If Cosmoem would be KO'd, it is instead left at 1 HP and Invincible for 1s (100s cooldown).",
+        "stage3_name": "Full Metal Body",
+        "stage3_description": "Solgaleo's Attack stat cannot be lowered by debuffs.",
+        "damageReductionPercent": 30
+    },
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "true",
+        "image": "assets/moves/basic_attack.png",
+        "notes": "Cosmog: every 3rd hit is boosted. Cosmoem: gain a boosted charge (max 3, 5s) on move use; boosted attack hits 3x in a cone. Solgaleo: melee-ranged, boosted attacks are a guaranteed critical hit (2 charges, max held 5s, both consumed).",
+        "damages": [
+            { "name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true, "can_crit": "true" },
+            { "name": "Boosted (Cosmog)", "multiplier": 100, "levelCoef": 0, "constant": 309, "dealDamage": true },
+            { "name": "Boosted (Cosmoem, per hit x3)", "multiplier": 34, "levelCoef": 0, "constant": 102, "dealDamage": true, "is_tick": true, "tick_count": 3 },
+            { "name": "Boosted (Solgaleo, guaranteed crit)", "multiplier": 100, "levelCoef": 0, "constant": 150, "dealDamage": true, "can_crit": "true" }
+        ]
+      },
+      {
+        "name": "Teleport",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "type": "Dash",
+        "cd": "5",
+        "can_crit": "false",
+        "image": "assets/moves/solgaleo/teleport.png",
+        "notes": "The user instantly teleports to the designated location, and readies a boosted attack.",
+        "damages": []
+      },
+      {
+        "name": "Iron Head",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 9,
+        "type": "Dash",
+        "cd": "6.5",
+        "can_crit": "false",
+        "image": "assets/moves/solgaleo/iron_head.png",
+        "notes": "Charges in the designated direction, dealing damage and shoving opposing Pokémon for 0.5s. On hit, a follow-up (barrage: 4 hits, each stunning 0.2s, up to 0.8s, heals 40% of damage dealt) becomes available for 2s. Against un-stunnable targets only one instance of increased damage is dealt. At Lv9 (enhanced): a 5th hit is added (up to 1s stun total), and un-stunnable-target damage is increased.",
+        "damages": [
+            { "name": "Damage", "multiplier": 98, "levelCoef": 0, "constant": 294, "dealDamage": true },
+            { "name": "Barrage (per hit)", "multiplier": 65, "levelCoef": 0, "constant": 195, "dealDamage": true, "is_tick": true, "tick_count": 4 },
+            { "name": "Barrage (Un-stunnable target)", "multiplier": 260, "levelCoef": 0, "constant": 780, "dealDamage": true },
+            { "name": "Barrage (Un-stunnable target, Lv9 Enhanced)", "multiplier": 325, "levelCoef": 0, "constant": 975, "dealDamage": true, "upgraded": true },
+            { "name": "Barrage Heal (per hit, 40% of dmg dealt)", "multiplier": 26, "levelCoef": 0, "constant": 78, "dealDamage": true, "heal": true }
+        ]
+      },
+      {
+        "name": "Cosmic Power",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "type": "Buff",
+        "cd": "6",
+        "can_crit": "false",
+        "image": "assets/moves/solgaleo/cosmic_power.png",
+        "buffs": "+30% Def & Sp. Def for 5s",
+        "notes": "Increases the user's Def and Sp. Def by 30% for 5s, and readies a boosted attack.",
+        "damages": []
+      },
+      {
+        "name": "Psyshock",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "type": "Area",
+        "cd": "6",
+        "can_crit": "false",
+        "image": "assets/moves/solgaleo/psyshock.png",
+        "notes": "Charges psychic power up to 4s (30% dmg reduction + Hindrance Resistant for the first 2s, +13% move speed every 0.5s up to +78%). On release, deals area damage scaling with charge level and throws for 0.3/0.4/0.45/0.55s. On hit, a follow-up becomes available for 5s: the user slashes twice (40% slow 3s + self-heal); if it hits, a second recast (same attack) becomes available. Lv11 (enhanced): increased claw-swipe healing.",
+        "damages": [
+            { "name": "Level 0 Charge", "multiplier": 110, "levelCoef": 0, "constant": 330, "dealDamage": true },
+            { "name": "Level 1 Charge", "multiplier": 121, "levelCoef": 0, "constant": 363, "dealDamage": true },
+            { "name": "Level 2 Charge", "multiplier": 132, "levelCoef": 0, "constant": 396, "dealDamage": true },
+            { "name": "Level 3 Charge", "multiplier": 143, "levelCoef": 0, "constant": 429, "dealDamage": true },
+            { "name": "Claw Swipe (per hit x2)", "multiplier": 68, "levelCoef": 0, "constant": 204, "dealDamage": true, "is_tick": true, "tick_count": 2 }
+        ],
+        "heals": [
+            { "name": "Claw Swipe Heal", "scaling": "atk", "multiplier": 70, "levelCoef": 0, "constant": 210, "target": "self" },
+            { "name": "Claw Swipe Heal (Lv11 Enhanced)", "scaling": "atk", "multiplier": 84, "levelCoef": 0, "constant": 252, "target": "self", "upgraded": true }
+        ]
+      },
+      {
+        "name": "Shining Meteor Crush (Unite)",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "type": "Sure Hit",
+        "cd": "112",
+        "energy": "100000",
+        "can_crit": "false",
+        "image": "assets/moves/solgaleo/shining_meteor_crush.png",
+        "buffs": "30% Movement Speed, 30% CDR, 20% Max HP Shield (6s)",
+        "notes": "Solgaleo becomes Unstoppable and enters Radiant Sun phase (10s) before charging at the designated Pokémon, dealing area damage. While in Radiant Sun, Solgaleo sees hidden Pokémon and its auto attacks/moves deal True type damage (bypasses flat % damage-reduction effects, including its own Unaware). Allied Pokémon KO'd nearby grant 10000 energy.",
+        "damages": [
+            { "name": "Damage", "multiplier": 220, "levelCoef": 0, "constant": 660, "dealDamage": true }
+        ]
+      }
+    ]
+  },
+  {
     "pokemonId": "suicune",
     "dex": 245,
     "role": "allrounder",

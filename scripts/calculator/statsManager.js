@@ -264,6 +264,12 @@ export function applyPokemonStatMutations(atkStats, defStats) {
     defStats.sp_def = Math.floor(defStats.sp_def * 1.10);
   }
 
+  // ── Solgaleo — Cosmic Power : +30% Def & Sp. Def for 5s (pre-Lv7 move2) ────
+  if (state.currentDefender?.pokemonId === 'solgaleo' && state.defenderSolgaleoCosmicPowerActive) {
+    defStats.def    = Math.floor(defStats.def    * 1.30);
+    defStats.sp_def = Math.floor(defStats.sp_def * 1.30);
+  }
+
   // ── Tinkaton — Thief (buff) : +10%/+25% Def & Sp. Def per target hit, max 5 ─
   if (state.currentDefender?.pokemonId === 'tinkaton' && state.defenderLevel >= 5) {
     const stacks = Math.min(5, state.defenderTinkatonThiefStacks ?? 0);

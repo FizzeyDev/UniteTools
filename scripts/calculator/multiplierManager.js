@@ -9,6 +9,15 @@ import { state } from './state.js';
 export function computeDefenderDamageMult() {
   let defenderDamageMult = 1.0;
 
+  // ── Solgaleo — Shining Meteor Crush (Unite) : Radiant Sun phase ────────────
+  // "Solgaleo's auto attacks and moves deal True type damage" while Radiant
+  // Sun is active. True damage bypasses all flat % damage-reduction effects
+  // (Unaware, Eldegoss, Ninetales, Umbreon, Mimikyu, etc.) — short-circuit
+  // the whole function so nothing below applies to the defender.
+  if (state.currentAttacker?.pokemonId === "solgaleo" && state.attackerSolgaleoRadiantSunActive) {
+    return 1.0;
+  }
+
   if (state.defenderEldegossBuff)           defenderDamageMult *= 0.80;
   if (state.defenderNinetailsBuff)          defenderDamageMult *= 0.65;
   if (state.defenderNinetailsPlusBuff)      defenderDamageMult *= 0.60;
@@ -61,6 +70,19 @@ export function computeDefenderDamageMult() {
     const snowCloakState = state.defenderSnowCloakState || "none";
     if (snowCloakState === "low")  defenderDamageMult *= 0.90;
     if (snowCloakState === "high") defenderDamageMult *= 0.80;
+  }
+
+  // ── Solgaleo — Unaware / Sturdy : -30% physical & special dmg taken (permanent). ──
+  // True type damage bypasses this — already handled by the early-return
+  // above when Solgaleo is the attacker in Radiant Sun, but this also covers
+  // Solgaleo taking true damage from another attacker (e.g. Tyranitar Rampage).
+  if (state.currentDefender?.pokemonId === "solgaleo" && (state.defenderSolgaleoUnawareActive ?? true)) {
+    defenderDamageMult *= 0.70;
+  }
+
+  // ── Solgaleo — Psyshock : -30% dmg taken while charging (first 2s) ─────────
+  if (state.currentDefender?.pokemonId === "solgaleo" && state.defenderSolgaleoPsyshockChargingActive) {
+    defenderDamageMult *= 0.70;
   }
 
   return defenderDamageMult;

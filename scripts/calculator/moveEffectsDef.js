@@ -1825,6 +1825,69 @@ function applySableyeKnockOff(atkStats, defStats, card) {
 }
 
 // ── Dispatcher ────────────────────────────────────────────────────────────────
+// ── SOLGALEO — Cosmic Power (Def/Sp.Def buff, pre-Lv7 move2) ───────────────
+// "Increases the user's Def and Sp. Def by 30% for 5s." Replaced by Psyshock
+// once the move is upgraded at level 7.
+function applySolgaleoCosmicPower(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level >= 7) return; // Upgraded into Psyshock at level 7
+
+  const isActive = state.defenderSolgaleoCosmicPowerActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/solgaleo/cosmic_power.png')}
+    <div style="flex:1;">
+      ${moveBadge('Cosmic Power', 1)}
+      For 5s → <strong style="color:#fff;">+30% Def & Sp. Def</strong><br>
+      <button class="solgaleo-cosmic-power-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.solgaleo-cosmic-power-toggle').onclick = () => {
+    state.defenderSolgaleoCosmicPowerActive = !state.defenderSolgaleoCosmicPowerActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
+// ── SOLGALEO — Psyshock charging (dmg reduction, Lv7 upgrade) ──────────────
+// "Granting 30% damage reduction and becoming Hindrance Resistant for the
+// first 2s" of the up-to-4s charge. Hindrance Resistance isn't modeled here.
+function applySolgaleoPsyshockCharging(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  if (level < 7) return; // Psyshock learned at level 7
+
+  const isActive = state.defenderSolgaleoPsyshockChargingActive ?? false;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/solgaleo/psyshock.png')}
+    <div style="flex:1;">
+      ${moveBadge('Psyshock', 7)}
+      While charging (first 2s of up to 4s) → <strong style="color:#fff;">−30% damage taken</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">Also Hindrance Resistant during this window — not modeled here</span><br>
+      <button class="solgaleo-psyshock-charging-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Activate'}</button>
+    </div>
+  `);
+  line.querySelector('.solgaleo-psyshock-charging-toggle').onclick = () => {
+    state.defenderSolgaleoPsyshockChargingActive = !state.defenderSolgaleoPsyshockChargingActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
   const handlers = {
     armarouge: [applyArmarougeFlameCharge, applyArmarougeArmorCannon],
@@ -1861,6 +1924,7 @@ export function applyDefenderMoveEffects(pokemonId, atkStats, defStats, card) {
     skeledirge: [applySkeledirgeSnarl],
     slowbro:   [applySlowbroAmnesia],
     snorlax:   [applySnorlaxBlock],
+    solgaleo:  [applySolgaleoCosmicPower, applySolgaleoPsyshockCharging],
     sylveon:   [applySylveonCalmMindDef],
     talonflame: [applyTalonflameBraveBird, applyTalonflameFlameSweep],
     tinkaton:   [applyTinkatonThiefBuff],

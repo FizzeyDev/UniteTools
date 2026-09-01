@@ -589,5 +589,11 @@
     "move2": [ "tailwind.png", "dragon_dance.png" ],
     "passive": [ "turboblaze.png" ],
     "unite": [ "flames_that_bring_lightning.png" ]
+  },
+  "solgaleo": {
+    "move1": [ "teleport.png", "iron_head.png" ],
+    "move2": [ "cosmic_power.png", "psyshock.png" ],
+    "passive": [ "unaware.png", "sturdy.png", "full_metal_body.png" ],
+    "unite": [ "shining_meteor_crush.png" ]
   }
 }

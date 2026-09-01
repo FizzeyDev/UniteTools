@@ -86,6 +86,31 @@
     return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 
+  /* Certains Pokémon ont plusieurs formes jouables dans UNITE_POKEMON
+     (ex: "Mewtwo X" / "Mewtwo Y") alors que les skins sont rattachés
+     au nom générique ("Mewtwo") dans UNITE_SKINS. On les fait matcher. */
+  const POKE_FORM_ALIASES = {
+    'Mewtwo': ['Mewtwo X', 'Mewtwo Y'],
+  };
+
+  /* Est-ce que le Pokémon deviné (guessName) correspond au Pokémon secret (secretName) ? */
+  function pokeNameMatches(guessName, secretName) {
+    if (guessName === secretName) return true;
+    const aliases = POKE_FORM_ALIASES[secretName];
+    return !!aliases && aliases.includes(guessName);
+  }
+
+  /* Retrouve la fiche du Pokémon secret dans UNITE_POKEMON, même si secretName
+     est un nom générique qui n'existe pas tel quel (ex: "Mewtwo"). */
+  function findSecretPokeData(secretName) {
+    let p = window.UNITE_POKEMON.find(p => p.name === secretName);
+    if (!p) {
+      const aliases = POKE_FORM_ALIASES[secretName];
+      if (aliases) p = window.UNITE_POKEMON.find(p => aliases.includes(p.name));
+    }
+    return p;
+  }
+
   function seededRandom(seed) {
     let s = seed | 0;
     return function () {
@@ -314,7 +339,7 @@
       const poke = window.UNITE_POKEMON.find(p => p.name === name);
       if (poke) {
         pokeGuesses.push(poke);
-        addPokeRow(poke, poke.name === secret.pokemon, true);
+        addPokeRow(poke, pokeNameMatches(poke.name, secret.pokemon), true);
       }
     });
     triesPokeEl.textContent = pokeGuesses.length;
@@ -358,7 +383,7 @@
     pokeGuesses.push(poke);
     triesPokeEl.textContent = pokeGuesses.length;
 
-    const isCorrect = poke.name === secret.pokemon;
+    const isCorrect = pokeNameMatches(poke.name, secret.pokemon);
     addPokeRow(poke, isCorrect, false);
 
     if (isCorrect) {
@@ -412,7 +437,7 @@
     phaseSkin.style.display   = 'block';
     skinCounter.style.display = 'inline-flex';
 
-    const pokeData = window.UNITE_POKEMON.find(p => p.name === secret.pokemon);
+    const pokeData = findSecretPokeData(secret.pokemon);
     foundPokeEl.innerHTML = `
       ${pokeData ? `<img src="${pokeData.img}" alt="${secret.pokemon}" onerror="this.style.display='none'">` : ''}
       <div class="skindle-found-poke-info">
@@ -494,7 +519,7 @@
         <img class="skindle-end-skin-img" src="${secret.img}" alt="${secret.skinName}"
              onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png'">
         <div class="skindle-end-skin-info">
-          <div class="skindle-end-skin-poke">${(() => { const pd = window.UNITE_POKEMON.find(p => p.name === secret.pokemon); return pd ? getDisplayName(pd) : secret.pokemon; })()}</div>
+          <div class="skindle-end-skin-poke">${(() => { const pd = findSecretPokeData(secret.pokemon); return pd ? getDisplayName(pd) : secret.pokemon; })()}</div>
           <div class="skindle-end-skin-name">${secret.skinName} Style</div>
         </div>
       </div>

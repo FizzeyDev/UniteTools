@@ -38,6 +38,7 @@ import {
   applyYveltalAttacker,
   applyPalkiaAttacker,
   applySlowbroAttacker,
+  applySolgaleoAttacker,
 } from './passiveEffectsAtk.js';
 
 import {
@@ -58,7 +59,8 @@ import {
   applyTyranitarDefender,
   applyUmbreonDefender,
   applyGarchompDefender,
-  applyFalinksDefender
+  applyFalinksDefender,
+  applySolgaleoDefender
 } from './passiveEffectsDef.js';
 
 import {
@@ -708,6 +710,7 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
     yveltal: applyYveltalAttacker,        // ← YVELTAL
     palkia: applyPalkiaAttacker,           // ← PALKIA
     slowbro: applySlowbroAttacker,         // ← SLOWBRO
+    solgaleo: applySolgaleoAttacker,       // ← SOLGALEO
   };
   handlers[pokemonId]?.(atkStats, defStats, card);
 }
@@ -723,7 +726,7 @@ function applyDefenderPassive(pokemonId, atkStats, defStats, card) {
     "mewtwo_y": applyMegaMewtwoYDefender, "mr_mime": applyMimeDefender,
     sylveon: applySylveonDefender, tyranitar: applyTyranitarDefender,
     umbreon: applyUmbreonDefender, garchomp: applyGarchompDefender,
-    falinks: applyFalinksDefender
+    falinks: applyFalinksDefender, solgaleo: applySolgaleoDefender
   };
   handlers[pokemonId]?.(atkStats, defStats, card);
 }

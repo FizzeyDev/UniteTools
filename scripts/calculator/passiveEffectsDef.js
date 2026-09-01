@@ -457,6 +457,39 @@ function applyFalinksDefender(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── SOLGALEO — Unaware / Sturdy (30% dmg reduction, permanent) ─────────────
+// "Reduces physical and special type damage by 30%. True type damage will
+// bypass this." Named Unaware (Cosmog/Cosmoem) then Full Metal Body kicks in
+// on evolving, but the 30% reduction itself (Sturdy at the middle stage)
+// carries through all 3 stages. Defaults ON — toggle off to see raw damage.
+function applySolgaleoDefender(atkStats, defStats, card) {
+  const level = state.defenderLevel;
+  const stageName = level >= 7 ? 'Sturdy' : level >= 5 ? 'Sturdy' : 'Unaware';
+  const isActive = state.defenderSolgaleoUnawareActive ?? true;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/solgaleo/unaware.png')}
+    <div style="flex:1;">
+      ${passiveBadge(stageName, null, PASSIVE_DEF)}
+      Permanent: <strong style="color:#fff;">−30% physical & special damage taken</strong><br>
+      <span style="font-size:0.8rem;color:${C}99;">True type damage bypasses this (e.g. Solgaleo's own Radiant Sun phase)${level >= 5 && level < 7 ? '. Sturdy also saves Cosmoem at 1 HP once (100s cd) — not modeled here.' : ''}</span><br>
+      <button class="solgaleo-unaware-toggle" style="
+        margin-top:8px;padding:6px 16px;
+        background:${isActive ? C : '#0d2428'};
+        color:${isActive ? '#000' : C};
+        border:1px solid ${C};border-radius:6px;cursor:pointer;
+        font-weight:700;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:0.04em;
+      ">${isActive ? '✓ Active' : 'Disabled'}</button>
+    </div>
+  `);
+  line.querySelector('.solgaleo-unaware-toggle').onclick = () => {
+    state.defenderSolgaleoUnawareActive = !isActive;
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 export {
   applyAegislashDefender, applyArmarougeDefender, applyArticunoDefender,
   applyZardxDefender, applyMegaGyaradosDefender, applyGyaradosDefender,
@@ -464,4 +497,5 @@ export {
   applyMamoswineDefender, applyMegaMewtwoDefender, applyMegaMewtwoYDefender,
   applyMimeDefender, applySylveonDefender, applyTyranitarDefender,
   applyUmbreonDefender, applyGarchompDefender, applyFalinksDefender,
+  applySolgaleoDefender,
 };
