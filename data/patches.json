@@ -1,6 +1,17 @@
 {
   "patches": [
     {
+      "version": "1.22.1.16",
+      "name": "Drive to Victory",
+      "date": "2026-09-03",
+      "buffs": [
+        "Crustle", "Dodrio", "Articuno", "Mewtwo Y", "Buzzwole", "Ninetales", "Moltres"
+      ],
+      "nerfs": ["Yveltal", "Reshiram", "Duraludon", "Feraligatr", "Greedent", "Garchomp", "Comfey"],
+      "tweaks": [],
+      "notes": "Shop update, Event update, Bug fixes, Text fixes"
+    },
+    {
       "version": "1.22.1.15",
       "name": "Aeos Summer Rush",
       "date": "2026-08-06",

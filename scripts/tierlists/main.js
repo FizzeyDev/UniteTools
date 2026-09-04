@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupKeyboardShortcuts();
     setupHowToUseModal();
     setupToastContainer();
+    setupMovesToggle();
 
     if (wasRestored) {
         // showToast is defined by setupToastContainer above, so delay one tick
@@ -175,6 +176,29 @@ function setupKeyboardShortcuts() {
                 });
             }
         }
+    });
+}
+
+function setupMovesToggle() {
+    // The button is (re)created by tierlist.js's loadTierList() every time the
+    // tierlist re-renders (tab switch, add/remove tier, etc.), so a direct
+    // reference taken here would go stale. tierlist.js already reflects the
+    // current state.askMovesOnAdd value whenever it draws the button; this
+    // delegated listener just needs to flip the state and keep whichever
+    // button node is currently on screen in sync.
+    document.addEventListener('click', e => {
+        const btn = e.target.closest('#moves-toggle-btn');
+        if (!btn) return;
+
+        state.askMovesOnAdd = !state.askMovesOnAdd;
+        btn.classList.toggle('is-active', state.askMovesOnAdd);
+        btn.setAttribute('aria-pressed', state.askMovesOnAdd ? 'true' : 'false');
+
+        window.triggerAutoSave?.();
+        window.showToast?.(
+            state.askMovesOnAdd ? 'Move selection popup enabled' : 'Move selection popup disabled — Pokémon placed instantly',
+            'info'
+        );
     });
 }
 

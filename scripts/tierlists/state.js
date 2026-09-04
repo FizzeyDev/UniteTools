@@ -25,6 +25,10 @@ const state = {
     itemUsageMode: 'one',
     gallerySearchQuery: '',
 
+    // When true, placing a Pokémon opens the move-selection modal.
+    // When false, the Pokémon is placed directly with default/auto-filled moves.
+    askMovesOnAdd: true,
+
     // Color history for the tier color picker (max 10)
     colorHistory: [],
 

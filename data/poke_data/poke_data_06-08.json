@@ -668,7 +668,7 @@
         "can_crit": "false",
         "image": "assets/moves/articuno/ice_wing_whiteout.png",
         "damages": [
-          {"name": "Damage per Wave (5x)", "multiplier": 74.8, "levelCoef": 0, "constant": 374, "dealDamage": true, "is_tick": true, "tick_count": 5, "tick_scaling": [1.00, 1.05, 1.10, 1.15, 2.00], "notes": "Wave 2: +5%, Wave 3: +10%, Wave 4: +15%, Wave 5: +100%"}
+          {"name": "Damage per Wave (5x)", "multiplier": 68, "levelCoef": 0, "constant": 340, "dealDamage": true, "is_tick": true, "tick_count": 5, "tick_scaling": [1.00, 1.05, 1.10, 1.15, 2.00], "notes": "Wave 2: +5%, Wave 3: +10%, Wave 4: +15%, Wave 5: +100%"}
         ],
         "shields": [
           {
@@ -1303,7 +1303,7 @@
         "image": "assets/moves/basic_attack.png",
         "damages": [
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
-          {"name": "Boosted (per Hit - 2 Hits)", "multiplier": 90, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 2}
+          {"name": "Boosted (per Hit - 2 Hits)", "multiplier": 80, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 2}
         ],
         "heals": [
           { "name": "Healing - Boosted (per Hit - 2 Hits)", "scaling": "atk", "multiplier": 78, "levelCoef": 0, "constant": 0, "is_tick": true, "tick_count": 2 }
@@ -3612,8 +3612,8 @@
         "can_crit": "false",
         "image": "assets/moves/dodrio/drill_peck.png",
         "damages": [
-          {"name": "Damage - 3 Hits (No Gauge)", "multiplier": 85.1, "levelCoef": 2, "constant": 78, "dealDamage": true, "is_tick": true, "tick_count": 3},
-          {"name": "Damage - 5 Hits (Full Gauge)", "multiplier": 85.1, "levelCoef": 2, "constant": 78, "dealDamage": true, "is_tick": true, "tick_count": 5},
+          {"name": "Damage - 3 Hits (No Gauge)", "multiplier": 78.8, "levelCoef": 2, "constant": 72, "dealDamage": true, "is_tick": true, "tick_count": 3},
+          {"name": "Damage - 5 Hits (Full Gauge)", "multiplier": 78.8, "levelCoef": 2, "constant": 72, "dealDamage": true, "is_tick": true, "tick_count": 5},
           {"name": "Damage - Bonus (Full Gauge)", "max_hp_percent": 3, "dealDamage": true, "is_tick": true, "tick_count": 3}
         ]
       },
@@ -4657,8 +4657,8 @@
         "upgradeLevel": 11,
         "image": "assets/moves/feraligatr/crunch.png",
         "damages": [
-          {"name": "Damage - Bonus", "multiplier": 198.7, "levelCoef": 0, "constant": 596, "dealDamage": true},
-          {"name": "Damage - Bonus +", "multiplier": 232, "levelCoef": 0, "constant": 695, "dealDamage": true, "upgraded": true},
+          {"name": "Damage - Bonus", "multiplier": 220.8, "levelCoef": 0, "constant": 662, "dealDamage": true},
+          {"name": "Damage - Bonus +", "multiplier": 253.9, "levelCoef": 0, "constant": 762, "dealDamage": true, "upgraded": true},
           {"name": "Damage - Bonus (Destructive Fangs)", "multiplier": 256.7, "levelCoef": 0, "constant": 770, "dealDamage": true},
           {"name": "Damage - Bonus + (Destructive Fangs)", "multiplier": 294, "levelCoef": 0, "constant": 888, "dealDamage": true, "upgraded": true}
         ],
@@ -4690,7 +4690,7 @@
           {"name": "Damage - Max Distance",   "multiplier": 272, "levelCoef": 0, "constant": 816, "dealDamage": true}
         ],
         "shields": [
-          {"name": "Shield", "scaling": "atk", "multiplier": 204, "levelCoef": 0, "constant": 612, "target": "self"}
+          {"name": "Shield", "scaling": "atk", "multiplier": 240, "levelCoef": 0, "constant": 720, "target": "self"}
         ]
       },
       {
@@ -5356,21 +5356,21 @@
     "role": "fighter",
     "style": "physical",
     "stats": [
-        {"level": 1, "hp": 3000, "atk": 170, "def": 75, "sp_atk": 20, "sp_def": 60, "crit": 0},
-        {"level": 2, "hp": 3135, "atk": 174, "def": 84, "sp_atk": 22, "sp_def": 68, "crit": 0},
-        {"level": 3, "hp": 3290, "atk": 178, "def": 95, "sp_atk": 24, "sp_def": 77, "crit": 0},
-        {"level": 4, "hp": 3469, "atk": 183, "def": 108, "sp_atk": 27, "sp_def": 88, "crit": 0},
-        {"level": 5, "hp": 4285, "atk": 206, "def": 165, "sp_atk": 40, "sp_def": 136, "crit": 0},
-        {"level": 6, "hp": 4522, "atk": 213, "def": 181, "sp_atk": 44, "sp_def": 150, "crit": 0},
-        {"level": 7, "hp": 4794, "atk": 221, "def": 200, "sp_atk": 48, "sp_def": 166, "crit": 0},
-        {"level": 8, "hp": 5107, "atk": 230, "def": 222, "sp_atk": 53, "sp_def": 184, "crit": 0},
-        {"level": 9, "hp": 5467, "atk": 240, "def": 247, "sp_atk": 59, "sp_def": 206, "crit": 0},
-        {"level": 10, "hp": 5882, "atk": 252, "def": 276, "sp_atk": 66, "sp_def": 230, "crit": 0},
-        {"level": 11, "hp": 6359, "atk": 266, "def": 309, "sp_atk": 74, "sp_def": 258, "crit": 0},
-        {"level": 12, "hp": 6908, "atk": 282, "def": 347, "sp_atk": 83, "sp_def": 291, "crit": 0},
-        {"level": 13, "hp": 7539, "atk": 300, "def": 391, "sp_atk": 93, "sp_def": 328, "crit": 0},
-        {"level": 14, "hp": 8265, "atk": 321, "def": 442, "sp_atk": 104, "sp_def": 371, "crit": 0},
-        {"level": 15, "hp": 9099, "atk": 345, "def": 500, "sp_atk": 117, "sp_def": 420, "crit": 0}
+      {"level": 1, "hp": 3000, "atk": 170, "def": 75, "sp_atk": 20, "sp_def": 60, "crit": 0},
+      {"level": 2, "hp": 3135, "atk": 174, "def": 85, "sp_atk": 22, "sp_def": 69, "crit": 0},
+      {"level": 3, "hp": 3290, "atk": 178, "def": 97, "sp_atk": 24, "sp_def": 79, "crit": 0},
+      {"level": 4, "hp": 3469, "atk": 183, "def": 111, "sp_atk": 27, "sp_def": 91, "crit": 0},
+      {"level": 5, "hp": 4285, "atk": 206, "def": 173, "sp_atk": 40, "sp_def": 144, "crit": 0},
+      {"level": 6, "hp": 4522, "atk": 213, "def": 191, "sp_atk": 44, "sp_def": 159, "crit": 0},
+      {"level": 7, "hp": 4794, "atk": 221, "def": 212, "sp_atk": 48, "sp_def": 177, "crit": 0},
+      {"level": 8, "hp": 5107, "atk": 230, "def": 236, "sp_atk": 53, "sp_def": 198, "crit": 0},
+      {"level": 9, "hp": 5467, "atk": 240, "def": 263, "sp_atk": 59, "sp_def": 222, "crit": 0},
+      {"level": 10, "hp": 5882, "atk": 252, "def": 295, "sp_atk": 66, "sp_def": 249, "crit": 0},
+      {"level": 11, "hp": 6359, "atk": 266, "def": 331, "sp_atk": 74, "sp_def": 280, "crit": 0},
+      {"level": 12, "hp": 6908, "atk": 282, "def": 373, "sp_atk": 83, "sp_def": 316, "crit": 0},
+      {"level": 13, "hp": 7539, "atk": 300, "def": 421, "sp_atk": 93, "sp_def": 357, "crit": 0},
+      {"level": 14, "hp": 8265, "atk": 321, "def": 476, "sp_atk": 104, "sp_def": 405, "crit": 0},
+      {"level": 15, "hp": 9099, "atk": 345, "def": 540, "sp_atk": 117, "sp_def": 460, "crit": 0}
     ],
     "moves": [
       {
@@ -8325,8 +8325,8 @@
         "can_crit": "true",
         "image": "assets/moves/basic_attack.png",
         "damages": [
-          {"name": "Basic", "multiplier": 47.3, "levelCoef": 4, "constant": 88, "dealDamage": true},
-          {"name": "Basic (Mega)", "multiplier": 52.92, "levelCoef": 5, "constant": 98, "dealDamage": true, "notes": "AoE + slow on hit"}
+          {"name": "Basic", "multiplier": 43, "levelCoef": 4, "constant": 80, "dealDamage": true},
+          {"name": "Basic (Mega)", "multiplier": 49, "levelCoef": 5, "constant": 90, "dealDamage": true, "notes": "AoE + slow on hit"}
         ]
       },
       {
@@ -8793,7 +8793,7 @@
         "can_crit": "false",
         "image": "assets/moves/moltres/firebird_inferno.png",
         "damages": [
-          {"name": "Damage", "multiplier": 154, "levelCoef": 11, "constant": 770, "dealDamage": true}
+          {"name": "Damage", "multiplier": 140, "levelCoef": 10, "constant": 700, "dealDamage": true}
         ],
         "shields": [
           {
@@ -8968,7 +8968,7 @@
         "image": "assets/moves/basic_attack.png",
         "damages": [
           {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true, "scaling": "physical"},
-          {"name": "Boosted", "multiplier": 57.46, "levelCoef": 14, "constant": 270, "dealDamage": true, "scaling": "special"}
+          {"name": "Boosted", "multiplier": 53.2, "levelCoef": 13, "constant": 250, "dealDamage": true, "scaling": "special"}
         ]
       },
       {
@@ -9009,7 +9009,7 @@
         "can_crit": "false",
         "image": "assets/moves/ninetales/avalanche.png",
         "damages": [
-          {"name": "Wind or Wall", "multiplier": 44, "levelCoef": 10, "constant": 229, "dealDamage": true}
+          {"name": "Wind or Wall", "multiplier": 40, "levelCoef": 9, "constant": 208, "dealDamage": true}
         ]
       },
       {
@@ -10019,8 +10019,8 @@
         "can_crit": "false",
         "image": "assets/moves/reshiram/blue_flare.png",
         "damages": [
-          {"name": "Damage", "multiplier": 99, "levelCoef": 0, "constant": 630, "dealDamage": true},
-          {"name": "Burn (per tick, x5)", "multiplier": 9.9, "levelCoef": 0, "constant": 63, "dealDamage": true, "is_tick": true, "tick_count": 5}
+          {"name": "Damage", "multiplier": 110, "levelCoef": 0, "constant": 700, "dealDamage": true},
+          {"name": "Burn (per tick, x5)", "multiplier": 11, "levelCoef": 0, "constant": 70, "dealDamage": true, "is_tick": true, "tick_count": 5}
         ]
       },
       {
@@ -10052,11 +10052,11 @@
         "can_crit": "false",
         "image": "assets/moves/reshiram/flames_that_bring_lightning.png",
         "damages": [
-          {"name": "Damage - Flames", "multiplier": 90, "levelCoef": 0, "constant": 450, "dealDamage": true},
-          {"name": "Damage - Lightning (Empowered only)", "multiplier": 54, "levelCoef": 0, "constant": 270, "dealDamage": true}
+          {"name": "Damage - Flames", "multiplier": 100, "levelCoef": 0, "constant": 500, "dealDamage": true},
+          {"name": "Damage - Lightning (Empowered only)", "multiplier": 60, "levelCoef": 0, "constant": 300, "dealDamage": true}
         ],
         "shields": [
-          {"name": "Shield - Unite Buff (Empowered only, 10% Max HP)", "scaling": "hp", "multiplier": 10, "levelCoef": 0, "constant": 0}
+          {"name": "Shield - Unite Buff (Empowered only, 20% Max HP)", "scaling": "hp", "multiplier": 20, "levelCoef": 0, "constant": 0}
         ]
       }
     ]
@@ -13073,7 +13073,7 @@
       "image": "assets/moves/yveltal/dark_aura.png",
       "description": "When this Pokémon deals damage with boosted attacks or moves, a mark of destruction is applied onto opposing Pokémon. This mark lasts 3s and stacks up to 5 times, increasing Yveltal's damage towards the marked Pokémon by 3% per stack. When Yveltal hits a Pokémon with 5 marks below 10% Max HP, deals an additional 40% of that Pokémon's Max HP as true damage (effectively 46% Max HP). KOs from this damage heal Yveltal, excess healing above Max HP converts to a shield for 3s at 50% conversion.",
       "markStackMax": 5,
-      "markDamagePercentPerStack": "2%",
+      "markDamagePercentPerStack": "3%",
       "executeHpThreshold": "10%",
       "executeDamagePercent": "40%",
       "healToShieldConversion": "50%"
@@ -13116,8 +13116,8 @@
         "can_crit": "false",
         "image": "assets/moves/yveltal/oblivion_wing.png",
         "damages": [
-          {"name": "Damage", "multiplier": 231.8, "levelCoef": 0, "constant": 650, "dealDamage": true},
-          {"name": "Damage (upgraded)", "multiplier": 273.6, "levelCoef": 0, "constant": 747, "dealDamage": true, "upgraded": true}
+          {"name": "Damage", "multiplier": 244, "levelCoef": 0, "constant": 684, "dealDamage": true},
+          {"name": "Damage (upgraded)", "multiplier": 280, "levelCoef": 0, "constant": 786, "dealDamage": true, "upgraded": true}
         ]
       },
       {

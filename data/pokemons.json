@@ -410,7 +410,7 @@
         "stade": "1ère évo",
         "evo_niveaux": "4",
         "mega": false,
-        "unite_move_cost": 134,
+        "unite_move_cost": 123,
         "evolution_levels": [
             4
         ],
@@ -429,7 +429,7 @@
         "stade": "1ère évo",
         "evo_niveaux": "5",
         "mega": false,
-        "unite_move_cost": 134,
+        "unite_move_cost": 123,
         "evolution_levels": [
             5
         ],
@@ -1419,7 +1419,7 @@
         "stade": "Base",
         "evo_niveaux": null,
         "mega": false,
-        "unite_move_cost": 134,
+        "unite_move_cost": 123,
         "evolution_levels": null,
         "date": "15/03",
         "name_ja": "ジュラルドン"
@@ -1456,7 +1456,7 @@
         "stade": "1ère évo",
         "evo_niveaux": "5",
         "mega": false,
-        "unite_move_cost": 100,
+        "unite_move_cost": 112,
         "evolution_levels": [
             5
         ],

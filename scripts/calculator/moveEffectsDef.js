@@ -1091,7 +1091,7 @@ function applyMoltresSkyAttackStacks(atkStats, defStats, card) {
 
   const stacks    = state.defenderMoltresSkyAttackStacks ?? 0;
   const maxStacks = 5;
-  const bonusPct  = stacks * 8;
+  const bonusPct  = stacks * 10;
   const line = document.createElement('div');
   line.className = 'global-bonus-line';
   line.innerHTML = wrap(`

@@ -30,12 +30,13 @@
  */
 
 export const patches = [
-  { id: 'live', label: 'Aeos Summer Rush (Current)', file: 'data/poke_data/poke_data.json' },
+  { id: 'live', label: 'Drive to Victory (Current)', file: 'data/poke_data/poke_data.json' },
 
-  { id: '1', label: 'Palkia Emergency Buff', file: 'data/poke_data/poke_data_20-07.json' },
-  { id: '2', label: 'Enduring Formation Part 2', file: 'data/poke_data/poke_data_16-07.json' },
-  { id: '3', label: 'Enduring Formation Part 1', file: 'data/poke_data/poke_data_17-06.json' },
-  { id: '4', label: 'Revival Stars Part 2', file: 'data/poke_data/poke_data_13-05.json' },
+  { id: '1', label: 'Aeos Summer Rush', file: 'data/poke_data/poke_data_06-08.json' },
+  { id: '2', label: 'Palkia Emergency Buff', file: 'data/poke_data/poke_data_20-07.json' },
+  { id: '3', label: 'Enduring Formation Part 2', file: 'data/poke_data/poke_data_16-07.json' },
+  { id: '4', label: 'Enduring Formation Part 1', file: 'data/poke_data/poke_data_17-06.json' },
+  { id: '5', label: 'Revival Stars Part 2', file: 'data/poke_data/poke_data_13-05.json' },
 
 
   // ── Historique — à compléter à la main à chaque nouveau patch ─────────

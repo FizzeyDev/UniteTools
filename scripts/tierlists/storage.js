@@ -16,11 +16,12 @@ let autoSaveTimer = null;
 export function saveToLocalStorage() {
     try {
         const data = {
-            drafts:       state.drafts,
-            currentDraft: state.currentDraft,
-            uidCounter:   state._uidCounter,
-            colorHistory: state.colorHistory,
-            savedAt:      new Date().toISOString(),
+            drafts:        state.drafts,
+            currentDraft:  state.currentDraft,
+            uidCounter:    state._uidCounter,
+            colorHistory:  state.colorHistory,
+            askMovesOnAdd: state.askMovesOnAdd,
+            savedAt:       new Date().toISOString(),
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     } catch (err) {
@@ -49,6 +50,11 @@ export function loadFromLocalStorage() {
         // Restore color history
         if (Array.isArray(data.colorHistory)) {
             state.colorHistory = data.colorHistory;
+        }
+
+        // Restore "ask moves on add" preference (default stays true if never saved)
+        if (typeof data.askMovesOnAdd === 'boolean') {
+            state.askMovesOnAdd = data.askMovesOnAdd;
         }
 
         // Guard: make sure currentDraft still exists

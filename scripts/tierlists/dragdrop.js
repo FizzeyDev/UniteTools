@@ -10,6 +10,36 @@ function triggerSave() {
     window.triggerAutoSave?.();
 }
 
+/**
+ * Build a placed-item object for direct placement (no move modal).
+ * For Pokémon, move/passive/unite fields are left undefined so tierlist.js's
+ * auto-fill logic (see resolvedMove1 etc.) picks sensible defaults automatically;
+ * the user can still double-click the placed Pokémon later to fine-tune moves.
+ */
+function buildDirectItem(name, category) {
+    const src  = category === 'pokemon' ? state.pokemonData
+               : category === 'items'   ? state.itemData
+               : state.battleItemData;
+    const file = src.find(i => i.name === name)?.file;
+    const item = { uid: state.nextUid(), name, category, file };
+
+    // For Pokémon placed directly (Ask Moves OFF), explicitly mark every move
+    // field as "no move" (empty string) rather than leaving them undefined.
+    // tierlist.js only auto-fills default moves when a field is undefined —
+    // an explicit '' means "intentionally none", so the card renders as a
+    // plain sprite (no move/passive/unite badges), exactly like a fresh
+    // direct placement should look. Double-clicking the placed Pokémon still
+    // opens the move modal to configure it later.
+    if (category === 'pokemon') {
+        item.move1   = '';
+        item.move2   = '';
+        item.passive = '';
+        item.unite   = '';
+    }
+
+    return item;
+}
+
 export function setupDragDrop() {
 
     // ── dragstart ──────────────────────────────────────────────────────────
@@ -176,21 +206,14 @@ export function setupDragDrop() {
                 return;
             }
 
-            if (dragPayload.category === 'pokemon') {
+            if (dragPayload.category === 'pokemon' && state.askMovesOnAdd) {
                 state.pendingAdd = { name: dragPayload.name, category: dragPayload.category, tierIndex };
                 showMoveModal(dragPayload.name, tierIndex, false);
                 dragPayload = null;
                 return;
             } else {
                 usageMap.set(dragPayload.name, (usageMap.get(dragPayload.name) || 0) + 1);
-                const src  = dragPayload.category === 'items' ? state.itemData : state.battleItemData;
-                const file = src.find(i => i.name === dragPayload.name)?.file;
-                targetTier.items.push({
-                    uid: state.nextUid(),
-                    name: dragPayload.name,
-                    category: dragPayload.category,
-                    file,
-                });
+                targetTier.items.push(buildDirectItem(dragPayload.name, dragPayload.category));
                 triggerSave();
             }
 
@@ -238,15 +261,13 @@ export function setupDragDrop() {
         const targetTier = draft.tiers[targetTierIndex];
         if (!targetTier) return;
 
-        if (category === 'pokemon') {
+        if (category === 'pokemon' && state.askMovesOnAdd) {
             state.pendingAdd = { name, category, tierIndex: targetTierIndex };
             showMoveModal(name, targetTierIndex, false);
             return;
         } else {
             usageMap.set(name, (usageMap.get(name) || 0) + 1);
-            const src  = category === 'items' ? state.itemData : state.battleItemData;
-            const file = src.find(i => i.name === name)?.file;
-            targetTier.items.push({ uid: state.nextUid(), name, category, file });
+            targetTier.items.push(buildDirectItem(name, category));
             triggerSave();
         }
 

@@ -1529,6 +1529,30 @@ body.is-dragging * { cursor: grabbing !important; }
 }
 .mode-bar__action-btn--clear:hover { background: rgba(239,83,80,0.2); }
 
+/* ── Ask Moves toggle: same visual language as the topbar ctrl-btn buttons.
+   Dimmed/neutral when OFF, yellow when ON (modal will open on placement). ── */
+.ctrl-btn--moves-toggle {
+  background: rgba(255,255,255,0.04);
+  border-color: var(--border-md);
+  color: var(--text-dim);
+}
+.ctrl-btn--moves-toggle:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: var(--border-md);
+}
+.ctrl-btn--moves-toggle:not(.is-active) .ctrl-icon { opacity: 0.5; filter: grayscale(1); }
+.ctrl-btn--moves-toggle.is-active {
+  background: var(--yellow-dim);
+  border-color: rgba(255,215,64,0.45);
+  color: var(--yellow);
+}
+.ctrl-btn--moves-toggle.is-active:hover {
+  background: rgba(255,215,64,0.24);
+  border-color: var(--yellow);
+  color: var(--text-bright);
+  box-shadow: 0 4px 20px rgba(255,215,64,0.25);
+}
+
 /* ══ tierlist-controls ═══════════════════════════════════════════════ */
 .tierlist-controls {
   display: flex;

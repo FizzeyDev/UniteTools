@@ -158,6 +158,15 @@ export function loadTierList(draftId) {
     spacer.style.flex = '1';
     modeBar.appendChild(spacer);
 
+    const movesToggleBtn     = document.createElement('button');
+    movesToggleBtn.type      = 'button';
+    movesToggleBtn.className = `ctrl-btn ctrl-btn--moves-toggle${state.askMovesOnAdd ? ' is-active' : ''}`;
+    movesToggleBtn.id        = 'moves-toggle-btn';
+    movesToggleBtn.title     = 'When enabled, placing a Pokémon opens a popup to choose its moves. Disable to place it instantly with default moves.';
+    movesToggleBtn.setAttribute('aria-pressed', state.askMovesOnAdd ? 'true' : 'false');
+    movesToggleBtn.innerHTML = '<span class="ctrl-icon">⚔️</span><span class="ctrl-label">Ask Moves</span>';
+    modeBar.appendChild(movesToggleBtn);
+
     const clearBtn       = document.createElement('button');
     clearBtn.className   = 'mode-bar__action-btn mode-bar__action-btn--clear';
     clearBtn.id          = 'clear-draft-btn';

@@ -658,7 +658,7 @@ function applyQuaquavalAttacker(atkStats, defStats, card) {
 // ── YVELTAL ───────────────────────────────────────────────────────────────────
 function applyYveltalAttacker(atkStats, defStats, card) {
   const marks       = Math.min(5, state.attackerPassiveStacks || 0);
-  const dmgBonusPct = marks * 3;
+  const dmgBonusPct = marks * 2;
   const executeReady = marks === 5 && (state.attackerYveltalExecuteReady ?? false);
 
   // Heal on KO (Dark Aura - Healing): 140% Sp. Atk + 0×(Level-1) + 420
