@@ -13691,5 +13691,130 @@
         ]
       }
     ]
+  },
+  {
+    "pokemonId": "morpeko",
+    "dex": 877,
+    "role": "speedster",
+    "style": "physical",
+    "stats": [
+      {"level": 1, "hp": 3300, "atk": 188, "def": 70, "sp_atk": 20, "sp_def": 70, "crit": 0, "lifesteal": 0},
+      {"level": 2, "hp": 3425, "atk": 206, "def": 78, "sp_atk": 23, "sp_def": 78, "crit": 0, "lifesteal": 0},
+      {"level": 3, "hp": 3563, "atk": 225, "def": 86, "sp_atk": 27, "sp_def": 86, "crit": 0, "lifesteal": 0},
+      {"level": 4, "hp": 3714, "atk": 246, "def": 95, "sp_atk": 31, "sp_def": 95, "crit": 0, "lifesteal": 0},
+      {"level": 5, "hp": 3880, "atk": 269, "def": 105, "sp_atk": 36, "sp_def": 105, "crit": 5, "lifesteal": 0},
+      {"level": 6, "hp": 4063, "atk": 295, "def": 116, "sp_atk": 41, "sp_def": 116, "crit": 5, "lifesteal": 0},
+      {"level": 7, "hp": 4265, "atk": 323, "def": 128, "sp_atk": 46, "sp_def": 128, "crit": 5, "lifesteal": 0},
+      {"level": 8, "hp": 4487, "atk": 354, "def": 141, "sp_atk": 53, "sp_def": 141, "crit": 5, "lifesteal": 0},
+      {"level": 9, "hp": 4730, "atk": 388, "def": 156, "sp_atk": 59, "sp_def": 156, "crit": 10, "lifesteal": 0},
+      {"level": 10, "hp": 4999, "atk": 426, "def": 172, "sp_atk": 67, "sp_def": 172, "crit": 10, "lifesteal": 0},
+      {"level": 11, "hp": 5293, "atk": 467, "def": 190, "sp_atk": 75, "sp_def": 190, "crit": 10, "lifesteal": 0},
+      {"level": 12, "hp": 5618, "atk": 512, "def": 209, "sp_atk": 84, "sp_def": 209, "crit": 10, "lifesteal": 0},
+      {"level": 13, "hp": 5975, "atk": 563, "def": 231, "sp_atk": 93, "sp_def": 231, "crit": 10, "lifesteal": 0},
+      {"level": 14, "hp": 6368, "atk": 617, "def": 254, "sp_atk": 104, "sp_def": 254, "crit": 10, "lifesteal": 0},
+      {"level": 15, "hp": 6800, "atk": 678, "def": 280, "sp_atk": 116, "sp_def": 280, "crit": 10, "lifesteal": 0}
+    ],
+    "passive": {
+      "name": "Hunger Switch",
+      "image": "assets/moves/morpeko/hunger_switch.png",
+      "description": "Morpeko's form and move effects change based on its fullness gauge. Eating Berries increases the gauge by 1. Full Belly Mode: on entry, heals the user and resets Thunder Shock/Spark's cooldown; the gauge decreases every 12s or whenever the user uses a move, and at 0 the user enters Hangry Mode. Hangry Mode: on entry, resets Power Trip/Assurance's cooldown and fears nearby opposing Pok\u00e9mon for 1s; the user gains 20% Move Speed and the gauge increases every 3s, and when full the user enters Full Belly Mode.",
+      "healRatio": 85,
+      "healConstant": 340,
+      "healScaling": "atk",
+      "hangryFearDuration": 1,
+      "hangryMoveSpeedBonus": 20
+    },
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "true",
+        "image": "assets/moves/basic_attack.png",
+        "damages": [
+          {"name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true},
+          {"name": "Boosted", "multiplier": 125, "levelCoef": 0, "constant": 0, "dealDamage": true, "notes": "Every 3rd auto attack. On hit, increases Move Speed by 50% for 2s, decaying 10% every 0.5s."}
+        ]
+      },
+      {
+        "name": "Thunder Shock",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/morpeko/thunder_shock.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 95, "levelCoef": 0, "constant": 380, "dealDamage": true, "notes": "Paralyzes for 1s (-30% Move Speed, -10% flat Attack Speed)."}
+        ]
+      },
+      {
+        "name": "Spark",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/morpeko/spark.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 170, "levelCoef": 0, "constant": 360, "dealDamage": true, "notes": "Applies a bolt mark for 5s and paralyzes for 4s (-30% Move Speed, -10% flat Attack Speed)."},
+          {"name": "Damage - Follow Up", "multiplier": 171, "levelCoef": 0, "constant": 684, "dealDamage": true, "mode": "full_belly", "notes": "Full Belly Mode only: recast within 2.5s to charge the marked Pok\u00e9mon, dealing area damage. Cooldown reduced 50% in Full Belly Mode."}
+        ],
+        "shields": [
+          {
+            "name": "Shield (Lv.11, on Follow Up)",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0,
+            "target": "self",
+            "upgraded": true
+          }
+        ]
+      },
+      {
+        "name": "Power Trip",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/morpeko/power_trip.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 110, "levelCoef": 0, "constant": 440, "dealDamage": true, "notes": "Readies a boosted attack."}
+        ]
+      },
+      {
+        "name": "Assurance",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/morpeko/assurance.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 180, "levelCoef": 0, "constant": 720, "dealDamage": true},
+          {"name": "Damage - Additional (Paralyzed target)", "multiplier": 60, "levelCoef": 0, "constant": 240, "dealDamage": true, "notes": "Hangry Mode: if this hits a bolt-marked Pok\u00e9mon, the cooldown is reset and the mark is consumed."}
+        ],
+        "notes_lv13": "At level 13, hitting a target readies a guaranteed critical-hit boosted attack."
+      },
+      {
+        "name": "Hungry Supercharge Wheel (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/morpeko/hungry_supercharge_wheel.png",
+        "damages": [
+          {"name": "Damage - Full Belly", "multiplier": 260, "levelCoef": 0, "constant": 1040, "dealDamage": true, "mode": "full_belly", "notes": "Stuns for 1s and paralyzes for 4s (-30% Move Speed, -10% Attack Speed)."},
+          {"name": "Damage - Hangry", "multiplier": 260, "levelCoef": 0, "constant": 1200, "dealDamage": true, "mode": "hangry", "notes": "Stuns for 1s and applies a bolt mark for 5s."}
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0,
+            "target": "self"
+          }
+        ],
+        "buffs": "80% Move Speed for 6s, unstoppable while dashing"
+      }
+    ]
   }
 ]

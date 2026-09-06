@@ -39,6 +39,7 @@ import {
   applyPalkiaAttacker,
   applySlowbroAttacker,
   applySolgaleoAttacker,
+  applyMorpekoAttacker,
 } from './passiveEffectsAtk.js';
 
 import {
@@ -139,6 +140,17 @@ function filterByUpgrade(items, upgraded) {
   }
 
   return filtered;
+}
+
+// ── filterByMode — generic form-toggle filter (e.g. Morpeko's Hunger Switch) ──
+// Entries can carry a "mode" tag (e.g. "full_belly" / "hangry"). Untagged
+// entries always pass through; tagged entries only show when they match the
+// attacker's current form state. Unlike filterByUpgrade (level-gated), this
+// is gated on a manual toggle the player sets via the passive card.
+function filterByMode(items, currentMode) {
+  if (!items?.length) return items || [];
+  if (!currentMode) return items;
+  return items.filter(i => !i.mode || i.mode === currentMode);
 }
 
 export function updateDamages() {
@@ -711,6 +723,7 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
     palkia: applyPalkiaAttacker,           // ← PALKIA
     slowbro: applySlowbroAttacker,         // ← SLOWBRO
     solgaleo: applySolgaleoAttacker,       // ← SOLGALEO
+    morpeko: applyMorpekoAttacker,         // ← MORPEKO
   };
   handlers[pokemonId]?.(atkStats, defStats, card);
 }
@@ -839,9 +852,14 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
 
     const upgraded = isMoveUpgraded(move, level);
 
-    const visibleDamages = filterByUpgrade(move.damages, upgraded);
-    const visibleHeals   = filterByUpgrade(move.heals,   upgraded);
-    const visibleShields = filterByUpgrade(move.shields, upgraded);
+    // ← MORPEKO: Hunger Switch form (full_belly / hangry) gates "mode"-tagged entries
+    const morpekoMode = state.currentAttacker?.pokemonId === "morpeko"
+      ? (state.attackerMorpekoMode || 'full_belly')
+      : null;
+
+    const visibleDamages = filterByMode(filterByUpgrade(move.damages, upgraded), morpekoMode);
+    const visibleHeals   = filterByMode(filterByUpgrade(move.heals,   upgraded), morpekoMode);
+    const visibleShields = filterByMode(filterByUpgrade(move.shields, upgraded), morpekoMode);
 
     const card = document.createElement("div");
     card.className = "move-card";

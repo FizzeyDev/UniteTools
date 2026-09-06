@@ -790,6 +790,43 @@ function applySolgaleoAttacker(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+
+// ── MORPEKO — Hunger Switch (Full Belly / Hangry form toggle) ─────────────
+// Morpeko is always in one of two forms (never a neutral "standard" state).
+// This toggle drives state.attackerMorpekoMode, which damageDisplay.js reads
+// (via filterByMorpekoMode) to pick the right damage rows in poke_data.json —
+// entries tagged "mode": "full_belly" or "mode": "hangry" (Spark's Follow-Up,
+// and the two Hungry Supercharge Wheel variants).
+function applyMorpekoAttacker(atkStats, defStats, card) {
+  const mode = state.attackerMorpekoMode || 'full_belly';
+  const modes = {
+    full_belly: { label: 'Full Belly Mode', color: '#4caf82', desc: 'Heals on entry. Spark gains a Follow-Up recast (shield at Lv.11). Thunder Shock/Spark cooldowns reset on transform.' },
+    hangry: { label: 'Hangry Mode', color: '#e74c3c', desc: '+20% Move Speed. Fears nearby opponents for 1s on entry. Assurance resets its cooldown on marked targets and (Lv.13) grants a guaranteed crit boosted attack. Unite Move deals increased damage and applies a bolt mark.' }
+  };
+  const order = ['full_belly', 'hangry'];
+  const current = modes[mode];
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/morpeko/hunger_switch.png')}
+    <div style="flex:1;">
+      ${passiveBadge('Hunger Switch', null, PASSIVE_ATK)}
+      Form: <strong style="color:${current.color};">${current.label}</strong>
+      <button class="morpeko-mode-toggle" style="margin-left:8px;padding:4px 12px;background:${current.color};color:white;border:none;border-radius:6px;cursor:pointer;">
+        Switch
+      </button>
+      <br><span style="font-size:0.8rem;color:${C}99;">${current.desc}</span>
+    </div>
+  `);
+  line.querySelector('.morpeko-mode-toggle').onclick = () => {
+    const idx = order.indexOf(mode);
+    state.attackerMorpekoMode = order[(idx + 1) % order.length];
+    updateDamages();
+  };
+  card.appendChild(line);
+}
+
 export {
   applyBuzzwoleAttacker, applyCeruledgeAttacker, applyChandelureAttacker,
   applyDarkraiAttacker, applyDecidueyeAttacker, applyZardyAttacker,
@@ -804,4 +841,5 @@ export {
   applyPalkiaAttacker,
   applySlowbroAttacker,
   applySolgaleoAttacker,
+  applyMorpekoAttacker,
 };

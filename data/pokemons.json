@@ -1842,7 +1842,24 @@
             5,
             7
         ],
-        "date": "TBD",
+        "date": "21/08",
         "name_ja": "ソルガレオ"
+    },
+    {
+        "name": "Morpeko",
+        "name_fr": "Morpeko",
+        "file": "morpeko_spe.png",
+        "role": "spe",
+        "dex": 877,
+        "portee": "Mêlée",
+        "difficulte": "Intermédiaire",
+        "annee": 2026,
+        "stade": "Base",
+        "evo_niveaux": null,
+        "mega": false,
+        "unite_move_cost": 100,
+        "evolution_levels": null,
+        "date": "04/09",
+        "name_ja": "モルペコ"
     }
 ]
