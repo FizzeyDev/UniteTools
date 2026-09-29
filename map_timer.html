@@ -69,6 +69,17 @@
 
       <div id="phase-label" class="timer-phase-label">🟢 Early Game</div>
     </div>
+
+    <div class="mt-view-switch" role="group" data-lang-title="mt_view_title" title="Display mode">
+      <button type="button" class="mt-view-btn active" data-view="visual" aria-pressed="true" data-lang="mt_view_visual">🗺️ Visual</button>
+      <button type="button" class="mt-view-btn" data-view="table" aria-pressed="false" data-lang="mt_view_table">📊 Table</button>
+    </div>
+  </div>
+
+  <!-- ── Next spawns banner (filled by scripts/map_timer/nextSpawns.js) ── -->
+  <div id="next-spawns" class="next-spawns">
+    <span class="ns-title" data-lang="mt_next_title">Next spawns</span>
+    <div id="next-spawns-list" class="ns-list"></div>
   </div>
 
   <div class="map-wrapper">
@@ -78,6 +89,15 @@
       <div id="towers-container"></div>
     </div>
   </div>
+
+  <!-- ── Spawn Guide: tables + explanations (filled by scripts/map_timer/guide.js) ── -->
+  <section id="spawn-guide" class="spawn-guide">
+    <div class="guide-head">
+      <h2 data-lang="mt_guide_title">Spawn Guide</h2>
+      <p data-lang="mt_guide_subtitle">Every spawn of the selected map. Times are on the in-game clock, counting down from 10:00 like the timer above.</p>
+    </div>
+    <div id="spawn-guide-content"></div>
+  </section>
 
   <div id="pokemon-tooltip" class="pokemon-tooltip">
     <div class="gif-container"><img id="tooltip-gif" src="" alt=""></div>
@@ -147,6 +167,10 @@
         <div class="htu-section">
           <div class="htu-icon">📋</div>
           <div><h3 data-lang="map_timer_htu_tracker_title">Tracker</h3><p data-lang="map_timer_htu_tracker_desc">Click the <strong>Tracker</strong> button (top-right) or press <kbd>T</kbd> to open the kill tracker. See when mobs were killed and when they respawn. Switch between <strong>Mobs</strong> and <strong>Towers</strong> tabs.</p></div>
+        </div>
+        <div class="htu-section">
+          <div class="htu-icon">📊</div>
+          <div><h3 data-lang="mt_htu_guide_title">Spawn Guide</h3><p data-lang="mt_htu_guide_desc">Scroll below the map for the spawn tables (Altaria timers by goal state, every spawn, and what each goal changes). Use <strong>Visual / Table</strong> next to the timer to hide the map and only see the tables.</p></div>
         </div>
         <div class="htu-section">
           <div class="htu-icon">💬</div>

@@ -39,6 +39,7 @@ export function updateDisplay() {
   updatePhaseLabel(state.currentTime);
   updateSpawns();
   updateTowers();
+  document.dispatchEvent(new CustomEvent("mapTimerTick"));   // keeps the Spawn Guide in sync
 }
 
 function startTimer() {
@@ -115,6 +116,8 @@ export function loadSpawns(mapName) {
       spawnsContainer.innerHTML = "";
       towersContainer.innerHTML = "";
       updateDisplay();
+      // Raw JSON for the Spawn Guide (tables under the map)
+      document.dispatchEvent(new CustomEvent("mapTimerDataLoaded", { detail: { map: mapName, data } }));
     })
     .catch(err => console.error("JSON load error:", err));
 }

@@ -206,12 +206,12 @@ function renderStats() {
       <div class="stat-val v-accent">${POKEMON.length}</div>
       <div class="stat-lbl" data-lang="patch_stat_pokemon">${t('patch_stat_pokemon','Tracked Pokémon')}</div>
     </div>
-    ${mostBuffed ? `<div class="stat-card" title="${mostBuffed[0]} - ${mostBuffed[1]} buffs" style="cursor:pointer;" onclick="openModal('${mostBuffed[0]}')">
-      <div class="stat-val v-buff" style="font-size:0.85rem;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${tagSprite(mostBuffed[0])} ${mostBuffed[0]}</div>
+    ${mostBuffed ? `<div class="stat-card stat-poke" title="${mostBuffed[0]} - ${mostBuffed[1]} buffs" onclick="openModal('${mostBuffed[0]}')">
+      <div class="stat-val stat-name v-buff">${tagSprite(mostBuffed[0])} ${mostBuffed[0]}</div>
       <div class="stat-lbl"><span data-lang="patch_most_buffed_label">${t('patch_most_buffed_label','▲ Most buffed')}</span> (${mostBuffed[1]})</div>
     </div>` : ''}
-    ${mostNerfed ? `<div class="stat-card" title="${mostNerfed[0]} - ${mostNerfed[1]} nerfs" style="cursor:pointer;" onclick="openModal('${mostNerfed[0]}')">
-      <div class="stat-val v-nerf" style="font-size:0.85rem;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${tagSprite(mostNerfed[0])} ${mostNerfed[0]}</div>
+    ${mostNerfed ? `<div class="stat-card stat-poke" title="${mostNerfed[0]} - ${mostNerfed[1]} nerfs" onclick="openModal('${mostNerfed[0]}')">
+      <div class="stat-val stat-name v-nerf">${tagSprite(mostNerfed[0])} ${mostNerfed[0]}</div>
       <div class="stat-lbl"><span data-lang="patch_most_nerfed_label">${t('patch_most_nerfed_label','▼ Most nerfed')}</span> (${mostNerfed[1]})</div>
     </div>` : ''}
   `;
@@ -323,11 +323,17 @@ function closeInfoModal() {
   }
 }
 
+function renderCurrent() {
+  if (view === 'patches') renderPatches();
+  else if (view === 'diff') document.dispatchEvent(new CustomEvent('patchDiffRender', { detail: { search, filter } }));
+  else renderPoke();
+}
+
 function buildFilterBar() {
   const fb = document.getElementById('filterBar');
 
   if (view === 'patches') {
-    fb.innerHTML = [
+    fb.innerHTML = '<div class="filter-group">' + [
       ['all',   'patch_filter_all',   'All',    ''],
       ['buff',  'patch_filter_buff',  'Buffs',  '▲ '],
       ['nerf',  'patch_filter_nerf',  'Nerfs',  '▼ '],
@@ -335,7 +341,7 @@ function buildFilterBar() {
       ['misc',  'patch_filter_qol',   'QoL',    '⚙ '],
     ].map(([v, lk, lf, icon]) =>
       `<button class="filter-btn ${filter === v ? 'active' : ''}" data-f="${v}" data-lang="${lk}">${icon}${t(lk, lf)}</button>`
-    ).join('');
+    ).join('') + '</div>';
 
   } else {
     const roleFilters = [
@@ -356,20 +362,30 @@ function buildFilterBar() {
       ['name',    'patch_sort_name',    'Sort by name'],
     ];
 
+    if (view === 'diff') {
+      fb.innerHTML = '<div class="filter-group">' + roleFilters.map(([v, lk, lf]) =>
+        `<button class="filter-btn ${filter === v ? 'active' : ''}" data-f="${v}" data-lang="${lk}">${t(lk, lf)}</button>`
+      ).join('') + '</div>';
+      bindFilterButtons();
+      return;
+    }
+
     const sortDirLabel = sortDir === 'desc'
       ? t('patch_sort_desc', '↓ Desc.')
       : t('patch_sort_asc',  '↑ Asc.');
 
     fb.innerHTML = `
-      ${roleFilters.map(([v, lk, lf]) =>
+      <div class="filter-group">${roleFilters.map(([v, lk, lf]) =>
         `<button class="filter-btn ${filter === v ? 'active' : ''}" data-f="${v}" data-lang="${lk}">${t(lk, lf)}</button>`
-      ).join('')}
-      <select class="sort-select" id="sortSel">
-        ${sortOptions.map(([v, lk, lf]) =>
-          `<option value="${v}" ${sortKey === v ? 'selected' : ''}>${t(lk, lf)}</option>`
-        ).join('')}
-      </select>
-      <button class="filter-btn" id="sortDirBtn">${sortDirLabel}</button>
+      ).join('')}</div>
+      <div class="sort-group">
+        <select class="sort-select" id="sortSel">
+          ${sortOptions.map(([v, lk, lf]) =>
+            `<option value="${v}" ${sortKey === v ? 'selected' : ''}>${t(lk, lf)}</option>`
+          ).join('')}
+        </select>
+        <button class="filter-btn" id="sortDirBtn">${sortDirLabel}</button>
+      </div>
     `;
 
     document.getElementById('sortSel').addEventListener('change', e => {
@@ -383,11 +399,15 @@ function buildFilterBar() {
     });
   }
 
+  bindFilterButtons();
+}
+
+function bindFilterButtons() {
   document.querySelectorAll('.filter-btn[data-f]').forEach(b => {
     b.addEventListener('click', () => {
       filter = b.dataset.f;
       buildFilterBar();
-      view === 'patches' ? renderPatches() : renderPoke();
+      renderCurrent();
     });
   });
 }
@@ -419,10 +439,13 @@ function renderPatches() {
   const years = Object.keys(byYear).sort((a, b) => b - a);
 
   content.innerHTML = years.map(y => `
-    <div class="year-label">${y}</div>
+    <div class="year-label"><span class="yl-year">${y}</span><span class="yl-line"></span><span class="yl-count">${byYear[y].length} ${t('patch_count_label','patches')}</span></div>
     ${byYear[y].map(patchCardHTML).join('')}
   `).join('');
 
+  content.querySelectorAll('.pd-open-btn').forEach(b => {
+    b.addEventListener('click', () => document.dispatchEvent(new CustomEvent('patchDiffOpen', { detail: { date: b.dataset.diffDate } })));
+  });
   content.querySelectorAll('.patch-header').forEach(h => {
     h.addEventListener('click', () => {
       const card = h.closest('.patch-card');
@@ -459,8 +482,19 @@ function patchCardHTML(p) {
              + makeCol(p.nerfs,  'nerf',  '▼', 'patch_nerfs_label',  'Nerfs')
              + makeCol(p.tweaks, 'tweak', '●', 'patch_tweaks_label', 'Tweaks');
 
+  const net = p.buffs.length - p.nerfs.length;
+  const tone = !hasC ? 'misc' : net > 0 ? 'pos' : net < 0 ? 'neg' : 'mix';
+  const MAX_S = 8;
+  const strip = [
+    ...p.buffs.map(n => ['buff', n]), ...p.nerfs.map(n => ['nerf', n]), ...p.tweaks.map(n => ['tweak', n]),
+  ];
+  const sprites = strip.slice(0, MAX_S).map(([k, n]) => {
+    const u = spriteUrl(n);
+    return u ? `<span class="ps ps-${k}" title="${n}"><img src="${u}" alt="" loading="lazy" onerror="this.parentNode.style.display='none'"/></span>` : '';
+  }).join('') + (strip.length > MAX_S ? `<span class="ps ps-more">+${strip.length - MAX_S}</span>` : '');
+
   return `
-  <div class="patch-card">
+  <div class="patch-card tone-${tone}">
     <div class="patch-header" tabindex="0" role="button" aria-expanded="false" aria-label="${p.name} ${p.version}">
       <div class="patch-left">
         <span class="ver-badge">${p.version}</span>
@@ -469,7 +503,8 @@ function patchCardHTML(p) {
           <span class="patch-date">${fmtDate(p.date)}</span>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:6px;">
+      <div class="patch-right">
+        <div class="patch-sprites">${sprites}</div>
         <div class="patch-pills">${pills}</div>
         <span class="expand-icon">▾</span>
       </div>
@@ -477,6 +512,7 @@ function patchCardHTML(p) {
     <div class="patch-body" style="display:none;">
       ${cols ? `<div class="change-grid">${cols}</div>` : ''}
       ${p.notes ? `<div class="patch-notes">${p.notes}</div>` : ''}
+      ${window.PatchDiff?.previousSnapshotFor(p.date) ? `<button class="official-link pd-open-btn" data-diff-date="${p.date}" type="button">📊 <span>${t('patch_diff_open','View stat changes')}</span></button>` : ''}
       ${url ? `
         <a class="official-link" href="${url}" target="_blank" rel="noopener noreferrer">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -724,7 +760,7 @@ document.addEventListener('keydown', e => {
     const si = document.getElementById('searchInput');
     if (document.activeElement === si) {
       si.value = ''; search = '';
-      view === 'patches' ? renderPatches() : renderPoke();
+      renderCurrent();
     }
     return;
   }
@@ -745,7 +781,10 @@ document.addEventListener('keydown', e => {
     case '2':
       if (!e.ctrlKey && !e.metaKey) activateTab('pokemon');
       break;
-    case 'a': case 'A': setFilter(view === 'pokemon' ? 'any' : 'all'); break;
+    case '3':
+      if (!e.ctrlKey && !e.metaKey) activateTab('diff');
+      break;
+    case 'a': case 'A': setFilter(view === 'patches' ? 'all' : 'any'); break;
     case 'b': case 'B': setFilter('buff');  break;
     case 'n': case 'N': setFilter('nerf');  break;
     case 't': case 'T': setFilter('tweak'); break;
@@ -760,24 +799,26 @@ function activateTab(tabView) {
 function setFilter(f) {
   filter = f;
   buildFilterBar();
-  view === 'patches' ? renderPatches() : renderPoke();
+  renderCurrent();
 }
 
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    view = btn.dataset.view; search = ''; filter = view === 'pokemon' ? 'any' : 'all';
+    view = btn.dataset.view; search = ''; filter = view === 'patches' ? 'all' : 'any';
     document.getElementById('searchInput').value = '';
     buildFilterBar();
-    view === 'patches' ? renderPatches() : renderPoke();
+    renderCurrent();
   });
 });
 
 document.getElementById('searchInput').addEventListener('input', e => {
   search = e.target.value;
-  view === 'patches' ? renderPatches() : renderPoke();
+  renderCurrent();
 });
+
+document.addEventListener('patchDiffReady', () => { if (view === 'patches' && PATCHES.length) renderPatches(); });
 
 async function loadData() {
   try {

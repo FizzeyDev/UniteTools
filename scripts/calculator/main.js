@@ -13,6 +13,7 @@ import { enhanceBuffLabels } from './buff-visuals.js';
 import { initBuildOptimizer } from './buildOptimizer.js';
 import { initCombatLogTab } from './combatLogTab.js';
 import { initComparePatchTab } from './comparePatchTab.js';
+import { restoreSharedState, initShareLink } from './shareLink.js';
 
 document.querySelectorAll('.reset-items-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -61,7 +62,13 @@ async function initApp() {
   else selectAttacker('absol');
   if (_p.get('def')) selectDefender(_p.get('def'));
   else selectDefender('substitute-doll');
+  restoreSharedState(_p);   // ?s=... : levels, items, toggles, stacks (see shareLink.js)
   updateDamages();
+  initShareLink();
+
+  // Translations load asynchronously: re-render once they are ready (and on language change)
+  // so labels like "Utility" never show up as raw keys.
+  document.addEventListener('translationsReady', () => updateDamages());
 
   initCombatLogTab();
   initComparePatchTab();

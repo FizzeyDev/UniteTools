@@ -237,7 +237,7 @@ h1 {
 
 /* ── Timer strip (buttons + display + slider + phase) ── */
 .mt-timer-strip {
-  flex: 1 1 480px;
+  flex: 1 1 640px;
   display: flex;
   align-items: center;
   gap: 1.25rem;
@@ -775,6 +775,198 @@ footer {
   position: relative;
   z-index: 1;
 }
+
+/* ── View switch (Visual / Table) ── */
+.mt-view-switch {
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-left: auto;
+  border: 1px solid var(--border-md);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface);
+}
+.mt-view-btn {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  padding: 8px 14px;
+  border: 0;
+  background: transparent;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+.mt-view-btn + .mt-view-btn { border-left: 1px solid var(--border-md); }
+.mt-view-btn:hover { color: var(--text); background: var(--surface-2); }
+.mt-view-btn.active { background: var(--blue-dim); color: var(--blue); }
+
+/* Table mode: the map goes away, the guide comes right under the controls */
+body.mt-view-table .map-wrapper { display: none; }
+
+/* ── Spawn Guide ── */
+.spawn-guide {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 2rem auto 0;
+}
+.guide-head h2 {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.guide-head p { margin: 4px 0 1rem; color: var(--text-dim); font-size: 0.95rem; }
+
+.guide-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.25rem 1.25rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+.guide-card h3 {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--blue);
+  margin-bottom: 0.6rem;
+}
+.guide-card h4 {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--yellow);
+  margin: 1.1rem 0 0.35rem;
+}
+.guide-explain { color: var(--text-mid); font-size: 1rem; line-height: 1.45; margin-bottom: 0.9rem; }
+.guide-explain ul { margin: 0.35rem 0 0 1.2rem; }
+.guide-explain li { margin-bottom: 4px; }
+.guide-explain strong { color: var(--text); }
+.guide-note { color: var(--text-dim); font-size: 0.85rem; margin-top: 0.6rem; }
+
+.guide-scroll { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+.guide-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; min-width: 560px; }
+.guide-table th, .guide-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.guide-table thead th {
+  background: var(--surface-2);
+  color: var(--text-mid);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.guide-table tbody tr:last-child > * { border-bottom: 0; }
+.guide-table tbody tr:hover { background: var(--surface-2); }
+.guide-table tbody th { font-weight: 600; color: var(--text); }
+
+.guide-table td.gt {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--yellow);
+  white-space: nowrap;
+}
+.guide-table td.gt.empty { color: var(--text-dim); font-weight: 400; }
+.guide-table td.gt.past { opacity: 0.35; text-decoration: line-through; }
+.guide-table td.gt.next { background: var(--green-dim); color: var(--green); border-radius: 4px; }
+.guide-table td.gq { color: var(--text-mid); white-space: nowrap; }
+.guide-table td.gc { white-space: nowrap; }
+.guide-table td.gp, .guide-table td.gr { color: var(--text-mid); }
+.guide-table td.gd { color: var(--text-dim); font-size: 0.85rem; min-width: 260px; }
+
+.guide-table th.gn { display: table-cell; white-space: nowrap; }
+.guide-table th.gn img { width: 28px; height: 28px; object-fit: contain; vertical-align: middle; margin-right: 8px; }
+.guide-table th.gn span { vertical-align: middle; }
+
+.gs-label { display: block; }
+.gs-chips { display: inline-flex; gap: 4px; margin-top: 3px; }
+.goal-chip { margin: 0 0 0 8px; }
+.chip {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid rgba(76,175,130,0.35);
+}
+.chip-broken { background: var(--red-dim); color: var(--red); border-color: rgba(239,83,80,0.35); }
+.altaria-table tr.is-current { background: var(--surface-2); box-shadow: inset 3px 0 0 var(--green); }
+.goals-table tr.is-broken { opacity: 0.6; }
+
+@media (max-width: 860px) {
+  .spawn-guide { margin-top: 1.25rem; }
+  .guide-card { padding: 0.9rem 0.75rem 1rem; }
+  .mt-view-switch { align-self: flex-start; }
+}
+
+/* ── Next spawns banner ── */
+.next-spawns {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto 1rem;
+  padding: 0.6rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.ns-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.ns-list { display: flex; gap: 0.75rem; flex-wrap: wrap; flex: 1; min-width: 0; }
+.ns-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px 6px 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  min-width: 0;
+}
+.ns-item img { width: 34px; height: 34px; object-fit: contain; flex-shrink: 0; }
+.ns-text { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
+.ns-name { font-weight: 700; color: var(--text); white-space: nowrap; }
+.ns-time { font-size: 0.8rem; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.ns-count {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--yellow);
+  white-space: nowrap;
+}
+.ns-item.soon { border-color: rgba(76,175,130,0.5); background: var(--green-dim); }
+.ns-item.soon .ns-count { color: var(--green); }
+.ns-empty { color: var(--text-dim); font-size: 0.9rem; }
 
 /* ── Responsive ── */
 @media (max-width: 860px) {

@@ -827,6 +827,72 @@ function applyMorpekoAttacker(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── TOXTRICITY — Punk Rock (+ Poison / Electric Timbre toggle) ─────────────
+// Toxtricity constantly plays one of two timbres. The active timbre drives
+// state.attackerToxtricityTimbre, which damageDisplay.js reads (through the
+// generic filterByMode) to pick the entries tagged "mode": "poison" or
+// "mode": "electric" in poke_data.json (Poison DoT, Overdrive sludge/feedback,
+// Electric boosted-attack heal). Punk Rock's attack-speed stacks reuse
+// state.attackerPassiveStacks (informational: attack speed is not part of the
+// damage formulas). Poison DoT / Punk Rock heal totals are computed live here
+// from the current target, because the number of poison stacks is a manual input.
+function applyToxtricityAttacker(atkStats, defStats, card) {
+  const timbre = state.attackerToxtricityTimbre || 'poison';
+  const timbres = {
+    poison:   { label: 'Poison Timbre',   color: '#b06ee0', desc: 'Auto attacks poison the target (true damage over time, up to 5 stacks). Overdrive fires an exploding poison ball.' },
+    electric: { label: 'Electric Timbre', color: '#f5d442', desc: 'Auto attacks have increased range; every 3rd attack slows the target and heals. Overdrive electrifies, stuns and chains a feedback.' }
+  };
+  const current  = timbres[timbre];
+  const maxStacks = 5;
+  const stacks   = Math.min(maxStacks, state.attackerPassiveStacks || 0);
+  const poisonStacks = Math.min(5, Math.max(1, state.attackerToxtricityPoisonStacks || 1));
+  const isWild   = state.currentDefender?.category === 'mob';
+
+  // Poison DoT: 0.6% target Max HP per stack per tick, 6 ticks (application + every 0.5s for 2.5s), cap 100/stack vs wild
+  let perStackTick = Math.floor((defStats?.hp || 0) * 0.006);
+  if (isWild) perStackTick = Math.min(perStackTick, 100);
+  const dotTick  = perStackTick * poisonStacks;
+  const dotTotal = dotTick * 6;
+  // Punk Rock heal (auto attack vs slowed target, not vs wild): 10% Sp. Atk + 45
+  const punkHeal = Math.floor(atkStats.sp_atk * 0.10) + 45;
+
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  line.innerHTML = wrap(`
+    ${icon('assets/moves/toxtricity/punk_rock.png')}
+    <div style="flex:1;">
+      ${passiveBadge('Punk Rock', null, PASSIVE_ATK)}
+      Timbre: <strong style="color:${current.color};">${current.label}</strong>
+      <button class="toxtricity-timbre-toggle" style="margin-left:8px;padding:4px 12px;background:${current.color};color:#111;border:none;border-radius:6px;cursor:pointer;font-weight:700;">Switch</button>
+      <br><span style="font-size:0.8rem;color:${C}99;">${current.desc}</span>
+      <div style="margin-top:8px;">
+        Punk Rock stacks (5s each): <button class="stack-btn minus">-</button>
+        <strong style="color:${C};">${stacks}</strong>/${maxStacks}
+        <button class="stack-btn plus">+</button>
+        <span style="color:#fff;"> → +${stacks * 8}% Attack Speed</span>
+      </div>
+      ${timbre === 'poison' ? `
+        <div style="margin-top:8px;font-size:0.85rem;">
+          Poison stacks on target: <button class="stack-btn tox-poison-minus">-</button>
+          <strong style="color:${current.color};">${poisonStacks}</strong>/5
+          <button class="stack-btn tox-poison-plus">+</button><br>
+          <span style="color:#fff;">Poison DoT: <strong>${dotTick.toLocaleString()}</strong> per tick · <strong>${dotTotal.toLocaleString()}</strong> over 2.5s (6 ticks, true damage${isWild ? ', capped at 100/stack vs wild' : ''})</span>
+        </div>` : ''}
+      ${!isWild ? `<div style="margin-top:6px;font-size:0.85rem;color:#4caf82;">Heal on auto attack vs a slowed target: <strong>${punkHeal.toLocaleString()}</strong></div>` : ''}
+    </div>
+  `);
+  line.querySelector('.toxtricity-timbre-toggle').onclick = () => {
+    state.attackerToxtricityTimbre = timbre === 'poison' ? 'electric' : 'poison';
+    updateDamages();
+  };
+  line.querySelector('.minus').onclick = () => { if ((state.attackerPassiveStacks || 0) > 0) { state.attackerPassiveStacks--; updateDamages(); } };
+  line.querySelector('.plus').onclick  = () => { if ((state.attackerPassiveStacks || 0) < maxStacks) { state.attackerPassiveStacks = (state.attackerPassiveStacks || 0) + 1; updateDamages(); } };
+  const pm = line.querySelector('.tox-poison-minus'), pp = line.querySelector('.tox-poison-plus');
+  if (pm) pm.onclick = () => { if (poisonStacks > 1) { state.attackerToxtricityPoisonStacks = poisonStacks - 1; updateDamages(); } };
+  if (pp) pp.onclick = () => { if (poisonStacks < 5) { state.attackerToxtricityPoisonStacks = poisonStacks + 1; updateDamages(); } };
+  card.appendChild(line);
+}
+
 export {
   applyBuzzwoleAttacker, applyCeruledgeAttacker, applyChandelureAttacker,
   applyDarkraiAttacker, applyDecidueyeAttacker, applyZardyAttacker,
@@ -842,4 +908,5 @@ export {
   applySlowbroAttacker,
   applySolgaleoAttacker,
   applyMorpekoAttacker,
+  applyToxtricityAttacker,
 };

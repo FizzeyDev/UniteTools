@@ -601,5 +601,11 @@
     "move2": [ "power_trip.png", "assurance.png" ],
     "passive": [ "hunger_switch.png" ],
     "unite": [ "hungry_supercharge_wheel.png" ]
+  },
+  "toxtricity": {
+    "move1": [ "charge.png", "shift_gear.png" ],
+    "move2": [ "growl.png", "overdrive.png" ],
+    "passive": [ "punk_rock.png" ],
+    "unite": [ "venom_distortion.png" ]
   }
 }

@@ -11661,6 +11661,343 @@
     ]
   },
   {
+    "pokemonId": "toxtricity",
+    "dex": 849,
+    "role": "attacker",
+    "style": "special",
+    "stats": [
+      { "level": 1, "hp": 3300, "atk": 20, "def": 70, "sp_atk": 122, "sp_def": 70, "crit": 0, "lifesteal": 0 },
+      { "level": 2, "hp": 3425,
+        "atk": 23,
+        "def": 78,
+        "sp_atk": 144,
+        "sp_def": 78,
+        "crit": 0,
+        "lifesteal": 0
+      },
+      {
+        "level": 3,
+        "hp": 3563,
+        "atk": 27,
+        "def": 87,
+        "sp_atk": 169,
+        "sp_def": 87,
+        "crit": 0,
+        "lifesteal": 0
+      },
+      {
+        "level": 4,
+        "hp": 3714,
+        "atk": 31,
+        "def": 96,
+        "sp_atk": 196,
+        "sp_def": 96,
+        "crit": 0,
+        "lifesteal": 0
+      },
+      {
+        "level": 5,
+        "hp": 3880,
+        "atk": 36,
+        "def": 106,
+        "sp_atk": 226,
+        "sp_def": 106,
+        "crit": 10,
+        "lifesteal": 0
+      },
+      {
+        "level": 6,
+        "hp": 4063,
+        "atk": 41,
+        "def": 118,
+        "sp_atk": 259,
+        "sp_def": 118,
+        "crit": 10,
+        "lifesteal": 0
+      },
+      {
+        "level": 7,
+        "hp": 4265,
+        "atk": 46,
+        "def": 131,
+        "sp_atk": 295,
+        "sp_def": 131,
+        "crit": 10,
+        "lifesteal": 0
+      },
+      {
+        "level": 8,
+        "hp": 4487,
+        "atk": 53,
+        "def": 145,
+        "sp_atk": 335,
+        "sp_def": 145,
+        "crit": 10,
+        "lifesteal": 0
+      },
+      {
+        "level": 9,
+        "hp": 4730,
+        "atk": 59,
+        "def": 160,
+        "sp_atk": 379,
+        "sp_def": 160,
+        "crit": 20,
+        "lifesteal": 0
+      },
+      {
+        "level": 10,
+        "hp": 4999,
+        "atk": 67,
+        "def": 177,
+        "sp_atk": 427,
+        "sp_def": 177,
+        "crit": 20,
+        "lifesteal": 0
+      },
+      {
+        "level": 11,
+        "hp": 5293,
+        "atk": 75,
+        "def": 195,
+        "sp_atk": 480,
+        "sp_def": 195,
+        "crit": 20,
+        "lifesteal": 0
+      },
+      {
+        "level": 12,
+        "hp": 5618,
+        "atk": 84,
+        "def": 216,
+        "sp_atk": 538,
+        "sp_def": 216,
+        "crit": 20,
+        "lifesteal": 0
+      },
+      {
+        "level": 13,
+        "hp": 5975,
+        "atk": 93,
+        "def": 238,
+        "sp_atk": 602,
+        "sp_def": 238,
+        "crit": 20,
+        "lifesteal": 0
+      },
+      {
+        "level": 14,
+        "hp": 6368,
+        "atk": 104,
+        "def": 263,
+        "sp_atk": 672,
+        "sp_def": 263,
+        "crit": 20,
+        "lifesteal": 0
+      },
+      {
+        "level": 15,
+        "hp": 6800,
+        "atk": 116,
+        "def": 290,
+        "sp_atk": 750,
+        "sp_def": 290,
+        "crit": 20,
+        "lifesteal": 0
+      }
+    ],
+    "passive": {
+      "name": "Punk Rock",
+      "image": "assets/moves/toxtricity/punk_rock.png",
+      "description": "Each auto attack grants +8% Attack Speed for 5s, stacking up to 5 times. Auto attacks against a slowed target restore a small amount of health (not against wild Pokémon).",
+      "healRatio": 10,
+      "healConstant": 45,
+      "healScaling": "sp_atk",
+      "attackSpeedPerStack": 8,
+      "maxStacks": 5
+    },
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "true",
+        "image": "assets/moves/basic_attack.png",
+        "damages": [
+          {
+            "name": "Basic",
+            "multiplier": 40,
+            "levelCoef": 0,
+            "constant": 100,
+            "dealDamage": true,
+            "scaling": "special",
+            "notes": "Poison Timbre: poisons the target for 2.5s. Electric Timbre: increased attack range."
+          },
+          {
+            "name": "Damage - Poison DoT (per stack, per tick x6)",
+            "max_hp_percent": 0.6,
+            "wild_cap": 100,
+            "dealDamage": true,
+            "can_crit": false,
+            "is_tick": true,
+            "tick_count": 6,
+            "mode": "poison",
+            "notes": "True damage: 0.6% of target Max HP per stack, on application then every 0.5s for 2.5s. Stacks up to 5 times (multiply by stack count). Capped at 100 per stack vs wild Pokémon."
+          },
+          {
+            "name": "Boosted",
+            "multiplier": 70,
+            "levelCoef": 0,
+            "constant": 175,
+            "dealDamage": true,
+            "scaling": "special",
+            "notes": "Every 3rd auto attack. Electric Timbre: also slows the target by 25% for 1s and restores health."
+          }
+        ],
+        "heals": [
+          {
+            "name": "Boosted (Healing) - Electric Timbre",
+            "scaling": "sp_atk",
+            "multiplier": 30,
+            "levelCoef": 0,
+            "constant": 70,
+            "target": "self",
+            "mode": "electric"
+          }
+        ]
+      },
+      {
+        "name": "Charge",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/toxtricity/charge.png",
+        "damages": [
+          {
+            "name": "Damage - Auto Attack Bonus",
+            "multiplier": 86,
+            "levelCoef": 0,
+            "constant": 215,
+            "dealDamage": true,
+            "notes": "Buff: +50% Move Speed for 2s (decays 10%/s to a minimum of 40%). For up to 4s, the next auto attack deals this additional damage and slows the target 20% for 2s."
+          }
+        ]
+      },
+      {
+        "name": "Shift Gear",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/toxtricity/shift_gear.png",
+        "damages": [
+          {
+            "name": "Utility",
+            "multiplier": 0,
+            "levelCoef": 0,
+            "constant": 0,
+            "dealDamage": false,
+            "notes": "Switches timbre. Poison Timbre: +25% Attack Speed for 4s or 5 auto attacks. Electric Timbre: +60% Move Speed for 3s (decays 10%/s to a minimum of 30%). Lv.11: readies a boosted attack when used."
+          }
+        ]
+      },
+      {
+        "name": "Growl",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/toxtricity/growl.png",
+        "damages": [
+          {
+            "name": "Damage",
+            "multiplier": 90,
+            "levelCoef": 0,
+            "constant": 225,
+            "dealDamage": true,
+            "notes": "Sure hit. Slows the target by 20% for 2s."
+          }
+        ]
+      },
+      {
+        "name": "Overdrive",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/toxtricity/overdrive.png",
+        "damages": [
+          {
+            "name": "Damage",
+            "multiplier": 40,
+            "levelCoef": 0,
+            "constant": 120,
+            "dealDamage": true,
+            "notes": "Area. Poison and Electric Timbre versions have separate cooldowns."
+          },
+          {
+            "name": "Damage - Poison Timbre sludge",
+            "multiplier": 180,
+            "levelCoef": 0,
+            "constant": 540,
+            "dealDamage": true,
+            "mode": "poison",
+            "notes": "Exploding poison ball: hits the first target and inflicts a stack of poison."
+          },
+          {
+            "name": "Damage - Poison Timbre sludge (Area)",
+            "multiplier": 90,
+            "levelCoef": 0,
+            "constant": 270,
+            "dealDamage": true,
+            "mode": "poison",
+            "notes": "Reduced damage around the target hit by the sludge."
+          },
+          {
+            "name": "Damage - Electric Timbre feedback",
+            "multiplier": 150,
+            "levelCoef": 0,
+            "constant": 450,
+            "dealDamage": true,
+            "mode": "electric",
+            "notes": "Stuns electrified targets for 0.5s and marks them for 4s; hitting a marked target with an auto attack or exploding poison triggers feedback on all marked Pokémon."
+          }
+        ],
+        "notes_lv13": "At level 13, hitting with this move grants Punk Rock stacks: 1 per target, +2 for the exploding poison hit, +1 per target in the explosion area."
+      },
+      {
+        "name": "Venom Distortion (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/toxtricity/venom_distortion.png",
+        "damages": [
+          {
+            "name": "Damage (x5)",
+            "multiplier": 100,
+            "levelCoef": 0,
+            "constant": 300,
+            "dealDamage": true,
+            "is_tick": true,
+            "tick_count": 5,
+            "notes": "5s performance, one burst per second. Poison Timbre: applies a poison stack per hit. Electric Timbre: slows by 25% for 1s. Auto attacks locked; Shift Gear cooldown reduced to 0.1s."
+          }
+        ],
+        "shields": [
+          {
+            "name": "Shield",
+            "scaling": "hp",
+            "multiplier": 20,
+            "levelCoef": 0,
+            "constant": 0,
+            "target": "self"
+          }
+        ],
+        "buffs": "30% Move Speed, 35% Attack Speed, 20% Max HP Shield for 6s; hindrance resistant during the performance"
+      }
+    ]
+  },
+  {
     "pokemonId": "trevenant",
     "dex": 709,
     "role": "defender",

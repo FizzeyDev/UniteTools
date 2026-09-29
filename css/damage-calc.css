@@ -1196,3 +1196,22 @@ h1::after {
   .buff-title { font-size: 0.75rem; }
   .buff-effect { font-size: 0.68rem; }
 }
+
+/* ─── SHARE LINK ─────────────────────────────────────────────────── */
+.share-btn {
+  position: fixed; top: 1rem; right: 17.5rem; z-index: 1000;
+  display: flex; align-items: center; gap: 6px; height: clamp(32px,5vw,38px); padding: 0 14px;
+  background: var(--surface-2); border: 1px solid rgba(76,175,130,0.4); border-radius: 20px;
+  color: var(--green); font-family: 'Exo 2', sans-serif; font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 0.06em; cursor: pointer; transition: all 0.2s ease;
+  box-shadow: var(--shadow-md); text-transform: uppercase;
+}
+.share-btn:hover { background: var(--surface-3); border-color: var(--green); transform: translateY(-1px); }
+.share-toast {
+  position: fixed; left: 50%; bottom: 2rem; transform: translate(-50%, 20px); z-index: 3000;
+  padding: 10px 18px; border-radius: 10px; background: var(--surface-3); color: var(--text);
+  border: 1px solid var(--green); box-shadow: var(--shadow-lg);
+  font-family: 'Exo 2', sans-serif; font-size: 0.85rem; font-weight: 700;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.share-toast.show { opacity: 1; transform: translate(-50%, 0); }

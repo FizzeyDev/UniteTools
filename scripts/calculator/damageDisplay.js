@@ -40,6 +40,7 @@ import {
   applySlowbroAttacker,
   applySolgaleoAttacker,
   applyMorpekoAttacker,
+  applyToxtricityAttacker,
 } from './passiveEffectsAtk.js';
 
 import {
@@ -724,6 +725,7 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
     slowbro: applySlowbroAttacker,         // ← SLOWBRO
     solgaleo: applySolgaleoAttacker,       // ← SOLGALEO
     morpeko: applyMorpekoAttacker,         // ← MORPEKO
+    toxtricity: applyToxtricityAttacker,   // ← TOXTRICITY
   };
   handlers[pokemonId]?.(atkStats, defStats, card);
 }
@@ -852,10 +854,13 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
 
     const upgraded = isMoveUpgraded(move, level);
 
-    // ← MORPEKO: Hunger Switch form (full_belly / hangry) gates "mode"-tagged entries
+    // ← MORPEKO (Hunger Switch form) / TOXTRICITY (Poison / Electric Timbre):
+    // both gate "mode"-tagged entries through the generic filterByMode
     const morpekoMode = state.currentAttacker?.pokemonId === "morpeko"
       ? (state.attackerMorpekoMode || 'full_belly')
-      : null;
+      : state.currentAttacker?.pokemonId === "toxtricity"
+        ? (state.attackerToxtricityTimbre || 'poison')
+        : null;
 
     const visibleDamages = filterByMode(filterByUpgrade(move.damages, upgraded), morpekoMode);
     const visibleHeals   = filterByMode(filterByUpgrade(move.heals,   upgraded), morpekoMode);

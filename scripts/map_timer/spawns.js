@@ -6,12 +6,12 @@ import { addMobKill, removeMobEntry, markMobRespawned } from "./tracker.js";
 
 const spawnsContainer = document.getElementById("spawns-container");
 
-function isRemovedByTower(spawn) {
+export function isRemovedByTower(spawn) {
   if (!spawn.removeOnTowerBreak) return false;
   return state.towers.some(t => spawn.removeOnTowerBreak.includes(t.breakid) && t.destroyed);
 }
 
-function isSpawnedByTower(spawn) {
+export function isSpawnedByTower(spawn) {
   if (!spawn.spawnOnTowerBreak) return true;
   return state.towers.some(t => spawn.spawnOnTowerBreak.includes(t.breakid) && t.destroyed);
 }
