@@ -19,6 +19,7 @@
 
 import { state } from "./state.js";
 import { isRemovedByTower, isSpawnedByTower } from "./spawns.js";
+import { getNextLaneSpawnTime } from "./altaria.js";
 import { translate } from "./i18n.js";
 
 const bar = document.getElementById("next-spawns");
@@ -92,8 +93,7 @@ function collectAltaria(push, now) {
 
   if (altaria) {
     ["top", "bot"].forEach(lane => {
-      const st = state.altariaState[lane];
-      if (st?.pending && (!st.active || st.active.killed)) push(laneName(lane), altaria.img, st.pending.time);
+      push(laneName(lane), altaria.img, getNextLaneSpawnTime(lane));
     });
 
     // Center: Rayquaza map uses altariaState.center, the others use the midState cycle

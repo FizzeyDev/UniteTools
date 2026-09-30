@@ -19,6 +19,7 @@
 
 import { state } from "./state.js";
 import { translate } from "./i18n.js";
+import { getLaneTeamState, getSequenceKey } from "./altaria.js";
 
 const root = document.getElementById("spawn-guide-content");
 
@@ -77,14 +78,12 @@ function goalsLabel(ids, goals) {
 
 // ── 1. Altaria lane timelines ───────────────────────────────────────────────
 
-const ALTARIA_STATES = [0, 1, 2, 3, 4];
+const ALTARIA_STATES = [0, 1, 2];
 
 const STATE_FALLBACK = {
   0: ["No goal broken", "Centered in the lane."],
-  1: ["1 T1 goal broken", "Closer to the broken goal."],
-  2: ["Both T1 goals broken", "Back in the middle."],
-  3: ["Both T1 + 1 T2 broken", "Closer to the broken T2 goal."],
-  4: ["Both T1 + both T2 broken", "In the middle."],
+  1: ["Goals of one team only (1 or 2), or 3 goals in total", "25 s earlier, off-center, toward the side that lost goals."],
+  2: ["One goal on each side, or all 4 goals", "10 s earlier, back in the middle."],
 };
 
 function renderAltaria(data) {
@@ -265,20 +264,12 @@ export function renderGuide() {
   updateLive();
 }
 
-/** Number of broken goals in a lane, from the goals clicked on the map. */
-function laneBroken(lane) {
-  return state.towers.filter(t => {
-    const g = parseGoal(t);
-    return g.lane === lane && t.destroyed;
-  }).length;
-}
-
 export function updateLive() {
   if (!root || !guideData) return;
   const now = state.currentTime;
 
   // Altaria rows: lane chips + dim past spawns + highlight the next one
-  const lanes = ["top", "bot"].map(l => ({ lane: l, k: Math.min(4, laneBroken(l)) }));
+  const lanes = ["top", "bot"].map(l => ({ lane: l, k: +getSequenceKey(getLaneTeamState(l)) }));
   root.querySelectorAll(".altaria-table tbody tr").forEach(row => {
     const k = +row.dataset.state;
     const here = lanes.filter(l => l.k === k);

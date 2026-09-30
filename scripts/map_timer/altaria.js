@@ -12,7 +12,7 @@ const spawnsContainer = document.getElementById("spawns-container");
 // ── Helper: tower state ─────────────────────────────────────────────────────
 
 const LANE_BREAKIDS = {
-  bot: { left: [1, 6], right: [2] },
+  bot: { left: [1, 6], right: [2, 8] },
   top: { left: [3, 5], right: [4, 7] },
 };
 
@@ -42,13 +42,39 @@ function getAltariaPosition(altaria, lane, ts) {
   return altaria.t1Positions?.[lane]?.[losingSide] || altaria.lanes[lane];
 }
 
-function getSequenceKey(ts) {
+/**
+ * Timeline key of the lane (spawnLists / spawnInfos in the map JSON).
+ * Rules (community sheet "Wild Pokemon Stats - Theia Sky Ruins [Groudon/Kyogre]"):
+ *   "0"  no goal broken in the lane
+ *   "1"  goals of ONE side only (1 or 2 goals), or 3 goals in total
+ *        -> spawns 25 s earlier, off-center
+ *   "2"  one goal on each side (2 opposing goals), or all 4 goals
+ *        -> spawns 10 s earlier, back in the middle
+ * ("left" / "right" are the two teams: each side has its T1 and the T2 behind it.)
+ */
+export function getSequenceKey(ts) {
   const { left, right, total } = ts;
   if (total === 0) return "0";
   if (total === 4) return "2";
   if (total === 3) return "1";
   if (left === 0 || right === 0) return "1";
   return "2";
+}
+
+/**
+ * Next lane spawn time, whether or not it is already "pending" (used by the
+ * Next spawns banner). Uses the goal state frozen at the last KO.
+ */
+export function getNextLaneSpawnTime(lane) {
+  const altaria = state.spawns.find(p => p.name === "Altaria" && p.isSpecial);
+  const st = state.altariaState[lane];
+  if (!altaria || !st) return null;
+  if (st.active && !st.active.killed) return null;
+  if (st.pending) return st.pending.time;
+  const ts = st.frozenTs || getLaneTeamState(lane);
+  const list = altaria.spawnLists[getSequenceKey(ts)] || altaria.spawnLists["0"] || [];
+  const t = list.find(x => x < (st.lastSpawnTime ?? Infinity));
+  return t ?? null;
 }
 
 // ── Initialize ──────────────────────────────────────────────────────────────
@@ -233,7 +259,9 @@ export function updateAltariaSpawns() {
     if (!st) return;
     if (st.active && !st.active.killed) return;   // encore en vie → on attend
 
-    const ts = getLaneTeamState(lane);
+    // Timing = goals broken in the lane AT THE LAST KO. Goals broken while the camp
+    // is already waiting to respawn do not change anything (it comes back as if intact).
+    const ts = st.frozenTs || getLaneTeamState(lane);
     const currentKey = getSequenceKey(ts);
     const list = altaria.spawnLists[currentKey] || altaria.spawnLists["0"] || [];
 
@@ -245,7 +273,7 @@ export function updateAltariaSpawns() {
         time: nextTime,
         index: list.indexOf(nextTime),
         sequenceKey: currentKey,
-        ts: st.frozenTs || ts   // on privilégie le frozen
+        ts
       };
     }
 
