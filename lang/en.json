@@ -1180,5 +1180,16 @@
   "patch_diff_covers": "Patches covered:",
   "patch_diff_no_official": "no official patch in this range",
   "patch_diff_multi": "Several patches happened between these two snapshots: their changes are merged.",
-  "patch_count_label": "patches"
+  "patch_count_label": "patches",
+  "nav_new_update": "New update",
+  "champions_eyebrow": "New project",
+  "champions_desc": "A damage calculator for Pokémon Champions - more tools are on the way.",
+  "champions_tag_calc": "Damage calculator",
+  "champions_tag_soon": "More coming soon",
+  "champions_btn": "Try Champions Tools",
+  "champions_about_section": "Other project",
+  "champions_about_title": "Champions Tools [v0.5.0] - for Pokémon Champions",
+  "champions_about_body": "Alongside Unite Tools, I am building Champions Tools, a companion site for Pokémon Champions. For now it is a damage calculator, and it will grow over time with more tools for the game.",
+  "champions_road_label": "Champions Tools [v0.5.0]",
+  "champions_road_sub": "Damage calculator for Pokémon Champions is live - more tools planned"
 }

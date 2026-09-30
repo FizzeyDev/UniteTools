@@ -730,3 +730,19 @@ strong {
   .team-card { flex-direction: column; align-items: flex-start; }
   .discord-cta-btn { width: 100%; }
 }
+
+/* ── Other project: Champions Tools ── */
+.cp-row { display: flex; align-items: center; gap: 24px; }
+.cp-logo { width: 88px; height: 88px; flex-shrink: 0; filter: drop-shadow(0 4px 16px rgba(255,157,0,0.35)); }
+.cp-text { min-width: 0; }
+.cp-text .card-body { padding: 0; margin: 0; }
+.about-link-btn {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 14px;
+  font-family: 'Exo 2', sans-serif; font-weight: 700; font-size: 0.82rem;
+  letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none;
+  padding: 9px 20px; border-radius: var(--radius-sm);
+  background: var(--orange); color: #1a1000;
+  transition: filter .2s, transform .2s;
+}
+.about-link-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+@media (max-width: 560px) { .cp-row { flex-direction: column; align-items: flex-start; gap: 14px; } }

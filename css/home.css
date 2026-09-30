@@ -62,8 +62,8 @@ body::before {
 /* ── HERO ── */
 .hero {
   text-align: center;
-  padding: 4.5rem 2rem 3rem;
-  margin-bottom: 2.5rem;
+  padding: 3.25rem 2rem 2.5rem;
+  margin-bottom: 2rem;
   position: relative;
   z-index: 1;
   overflow: hidden;
@@ -476,3 +476,71 @@ footer #footer-legal {
   .tools-grid { grid-template-columns: 1fr; }
   .hero-actions { flex-direction: column; align-items: center; }
 }
+
+/* ── OTHER PROJECT PROMO (Champions Tools) ── */
+.promo-banner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  max-width: 860px;
+  margin: -0.5rem auto 2.25rem;
+  padding: 14px 20px 14px 16px;
+  background: linear-gradient(100deg, rgba(255,157,0,0.10), rgba(159,83,236,0.10) 60%, var(--surface));
+  border: 1px solid rgba(255,157,0,0.35);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm), 0 0 32px rgba(255,157,0,0.06);
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+.promo-banner::after {
+  content: '';
+  position: absolute; top: 0; bottom: 0; left: -40%; width: 30%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.07), transparent);
+  transform: skewX(-20deg);
+  animation: promoShine 6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes promoShine { 0%, 60% { left: -40%; } 100% { left: 130%; } }
+.promo-banner:hover { transform: translateY(-2px); border-color: var(--orange); box-shadow: var(--shadow-md), 0 0 40px rgba(255,157,0,0.18); }
+.promo-banner:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+.promo-logo { width: 72px; height: 72px; flex-shrink: 0; filter: drop-shadow(0 4px 14px rgba(255,157,0,0.35)); }
+.promo-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.promo-eyebrow {
+  font-family: 'Exo 2', sans-serif; font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange);
+}
+.promo-title {
+  font-family: 'Exo 2', sans-serif; font-size: 1.35rem; font-weight: 900;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  background: linear-gradient(90deg, #ffe082, var(--orange));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.promo-desc { font-size: 0.98rem; color: var(--text-mid); line-height: 1.3; }
+.promo-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.promo-tag {
+  font-family: 'Exo 2', sans-serif; font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 2px 9px; border-radius: 99px;
+  background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(255,157,0,0.25);
+}
+.promo-tag--soon { background: var(--violet-dim); color: var(--violet); border-color: rgba(159,83,236,0.3); }
+.promo-cta {
+  flex-shrink: 0;
+  font-family: 'Exo 2', sans-serif; font-weight: 700; font-size: 0.8rem;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 9px 18px; border-radius: var(--radius-sm);
+  background: var(--orange); color: #1a1000;
+  transition: filter .2s;
+}
+.promo-banner:hover .promo-cta { filter: brightness(1.1); }
+
+@media (max-width: 640px) {
+  .promo-banner { flex-wrap: wrap; padding: 14px; gap: 12px; }
+  .promo-logo { width: 56px; height: 56px; }
+  .promo-cta { width: 100%; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) { .promo-banner::after { animation: none; } }

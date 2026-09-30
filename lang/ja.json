@@ -1180,5 +1180,16 @@
   "patch_diff_covers": "対象パッチ：",
   "patch_diff_no_official": "この期間に公式パッチなし",
   "patch_diff_multi": "2つのスナップショットの間に複数のパッチがあります。変更は統合されています。",
-  "patch_count_label": "パッチ"
+  "patch_count_label": "パッチ",
+  "nav_new_update": "新しいアップデート",
+  "champions_eyebrow": "新プロジェクト",
+  "champions_desc": "ポケモンチャンピオンズ向けのダメージ計算ツール。今後さらにツールを追加予定です。",
+  "champions_tag_calc": "ダメージ計算",
+  "champions_tag_soon": "近日追加予定",
+  "champions_btn": "Champions Toolsを試す",
+  "champions_about_section": "別のプロジェクト",
+  "champions_about_title": "Champions Tools [v0.5.0] - ポケモンチャンピオンズ向け",
+  "champions_about_body": "Unite Toolsに加えて、ポケモンチャンピオンズ向けのサイトChampions Toolsを開発しています。現在はダメージ計算ツールのみですが、今後ゲーム向けのツールを順次追加していきます。",
+  "champions_road_label": "Champions Tools [v0.5.0]",
+  "champions_road_sub": "ポケモンチャンピオンズ向けダメージ計算ツールを公開中 - 今後さらにツールを追加予定"
 }
