@@ -35,14 +35,16 @@
     const imgW = img.naturalWidth  || img.offsetWidth  || 800;
     const imgH = img.naturalHeight || img.offsetHeight || 600;
 
+    // App.bottomInset = height covered by the steps strip (steps.js)
+    const availH = Math.max(120, areaRect.height - (App.bottomInset || 0));
     const fitZoom = Math.min(
-      (areaRect.width  * 0.92) / imgW,
-      (areaRect.height * 0.92) / imgH,
+      (areaRect.width * 0.92) / imgW,
+      (availH * 0.92) / imgH,
       1
     );
     zoom = fitZoom;
-    panX = (areaRect.width  - imgW * zoom) / 2;
-    panY = (areaRect.height - imgH * zoom) / 2;
+    panX = (areaRect.width - imgW * zoom) / 2;
+    panY = (availH - imgH * zoom) / 2;
 
     applyTransform();
   }

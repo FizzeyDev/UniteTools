@@ -75,8 +75,21 @@
     <div class="topbar-sep"></div>
 
     <!-- Actions -->
-    <button class="action-btn" id="undo-btn" data-lang-title="map_undo_title" title="Undo (Ctrl+Z)" data-lang="map_undo_btn">↩ Undo</button>
-    <button class="action-btn danger" id="clear-draw-btn" data-lang="map_clear_btn">🗑 Clear</button>
+    <div class="seg-group">
+      <button class="seg-btn" id="undo-btn" data-lang-title="map_undo_title" title="Undo (Ctrl+Z)">↩</button>
+      <button class="seg-btn" id="redo-btn" data-lang-title="map_redo_title" title="Redo (Ctrl+Y)">↪</button>
+    </div>
+    <button class="action-btn" id="file-menu-btn" type="button" aria-haspopup="true" aria-expanded="false"><span data-lang="map_file_menu">📁 File</span> ▾</button>
+    <div class="tb-menu-list" id="file-menu-list" hidden>
+      <button class="tb-menu-item" id="plans-btn" data-lang="mapstep_menu_plans">💾 My plans</button>
+      <button class="tb-menu-item" id="plan-share-btn" data-lang="mapstep_menu_share">🔗 Share link</button>
+      <div class="tb-menu-sep"></div>
+      <button class="tb-menu-item" id="plan-export-btn" data-lang="mapstep_menu_export">⬆ Export plan (JSON)</button>
+      <button class="tb-menu-item" id="plan-import-btn" data-lang="mapstep_menu_import">⬇ Import plan (JSON)</button>
+      <button class="tb-menu-item" id="plan-png-btn" data-lang="mapstep_menu_png">📷 Image of this step (PNG)</button>
+      <div class="tb-menu-sep"></div>
+      <button class="tb-menu-item danger" id="clear-draw-btn" data-lang="mapstep_menu_clear">🗑 Clear drawings</button>
+    </div>
 
     <div class="topbar-spacer"></div>
 
@@ -164,6 +177,9 @@
         <button class="zoom-btn" id="zoom-reset"
                 style="font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:700;">FIT</button>
       </div>
+
+      <!-- Steps strip + player — filled by scripts/map/steps.js -->
+      <div id="steps-mount"></div>
     </div>
 
     <!-- Right Panel (selected sprite info) -->
@@ -209,6 +225,7 @@
   <script src="./scripts/map/drawing.js"></script>
   <script src="./scripts/map/sprites.js"></script>
   <script src="./scripts/map/panel.js"></script>
+  <script src="./scripts/map/steps.js"></script>
   <script src="./scripts/navbar.js"></script>
   <script type="module">
     import { hydrateDraftSprites } from "./scripts/drafts/map_draft.js";

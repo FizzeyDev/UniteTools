@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ── Map switch ── */
   document.querySelectorAll('.map-pill').forEach(btn => {
     btn.addEventListener('click', () => {
+      // Steps module: ask before throwing away a plan that has content
+      if (App.confirmMapSwitch && !App.confirmMapSwitch(btn.dataset.map)) return;
       document.querySelectorAll('.map-pill').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       App.mapImg.src = MAPS[btn.dataset.map];
@@ -58,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
       App.drawPaths = [];
       App.redrawAll && App.redrawAll();
       App.clearSprites && App.clearSprites();
+      App.onMapSwitched && App.onMapSwitched(btn.dataset.map);
     });
   });
 
@@ -115,11 +118,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ── Undo & Clear ── */
-  document.getElementById('undo-btn').addEventListener('click', () => {
-    if (App.drawPaths.length) { App.drawPaths.pop(); App.redrawAll(); }
-  });
+  // Undo / Redo: the steps module (steps.js) replaces this with a full
+  // history (sprites + drawings). The legacy behaviour stays as a fallback.
+  const legacyUndo = () => { if (App.drawPaths.length) { App.drawPaths.pop(); App.redrawAll(); } };
+  const undoBtn = document.getElementById('undo-btn');
+  if (undoBtn) undoBtn.addEventListener('click', () => (App.undo || legacyUndo)());
+  const redoBtn = document.getElementById('redo-btn');
+  if (redoBtn) redoBtn.addEventListener('click', () => { App.redo && App.redo(); });
 
-  document.getElementById('clear-draw-btn').addEventListener('click', () => {
+  const clearBtn = document.getElementById('clear-draw-btn');
+  if (clearBtn) clearBtn.addEventListener('click', () => {
     App.drawPaths = [];
     App.redrawAll();
     showToast('Canvas cleared');
@@ -146,8 +154,12 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'z': case 'Z':
         if (e.ctrlKey || e.metaKey) {
           e.preventDefault();
-          if (App.drawPaths.length) { App.drawPaths.pop(); App.redrawAll(); }
+          if (e.shiftKey && App.redo) App.redo();
+          else (App.undo || legacyUndo)();
         }
+        break;
+      case 'y': case 'Y':
+        if ((e.ctrlKey || e.metaKey) && App.redo) { e.preventDefault(); App.redo(); }
         break;
     }
   });

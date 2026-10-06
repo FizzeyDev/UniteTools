@@ -32,8 +32,15 @@ const IMG_BASE = 'assets/pokemon/';
   document.head.appendChild(s);
 })();
 
+/** Active language dictionary (loaded by navbar.js into window.translations). */
+function curLang() {
+  const code = (() => { try { return localStorage.getItem('lang') || 'fr'; } catch (e) { return 'fr'; } })();
+  return window.LANG || window.translations?.[code] || null;
+}
+
 function t(key, fallback = key) {
-  return (window.LANG && window.LANG[key]) ? window.LANG[key] : fallback;
+  const d = curLang();
+  return (d && d[key]) ? d[key] : fallback;
 }
 
 let PATCHES     = [];
@@ -42,10 +49,144 @@ let PATCH_LINKS = {};
 let POKEMON_MAP = {};
 
 let view    = 'patches';
-let filter  = 'all';
 let search  = '';
 let sortKey = 'buffs';
 let sortDir = 'desc';
+
+/* Combinable filters (shared by the Patches / By Pokémon / Stat changes tabs) */
+const F = { type: 'all', role: 'any', period: 'all', fav: false, unstable: false };
+const RECENT_N = 6;                 // "unstable" = touched at least twice in the last N patches
+let UNSTABLE = new Set();
+
+/** t() with {var} substitution */
+function tv(key, fallback, vars = {}) {
+  let s = t(key, fallback);
+  Object.entries(vars).forEach(([k, v]) => { s = String(s).split('{' + k + '}').join(v); });
+  return s;
+}
+
+/* ── Favourites ("Mes Pokémon") + "since your last visit" alert ───────────── */
+const FAV_KEY = 'ut_patch_favs', SEEN_KEY = 'ut_patch_seen';
+let favMem = [], seenMem = null;
+
+function loadFavs() {
+  try {
+    const a = JSON.parse(localStorage.getItem(FAV_KEY) || '[]');
+    if (Array.isArray(a)) return new Set(a.filter(x => typeof x === 'string'));
+  } catch (e) { /* storage unavailable */ }
+  return new Set(favMem);
+}
+let FAVS = loadFavs();
+function saveFavs() {
+  favMem = [...FAVS];
+  try { localStorage.setItem(FAV_KEY, JSON.stringify(favMem)); } catch (e) { /* ignore */ }
+}
+function getSeen() {
+  try { const v = localStorage.getItem(SEEN_KEY); if (v) return v; } catch (e) { /* ignore */ }
+  return seenMem;
+}
+function setSeen(d) {
+  seenMem = d;
+  try { localStorage.setItem(SEEN_KEY, d); } catch (e) { /* ignore */ }
+}
+function latestDate() { return PATCHES.length ? PATCHES[0].date : ''; }
+
+function toggleFav(name) {
+  if (FAVS.has(name)) FAVS.delete(name);
+  else {
+    FAVS.add(name);
+    if (!getSeen() && latestDate()) setSeen(latestDate());   // only alert about FUTURE patches
+  }
+  saveFavs();
+  refreshFavUI();
+}
+
+function favStarHTML(name, cls = '') {
+  const on = FAVS.has(name);
+  const label = on ? t('patchx_fav_remove', 'Stop following') : t('patchx_fav_add', 'Follow this Pokémon');
+  return `<button type="button" class="fav-star ${cls} ${on ? 'on' : ''}" data-fav="${name}" aria-pressed="${on}" title="${label}" aria-label="${label}">${on ? '★' : '☆'}</button>`;
+}
+
+function refreshFavUI() {
+  document.querySelectorAll('.fav-star[data-fav]').forEach(b => {
+    const on = FAVS.has(b.dataset.fav);
+    b.classList.toggle('on', on);
+    b.textContent = on ? '★' : '☆';
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    const label = on ? t('patchx_fav_remove', 'Stop following') : t('patchx_fav_add', 'Follow this Pokémon');
+    b.title = label; b.setAttribute('aria-label', label);
+  });
+  renderFavAlert();
+  buildFilterBar();
+  if (F.fav || view === 'patches') renderCurrent();
+}
+
+function renderFavAlert() {
+  const el = document.getElementById('favAlert');
+  if (!el) return;
+  const seen = getSeen();
+  const hits = [];
+  if (FAVS.size && seen) {
+    PATCHES.filter(p => p.date > seen).forEach(p => {
+      [['buffs', 'buff', '▲'], ['nerfs', 'nerf', '▼'], ['tweaks', 'tweak', '●']].forEach(([k, cls, icon]) =>
+        p[k].forEach(n => { if (FAVS.has(n)) hits.push({ n, cls, icon, v: p.version }); }));
+    });
+  }
+  if (!hits.length) { el.hidden = true; el.innerHTML = ''; return; }
+  const n = new Set(hits.map(h => h.n)).size;
+  const title = n === 1
+    ? t('patchx_alert_one', '1 Pokémon you follow was touched since your last visit')
+    : tv('patchx_alert_many', '{n} Pokémon you follow were touched since your last visit', { n });
+  el.hidden = false;
+  el.innerHTML = `
+    <div class="fav-alert">
+      <div class="fa-title">★ ${title}</div>
+      <div class="fa-list">${hits.map(h =>
+        `<button type="button" class="fa-chip fa-${h.cls}" data-poke="${h.n}">${h.icon} ${h.n} <small>${h.v}</small></button>`).join('')}</div>
+      <div class="fa-actions">
+        <button type="button" class="filter-btn" id="faView">${t('patchx_alert_view', 'See in patches')}</button>
+        <button type="button" class="filter-btn" id="faSeen">${t('patchx_alert_seen', 'Mark as seen')}</button>
+      </div>
+    </div>`;
+  el.querySelectorAll('.fa-chip').forEach(c => c.addEventListener('click', () => openModal(c.dataset.poke)));
+  document.getElementById('faSeen').addEventListener('click', () => { setSeen(latestDate()); renderFavAlert(); });
+  document.getElementById('faView').addEventListener('click', () => {
+    F.fav = true; F.type = 'all';
+    if (view !== 'patches') { activateTab('patches'); } else { buildFilterBar(); renderCurrent(); }
+    document.getElementById('controlsPanel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+
+/* ── Filter helpers ──────────────────────────────────────────────────────── */
+function periodPatches() {
+  if (F.period === 'all' || !PATCHES.length) return PATCHES;
+  if (F.period === 'p5')  return PATCHES.slice(0, 5);
+  if (F.period === 'p10') return PATCHES.slice(0, 10);
+  let m = /^m(\d+)$/.exec(F.period);
+  if (m) {
+    const d = new Date(PATCHES[0].date + 'T00:00:00');
+    d.setMonth(d.getMonth() - Number(m[1]));
+    const cut = d.toISOString().slice(0, 10);
+    return PATCHES.filter(p => p.date > cut);
+  }
+  m = /^y(\d{4})$/.exec(F.period);
+  if (m) return PATCHES.filter(p => p.date.startsWith(m[1]));
+  return PATCHES;
+}
+function computeUnstable() {
+  const c = {};
+  PATCHES.slice(0, RECENT_N).forEach(p => new Set([...p.buffs, ...p.nerfs, ...p.tweaks]).forEach(n => { c[n] = (c[n] || 0) + 1; }));
+  UNSTABLE = new Set(Object.keys(c).filter(n => c[n] >= 2));
+}
+function nameFiltersOn() { return F.role !== 'any' || F.fav || F.unstable; }
+function anyFilterOn()   { return nameFiltersOn() || F.type !== 'all' || F.period !== 'all'; }
+function nameOK(n) {
+  if (F.role !== 'any' && (POKEMON_MAP[n]?.role) !== F.role) return false;
+  if (F.fav && !FAVS.has(n)) return false;
+  if (F.unstable && !UNSTABLE.has(n)) return false;
+  return true;
+}
+function resetFilters() { Object.assign(F, { type: 'all', role: 'any', period: 'all', fav: false, unstable: false }); }
 
 const ROLE_COLORS = {
   atk: { bg: 'rgba(239,83,80,0.12)',  text: '#ef5350' },
@@ -137,14 +278,14 @@ function tagSprite(name) {
 }
 
 function fmtDate(d) {
-  const locale = (window.LANG && window.LANG._locale) ? window.LANG._locale : 'fr-FR';
+  const locale = (curLang() && curLang()._locale) ? curLang()._locale : ({ fr: 'fr-FR', en: 'en-GB', ja: 'ja-JP' }[(() => { try { return localStorage.getItem('lang') || 'fr'; } catch (e) { return 'fr'; } })()] || 'fr-FR');
   return new Date(d).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' });
 }
 function getYear(d) { return d.split('-')[0]; }
 
-function getStats(name) {
+function getStats(name, list = PATCHES) {
   let buffs = 0, nerfs = 0, tweaks = 0;
-  PATCHES.forEach(p => {
+  list.forEach(p => {
     if (p.buffs.includes(name))  buffs++;
     if (p.nerfs.includes(name))  nerfs++;
     if (p.tweaks.includes(name)) tweaks++;
@@ -264,6 +405,7 @@ function openInfoModal() {
           <div class="shortcut-row"><kbd>B</kbd><span data-lang="patch_htu_kbd_buff">${t('patch_htu_kbd_buff','Filter Buffs')}</span></div>
           <div class="shortcut-row"><kbd>N</kbd><span data-lang="patch_htu_kbd_nerf">${t('patch_htu_kbd_nerf','Filter Nerfs')}</span></div>
           <div class="shortcut-row"><kbd>T</kbd><span data-lang="patch_htu_kbd_tweak">${t('patch_htu_kbd_tweak','Filter Tweaks')}</span></div>
+          <div class="shortcut-row"><kbd>F</kbd><span data-lang="patchx_htu_kbd_fav">${t('patchx_htu_kbd_fav', 'Show only the Pokémon you follow')}</span></div>
           <div class="shortcut-row"><kbd>A</kbd><span data-lang="patch_htu_kbd_all">${t('patch_htu_kbd_all','Reset filter to All')}</span></div>
           <div class="shortcut-row"><kbd>?</kbd><span data-lang="patch_htu_kbd_help">${t('patch_htu_kbd_help','Open this help panel')}</span></div>
         </div>
@@ -325,34 +467,59 @@ function closeInfoModal() {
 
 function renderCurrent() {
   if (view === 'patches') renderPatches();
-  else if (view === 'diff') document.dispatchEvent(new CustomEvent('patchDiffRender', { detail: { search, filter } }));
+  else if (view === 'diff') document.dispatchEvent(new CustomEvent('patchDiffRender', { detail: { search, filter: F.role, favs: F.fav ? FAVS : null } }));
   else renderPoke();
+}
+
+function periodOptions() {
+  const years = [...new Set(PATCHES.map(p => p.date.slice(0, 4)))].sort().reverse();
+  return [
+    ['all', 'patchx_p_all', 'All history'],
+    ['p5',  'patchx_p_last5', 'Last 5 patches'],
+    ['p10', 'patchx_p_last10', 'Last 10 patches'],
+    ['m3',  'patchx_p_m3', 'Last 3 months'],
+    ['m6',  'patchx_p_m6', 'Last 6 months'],
+    ['m12', 'patchx_p_m12', 'Last 12 months'],
+    ...years.map(y => ['y' + y, null, y]),
+  ];
 }
 
 function buildFilterBar() {
   const fb = document.getElementById('filterBar');
+  const btn = (grp, v, lk, lf, icon = '') =>
+    `<button class="filter-btn ${F[grp] === v ? 'active' : ''}" data-fg="${grp}" data-fv="${v}" data-lang="${lk}">${icon}${t(lk, lf)}</button>`;
 
-  if (view === 'patches') {
-    fb.innerHTML = '<div class="filter-group">' + [
-      ['all',   'patch_filter_all',   'All',    ''],
-      ['buff',  'patch_filter_buff',  'Buffs',  '▲ '],
-      ['nerf',  'patch_filter_nerf',  'Nerfs',  '▼ '],
-      ['tweak', 'patch_filter_tweak', 'Tweaks', '● '],
-      ['misc',  'patch_filter_qol',   'QoL',    '⚙ '],
-    ].map(([v, lk, lf, icon]) =>
-      `<button class="filter-btn ${filter === v ? 'active' : ''}" data-f="${v}" data-lang="${lk}">${icon}${t(lk, lf)}</button>`
-    ).join('') + '</div>';
+  const typeGroup = view === 'diff' ? '' : `<div class="filter-group" role="group" aria-label="${t('patchx_f_type', 'Change type')}">` + [
+    ['all',   'patch_filter_all',   'All',    ''],
+    ['buff',  'patch_filter_buff',  'Buffs',  '▲ '],
+    ['nerf',  'patch_filter_nerf',  'Nerfs',  '▼ '],
+    ['tweak', 'patch_filter_tweak', 'Tweaks', '● '],
+    ...(view === 'patches' ? [['misc', 'patch_filter_qol', 'QoL', '⚙ ']] : []),
+  ].map(([v, lk, lf, icon]) => btn('type', v, lk, lf, icon)).join('') + '</div>';
 
-  } else {
-    const roleFilters = [
-      ['any', 'patch_filter_all_role',  'All'],
-      ['atk', 'patch_filter_atk',       'Attacker'],
-      ['def', 'patch_filter_def',       'Defender'],
-      ['sup', 'patch_filter_sup',       'Supporter'],
-      ['all', 'patch_filter_all_round', 'All-Rounder'],
-      ['spe', 'patch_filter_spe',       'Speedster'],
-    ];
+  const roleGroup = '<div class="filter-group" role="group" aria-label="' + t('patchx_f_role', 'Role') + '">' + [
+    ['any', 'patch_filter_all_role',  'All'],
+    ['atk', 'patch_filter_atk',       'Attacker'],
+    ['def', 'patch_filter_def',       'Defender'],
+    ['sup', 'patch_filter_sup',       'Supporter'],
+    ['all', 'patch_filter_all_round', 'All-Rounder'],
+    ['spe', 'patch_filter_spe',       'Speedster'],
+  ].map(([v, lk, lf]) => btn('role', v, lk, lf)).join('') + '</div>';
 
+  const periodSel = view === 'diff' ? '' : `
+    <label class="fb-select"><span data-lang="patchx_f_period">${t('patchx_f_period', 'Period')}</span>
+      <select id="fPeriod" class="sort-select">${periodOptions().map(([v, lk, lf]) =>
+        `<option value="${v}" ${F.period === v ? 'selected' : ''}>${lk ? t(lk, lf) : lf}</option>`).join('')}</select>
+    </label>`;
+
+  const chips = `
+    <div class="filter-group fb-chips">
+      <button class="filter-btn chip-fav ${F.fav ? 'active' : ''}" id="fFav" type="button" aria-pressed="${F.fav}">★ <span data-lang="patchx_f_fav">${t('patchx_f_fav', 'My Pokémon')}</span> <small>${FAVS.size}</small></button>
+      ${view === 'diff' ? '' : `<button class="filter-btn chip-unstable ${F.unstable ? 'active' : ''}" id="fUnstable" type="button" aria-pressed="${F.unstable}" title="${tv('patchx_f_unstable_tip', 'Touched at least twice in the last {n} patches', { n: RECENT_N })}">🔥 <span data-lang="patchx_f_unstable">${t('patchx_f_unstable', 'Unstable')}</span></button>`}
+    </div>`;
+
+  let sortGroup = '';
+  if (view === 'pokemon') {
     const sortOptions = [
       ['buffs',   'patch_sort_buffs',   'Sort by buffs'],
       ['nerfs',   'patch_sort_nerfs',   'Sort by nerfs'],
@@ -361,72 +528,81 @@ function buildFilterBar() {
       ['balance', 'patch_sort_balance', 'Sort by balance'],
       ['name',    'patch_sort_name',    'Sort by name'],
     ];
-
-    if (view === 'diff') {
-      fb.innerHTML = '<div class="filter-group">' + roleFilters.map(([v, lk, lf]) =>
-        `<button class="filter-btn ${filter === v ? 'active' : ''}" data-f="${v}" data-lang="${lk}">${t(lk, lf)}</button>`
-      ).join('') + '</div>';
-      bindFilterButtons();
-      return;
-    }
-
-    const sortDirLabel = sortDir === 'desc'
-      ? t('patch_sort_desc', '↓ Desc.')
-      : t('patch_sort_asc',  '↑ Asc.');
-
-    fb.innerHTML = `
-      <div class="filter-group">${roleFilters.map(([v, lk, lf]) =>
-        `<button class="filter-btn ${filter === v ? 'active' : ''}" data-f="${v}" data-lang="${lk}">${t(lk, lf)}</button>`
-      ).join('')}</div>
+    const sortDirLabel = sortDir === 'desc' ? t('patch_sort_desc', '↓ Desc.') : t('patch_sort_asc', '↑ Asc.');
+    sortGroup = `
       <div class="sort-group">
-        <select class="sort-select" id="sortSel">
-          ${sortOptions.map(([v, lk, lf]) =>
-            `<option value="${v}" ${sortKey === v ? 'selected' : ''}>${t(lk, lf)}</option>`
-          ).join('')}
-        </select>
+        <select class="sort-select" id="sortSel">${sortOptions.map(([v, lk, lf]) =>
+          `<option value="${v}" ${sortKey === v ? 'selected' : ''}>${t(lk, lf)}</option>`).join('')}</select>
         <button class="filter-btn" id="sortDirBtn">${sortDirLabel}</button>
-      </div>
-    `;
-
-    document.getElementById('sortSel').addEventListener('change', e => {
-      sortKey = e.target.value;
-      renderPoke();
-    });
-    document.getElementById('sortDirBtn').addEventListener('click', () => {
-      sortDir = sortDir === 'desc' ? 'asc' : 'desc';
-      buildFilterBar();
-      renderPoke();
-    });
+      </div>`;
   }
 
-  bindFilterButtons();
+  const reset = (view === 'diff' ? (F.role !== 'any' || F.fav) : anyFilterOn())
+    ? `<button class="filter-btn fb-reset" id="fReset" type="button">✕ ${t('patchx_f_reset', 'Reset')}</button>` : '';
+
+  fb.innerHTML = `
+    <div class="fb-row">${typeGroup}${roleGroup}</div>
+    <div class="fb-row">${periodSel}${chips}${sortGroup}${reset}<span class="fb-count" id="fbCount" aria-live="polite"></span></div>`;
+
+  fb.querySelectorAll('.filter-btn[data-fg]').forEach(b => b.addEventListener('click', () => {
+    F[b.dataset.fg] = b.dataset.fv;
+    buildFilterBar(); renderCurrent();
+  }));
+  document.getElementById('fFav')?.addEventListener('click', () => { F.fav = !F.fav; buildFilterBar(); renderCurrent(); });
+  document.getElementById('fUnstable')?.addEventListener('click', () => { F.unstable = !F.unstable; buildFilterBar(); renderCurrent(); });
+  document.getElementById('fPeriod')?.addEventListener('change', e => { F.period = e.target.value; buildFilterBar(); renderCurrent(); });
+  document.getElementById('fReset')?.addEventListener('click', () => { resetFilters(); buildFilterBar(); renderCurrent(); });
+  document.getElementById('sortSel')?.addEventListener('change', e => { sortKey = e.target.value; renderPoke(); });
+  document.getElementById('sortDirBtn')?.addEventListener('click', () => {
+    sortDir = sortDir === 'desc' ? 'asc' : 'desc';
+    buildFilterBar(); renderPoke();
+  });
 }
 
-function bindFilterButtons() {
-  document.querySelectorAll('.filter-btn[data-f]').forEach(b => {
-    b.addEventListener('click', () => {
-      filter = b.dataset.f;
-      buildFilterBar();
-      renderCurrent();
-    });
-  });
+function setCount(n, kind) {
+  const el = document.getElementById('fbCount');
+  if (!el) return;
+  el.textContent = kind === 'patches'
+    ? tv('patchx_count_patches', '{n} patches', { n })
+    : kind === 'pokemon' ? tv('patchx_count_pokemon', '{n} Pokémon', { n }) : '';
+}
+
+/** Copy of a patch where each list only keeps the names matching the active filters. */
+function filteredPatch(p) {
+  const typeOK = k => F.type === 'all' || F.type === k;
+  return {
+    ...p, _orig: p,
+    buffs:  typeOK('buff')  ? p.buffs.filter(nameOK)  : [],
+    nerfs:  typeOK('nerf')  ? p.nerfs.filter(nameOK)  : [],
+    tweaks: typeOK('tweak') ? p.tweaks.filter(nameOK) : [],
+  };
+}
+
+function emptyFilterMessage(key, fallback) {
+  if (F.fav && !FAVS.size) {
+    return `<div class="empty">${t('patchx_fav_empty', 'You are not following any Pokémon yet. Click the ☆ on a Pokémon card (or in its sheet) to follow it.')}</div>`;
+  }
+  return `<div class="empty" data-lang="${key}">${t(key, fallback)}</div>`;
 }
 
 function renderPatches() {
   const q = search.toLowerCase();
-  const list = PATCHES.filter(p => {
+  const list = [];
+  periodPatches().forEach(p => {
     const hay = [...p.buffs, ...p.nerfs, ...p.tweaks, p.version, p.name].join(' ').toLowerCase();
-    if (q && !hay.includes(q)) return false;
-    if (filter === 'buff')  return p.buffs.length > 0;
-    if (filter === 'nerf')  return p.nerfs.length > 0;
-    if (filter === 'tweak') return p.tweaks.length > 0;
-    if (filter === 'misc')  return p.buffs.length === 0 && p.nerfs.length === 0 && p.tweaks.length === 0;
-    return true;
+    if (q && !hay.includes(q)) return;
+    const hasC = p.buffs.length + p.nerfs.length + p.tweaks.length > 0;
+    if (F.type === 'misc') { if (!hasC && !nameFiltersOn()) list.push(filteredPatch(p)); return; }
+    const f = filteredPatch(p);
+    const n = f.buffs.length + f.nerfs.length + f.tweaks.length;
+    if (!hasC) { if (F.type === 'all' && !nameFiltersOn()) list.push(f); return; }
+    if (n > 0) list.push(f);
   });
+  setCount(list.length, 'patches');
 
   const content = document.getElementById('mainContent');
   if (!list.length) {
-    content.innerHTML = `<div class="empty" data-lang="patch_empty">${t('patch_empty','No patch found.')}</div>`;
+    content.innerHTML = emptyFilterMessage('patch_empty', 'No patch found.');
     return;
   }
 
@@ -453,6 +629,7 @@ function renderPatches() {
       const open = card.classList.toggle('open');
       body.style.display = open ? 'block' : 'none';
       h.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) loadPatchValues(card);
     });
   });
 
@@ -461,21 +638,61 @@ function renderPatches() {
   });
 }
 
+/* ── Exact values inside a patch card (from the data snapshots) ───────────── */
+async function loadPatchValues(card) {
+  const box = card.querySelector('.patch-values');
+  if (!box || box.dataset.loaded) return;
+  box.dataset.loaded = '1';
+  const PD = window.PatchDiff;
+  const orig = PATCHES[Number(box.dataset.pidx)];
+  if (!PD?.valuesForPatch || !orig) { box.remove(); return; }
+  let v;
+  try { v = await PD.valuesForPatch(orig); } catch (e) { console.error(e); box.remove(); return; }
+  if (!v) { box.remove(); return; }
+
+  const shown = [...card.querySelectorAll('.poke-tag[data-poke]')].map(tg => ({
+    n: tg.dataset.poke, k: ['buff', 'nerf', 'tweak'].find(c => tg.classList.contains('poke-tag-' + c)),
+  }));
+  const one = (name, k, res) => {
+    const head = PD.headline(res.sections, 2).map(x => `<span>${x}</span>`).join('');
+    const cnt = [res.up ? `<span class="pill pill-buff">▲ ${res.up}</span>` : '', res.down ? `<span class="pill pill-nerf">▼ ${res.down}</span>` : '', res.flat ? `<span class="pill pill-tweak">● ${res.flat}</span>` : ''].join('');
+    return `<details class="pv-poke pv-${k}">
+      <summary>${tagSprite(name)}<b>${name}</b><span class="pv-head">${head}</span><span class="pd-pills">${cnt}</span><span class="pd-chevron">▾</span></summary>
+      <div class="pd-body">${PD.sectionsHTML(res.sections)}</div>
+    </details>`;
+  };
+
+  const rows = shown.filter(x => v.items.has(x.n)).map(x => one(x.n, x.k, v.items.get(x.n))).join('');
+  const missing = shown.filter(x => !v.items.has(x.n)).map(x => x.n);
+  const others = v.others.length && !anyFilterOn()
+    ? `<details class="pv-others"><summary>${t('patchx_values_others', 'Other differences found in the data')} <small>${t('patchx_values_others_tip', 'data corrections or changes not listed in the official notes')}</small> <span class="pill pill-tweak">${v.others.length}</span></summary>${v.others.map(r => one(r.rec.displayName, 'tweak', r)).join('')}</details>` : '';
+
+  if (!rows && !missing.length && !others) { box.remove(); return; }
+  box.innerHTML = `
+    <div class="pv-title">📐 ${t('patchx_values_title', 'Exact values')}</div>
+    ${v.merged ? `<div class="pv-note">${tv('patchx_values_merged', 'Values cover {n} patches at once ({versions}): the data snapshots cannot tell them apart.', { n: v.range.covered.length, versions: v.range.covered.map(c => c.version).join(' + ') })}</div>` : ''}
+    ${rows}
+    ${missing.length ? `<div class="pv-note">${tv('patchx_values_none', 'No numeric change found in the data for: {names}', { names: missing.join(', ') })}</div>` : ''}
+    ${others}`;
+}
+
 function patchCardHTML(p) {
   const hasC = p.buffs.length + p.nerfs.length + p.tweaks.length > 0;
   const url  = PATCH_LINKS[p.version];
+  const favHit = [...p.buffs, ...p.nerfs, ...p.tweaks].filter(n => FAVS.has(n)).length;
 
   const pills = [
     p.buffs.length  ? `<span class="pill pill-buff">▲ ${p.buffs.length}</span>`  : '',
     p.nerfs.length  ? `<span class="pill pill-nerf">▼ ${p.nerfs.length}</span>`  : '',
     p.tweaks.length ? `<span class="pill pill-tweak">● ${p.tweaks.length}</span>` : '',
+    favHit          ? `<span class="pill pill-fav" title="${t('patchx_fav_pill', 'Pokémon you follow')}">★ ${favHit}</span>` : '',
     !hasC           ? `<span class="pill pill-misc">⚙ ${t('patch_qol_label','QoL')}</span>` : '',
   ].join('');
 
   const makeCol = (items, cls, icon, lk, lf) => items.length ? `
     <div class="change-col col-${cls}">
       <div class="col-title" data-lang="${lk}">${icon} ${t(lk, lf)}</div>
-      ${items.map(n => `<span class="poke-tag poke-tag-${cls}" data-poke="${n}" tabindex="0" role="button">${tagSprite(n)} ${n}</span>`).join('')}
+      ${items.map(n => `<span class="poke-tag poke-tag-${cls} ${FAVS.has(n) ? 'is-fav' : ''}" data-poke="${n}" tabindex="0" role="button">${tagSprite(n)} ${n}${FAVS.has(n) ? ' <i class="tag-star">★</i>' : ''}</span>`).join('')}
     </div>` : '';
 
   const cols = makeCol(p.buffs,  'buff',  '▲', 'patch_buffs_label',  'Buffs')
@@ -494,7 +711,7 @@ function patchCardHTML(p) {
   }).join('') + (strip.length > MAX_S ? `<span class="ps ps-more">+${strip.length - MAX_S}</span>` : '');
 
   return `
-  <div class="patch-card tone-${tone}">
+  <div class="patch-card tone-${tone} ${favHit ? 'has-fav' : ''}">
     <div class="patch-header" tabindex="0" role="button" aria-expanded="false" aria-label="${p.name} ${p.version}">
       <div class="patch-left">
         <span class="ver-badge">${p.version}</span>
@@ -512,6 +729,7 @@ function patchCardHTML(p) {
     <div class="patch-body" style="display:none;">
       ${cols ? `<div class="change-grid">${cols}</div>` : ''}
       ${p.notes ? `<div class="patch-notes">${p.notes}</div>` : ''}
+      ${hasC && window.PatchDiff?.rangeFor?.(p.date) ? `<div class="patch-values" data-pidx="${PATCHES.indexOf(p._orig || p)}"><div class="pv-note">${t('patchx_values_loading', 'Loading values…')}</div></div>` : ''}
       ${window.PatchDiff?.previousSnapshotFor(p.date) ? `<button class="official-link pd-open-btn" data-diff-date="${p.date}" type="button">📊 <span>${t('patch_diff_open','View stat changes')}</span></button>` : ''}
       ${url ? `
         <a class="official-link" href="${url}" target="_blank" rel="noopener noreferrer">
@@ -528,16 +746,24 @@ function patchCardHTML(p) {
 
 function renderPoke() {
   const q = search.toLowerCase();
+  const range = periodPatches();
+  const scoped = F.period !== 'all';
 
   const list = POKEMON
     .filter(p => {
       if (q && !p.name.toLowerCase().includes(q)) return false;
-      if (filter !== 'any' && p.role !== filter)  return false;
-      return true;
+      return nameOK(p.name);
     })
     .map(p => {
-      const s = getStats(p.name);
+      const s = getStats(p.name, range);
       return { ...p, ...s, total: s.buffs + s.nerfs + s.tweaks, balance: s.buffs - s.nerfs };
+    })
+    .filter(p => {
+      if (F.type === 'buff'  && !p.buffs)  return false;
+      if (F.type === 'nerf'  && !p.nerfs)  return false;
+      if (F.type === 'tweak' && !p.tweaks) return false;
+      if ((scoped || F.unstable) && !p.total) return false;
+      return true;
     })
     .sort((a, b) => {
       const v = sortKey === 'name'    ? a.name.localeCompare(b.name)
@@ -545,10 +771,11 @@ function renderPoke() {
               :                        (a[sortKey] || 0) - (b[sortKey] || 0);
       return sortDir === 'desc' ? -v : v;
     });
+  setCount(list.length, 'pokemon');
 
   const content = document.getElementById('mainContent');
   if (!list.length) {
-    content.innerHTML = `<div class="empty" data-lang="patch_empty_pokemon">${t('patch_empty_pokemon','No Pokémon found.')}</div>`;
+    content.innerHTML = emptyFilterMessage('patch_empty_pokemon', 'No Pokémon found.');
     return;
   }
 
@@ -578,7 +805,8 @@ function pokeCardHTML(p) {
   const porteeEl = pKey ? `<span class="poke-portee" data-lang="${pKey}">${t(pKey, p.portee)}</span>` : '';
 
   return `
-  <div class="poke-card role-${p.role || 'none'}" data-name="${p.name}" tabindex="0" role="button" aria-label="${p.name}">
+  <div class="poke-card role-${p.role || 'none'} ${FAVS.has(p.name) ? 'is-fav' : ''}" data-name="${p.name}" tabindex="0" role="button" aria-label="${p.name}">
+    ${favStarHTML(p.name, 'on-card')}
     ${avatar(p.name, p.role, 64)}
     <div class="poke-info">
       <div class="poke-name">${p.name}</div>
@@ -641,7 +869,9 @@ function openModal(name) {
         <div class="m-name" id="modalPokeName">${name}</div>
         <div class="m-role role-${poke.role}" data-lang="${roleKey(poke.role)}">${roleLabel(poke.role)}${porteeTxt}</div>
         <span class="balance-score ${bc}">${bLabel}</span>
+        <a class="official-link m-calc-link" id="mCalcLink" href="#" hidden>🧮 <span>${t('patchx_calc_open', 'Open in the damage calculator')}</span></a>
       </div>
+      ${favStarHTML(name, 'in-modal')}
     </div>
     <div class="m-stats">
       <div class="m-stat">
@@ -661,13 +891,114 @@ function openModal(name) {
         <div class="m-stat-lbl" data-lang="patch_modal_patches">${t('patch_modal_patches','patches')}</div>
       </div>
     </div>
-    ${history.length > 0 ? buildTimelineHTML(history) : ''}
+    ${history.length > 0 ? buildCumulHTML(name) + buildTimelineHTML(history) : ''}
+    <div id="mNumeric" class="m-numeric"><div class="h-list-title">${t('patchx_num_title', 'Numeric changes')}</div><div class="pv-note">${t('patchx_num_loading', 'Loading values…')}</div></div>
     <div class="h-list-title" data-lang="patch_history_full">${t('patch_history_full','Full history')}</div>
     ${histRows}
   `;
 
   document.getElementById('modal').classList.add('open');
   document.getElementById('overlay').classList.add('open');
+  loadNumericSection(name);
+}
+
+/** Cumulative buffs / nerfs / balance of one Pokémon across the whole patch history. */
+function buildCumulHTML(name) {
+  const asc = [...PATCHES].reverse();
+  let b = 0, n = 0;
+  const pts = [];
+  asc.forEach((p, i) => {
+    const hb = p.buffs.includes(name), hn = p.nerfs.includes(name);
+    if (hb || hn || p.tweaks.includes(name)) {
+      if (hb) b++;
+      if (hn) n++;
+      pts.push({ i, b, n, bal: b - n, p });
+    }
+  });
+  if (!pts.length || asc.length < 2) return '';
+  const W = 600, H = 160, PL = 28, PR = 10, PT = 12, PB = 24, N = asc.length - 1;
+  const yMin = Math.min(0, ...pts.map(q => q.bal));
+  const yMax = Math.max(1, ...pts.map(q => Math.max(q.b, q.n, q.bal)));
+  const X = i => PL + (W - PL - PR) * i / N;
+  const Y = v => PT + (H - PT - PB) * (1 - (v - yMin) / (yMax - yMin));
+  const step = key => {
+    let d = `M${X(0).toFixed(1)},${Y(0).toFixed(1)}`, prev = 0;
+    pts.forEach(q => { d += ` L${X(q.i).toFixed(1)},${Y(prev).toFixed(1)} L${X(q.i).toFixed(1)},${Y(q[key]).toFixed(1)}`; prev = q[key]; });
+    return d + ` L${X(N).toFixed(1)},${Y(prev).toFixed(1)}`;
+  };
+  const ticks = [];
+  for (let v = Math.ceil(yMin); v <= yMax; v++) ticks.push(v);
+  const every = Math.ceil(ticks.length / 6);
+  const grid = ticks.filter((v, k) => k % every === 0 || v === 0).map(v =>
+    `<line x1="${PL}" x2="${W - PR}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" stroke="rgba(255,255,255,${v === 0 ? .22 : .07})" stroke-width="1"/>
+     <text x="${PL - 5}" y="${(Y(v) + 3).toFixed(1)}" text-anchor="end" font-size="9" fill="#6a8587" font-family="Rajdhani,sans-serif">${v}</text>`).join('');
+  const dots = pts.map(q => `<circle cx="${X(q.i).toFixed(1)}" cy="${Y(q.bal).toFixed(1)}" r="3.5" fill="#1b1f2b" stroke="#b07ef5" stroke-width="2"><title>${q.p.version} · ${fmtDate(q.p.date)} · ▲ ${q.b} / ▼ ${q.n} (${q.bal > 0 ? '+' : ''}${q.bal})</title></circle>`).join('');
+  const last = pts[pts.length - 1];
+  return `
+  <div class="timeline-section cumul-section">
+    <div class="timeline-title">
+      <span>${t('patchx_cumul_title', 'Cumulative buffs & nerfs')}</span>
+      <div class="timeline-legend">
+        <span class="tl-legend-item"><span class="tl-legend-dot" style="background:#4caf82"></span>${t('patchx_cumul_buffs', 'Buffs')} (${last.b})</span>
+        <span class="tl-legend-item"><span class="tl-legend-dot" style="background:#ef5350"></span>${t('patchx_cumul_nerfs', 'Nerfs')} (${last.n})</span>
+        <span class="tl-legend-item"><span class="tl-legend-dot" style="background:#b07ef5"></span>${t('patchx_cumul_balance', 'Balance')} (${last.bal > 0 ? '+' : ''}${last.bal})</span>
+      </div>
+    </div>
+    <svg class="cumul-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${t('patchx_cumul_title', 'Cumulative buffs & nerfs')}">
+      ${grid}
+      <path d="${step('b')}" fill="none" stroke="#4caf82" stroke-width="1.6" opacity=".75"/>
+      <path d="${step('n')}" fill="none" stroke="#ef5350" stroke-width="1.6" opacity=".75"/>
+      <path d="${step('bal')}" fill="none" stroke="#b07ef5" stroke-width="2.6" stroke-linejoin="round"/>
+      ${dots}
+      <text x="${PL}" y="${H - 6}" font-size="9" fill="#6a8587" font-family="Rajdhani,sans-serif">${asc[0].date.slice(0, 4)}</text>
+      <text x="${W - PR}" y="${H - 6}" text-anchor="end" font-size="9" fill="#6a8587" font-family="Rajdhani,sans-serif">${asc[N].date.slice(0, 4)}</text>
+    </svg>
+  </div>`;
+}
+
+/** Exact numeric changes of one Pokémon (from the data snapshots) + damage calculator link. */
+async function loadNumericSection(name) {
+  const PD = window.PatchDiff;
+  const still = () => document.getElementById('modalPokeName')?.textContent === name;
+  if (!PD?.historyFor) { document.getElementById('mNumeric')?.remove(); return; }
+  await PD.ready;
+  if (!still()) return;
+
+  PD.calcIdFor(name).then(id => {
+    const a = document.getElementById('mCalcLink');
+    if (id && a && still()) { a.href = 'damage-calc.html?atk=' + encodeURIComponent(id); a.hidden = false; }
+  }).catch(() => {});
+
+  let hist;
+  try { hist = await PD.historyFor(name); } catch (e) { console.error(e); document.getElementById('mNumeric')?.remove(); return; }
+  const box = document.getElementById('mNumeric');
+  if (!box || !still()) return;
+
+  const since = fmtDate(PD.sinceDate());
+  const block = h => {
+    const o = h.res.official;
+    const badge = o
+      ? `<span class="pd-badge official ${o}">📋 ${t('patch_diff_official_' + o, o)}</span>`
+      : `<span class="pd-badge data">${t('patch_diff_data', 'data')}</span>`;
+    const vers = h.covered.length ? h.covered.map(c => c.version).join(' + ') : '';
+    return `<div class="nx-block">
+      <div class="nx-head"><span class="nx-range">${fmtDate(h.from.date)} → ${fmtDate(h.to.date)}</span>${vers ? `<span class="nx-ver">${vers}</span>` : ''}${h.res.isNew ? '' : badge}</div>
+      ${h.res.isNew ? `<div class="pv-note">${t('patchx_num_new', 'Added during this period.')}</div>` : PD.sectionsHTML(h.res.sections)}
+    </div>`;
+  };
+  const SHOW = 3;
+  const title = `<div class="h-list-title">${t('patchx_num_title', 'Numeric changes')}</div>`;
+  if (!hist.length) {
+    box.innerHTML = `${title}<div class="pv-note">${tv('patchx_num_none', 'No numeric change detected in the data since {date}.', { date: since })}</div>`;
+    return;
+  }
+  box.innerHTML = `${title}
+    ${hist.slice(0, SHOW).map(block).join('')}
+    ${hist.length > SHOW ? `<div class="nx-more" hidden>${hist.slice(SHOW).map(block).join('')}</div><button type="button" class="filter-btn nx-more-btn">${tv('patchx_num_more', 'Show the {n} older ones', { n: hist.length - SHOW })}</button>` : ''}
+    <div class="pv-note">${tv('patchx_num_since', 'Numeric data available since {date}.', { date: since })}</div>`;
+  box.querySelector('.nx-more-btn')?.addEventListener('click', e => {
+    box.querySelector('.nx-more').hidden = false; e.currentTarget.remove();
+  });
 }
 
 function buildTimelineHTML(history) {
@@ -732,6 +1063,13 @@ function closeModal() {
   document.getElementById('overlay').classList.remove('open');
 }
 document.getElementById('overlay').addEventListener('click', closeModal);
+// Favourite stars (cards + modal): delegated so they survive every re-render
+document.addEventListener('click', e => {
+  const star = e.target.closest?.('.fav-star[data-fav]');
+  if (!star) return;
+  e.preventDefault(); e.stopPropagation();
+  toggleFav(star.dataset.fav);
+}, true);
 document.getElementById('modalClose').addEventListener('click', closeModal);
 document.getElementById('infoBtn')?.addEventListener('click', openInfoModal);
 
@@ -784,10 +1122,11 @@ document.addEventListener('keydown', e => {
     case '3':
       if (!e.ctrlKey && !e.metaKey) activateTab('diff');
       break;
-    case 'a': case 'A': setFilter(view === 'patches' ? 'all' : 'any'); break;
-    case 'b': case 'B': setFilter('buff');  break;
-    case 'n': case 'N': setFilter('nerf');  break;
-    case 't': case 'T': setFilter('tweak'); break;
+    case 'a': case 'A': if (view !== 'diff') setType('all'); break;
+    case 'b': case 'B': if (view !== 'diff') setType('buff');  break;
+    case 'n': case 'N': if (view !== 'diff') setType('nerf');  break;
+    case 't': case 'T': if (view !== 'diff') setType('tweak'); break;
+    case 'f': case 'F': F.fav = !F.fav; buildFilterBar(); renderCurrent(); break;
   }
 });
 
@@ -796,8 +1135,8 @@ function activateTab(tabView) {
   if (btn) btn.click();
 }
 
-function setFilter(f) {
-  filter = f;
+function setType(tp) {
+  F.type = tp;
   buildFilterBar();
   renderCurrent();
 }
@@ -806,7 +1145,8 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    view = btn.dataset.view; search = ''; filter = view === 'patches' ? 'all' : 'any';
+    view = btn.dataset.view; search = '';
+    if (view !== 'patches' && F.type === 'misc') F.type = 'all';   // QoL only exists for patches
     document.getElementById('searchInput').value = '';
     buildFilterBar();
     renderCurrent();
@@ -819,6 +1159,10 @@ document.getElementById('searchInput').addEventListener('input', e => {
 });
 
 document.addEventListener('patchDiffReady', () => { if (view === 'patches' && PATCHES.length) renderPatches(); });
+document.addEventListener('translationsReady', () => {
+  if (!PATCHES.length) return;
+  buildFilterBar(); renderFavAlert(); renderCurrent();
+});
 
 async function loadData() {
   try {
@@ -828,7 +1172,11 @@ async function loadData() {
       fetch('data/patch_links.json').then(r => r.json()),
     ]);
 
-    PATCHES = Array.isArray(patchesData) ? patchesData : patchesData.patches;
+    // Newest first, and drop exact duplicates (same version + date) so counts are not doubled
+    const seenPatch = new Set();
+    PATCHES = (Array.isArray(patchesData) ? patchesData : patchesData.patches)
+      .slice().sort((a, b) => b.date.localeCompare(a.date))
+      .filter(p => { const k = p.version + '|' + p.date; if (seenPatch.has(k)) return false; seenPatch.add(k); return true; });
     const raw = Array.isArray(pokemonsData) ? pokemonsData : pokemonsData.pokemon;
 
     const seen = new Set();
@@ -842,8 +1190,11 @@ async function loadData() {
     POKEMON_MAP = Object.fromEntries(POKEMON.map(p => [p.name, p]));
     PATCH_LINKS = linksData;
 
+    computeUnstable();
+    if (FAVS.size && !getSeen()) setSeen(latestDate());
     renderStats();
     buildFilterBar();
+    renderFavAlert();
     renderPatches();
 
   } catch (err) {
