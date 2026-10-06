@@ -45,6 +45,7 @@
       dur: 3,              // seconds per step in the player
       loop: false,
       ghosts: true,
+      camps: false,        // overlay of the camps present at the step's timer
       playing: false,
     };
 
@@ -173,11 +174,86 @@
       afterChange(true);
     }
 
+    /* ── camps present at the step's timer (data/spawns_<map>.json) ──
+       Read-only overlay: it is not part of the plan, so it never touches undo / redo.
+       Assumes every pad is still standing (spawns tied to a pad break are left out). */
+    const campLayer = document.createElement('div');
+    campLayer.id = 'camp-layer';
+    const campCache = {};
+    const campLoading = {};
+
+    function loadCamps(key) {
+      if (key in campCache) return Promise.resolve(campCache[key]);
+      if (!campLoading[key]) {
+        campLoading[key] = fetch(`data/spawns_${key}.json`).then(r => r.json())
+          .then(d => { campCache[key] = d; return d; })
+          .catch(() => { campCache[key] = null; return null; });
+      }
+      return campLoading[key];
+    }
+
+    /** "7:30" → 450 (seconds left on the game clock), null when the label is not a timer. */
+    function labelSeconds(label) {
+      const m = /^\s*(\d{1,2}):(\d{2})\s*$/.exec(label || '');
+      return m ? parseInt(m[1], 10) * 60 + parseInt(m[2], 10) : null;
+    }
+
+    function campsAt(data, R, key) {
+      const out = [];
+      if (!data || R == null) return out;
+      (data.pokemons || []).forEach(p => {
+        if (p.isSpecial) return;                                   // Altaria lanes depend on pads: not drawn
+        if (p.name === 'Regidrago') {                              // centre boss: 8:00 → 2:30
+          const s0 = (p.spawns || [])[0];
+          if (s0 && R <= 480 && R > 150) out.push({ name: p.name, img: s0.img || p.img, x: s0.xPercent, y: s0.yPercent, size: s0.size || p.size || 80, at: 480 });
+          return;
+        }
+        (p.spawns || []).forEach(s => {
+          if (s.spawnOnTowerBreak) return;
+          if (!(R <= s.time)) return;
+          if (s.time_dispawn && !(R > s.time_dispawn)) return;
+          const evo = p.evolution && R <= p.evolution.time;
+          out.push({
+            name: evo ? p.evolution.name : p.name,
+            img: evo ? p.evolution.img : (s.img || p.img),
+            x: s.xPercent, y: s.yPercent, size: s.size || p.size || 60, at: s.time,
+          });
+        });
+      });
+      return out;
+    }
+
+    const fmtClock = t => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
+
+    function campsForStep(step) {
+      if (!P.camps) return [];
+      const data = campCache[currentMap()];
+      return campsAt(data, labelSeconds(step && step.label), currentMap());
+    }
+
+    function renderCamps() {
+      campLayer.innerHTML = '';
+      const W = drawCanvas.width, H = drawCanvas.height;
+      if (!P.camps || !W) return;
+      const key = currentMap();
+      if (!(key in campCache)) { loadCamps(key).then(renderCamps); return; }
+      campsForStep(P.steps[P.cur]).forEach(c => {
+        const el = document.createElement('div');
+        el.className = 'camp-sprite';
+        el.style.left = (c.x / 100 * 100) + '%';
+        el.style.top = (c.y / 100 * 100) + '%';
+        el.title = `${c.name} — ${tr('mapstep_camp_from', 'spawns at')} ${fmtClock(c.at)}`;
+        el.innerHTML = `<img src="${esc(c.img)}" alt="" draggable="false" style="width:${c.size}px;height:${c.size}px">`;
+        campLayer.appendChild(el);
+      });
+    }
+
     /* ── ghosts (previous step, transparent) + movement arrows ── */
     const ghostLayer = document.createElement('div');
     ghostLayer.id = 'ghost-layer';
     const ghostCanvas = document.createElement('canvas');
     ghostCanvas.id = 'ghost-canvas';
+    wrapper.insertBefore(campLayer, drawCanvas);
     wrapper.insertBefore(ghostCanvas, drawCanvas);
     wrapper.insertBefore(ghostLayer, drawCanvas);
 
@@ -285,6 +361,11 @@
       const ctx = canvas.getContext('2d');
       ctx.fillStyle = '#0d1617'; ctx.fillRect(0, 0, canvas.width, canvas.height);
       try { ctx.drawImage(map, 0, 0, canvas.width, canvas.height); } catch { /* map not decoded yet */ }
+      (opts.camps || []).forEach(c => {
+        const size = Math.max(5, c.size * k), x = c.x / 100 * W * k, y = c.y / 100 * H * k;
+        const im = getImg(c.img, opts.onImg);
+        if (im.__ok) { ctx.save(); ctx.globalAlpha = .8; ctx.drawImage(im, x - size / 2, y - size / 2, size, size); ctx.restore(); }
+      });
       paintPaths(ctx, step.paths || [], k);
       (step.sprites || []).forEach(s => {
         const size = Math.max(5, s.size * k), x = s.x * k, y = s.y * k;
@@ -334,6 +415,7 @@
           <label class="sp-dur" title="${esc(tr('mapstep_t_dur', 'Seconds per step'))}"><input type="number" id="sp-dur" min="1" max="30" value="3"><span>s</span></label>
           <button class="sp-btn sp-toggle" id="sp-loop" title="${esc(tr('mapstep_t_loop', 'Loop'))}">🔁</button>
           <button class="sp-btn sp-toggle on" id="sp-ghost" title="${esc(tr('mapstep_t_ghost', 'Ghosts of the previous step'))}">👻</button>
+          <button class="sp-btn sp-toggle" id="sp-camps" title="${esc(tr('mapstep_t_camps', 'Show the camps present at this timer (pads assumed standing). Use a timer like 7:00.'))}">🌿</button>
           <button class="sp-btn" id="sp-full" title="${esc(tr('mapstep_t_full', 'Fullscreen'))}">⛶</button>
           <div class="steps-fields">
             <input type="text" id="step-label" maxlength="24" placeholder="10:00" aria-label="Timer">
@@ -417,6 +499,7 @@
       $('sp-play').textContent = P.playing ? '⏸' : '▶';
       $('sp-loop').classList.toggle('on', P.loop);
       $('sp-ghost').classList.toggle('on', P.ghosts);
+      $('sp-camps').classList.toggle('on', P.camps);
       $('sp-prev').disabled = P.cur === 0;
       $('sp-first').disabled = P.cur === 0;
       $('sp-next').disabled = P.cur >= P.steps.length - 1;
@@ -425,6 +508,7 @@
 
     function afterChange(immediate) {
       renderGhosts();
+      renderCamps();
       updateButtons();
       if (immediate) { renderStrip(); return; }
       clearTimeout(thumbTimer);
@@ -492,7 +576,7 @@
       afterChange(true);
     }
 
-    $('step-label').addEventListener('input', e => { P.steps[P.cur].label = e.target.value; updateFields(); clearTimeout(thumbTimer); thumbTimer = setTimeout(renderStrip, 250); });
+    $('step-label').addEventListener('input', e => { P.steps[P.cur].label = e.target.value; updateFields(); renderCamps(); clearTimeout(thumbTimer); thumbTimer = setTimeout(renderStrip, 250); });
     $('step-note').addEventListener('input', e => { P.steps[P.cur].note = e.target.value; updateFields(); });
 
     /* ── player ──────────────────────────────────────────────── */
@@ -538,6 +622,7 @@
     $('sp-dur').addEventListener('input', e => { P.dur = Math.max(1, Math.min(30, parseFloat(e.target.value) || 3)); });
     $('sp-loop').addEventListener('click', () => { P.loop = !P.loop; updateButtons(); });
     $('sp-ghost').addEventListener('click', () => { P.ghosts = !P.ghosts; updateButtons(); renderGhosts(); });
+    $('sp-camps').addEventListener('click', () => { P.camps = !P.camps; updateButtons(); renderCamps(); });
     // Keep the map fitted above the strip
     const bar = $('steps-bar');
     function syncInset() {
@@ -576,8 +661,8 @@
     document.addEventListener('change', commitSoon);
     document.addEventListener('keyup', e => { if (e.key === 'Delete' || e.key === 'Backspace') commitSoon(); });
     document.addEventListener('mousemove', e => { if (e.buttons & 1 && App.selectedSprite && P.cur > 0) ghostSoon(); });
-    window.addEventListener('resize', () => setTimeout(() => { renderGhosts(); }, 120));
-    App.mapImg.addEventListener('load', () => setTimeout(() => { renderGhosts(); renderStrip(); }, 150));
+    window.addEventListener('resize', () => setTimeout(() => { renderGhosts(); renderCamps(); }, 120));
+    App.mapImg.addEventListener('load', () => setTimeout(() => { renderGhosts(); renderCamps(); renderStrip(); }, 150));
 
     /* ── map switching (called from app.js) ──────────────────── */
     function hasContent() {
@@ -649,7 +734,7 @@
       capture();
       return {
         app: 'unitetools-map-plan', v: 1,
-        name: P.name || '', map: currentMap(), dur: P.dur,
+        name: P.name || '', map: currentMap(), dur: P.dur, cp: P.camps ? 1 : 0,
         steps: P.steps.map(st => ({
           l: st.label, n: st.note,
           sp: st.sprites.map(s => {
@@ -676,6 +761,7 @@
       P.id = meta.id || null;
       P.name = o.name || meta.name || '';
       P.dur = o.dur || 3; $('sp-dur').value = P.dur;
+      P.camps = !!o.cp;
       P.steps = o.steps.map(s => ({
         id: uidGen(), label: s.l || '', note: s.n || '',
         sprites: (s.sp || []).map(x => {
@@ -881,7 +967,7 @@
     function exportPNG() {
       capture();
       const c = document.createElement('canvas');
-      paintStep(c, P.steps[P.cur], 1, { hud: true });
+      paintStep(c, P.steps[P.cur], 1, { hud: true, camps: campsForStep(P.steps[P.cur]) });
       c.toBlob(b => { if (b) download(`unitetools-map-${(P.steps[P.cur].label || 'step').replace(/[^\w-]+/g, '_')}.png`, b); }, 'image/png');
     }
 
