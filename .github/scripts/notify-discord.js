@@ -52,14 +52,41 @@ const summary = summaryParts.join(', ');
 const roleId = process.env.DISCORD_ROLE_ID;
 const ping = roleId ? `<@&${roleId}> ` : '';
 
-const fields = sections.slice(0, 5).map(s => ({
-  name: s.title,
-  value: s.items.slice(0, 6).map(i => {
+// Discord limits: field name <= 256, field value <= 1024, embed total <= 6000 chars, max 25 fields.
+const clip = (str, max) => str.length > max ? str.slice(0, max - 1).trimEnd() + '…' : str;
+const clean = (str) => str.replace(/\s+/g, ' ').trim();
+
+const MAX_FIELD_VALUE = 1024;
+const MAX_ITEM = 110;          // one bullet is shortened to this length
+const EMBED_BUDGET = 5200;     // safety margin under the 6000 total
+let used = `Changelog — ${version}`.length + `Released on ${date} • unite-tools.com`.length;
+
+const fields = [];
+let skippedSections = 0;
+for (const s of sections) {
+  if (fields.length >= 25) { skippedSections++; continue; }
+  const name = clip(clean(s.title) || '\u200b', 256);
+  const lines = [];
+  let len = 0;
+  let shown = 0;
+  for (const i of s.items) {
     const emoji = categoryEmoji[i.category] ?? '•';
-    return `${emoji} ${i.text}`;
-  }).join('\n') + (s.items.length > 6 ? `\n*...and ${s.items.length - 6} more*` : ''),
-  inline: false
-}));
+    const line = `${emoji} ${clip(clean(i.text), MAX_ITEM)}`;
+    const reserve = 40; // room for the "...and N more" line
+    if (len + line.length + 1 > MAX_FIELD_VALUE - reserve && shown < s.items.length) break;
+    lines.push(line);
+    len += line.length + 1;
+    shown++;
+  }
+  if (shown < s.items.length) lines.push(`*...and ${s.items.length - shown} more*`);
+  const value = clip(lines.join('\n'), MAX_FIELD_VALUE);
+  if (used + name.length + value.length > EMBED_BUDGET) { skippedSections++; continue; }
+  used += name.length + value.length;
+  fields.push({ name, value, inline: false });
+}
+if (skippedSections) {
+  fields.push({ name: '\u200b', value: `*...and ${skippedSections} more section${skippedSections > 1 ? 's' : ''} on the full changelog.*`, inline: false });
+}
 
 // --- 3. Discord Payload ---
 const payload = {
