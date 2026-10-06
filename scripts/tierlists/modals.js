@@ -292,6 +292,7 @@ export function onMoveSave() {
     hideMoveModal();
     loadTierList(state.currentDraft);
     loadGallery(state.currentCategory);
+    window.triggerAutoSave?.();
 }
 
 // ─── Tier modal ───────────────────────────────────────────────────────────────
@@ -406,6 +407,7 @@ export function onTierSave() {
     draft.tiers[tierIndex].color = newColor;
     hideTierModal();
     loadTierList(draftId);
+    window.triggerAutoSave?.();
 }
 
 export function onTierDelete() {

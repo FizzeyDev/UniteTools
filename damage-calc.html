@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="css/buildOptimizer.css">
   <link rel="stylesheet" href="css/combatLog.css">
   <link rel="stylesheet" href="css/comparePatch.css">
+  <link rel="stylesheet" href="css/calculator_builds.css">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7HW29S7HW"></script>
   <script>
@@ -24,57 +25,42 @@
     .editable-custom { cursor:pointer; color:#ffdd77; font-weight:bold; font-size:1.1rem; }
     .editable-custom:hover { text-decoration:underline; color:#ffeaaa; }
     .custom-stat { background:rgba(255,221,119,0.1); border-radius:8px; padding:4px 0; margin:4px 0; }
-
-    /* ── Tabs principaux ── */
-    .main-tabs {
-      display: flex;
-      gap: 0.5rem;
-      padding: 0.75rem 1rem 0;
-      background: var(--bg-secondary, #1a1a2e);
-      border-bottom: 2px solid var(--border, #2a2a4a);
-    }
-    .main-tab-btn {
-      padding: 0.5rem 1.2rem;
-      border: none;
-      border-radius: 8px 8px 0 0;
-      background: transparent;
-      color: var(--text-muted, #888);
-      font-size: 0.95rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-    .main-tab-btn:hover { background: rgba(255,255,255,0.06); color: #fff; }
-    .main-tab-btn.active {
-      background: var(--bg-primary, #12122a);
-      color: #fff;
-      border-bottom: 2px solid var(--accent, #7b61ff);
-      margin-bottom: -2px;
-    }
-    .main-tab-panel { display: none; }
-    .main-tab-panel.active {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      min-height: 0;
-    }
   </style>
 </head>
 <body>
   <div id="navbar-container"></div>
 
-  <!-- Bouton Warning -->
-  <button id="warningBtn" class="warning-btn unread" title="Important Information">⚠️</button>
-  <!-- Bouton How To Use -->
-  <button id="howToUseBtn" class="how-to-use-btn" title="How to use (?)">📖 How to use</button>
-  <!-- Bouton Partage (copie un lien avec attaquant, défenseur, niveaux, items, toggles) -->
-  <button id="shareBtn" class="share-btn" data-lang-title="calc_share_title" title="Copy a link to this setup"><span data-lang="calc_share_btn">🔗 Share</span></button>
-
-  <h1 data-lang="calc_h1">Pokémon UNITE Damage Calculator</h1>
-  <div class="main-tabs">
-    <button class="main-tab-btn active" data-tab="calculator">🗡️ Damage Calculator</button>
-    <button class="main-tab-btn" data-tab="optimizer">⚡ Build Optimizer [BETA]</button>
-  </div>
+  <!-- ── En-tête : titre + actions, puis onglets ─────────────────── -->
+  <header class="calc-header">
+    <h1 data-lang="calc_h1">Pokémon UNITE Damage Calculator</h1>
+    <div class="calc-actions">
+      <button id="swapBtn" class="calc-act" type="button" data-lang-title="calc_swap_title" title="Swap attacker and defender (X)">
+        <span class="ca-ico">⇄</span><span class="ca-lbl" data-lang="calc_swap_btn">Swap</span>
+      </button>
+      <button id="buildsBtn" class="calc-act calc-act--green" type="button" data-lang-title="calc_builds_btn_title" title="Saved builds">
+        <span class="ca-ico">💾</span><span class="ca-lbl" data-lang="calc_builds_btn_label">Builds</span>
+      </button>
+      <button id="shareBtn" class="calc-act calc-act--green" type="button" data-lang-title="calc_share_title" title="Copy a link to this setup">
+        <span class="ca-ico">🔗</span><span class="ca-lbl" data-lang="calc_share_btn_label">Share</span>
+      </button>
+      <div class="calc-menu">
+        <button id="calcMoreBtn" class="calc-act calc-act--icon unread" type="button" aria-haspopup="true" aria-expanded="false" data-lang-title="calc_more_title" title="More">
+          <span class="ca-ico">⋯</span><span class="calc-more-dot"></span>
+        </button>
+        <div class="calc-menu-list" id="calcMenuList" role="menu" hidden>
+          <button id="warningBtn" class="calc-menu-item" type="button" role="menuitem"><span class="cm-ico">⚠️</span><span data-lang="calc_menu_warning">Important information</span></button>
+          <button id="howToUseBtn" class="calc-menu-item" type="button" role="menuitem"><span class="cm-ico">📖</span><span data-lang="calc_menu_howto">How to use</span></button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <nav class="main-tabs" role="tablist">
+    <button class="main-tab-btn active" data-tab="calculator" role="tab" data-lang="calc_tab_calculator">🗡️ Damage Calculator</button>
+    <button class="main-tab-btn" data-tab="optimizer" role="tab" data-lang="calc_tab_optimizer">⚡ Build Optimizer [BETA]</button>
+    <button class="main-tab-btn" data-tab="compare" role="tab" data-lang="calc_tab_compare">⚖️ Compare</button>
+    <button class="main-tab-btn" data-tab="combatlog" role="tab" data-lang="calc_tab_combatlog">⚔️ Combat Log</button>
+    <button class="main-tab-btn" data-tab="comparepatch" role="tab" data-lang="calc_tab_comparepatch">📊 Compare Patch</button>
+  </nav>
 
   <!-- ── PANNEAU : Calculateur ─────────────────────────────────── -->
   <div id="tab-calculator" class="main-tab-panel active">
@@ -515,6 +501,9 @@
     <div id="buildOptimizerContainer"></div>
   </div>
 
+  <!-- ── PANNEAU : Comparer (builds / objets) — rempli par compareTab.js ── -->
+  <div id="tab-compare" class="main-tab-panel"></div>
+
   <!-- ══════════════════════════════════════════════
        ÉLÉMENTS CACHÉS — gardés pour la compatibilité JS
        ══════════════════════════════════════════════ -->
@@ -554,7 +543,7 @@
   <div id="warningModal" class="warning-modal" style="display:none;">
     <div class="warning-modal-content">
       <span class="close-warning">x</span>
-      <h3 data-lang="calc_warning_title">⚠️ IMPORTANT INFORMATIONS - WIP</h3>
+      <h3 data-lang="calc_warning_title">⚠️ IMPORTANT INFORMATION</h3>
       <div id="warningText">
         <p><strong>This calculator try to provides exact values but may contain errors.</strong></p>
         <p>The displayed damage and stats do <strong>not</strong> take into account:</p>
@@ -583,27 +572,35 @@
 
   <script>
     document.getElementById('warningBtn').addEventListener('click', function() {
-      this.classList.remove('unread');
+      document.getElementById('calcMoreBtn')?.classList.remove('unread');
     });
 
-    /* ── Tabs principaux : Calculateur | Build Optimizer ── */
+    /* ── Tabs principaux (délégation : les onglets sont déclarés dans le HTML) ── */
     function setCombatLogVisible(visible) {
       const cl = document.getElementById('combatLogPanel');
       if (cl) cl.style.display = visible ? '' : 'none';
     }
 
-    document.querySelectorAll('.main-tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.main-tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.main-tab-panel').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        const panel = document.getElementById(`tab-${btn.dataset.tab}`);
-        if (panel) panel.classList.add('active');
-        setCombatLogVisible(btn.dataset.tab === 'calculator');
-      });
+    function activateTab(name) {
+      const btn = document.querySelector(`.main-tab-btn[data-tab="${name}"]`);
+      const panel = document.getElementById(`tab-${name}`);
+      if (!btn || !panel) return;
+      document.querySelectorAll('.main-tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+      document.querySelectorAll('.main-tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      panel.classList.add('active');
+      setCombatLogVisible(name === 'calculator');
+      btn.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      document.dispatchEvent(new CustomEvent('calcTabChanged', { detail: { tab: name } }));
+    }
+    window.activateCalcTab = activateTab;
+
+    document.querySelector('.main-tabs').addEventListener('click', e => {
+      const btn = e.target.closest('.main-tab-btn');
+      if (btn) activateTab(btn.dataset.tab);
     });
 
-    // Hide combat log if optimizer is somehow the default active tab
     window.addEventListener('load', () => {
       const activeTab = document.querySelector('.main-tab-btn.active')?.dataset.tab;
       setCombatLogVisible(activeTab === 'calculator');

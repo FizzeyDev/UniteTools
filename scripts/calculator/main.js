@@ -14,6 +14,9 @@ import { initBuildOptimizer } from './buildOptimizer.js';
 import { initCombatLogTab } from './combatLogTab.js';
 import { initComparePatchTab } from './comparePatchTab.js';
 import { restoreSharedState, initShareLink } from './shareLink.js';
+import { initBuildStorage } from './buildStorage.js';
+import { initCalcHeader } from './calcHeader.js';
+import { initCompareTab } from './compareTab.js';
 
 document.querySelectorAll('.reset-items-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -65,6 +68,9 @@ async function initApp() {
   restoreSharedState(_p);   // ?s=... : levels, items, toggles, stacks (see shareLink.js)
   updateDamages();
   initShareLink();
+  initBuildStorage();
+  initCalcHeader();
+  initCompareTab();
 
   // Translations load asynchronously: re-render once they are ready (and on language change)
   // so labels like "Utility" never show up as raw keys.

@@ -26,6 +26,56 @@
     </header>
     <div class="timeline">
 
+      <!-- v4.0.0 -->
+      <div class="update-entry">
+        <div class="update-card">
+          <div class="update-card-header" onclick="toggleCard(this)">
+            <span class="update-version">v4.0.0</span>
+            <span class="update-date">October 5, 2026</span>
+            <span class="update-chevron">▾</span>
+          </div>
+          <div class="update-card-body">
+            <div class="update-card-divider"></div>
+            <div class="update-card-content">
+              <div class="change-section">
+                <div class="change-section-title">Unite Tools - Tier List</div>
+                <ul class="change-list">
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Undo and redo (Ctrl+Z / Ctrl+Y, or the new buttons in the top bar). Every change to your tierlists can be reverted: drag and drop, adding or removing tiers, clearing, moves.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Export your tierlist as a PNG image (📷 Image button): title, latest patch version and date, coloured tiers, sprites with optional names, dark or light theme, 1x to 3x resolution, with a Unite Tools watermark. Download it or copy it straight to the clipboard to post on Discord or Twitter.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>My tierlists: save the current tierlist in your personal library (💾 My tierlists), reopen it later in a new tab without overwriting anything, pin, rename, replace or delete saves, and import or export your whole library as a JSON file. Everything stays in your browser.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-update">Improved</span>The top bar is now organised: undo / redo, My tierlists and Image on the front, and Import, Export and Copy as text grouped in a File menu.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-fix">Fix</span>Editing a tier (name or colour) and confirming a Pokémon's moves are now saved automatically. They could be lost when reloading the page before.</span></li>
+                </ul>
+              </div><br>
+              <div class="change-section">
+                <div class="change-section-title">Unite Tools - Damage Calculator</div>
+                <ul class="change-list">
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Saved builds (💾 Builds): save your whole setup (attacker, defender, levels, items, buffs and toggles) with a name and a note, load it back in one click, pin, rename, duplicate, overwrite, copy a share link, search or filter by Pokémon, and import or export all your builds as a JSON file.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Compare tab, build vs build: pick two setups (your current one or saved builds) and see the damage of every move side by side, with the difference in value and in percent, and an optional critical hits view.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Compare tab, item swap: choose one of the attacker's three item slots and get a ranking of every held item by the damage it would add or remove, overall or for a single move. Click an item for the detailed move-by-move comparison, with stacks and activation settings.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Swap button (or X key) to invert attacker and defender in one click. Levels, HP and items follow.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-update">Improved</span>New header: the title, the Swap, Builds and Share actions and a ⋯ menu (important information, how to use) are now grouped in one bar instead of floating buttons covering the title on smaller screens.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-update">Improved</span>The calculator tabs are now translated (English, French, Japanese) and scroll horizontally on narrow screens instead of being cut off.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-update">Improved</span>The Damage Calculator is no longer marked WIP / BETA. The Build Optimizer keeps its BETA label.</span></li>
+                </ul>
+              </div>
+              <br>
+              <div class="change-section">
+                <div class="change-section-title">Unite Tools - Experience Calculator</div>
+                <ul class="change-list">
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Planner, Goal tab: pick a target level and a game timer ("level 9 at 4:00"). Check my queue tells you whether your current Kill Queue gets there, how many XP you are missing, and which camp kills would close the gap. Fastest rotation builds the quickest rotation to reach that level, planning around the scores, Player KOs and camp kills you already entered, and Apply to my queue puts it straight in your Kill Queue.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Planner, Curve tab: XP or level over time for you, your ally and the enemy track on one graph, with the goal marked and a hover tooltip. Handy to see exactly when each level is reached, including Stored XP before an evolution.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Planner, Compare tab: put two rotations (your current queue or any saved preset) side by side, with the level and XP difference at 8:00, 6:00, 4:00, 2:00 and 0:00, the time each one reaches every level, and both curves on the same graph.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-new">New</span>Share links: the Share button copies a link that restores your Pokémon, levels, Exp. Share, timer, map, Kill Queue and goal, like the Damage Calculator links.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-update">Improved</span>Buttons are grouped like on the other pages: Share and How to Use in the top bar, Disclaimer and Roadmap in a ⋯ menu, and Export / Import of presets in a ⋯ menu next to Save Current and Share.</span></li>
+                  <li class="change-item"><span class="change-icon">✦</span><span><span class="change-category cat-update">Improved</span>The optimizer uses the real spawn and respawn timings of each camp. Travel and kill times are adjustable estimates, the XP maths (Catch-Up, Exp. Share, Stored XP) is the same as the Advanced simulation.</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- v3.9.1 -->
       <div class="update-entry">
         <div class="update-card">

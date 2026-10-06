@@ -25,25 +25,45 @@
   <div class="tl-topbar">
     <h1 data-lang="tierlist_h1">Pokémon Unite Tier List</h1>
     <div class="tl-topbar-actions">
-      <button id="import-btn" class="ctrl-btn ctrl-btn--import" data-lang-title="tierlist_import_title_full" title="Import tierlists from JSON file">
-        <span class="ctrl-icon">📥</span>
-        <span class="ctrl-label" data-lang="tierlist_btn_import">Import</span>
+      <div class="tl-seg" role="group" aria-label="History">
+        <button id="undo-btn" class="ctrl-btn ctrl-btn--history" data-lang-title="tierlist_undo_title" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>
+          <span class="ctrl-icon">↶</span>
+        </button>
+        <button id="redo-btn" class="ctrl-btn ctrl-btn--history" data-lang-title="tierlist_redo_title" title="Redo (Ctrl+Y)" aria-label="Redo" disabled>
+          <span class="ctrl-icon">↷</span>
+        </button>
+      </div>
+      <button id="library-btn" class="ctrl-btn ctrl-btn--library" data-lang-title="tierlist_lib_btn_title" title="My saved tierlists">
+        <span class="ctrl-icon">💾</span>
+        <span class="ctrl-label" data-lang="tierlist_lib_btn">My tierlists</span>
       </button>
-      <button id="export-all" class="ctrl-btn ctrl-btn--export" data-lang-title="tierlist_export_all_title_full" title="Export all tierlists (Ctrl+Shift+E)">
-        <span class="ctrl-icon">📤</span>
-        <span class="ctrl-label" data-lang="tierlist_btn_export_all">Export All</span>
+      <button id="export-image" class="ctrl-btn ctrl-btn--image" data-lang-title="tierlist_img_btn_title" title="Export the current tierlist as a PNG image">
+        <span class="ctrl-icon">📷</span>
+        <span class="ctrl-label" data-lang="tierlist_img_btn">Image</span>
       </button>
-      <button id="export-current" class="ctrl-btn ctrl-btn--export" data-lang-title="tierlist_export_current_title_full" title="Export current tierlist only">
-        <span class="ctrl-icon">📤</span>
-        <span class="ctrl-label" data-lang="tierlist_btn_export_current">Export Current</span>
-      </button>
-      <button id="copy-current" class="ctrl-btn ctrl-btn--copy" data-lang-title="tierlist_copy_title_full" title="Copy current tierlist as text">
-        <span class="ctrl-icon">📋</span>
-        <span class="ctrl-label" data-lang="tierlist_btn_copy">Copy as Text</span>
-      </button>
-      <button id="how-to-use-btn" class="ctrl-btn htu-ctrl-btn" data-lang-title="tierlist_help_title_full" title="Help (?)">
+      <div class="tl-menu">
+        <button id="file-menu-btn" class="ctrl-btn ctrl-btn--file" aria-haspopup="true" aria-expanded="false">
+          <span class="ctrl-icon">📂</span>
+          <span class="ctrl-label" data-lang="tierlist_file_menu">File</span>
+          <span class="tl-caret">▾</span>
+        </button>
+        <div class="tl-menu-list" id="file-menu-list" role="menu" hidden>
+          <button id="import-btn" class="tl-menu-item" role="menuitem" data-lang-title="tierlist_import_title_full" title="Import tierlists from JSON file">
+            <span class="tl-menu-icon">📥</span><span data-lang="tierlist_btn_import">Import</span>
+          </button>
+          <button id="export-current" class="tl-menu-item" role="menuitem" data-lang-title="tierlist_export_current_title_full" title="Export current tierlist only">
+            <span class="tl-menu-icon">📤</span><span data-lang="tierlist_btn_export_current">Export Current</span>
+          </button>
+          <button id="export-all" class="tl-menu-item" role="menuitem" data-lang-title="tierlist_export_all_title_full" title="Export all tierlists (Ctrl+Shift+E)">
+            <span class="tl-menu-icon">📤</span><span data-lang="tierlist_btn_export_all">Export All</span>
+          </button>
+          <button id="copy-current" class="tl-menu-item" role="menuitem" data-lang-title="tierlist_copy_title_full" title="Copy current tierlist as text">
+            <span class="tl-menu-icon">📋</span><span data-lang="tierlist_btn_copy">Copy as Text</span>
+          </button>
+        </div>
+      </div>
+      <button id="how-to-use-btn" class="ctrl-btn htu-ctrl-btn ctrl-btn--icon" data-lang-title="tierlist_help_title_full" title="Help (?)" aria-label="Help">
         <span class="ctrl-icon">❓</span>
-        <span class="ctrl-label" data-lang="tierlist_help_btn">Help</span>
       </button>
     </div>
   </div>
@@ -166,7 +186,7 @@
         </div>
         <div class="htu-section">
           <div class="htu-icon">⌨️</div>
-          <div><h3 data-lang="tierlist_htu_keyboard_title">Keyboard shortcuts</h3><p data-lang="tierlist_htu_keyboard_desc"><kbd>F</kbd> Search &nbsp;·&nbsp; <kbd>P</kbd>/<kbd>I</kbd>/<kbd>B</kbd> Pokémon/Items/Battle Items &nbsp;·&nbsp; <kbd>Ctrl</kbd><kbd>M</kbd> New tierlist &nbsp;·&nbsp; <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>A</kbd> New tier &nbsp;·&nbsp; <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd> Export current &nbsp;·&nbsp; <kbd>Ctrl</kbd><kbd>Del</kbd> Clear current &nbsp;·&nbsp; <kbd>?</kbd>/<kbd>H</kbd> Help &nbsp;·&nbsp; <kbd>Esc</kbd> Close</p></div>
+          <div><h3 data-lang="tierlist_htu_keyboard_title">Keyboard shortcuts</h3><p data-lang="tierlist_htu_keyboard_desc"><kbd>F</kbd> Search &nbsp;·&nbsp; <kbd>P</kbd>/<kbd>I</kbd>/<kbd>B</kbd> Pokémon/Items/Battle Items &nbsp;·&nbsp; <kbd>Ctrl</kbd><kbd>M</kbd> New tierlist &nbsp;·&nbsp; <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>A</kbd> New tier &nbsp;·&nbsp; <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>E</kbd> Export current &nbsp;·&nbsp; <kbd>Ctrl</kbd><kbd>Del</kbd> Clear current &nbsp;·&nbsp; <kbd>Ctrl</kbd><kbd>Z</kbd> Undo &nbsp;·&nbsp; <kbd>Ctrl</kbd><kbd>Y</kbd> Redo &nbsp;·&nbsp; <kbd>?</kbd>/<kbd>H</kbd> Help &nbsp;·&nbsp; <kbd>Esc</kbd> Close</p></div>
         </div>
       </div>
     </div>
