@@ -2,6 +2,7 @@ import state from './state.js';
 import { getMovesForPokemon } from './dataLoader.js';
 import { loadTierList } from './tierlist.js';
 import { loadGallery } from './gallery.js';
+const mvT = (k, fb, q) => { const s = window.translations?.[localStorage.getItem('lang') || 'fr']?.[k] ?? fb; return q != null ? s.replace('{q}', q) : s; };
 
 export function showMoveModal(pokemonName, tierIndex, isEdit, uid = null) {
     const modal      = document.getElementById('move-modal');
@@ -31,7 +32,7 @@ export function showMoveModal(pokemonName, tierIndex, isEdit, uid = null) {
                     && !moveData.passive?.length && !moveData.unite?.length;
 
     if (hasNoMoves) {
-        optionsDiv.innerHTML = '<p class="modal-note">Aucune donnée de move disponible pour ce Pokémon.</p>';
+        optionsDiv.innerHTML = '<p class="modal-note">' + mvT('tierlist_mv_no_data','No move data available for this Pokémon.') + '</p>';
     } else {
         buildMoveModalBody(optionsDiv, moveData, placedItem);
     }
@@ -59,24 +60,24 @@ function buildMoveModalBody(container, moveData, placedItem) {
     const sections = [
         {
             key:     'moves',
-            label:   '⚔️ Move Combo',
+            label:   '⚔️ ' + mvT('tierlist_mv_combo','Move Combo'),
             slots: [
-                { label: 'Move Slot 1', moves: moveData.move1,           inputName: 'move1',   currentValue: placedItem?.move1   ?? '', currentImg: placedItem?.move1Img   ?? '' },
-                { label: 'Move Slot 2', moves: moveData.move2,           inputName: 'move2',   currentValue: placedItem?.move2   ?? '', currentImg: placedItem?.move2Img   ?? '' },
+                { label: mvT('tierlist_mv_slot1','Move Slot 1'), moves: moveData.move1,           inputName: 'move1',   currentValue: placedItem?.move1   ?? '', currentImg: placedItem?.move1Img   ?? '' },
+                { label: mvT('tierlist_mv_slot2','Move Slot 2'), moves: moveData.move2,           inputName: 'move2',   currentValue: placedItem?.move2   ?? '', currentImg: placedItem?.move2Img   ?? '' },
             ],
         },
         {
             key:     'unite',
-            label:   '✨ Unite Move',
+            label:   '✨ ' + mvT('tierlist_mv_unite','Unite Move'),
             slots: [
-                { label: 'Unite Move', moves: moveData.unite || [],      inputName: 'unite',   currentValue: placedItem?.unite   ?? '', currentImg: placedItem?.uniteImg   ?? '' },
+                { label: mvT('tierlist_mv_unite','Unite Move'), moves: moveData.unite || [],      inputName: 'unite',   currentValue: placedItem?.unite   ?? '', currentImg: placedItem?.uniteImg   ?? '' },
             ],
         },
         {
             key:     'passive',
-            label:   '🔮 Passif',
+            label:   '🔮 ' + mvT('tierlist_mv_passive','Passive'),
             slots: [
-                { label: 'Passif',     moves: moveData.passive || [],    inputName: 'passive', currentValue: placedItem?.passive ?? '', currentImg: placedItem?.passiveImg ?? '' },
+                { label: mvT('tierlist_mv_passive','Passive'),     moves: moveData.passive || [],    inputName: 'passive', currentValue: placedItem?.passive ?? '', currentImg: placedItem?.passiveImg ?? '' },
             ],
         },
     ];
@@ -135,7 +136,7 @@ function buildSlotSection(label, moves, inputName, currentValue, currentImg = ''
     if (!moves || !moves.length) {
         const note = document.createElement('p');
         note.className = 'modal-note';
-        note.textContent = 'Aucun move pour ce slot.';
+        note.textContent = mvT('tierlist_mv_no_slot','No move for this slot.');
         section.appendChild(note);
         return section;
     }
@@ -162,7 +163,7 @@ function buildSlotSection(label, moves, inputName, currentValue, currentImg = ''
 
         const span       = document.createElement('span');
         span.className   = 'move-name';
-        span.textContent = '— No move —';
+        span.textContent = mvT('tierlist_mv_none','— No move —');
 
         wrapper.appendChild(radio);
         wrapper.appendChild(span);
