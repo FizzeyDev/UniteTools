@@ -123,15 +123,19 @@ export function serializeState() {
   return s;
 }
 
-export function buildShareURL() {
+/** Link for an arbitrary snapshot (used by saved builds). */
+export function buildURLFor(atkId, defId, s) {
   const url = new URL(window.location.href);
   url.search = '';
   url.hash = '';
-  if (state.currentAttacker) url.searchParams.set('atk', state.currentAttacker.pokemonId);
-  if (state.currentDefender) url.searchParams.set('def', state.currentDefender.pokemonId);
-  const s = serializeState();
-  if (Object.keys(s).length > 1) url.searchParams.set('s', encode(s));
+  if (atkId) url.searchParams.set('atk', atkId);
+  if (defId) url.searchParams.set('def', defId);
+  if (s && Object.keys(s).length > 1) url.searchParams.set('s', encode(s));
   return url.toString();
+}
+
+export function buildShareURL() {
+  return buildURLFor(state.currentAttacker?.pokemonId, state.currentDefender?.pokemonId, serializeState());
 }
 
 // ── Restore ──────────────────────────────────────────────────────────────────
@@ -195,6 +199,11 @@ export function restoreSharedState(params) {
 
   let s;
   try { s = decode(raw); } catch { console.warn('[share] invalid link payload'); return; }
+  applyState(s);
+}
+
+/** Replay a serialized snapshot into the UI (Pokémon must already be selected). */
+export function applyState(s) {
   if (!s || typeof s !== 'object') return;
 
   if (s.al) setSlider('levelSliderAttacker', s.al);

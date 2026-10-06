@@ -695,12 +695,6 @@ function buildTabAndPanel() {
   const optimizerPanel = document.getElementById('tab-optimizer');
   if (!tabs || !optimizerPanel || document.getElementById('tab-combatlog')) return;
 
-  const btn = document.createElement('button');
-  btn.className = 'main-tab-btn';
-  btn.dataset.tab = 'combatlog';
-  btn.textContent = '⚔️ Combat Log';
-  tabs.appendChild(btn);
-
   const panel = document.createElement('div');
   panel.id = 'tab-combatlog';
   panel.className = 'main-tab-panel';
@@ -749,14 +743,8 @@ function buildTabAndPanel() {
       </div>
     </div>
   `;
-  optimizerPanel.insertAdjacentElement('afterend', panel);
-
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.main-tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.main-tab-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    panel.classList.add('active');
-  });
+  // The tab button is declared in damage-calc.html; switching is handled there (activateCalcTab)
+  (document.getElementById('tab-compare') || optimizerPanel).insertAdjacentElement('afterend', panel);
 
   document.getElementById('cltPokemonModalClose').addEventListener('click', () => {
     document.getElementById('cltPokemonModal').classList.remove('open');

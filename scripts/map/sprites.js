@@ -161,7 +161,7 @@
   });
 
   /* ──────────── Place sprite ──────────── */
-  function placeSprite(item, canvasX, canvasY, team = App.currentTeam, size = 48) {
+  function placeSprite(item, canvasX, canvasY, team = App.currentTeam, size = 48, uid = null) {
     const canvas = document.getElementById('draw-canvas');
 
     if (canvas.width <= 300) {
@@ -201,7 +201,7 @@
 
     if (dueling) spriteEl.classList.add('duel-pick');
 
-    const entry = { el: spriteEl, id: item.id, name: item.name, imgSrc: item.img, team, size, img, badge, canvasX, canvasY };
+    const entry = { uid: uid || ('s' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7)), el: spriteEl, id: item.id, name: item.name, imgSrc: item.img, team, size, img, badge, canvasX, canvasY };
     App.placedSprites.push(entry);
 
     deleteBtn.addEventListener('click', (ev) => {

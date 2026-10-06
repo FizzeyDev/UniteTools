@@ -1,4 +1,5 @@
 import state from './state.js';
+const mvT = (k, fb, q) => { const s = window.translations?.[localStorage.getItem('lang') || 'fr']?.[k] ?? fb; return q != null ? s.replace('{q}', q) : s; };
 import { getBasePath, getMovesForPokemon } from './dataLoader.js';
 import { recalcUsage } from './usage.js';
 import { loadGallery } from './gallery.js';
@@ -432,7 +433,7 @@ function findMoveImg(moveName, moves = []) {
 function makeBadge(moveName, moveImg, basePath, posClass, typeClass) {
     const badge     = document.createElement('div');
     badge.className = `move-badge ${posClass} ${typeClass}`;
-    badge.title     = moveName || 'No move';
+    badge.title     = moveName || mvT('tierlist_mv_none_short','No move');
 
     if (moveImg && moveName) {
         const img     = document.createElement('img');

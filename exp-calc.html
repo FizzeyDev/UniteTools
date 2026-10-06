@@ -7,6 +7,7 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./css/navbar.css">
   <link rel="stylesheet" href="./css/exp-calc.css">
+  <link rel="stylesheet" href="./css/exp_planner.css">
   <link rel="stylesheet" href="css/theme.css">
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Google Analytics -->
@@ -25,9 +26,15 @@
   <div class="topbar">
     <span class="topbar-title" data-lang="xpcalc_topbar_title">⚡ XP Calculator</span>
     <div class="topbar-spacer"></div>
-    <button class="btn btn-topbar btn-orange disclaimer-btn" id="disclaimerBtn" data-lang="xpcalc_disclaimer_btn">⚠️ Disclaimer</button>
+    <button class="btn btn-topbar btn-green" id="shareLinkBtn" data-lang="xpplan_share_btn">🔗 Share</button>
     <button class="btn btn-topbar btn-blue how-to-use-btn" id="howToUseBtn" data-lang="xpcalc_howtouse_btn">📖 How to Use</button>
-    <button class="btn btn-topbar btn-violet roadmap-btn" id="roadmapBtn" data-lang="xpcalc_roadmap_btn">🗺️ Roadmap</button>
+    <div class="tb-menu">
+      <button class="btn btn-topbar btn-ghost tb-menu-btn" type="button" aria-haspopup="true" aria-expanded="false" title="More">⋯</button>
+      <div class="tb-menu-list" hidden>
+        <button class="tb-menu-item" id="disclaimerBtn" data-lang="xpcalc_disclaimer_btn">⚠️ Disclaimer</button>
+        <button class="tb-menu-item" id="roadmapBtn" data-lang="xpcalc_roadmap_btn">🗺️ Roadmap</button>
+      </div>
+    </div>
   </div>
 
   <!-- ── Main Layout ── -->
@@ -238,8 +245,14 @@
             <span class="preset-bar-label" data-lang="xpcalc_presets_label">💾 Farm Presets</span>
             <div class="preset-bar-actions">
               <button class="preset-save-btn" id="preset-save-btn" data-lang="xpcalc_preset_save_btn">+ Save Current</button>
-              <button id="preset-export-btn" data-lang="xpcalc_preset_export_btn">⬆ Export</button>
-              <button id="preset-import-btn" data-lang="xpcalc_preset_import_btn">⬇ Import</button>
+              <button class="preset-share-btn" id="preset-share-btn" data-lang="xpplan_share_queue_btn">🔗 Share</button>
+              <div class="tb-menu small">
+                <button class="tb-menu-btn" type="button" aria-haspopup="true" aria-expanded="false" title="More">⋯</button>
+                <div class="tb-menu-list" hidden>
+                  <button class="tb-menu-item" id="preset-export-btn" data-lang="xpcalc_preset_export_btn">⬆ Export</button>
+                  <button class="tb-menu-item" id="preset-import-btn" data-lang="xpcalc_preset_import_btn">⬇ Import</button>
+                </div>
+              </div>
             </div>
           </div>
           <div class="preset-chips" id="preset-chips">
@@ -294,6 +307,9 @@
       </div>
 
     </div>
+
+    <!-- ── Planner (goal / curve / compare) — filled by scripts/exp-calc/ui-planner.js ── -->
+    <div id="xp-planner-mount"></div>
 
     <!-- ═══════════════════════════════════════
          RESULT PANEL
@@ -745,8 +761,11 @@
   <script src="./scripts/exp-calc/presets.js"></script>
   <script src="./scripts/exp-calc/ui-pokemon.js"></script>
   <script src="./scripts/exp-calc/ui-queue.js"></script>
+  <script src="./scripts/exp-calc/timeline.js"></script>
+  <script src="./scripts/exp-calc/planner.js"></script>
   <script src="./scripts/exp-calc/simulation.js"></script>
   <script src="./scripts/exp-calc/main.js"></script>
+  <script src="./scripts/exp-calc/ui-planner.js"></script>
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>

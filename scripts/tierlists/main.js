@@ -5,6 +5,9 @@ import { loadGallery } from './gallery.js';
 import { setupDragDrop } from './dragdrop.js';
 import { hideMoveModal, hideTierModal, onMoveSave, onTierSave, onTierDelete } from './modals.js';
 import { loadFromLocalStorage, saveToLocalStorage, setupAutoSave } from './storage.js';
+import { setupHistory } from './history.js';
+import { setupImageExport } from './exportImage.js';
+import { setupLibrary } from './library.js';
 import { exportTierlistsAsJSON, exportCurrentTierlist, showImportModal, hideImportModal, setupImportModal, copyToClipboard } from './importexport.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -26,6 +29,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupHowToUseModal();
     setupToastContainer();
     setupMovesToggle();
+    setupHistory();        // after setupAutoSave: wraps triggerAutoSave and takes the baseline snapshot
+    setupImageExport();
+    setupLibrary();
+    setupFileMenu();
 
     if (wasRestored) {
         // showToast is defined by setupToastContainer above, so delay one tick
@@ -264,4 +271,19 @@ function setupToastContainer() {
         container.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
     };
+}
+
+/** "File" dropdown in the top bar (Import / Export / Copy as text). */
+function setupFileMenu() {
+    const btn  = document.getElementById('file-menu-btn');
+    const list = document.getElementById('file-menu-list');
+    if (!btn || !list) return;
+
+    const close = () => { list.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+    const toggle = () => { list.hidden = !list.hidden; btn.setAttribute('aria-expanded', String(!list.hidden)); };
+
+    btn.addEventListener('click', e => { e.stopPropagation(); toggle(); });
+    list.addEventListener('click', close);                       // any item closes the menu
+    document.addEventListener('click', e => { if (!e.target.closest('.tl-menu')) close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 }

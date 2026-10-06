@@ -40,6 +40,9 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => (
   { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
 ));
 
+/** Name key tolerant to punctuation differences ("Sirfetch'd" / "Sirfetchd", "Mega-Charizard Y" / "Mega Charizard Y"). */
+const nk = n => String(n ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
 const fmtNum = n => (typeof n === 'number' ? (Number.isInteger(n) ? n.toLocaleString('en-US') : String(+n.toFixed(2))) : String(n));
 
 // ── Snapshots ───────────────────────────────────────────────────────────────
@@ -80,6 +83,8 @@ function previousSnapshotFor(date) {
   const i = SNAPSHOTS.findIndex(s => s.date === date);
   return i >= 0 && i < SNAPSHOTS.length - 1 ? SNAPSHOTS[i + 1] : null;
 }
+let resolveReady;
+const ready = new Promise(r => { resolveReady = r; });
 window.PatchDiff = { previousSnapshotFor };
 
 async function loadSnapshot(snap) {
@@ -162,7 +167,8 @@ function statChanges(a, b) {
     const at = c => `Lv.${c.lvl}: ${fmtNum(c.a)} → ${fmtNum(c.b)}`;
     const shown = first === last ? at(first) : `${at(first)} · ${at(last)}`;
     const dir = dirOf(last.a ?? 0, last.b ?? 0);
-    rows.push({ label, text: shown, extra: changed.length > 2 ? t('patch_diff_levels', '{n} levels', { n: changed.length }) : '', dir });
+    const at15 = changed.find(c => c.lvl === 15);
+    rows.push({ label, text: shown, extra: changed.length > 2 ? t('patch_diff_levels', '{n} levels', { n: changed.length }) : '', dir, lv15: at15 || null });
   });
   return rows;
 }
@@ -277,20 +283,27 @@ function officialFor(from, to) {
   return OFFICIAL.filter(p => p.date > from.date && p.date <= to.date);
 }
 
-async function computeDiff(from, to) {
+const diffCache = new Map();
+function computeDiff(from, to) {
+  const key = `${from.id}>${to.id}`;
+  if (!diffCache.has(key)) diffCache.set(key, computeDiffRaw(from, to).catch(err => { diffCache.delete(key); throw err; }));
+  return diffCache.get(key);
+}
+
+async function computeDiffRaw(from, to) {
   const [A, B] = await Promise.all([loadSnapshot(from), loadSnapshot(to)]);
   const covered = officialFor(from, to);
   const listed = new Map();   // display name -> 'buff' | 'nerf' | 'tweak'
   covered.forEach(p => {
-    (p.buffs || []).forEach(n => listed.set(n, listed.get(n) === 'nerf' ? 'tweak' : 'buff'));
-    (p.nerfs || []).forEach(n => listed.set(n, listed.get(n) === 'buff' ? 'tweak' : 'nerf'));
-    (p.tweaks || []).forEach(n => listed.set(n, 'tweak'));
+    (p.buffs || []).forEach(n => listed.set(nk(n), listed.get(nk(n)) === 'nerf' ? 'tweak' : 'buff'));
+    (p.nerfs || []).forEach(n => listed.set(nk(n), listed.get(nk(n)) === 'buff' ? 'tweak' : 'nerf'));
+    (p.tweaks || []).forEach(n => listed.set(nk(n), 'tweak'));
   });
 
   const results = [];
   B.forEach((b, id) => {
     const a = A.get(id);
-    if (!a) { results.push({ id, rec: b, isNew: true, sections: [], up: 0, down: 0, flat: 0, official: listed.get(b.displayName) || null }); return; }
+    if (!a) { results.push({ id, rec: b, isNew: true, sections: [], up: 0, down: 0, flat: 0, official: listed.get(nk(b.displayName)) || null }); return; }
     const sections = diffPokemon(a, b);
     if (!sections.length) return;
     const all = sections.flatMap(s => s.rows);
@@ -299,7 +312,7 @@ async function computeDiff(from, to) {
       up: all.filter(r => r.dir === 'up').length,
       down: all.filter(r => r.dir === 'down').length,
       flat: all.filter(r => r.dir === 'flat').length,
-      official: listed.get(b.displayName) || null,
+      official: listed.get(nk(b.displayName)) || null,
     });
   });
   A.forEach((a, id) => { if (!B.has(id)) results.push({ id, rec: a, isRemoved: true, sections: [], up: 0, down: 0, flat: 0, official: null }); });
@@ -315,7 +328,8 @@ function roleOf(rec) {
   return ui.pokemonRoles[rec.displayName] || null;
 }
 
-function rowHTML(r) {
+function rowHTML(r, compact = false) {
+  if (compact && r.lv15) r = { label: `${r.label} Lv.15`, old: fmtNum(r.lv15.a), neu: fmtNum(r.lv15.b), dir: dirOf(r.lv15.a, r.lv15.b) };
   const arrow = r.dir === 'up' ? '<span class="pd-arrow up">▲</span>' : r.dir === 'down' ? '<span class="pd-arrow down">▼</span>' : '';
   const body = r.text != null
     ? `<span class="pd-text">${esc(r.text)}${r.extra ? ` <em>(${esc(r.extra)})</em>` : ''}</span>`
@@ -405,6 +419,7 @@ async function render() {
   let list = diff.results.filter(r => {
     if (q && !r.rec.displayName.toLowerCase().includes(q)) return false;
     if (ui.filter !== 'any' && roleOf(r.rec) !== ui.filter) return false;
+    if (ui.favs && !ui.favs.has(nk(r.rec.displayName))) return false;
     return true;
   });
   list.sort((a, b) => ui.sort === 'name'
@@ -427,12 +442,92 @@ async function render() {
     ${list.length ? list.map(cardHTML).join('') : `<div class="empty">${esc(t('patch_diff_none', 'No difference found.'))}</div>`}`;
 }
 
+
+// ── Public API used by patch_tracker.js (exact values in patch cards / Pokémon sheet) ──
+
+/** Snapshot pair (older, newer) whose range contains this patch date, or null before the first snapshot. */
+function rangeFor(date) {
+  const asc = SNAPSHOTS.slice().reverse();
+  for (let i = 1; i < asc.length; i++) {
+    if (asc[i - 1].date < date && date <= asc[i].date) {
+      return { from: asc[i - 1], to: asc[i], covered: officialFor(asc[i - 1], asc[i]) };
+    }
+  }
+  return null;
+}
+
+/** Compact HTML of diff sections (stat rows show the level-15 value). */
+function sectionsHTML(sections) {
+  return sections.map(s => `
+    <div class="pd-section">
+      <div class="pd-section-title">${s.icon ? `<img src="${esc(s.icon)}" alt="" onerror="this.style.display='none'">` : ''}${esc(s.title)}</div>
+      ${s.rows.map(r => rowHTML(r, true)).join('')}
+    </div>`).join('');
+}
+
+/** One-line teaser: the first changes, e.g. "Atk Lv.15 312 → 330 · Surf 75% → 80%". */
+function headline(sections, max = 2) {
+  const out = [];
+  for (const s of sections) {
+    for (const r of s.rows) {
+      const c = r.lv15 ? { label: `${r.label} Lv.15`, old: fmtNum(r.lv15.a), neu: fmtNum(r.lv15.b) } : r;
+      const name = s.title && !r.lv15 && s.title !== r.label ? `${s.title}${r.label && r.label !== s.title ? ' · ' + r.label : ''}` : c.label;
+      if (c.old != null && c.neu != null) out.push(`${name}: ${c.old} → ${c.neu}`);
+      else if (r.tag) out.push(`${name} (${r.tag})`);
+      else if (r.text) out.push(`${name}: ${r.text}`);
+      if (out.length >= max) return out;
+    }
+  }
+  return out;
+}
+
+async function valuesForPatch(patch) {
+  const range = rangeFor(patch.date);
+  if (!range) return null;
+  const diff = await computeDiff(range.from, range.to);
+  const names = [...patch.buffs, ...patch.nerfs, ...patch.tweaks];
+  const byName = new Map(diff.results.filter(r => !r.isNew && !r.isRemoved).map(r => [nk(r.rec.displayName), r]));
+  const items = new Map();
+  names.forEach(n => { if (byName.has(nk(n))) items.set(n, byName.get(nk(n))); });
+  const nameKeys = new Set(names.map(nk));
+  const showOthers = range.to.date === patch.date;   // hidden changes are attributed to the last patch of the range
+  const others = showOthers ? diff.results.filter(r => !r.isNew && !r.isRemoved && !r.official && !nameKeys.has(nk(r.rec.displayName))) : [];
+  return { range, merged: range.covered.length > 1, items, others, missing: names.filter(n => !items.has(n)) };
+}
+
+/** Numeric changes of one Pokémon across every pair of consecutive snapshots (newest first). */
+async function historyFor(displayName) {
+  const asc = SNAPSHOTS.slice().reverse();
+  const out = [];
+  for (let i = 1; i < asc.length; i++) {
+    const diff = await computeDiff(asc[i - 1], asc[i]);
+    const res = diff.results.find(r => nk(r.rec.displayName) === nk(displayName));
+    if (res && !res.isNew && !res.isRemoved && res.sections.length) {
+      out.push({ from: asc[i - 1], to: asc[i], covered: diff.covered, res });
+    } else if (res && res.isNew) {
+      out.push({ from: asc[i - 1], to: asc[i], covered: diff.covered, res });
+    }
+  }
+  return out.reverse();
+}
+
+async function calcIdFor(displayName) {
+  if (!SNAPSHOTS.length) return null;
+  const live = await loadSnapshot(SNAPSHOTS[0]);
+  for (const [id, rec] of live) if (nk(rec.displayName) === nk(displayName)) return id;
+  return null;
+}
+
+const sinceDate = () => (SNAPSHOTS.length ? SNAPSHOTS[SNAPSHOTS.length - 1].date : null);
+Object.assign(window.PatchDiff, { sinceDate, rangeFor, sectionsHTML, headline, valuesForPatch, historyFor, calcIdFor, ready });
+
 // ── Wiring ──────────────────────────────────────────────────────────────────
 
 document.addEventListener('patchDiffRender', e => {
   ui.active = true;
   ui.search = e.detail?.search ?? '';
   ui.filter = e.detail?.filter ?? 'any';
+  ui.favs = e.detail?.favs ? new Set([...e.detail.favs].map(nk)) : null;
   render();
 });
 
@@ -464,4 +559,5 @@ document.addEventListener('translationsReady', () => { if (ui.active) render(); 
   } catch (err) {
     console.error('[patch_diff] init failed', err);
   }
+  resolveReady();
 })();

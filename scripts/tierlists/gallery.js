@@ -1,4 +1,5 @@
 import state from './state.js';
+const mvT = (k, fb, q) => { const s = window.translations?.[localStorage.getItem('lang') || 'fr']?.[k] ?? fb; return q != null ? s.replace('{q}', q) : s; };
 import { getBasePath } from './dataLoader.js';
 import { getUsageMap, getMaxUsage } from './usage.js';
 
@@ -28,7 +29,7 @@ export function loadGallery(category) {
     });
 
     if (filtered.length === 0) {
-        gallery.innerHTML = `<p class="gallery-empty">Aucun résultat${state.gallerySearchQuery ? ` pour « ${state.gallerySearchQuery} »` : ''}.</p>`;
+        gallery.innerHTML = `<p class="gallery-empty">${state.gallerySearchQuery ? mvT('tierlist_gallery_empty_for','No results for "{q}"', state.gallerySearchQuery) : mvT('tierlist_gallery_empty','No results')}</p>`;
         return;
     }
 

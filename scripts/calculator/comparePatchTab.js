@@ -911,12 +911,6 @@ function buildTabAndPanel() {
   const lastPanel = panels[panels.length - 1];
   if (!tabs || !lastPanel || document.getElementById('tab-comparepatch')) return;
 
-  const btn = document.createElement('button');
-  btn.className = 'main-tab-btn';
-  btn.dataset.tab = 'comparepatch';
-  btn.textContent = '📊 Compare Patch';
-  tabs.appendChild(btn);
-
   const panel = document.createElement('div');
   panel.id = 'tab-comparepatch';
   panel.className = 'main-tab-panel cpt-panel';
@@ -990,14 +984,8 @@ function buildTabAndPanel() {
 
     <div class="cpt-result" id="cptResult"></div>
   `;
+  // The tab button is declared in damage-calc.html; switching is handled there (activateCalcTab)
   lastPanel.insertAdjacentElement('afterend', panel);
-
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.main-tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.main-tab-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    panel.classList.add('active');
-  });
 
   document.getElementById('cptSearch').addEventListener('input', (e) => {
     cptState.searchTerm = e.target.value.toLowerCase().trim();
