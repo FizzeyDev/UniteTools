@@ -83,6 +83,7 @@ import {
   applyMeowscaradaAttacker, applyMegaMewtwoAttacker, applyMegaMewtwoYAttacker,
   applyMimikyuAttacker, applyRapidashAttacker, applySirfetchdAttacker,
   applySylveonAttacker, applyTinkatonAttacker, applyTyranitarAttacker,
+  applyFlareonAttacker, applyJolteonAttacker,
   applyZeraoraAttacker, applyMoltresAttacker, applyTyphlosionAttacker,
   applySkeledirgAttacker, applyQuaquavalAttacker, applyYveltalAttacker, applyPalkiaAttacker,
 } from './passiveEffectsAtk.js';
@@ -116,6 +117,7 @@ const ATTACKER_PASSIVE_HANDLERS = {
   moltres: applyMoltresAttacker, typhlosion: applyTyphlosionAttacker,
   skeledirge: applySkeledirgAttacker, quaquaval: applyQuaquavalAttacker,
   yveltal: applyYveltalAttacker, palkia: applyPalkiaAttacker,
+  flareon: applyFlareonAttacker, jolteon: applyJolteonAttacker,
 };
 const DEFENDER_PASSIVE_HANDLERS = {
   aegislash: applyAegislashDefender, armarouge: applyArmarougeDefender,
@@ -1703,8 +1705,8 @@ const ATTACKER_DEBUFFS = [
   ['debuffTsareenaTropKick', 'Tsareena: Trop Kick (-25% Atk)'], ['debuffGoodraMuddyWater', 'Goodra: Muddy Water (-15% Damage)'],
   ['debuffMimePowerSwap', 'Mr. Mime: Power Swap (-15% Damage)'], ['debuffMimePowerSwapPlus', 'Mr. Mime: Power Swap + (-20% Damage)'],
   ['debuffTrevenantWoodHammerPlus', 'Trevenant: Wood Hammer + (-20% Damage)'], ['debuffInteleonTearfulLook', 'Inteleon: Tearful Look (-20% Atk / Sp.Atk)'],
-  ['debuffHoohFlamethrower', 'Ho-Oh: Flamethrower (-20% Atk / Sp.Atk)'], ['debuffHoohSacredFire', 'Ho-Oh: Sacred Fire (-10% Atk)'],
-  ['debuffHoohSacredFirePlus', 'Ho-Oh: Sacred Fire + (-20% Atk)'], ['debuffPsyduckSurfPlus', 'Psyduck: Surf + (-25% Damage)'],
+  ['debuffHoohFlamethrower', 'Ho-Oh: Flamethrower (-20% Atk / Sp.Atk)'], ['debuffHoohSacredFire', 'Ho-Oh: Sacred Fire (-30% Atk)'],
+  ['debuffHoohSacredFirePlus', 'Ho-Oh: Sacred Fire + (-40% Atk)'], ['debuffPsyduckSurfPlus', 'Psyduck: Surf + (-25% Damage)'],
   ['debuffPsyduckUnite', 'Psyduck: Full Power Psy-Ay-Ay! (Unite Move) (-30% Damage)'], ['debuffTinkatonIceHammer', 'Tinkaton: Ice Hammer (-30% Atk / -15% Sp.Atk)'],
   ['debuffTinkatonIceHammerPlus', 'Tinkaton: Ice Hammer + (-50% Atk / -30% Sp.Atk)'], ['debuffAlcremieCharm', 'Alcremie: Charm (-30 Atk / -20 Sp.Atk)'],
   ['debuffLatiasMistBall', 'Latias: Mist Ball (-25% Damage)'],

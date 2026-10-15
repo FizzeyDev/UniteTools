@@ -1475,7 +1475,7 @@
         "stade": "2ème évo",
         "evo_niveaux": "5/7",
         "mega": false,
-        "unite_move_cost": 112,
+        "unite_move_cost": 100,
         "evolution_levels": [
             5,
             7
@@ -1878,5 +1878,43 @@
         "evolution_levels": null,
         "date": "24/09",
         "name_ja": "ストリンダー"
+    },
+    {
+        "name": "Flareon",
+        "name_fr": "Pyroli",
+        "file": "flareon_all.png",
+        "role": "all",
+        "dex": 136,
+        "portee": "Mêlée",
+        "difficulte": "Intermédiaire",
+        "annee": 2026,
+        "stade": "1ère évo",
+        "evo_niveaux": "4",
+        "mega": false,
+        "unite_move_cost": 100,
+        "evolution_levels": [
+            4
+        ],
+        "date": "13/10",
+        "name_ja": "ブースター"
+    },
+    {
+        "name": "Jolteon",
+        "name_fr": "Voltali",
+        "file": "jolteon_spe.png",
+        "role": "spe",
+        "dex": 135,
+        "portee": "Mêlée",
+        "difficulte": "Intermédiaire",
+        "annee": 2026,
+        "stade": "1ère évo",
+        "evo_niveaux": "4",
+        "mega": false,
+        "unite_move_cost": 100,
+        "evolution_levels": [
+            4
+        ],
+        "date": "13/10",
+        "name_ja": "サンダース"
     }
 ]

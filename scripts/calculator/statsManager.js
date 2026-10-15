@@ -115,6 +115,17 @@ export function applyPokemonStatMutations(atkStats, defStats) {
     atkStats.atk = Math.floor(atkStats.atk * 1.30);
   }
 
+  // ── Flareon — Adaptability (Lv1-3) / Flash Fire heat thresholds (Lv4+) ──────
+  if (state.currentAttacker?.pokemonId === "flareon") {
+    const fp = state.currentAttacker.passive || {};
+    if (state.attackerLevel <= 3) {
+      if (state.attackerFlareonAdaptabilityActive) atkStats.atk = Math.floor(atkStats.atk * (1 + (fp.adaptabilityAtkPercent ?? 12) / 100));
+    } else {
+      const tier = Math.min(state.attackerPassiveStacks || 0, fp.heatMaxThresholds ?? 3);
+      if (tier > 0) atkStats.atk = Math.floor(atkStats.atk * (1 + tier * (fp.heatAtkPercentPerThreshold ?? 8) / 100));
+    }
+  }
+
   // ── Sylveon — Fairy skin stacks (attaquant) ────────────────────────────────
   if (state.currentAttacker?.pokemonId === "sylveon") {
     const percent = state.attackerLevel <= 3 ? 0.05 : 0.025;

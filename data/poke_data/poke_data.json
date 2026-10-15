@@ -6109,7 +6109,7 @@
         "can_crit": "false",
         "image": "assets/moves/hooh/flamethrower.png",
         "damages": [
-          {"name": "Damage (per tick)", "multiplier": 35, "levelCoef": 2, "constant": 48, "dealDamage": true, "is_tick": true, "tick_count": 16},
+          {"name": "Damage (per tick)", "multiplier": 36.75, "levelCoef": 2, "constant": 50, "dealDamage": true, "is_tick": true, "tick_count": 16},
           {"name": "Burn Damage", "multiplier": 20, "levelCoef": 0, "constant": 20, "dealDamage": true, "is_tick": true, "tick_count": 6}
         ],
         "heals": [
@@ -6391,9 +6391,9 @@
         "can_crit": "true",
         "image": "assets/moves/inteleon/snipe_shot.png",
         "damages": [
-          {"name": "Damage (Close)", "multiplier": 58, "levelCoef": 4, "constant": 172, "dealDamage": true, "sp_def_ignore": 0.15},
-          {"name": "Damage (Mid)",   "multiplier": 85, "levelCoef": 8, "constant": 256, "dealDamage": true, "sp_def_ignore": 0.20},
-          {"name": "Damage (Far)",   "multiplier": 114, "levelCoef": 10, "constant": 344, "dealDamage": true, "sp_def_ignore": 0.25}
+          {"name": "Damage (Close)", "multiplier": 63.8, "levelCoef": 4, "constant": 189, "dealDamage": true, "sp_def_ignore": 0.15},
+          {"name": "Damage (Mid)",   "multiplier": 93.5, "levelCoef": 9, "constant": 282, "dealDamage": true, "sp_def_ignore": 0.20},
+          {"name": "Damage (Far)",   "multiplier": 125.4, "levelCoef": 11, "constant": 378, "dealDamage": true, "sp_def_ignore": 0.25}
         ]
       },
       {
@@ -6410,6 +6410,8 @@
       },
       {
         "name": "Azure Spy Vision (Unite)",
+        "cd": "100",
+        "energy": "90000",
         "learnLevel": 9,
         "unlearn": null,
         "upgradeLevel": null,
@@ -8624,9 +8626,9 @@
         "can_crit": "false",
         "image": "assets/moves/miraidon/electro_drift.png",
         "damages": [
-          {"name": "Regular", "multiplier": 113, "levelCoef": 9, "constant": 494, "dealDamage": true},
-          {"name": "Boosted", "multiplier": 166, "levelCoef": 16, "constant": 630, "dealDamage": true},
-          {"name": "Boosted (<50% HP)", "multiplier": 199, "levelCoef": 20, "constant": 755, "dealDamage": true}
+          {"name": "Regular", "multiplier": 124.3, "levelCoef": 10, "constant": 543, "dealDamage": true},
+          {"name": "Boosted", "multiplier": 182.6, "levelCoef": 18, "constant": 693, "dealDamage": true},
+          {"name": "Boosted (<50% HP)", "multiplier": 218.9, "levelCoef": 22, "constant": 831, "dealDamage": true}
         ]
       },
       {
@@ -10710,20 +10712,20 @@
     "style": "special",
     "stats": [
       {"level": 1, "hp": 3225, "atk": 150, "def": 70, "sp_atk": 50, "sp_def": 60, "crit": 0},
-      {"level": 2, "hp": 3361, "atk": 153, "def": 79, "sp_atk": 58, "sp_def": 68, "crit": 0},
-      {"level": 3, "hp": 3517, "atk": 157, "def": 89, "sp_atk": 67, "sp_def": 77, "crit": 0},
-      {"level": 4, "hp": 4309, "atk": 175, "def": 142, "sp_atk": 114, "sp_def": 124, "crit": 0},
-      {"level": 5, "hp": 4516, "atk": 180, "def": 156, "sp_atk": 126, "sp_def": 136, "crit": 0},
-      {"level": 6, "hp": 4754, "atk": 186, "def": 172, "sp_atk": 140, "sp_def": 150, "crit": 0},
-      {"level": 7, "hp": 5027, "atk": 192, "def": 190, "sp_atk": 156, "sp_def": 166, "crit": 0},
-      {"level": 8, "hp": 5342, "atk": 199, "def": 211, "sp_atk": 175, "sp_def": 185, "crit": 0},
-      {"level": 9, "hp": 5704, "atk": 207, "def": 235, "sp_atk": 196, "sp_def": 206, "crit": 0},
-      {"level": 10, "hp": 6120, "atk": 217, "def": 263, "sp_atk": 221, "sp_def": 231, "crit": 0},
-      {"level": 11, "hp": 6599, "atk": 228, "def": 295, "sp_atk": 249, "sp_def": 259, "crit": 0},
-      {"level": 12, "hp": 7150, "atk": 241, "def": 332, "sp_atk": 282, "sp_def": 291, "crit": 0},
-      {"level": 13, "hp": 7784, "atk": 256, "def": 375, "sp_atk": 319, "sp_def": 328, "crit": 0},
-      {"level": 14, "hp": 8513, "atk": 273, "def": 424, "sp_atk": 362, "sp_def": 371, "crit": 0},
-      {"level": 15, "hp": 9350, "atk": 292, "def": 480, "sp_atk": 411, "sp_def": 420, "crit": 0}
+      {"level": 2, "hp": 3361, "atk": 153, "def": 80, "sp_atk": 58, "sp_def": 69, "crit": 0},
+      {"level": 3, "hp": 3517, "atk": 157, "def": 92, "sp_atk": 67, "sp_def": 80, "crit": 0},
+      {"level": 4, "hp": 4309, "atk": 175, "def": 153, "sp_atk": 114, "sp_def": 134, "crit": 0},
+      {"level": 5, "hp": 4516, "atk": 180, "def": 169, "sp_atk": 126, "sp_def": 149, "crit": 0},
+      {"level": 6, "hp": 4754, "atk": 186, "def": 187, "sp_atk": 140, "sp_def": 165, "crit": 0},
+      {"level": 7, "hp": 5027, "atk": 192, "def": 208, "sp_atk": 156, "sp_def": 184, "crit": 0},
+      {"level": 8, "hp": 5342, "atk": 199, "def": 233, "sp_atk": 175, "sp_def": 205, "crit": 0},
+      {"level": 9, "hp": 5704, "atk": 207, "def": 260, "sp_atk": 196, "sp_def": 230, "crit": 0},
+      {"level": 10, "hp": 6120, "atk": 217, "def": 292, "sp_atk": 221, "sp_def": 259, "crit": 0},
+      {"level": 11, "hp": 6599, "atk": 228, "def": 329, "sp_atk": 249, "sp_def": 291, "crit": 0},
+      {"level": 12, "hp": 7150, "atk": 241, "def": 371, "sp_atk": 282, "sp_def": 329, "crit": 0},
+      {"level": 13, "hp": 7784, "atk": 256, "def": 420, "sp_atk": 319, "sp_def": 373, "crit": 0},
+      {"level": 14, "hp": 8513, "atk": 273, "def": 476, "sp_atk": 362, "sp_def": 423, "crit": 0},
+      {"level": 15, "hp": 9350, "atk": 292, "def": 540, "sp_atk": 411, "sp_def": 480, "crit": 0}
     ],
     "moves": [
       {
@@ -11058,10 +11060,10 @@
         "unlearn": null,
         "upgradeLevel": 9,
         "type": "Dash",
-        "cd": "6.5",
+        "cd": "6",
         "can_crit": "false",
         "image": "assets/moves/solgaleo/iron_head.png",
-        "notes": "Charges in the designated direction, dealing damage and shoving opposing Pokémon for 0.5s. On hit, a follow-up (barrage: 4 hits, each stunning 0.2s, up to 0.8s, heals 40% of damage dealt) becomes available for 2s. Against un-stunnable targets only one instance of increased damage is dealt. At Lv9 (enhanced): a 5th hit is added (up to 1s stun total), and un-stunnable-target damage is increased.",
+        "notes": "Charges in the designated direction, dealing damage and shoving opposing Pokémon for 0.5s. On hit, a follow-up (barrage: 4 hits, each stunning 0.2s, up to 0.8s, heals 40% of damage dealt) becomes available for 3s. Against un-stunnable targets only one instance of increased damage is dealt. At Lv9 (enhanced): a 5th hit is added (up to 1s stun total), and un-stunnable-target damage is increased.",
         "damages": [
             { "name": "Damage", "multiplier": 98, "levelCoef": 0, "constant": 294, "dealDamage": true },
             { "name": "Barrage (per hit)", "multiplier": 65, "levelCoef": 0, "constant": 195, "dealDamage": true, "is_tick": true, "tick_count": 4 },
@@ -11092,7 +11094,7 @@
         "cd": "6",
         "can_crit": "false",
         "image": "assets/moves/solgaleo/psyshock.png",
-        "notes": "Charges psychic power up to 4s (30% dmg reduction + Hindrance Resistant for the first 2s, +13% move speed every 0.5s up to +78%). On release, deals area damage scaling with charge level and throws for 0.3/0.4/0.45/0.55s. On hit, a follow-up becomes available for 5s: the user slashes twice (40% slow 3s + self-heal); if it hits, a second recast (same attack) becomes available. Lv11 (enhanced): increased claw-swipe healing.",
+        "notes": "Charges psychic power up to 4s (30% dmg reduction + Hindrance Resistant for the first 2s, +18% move speed every 0.5s up to +108%). On release, deals area damage scaling with charge level and throws for 0.3/0.4/0.45/0.55s. On hit, a follow-up becomes available for 5s: the user slashes twice (uninterruptible, 40% slow 3s + self-heal); if it hits, a second recast (same attack) becomes available. Lv11 (enhanced): increased claw-swipe healing.",
         "damages": [
             { "name": "Level 0 Charge", "multiplier": 110, "levelCoef": 0, "constant": 330, "dealDamage": true },
             { "name": "Level 1 Charge", "multiplier": 121, "levelCoef": 0, "constant": 363, "dealDamage": true },
@@ -11116,7 +11118,7 @@
         "can_crit": "false",
         "image": "assets/moves/solgaleo/shining_meteor_crush.png",
         "buffs": "30% Movement Speed, 30% CDR, 20% Max HP Shield (6s)",
-        "notes": "Solgaleo becomes Unstoppable and enters Radiant Sun phase (10s) before charging at the designated Pokémon, dealing area damage. While in Radiant Sun, Solgaleo sees hidden Pokémon and its auto attacks/moves deal True type damage (bypasses flat % damage-reduction effects, including its own Unaware). Allied Pokémon KO'd nearby grant 10000 energy.",
+        "notes": "Solgaleo becomes Unstoppable and enters Radiant Sun phase (15s) before charging at the designated Pokémon, dealing area damage. While in Radiant Sun, Solgaleo sees hidden Pokémon and its auto attacks/moves deal True type damage (bypasses flat % damage-reduction effects, including its own Unaware). Allied Pokémon KO'd nearby grant 10000 energy.",
         "damages": [
             { "name": "Damage", "multiplier": 220, "levelCoef": 0, "constant": 660, "dealDamage": true }
         ]
@@ -11657,343 +11659,6 @@
             "constant": 0, "target": "self"
           }
         ]
-      }
-    ]
-  },
-  {
-    "pokemonId": "toxtricity",
-    "dex": 849,
-    "role": "attacker",
-    "style": "special",
-    "stats": [
-      { "level": 1, "hp": 3300, "atk": 20, "def": 70, "sp_atk": 122, "sp_def": 70, "crit": 0, "lifesteal": 0 },
-      { "level": 2, "hp": 3425,
-        "atk": 23,
-        "def": 78,
-        "sp_atk": 144,
-        "sp_def": 78,
-        "crit": 0,
-        "lifesteal": 0
-      },
-      {
-        "level": 3,
-        "hp": 3563,
-        "atk": 27,
-        "def": 87,
-        "sp_atk": 169,
-        "sp_def": 87,
-        "crit": 0,
-        "lifesteal": 0
-      },
-      {
-        "level": 4,
-        "hp": 3714,
-        "atk": 31,
-        "def": 96,
-        "sp_atk": 196,
-        "sp_def": 96,
-        "crit": 0,
-        "lifesteal": 0
-      },
-      {
-        "level": 5,
-        "hp": 3880,
-        "atk": 36,
-        "def": 106,
-        "sp_atk": 226,
-        "sp_def": 106,
-        "crit": 10,
-        "lifesteal": 0
-      },
-      {
-        "level": 6,
-        "hp": 4063,
-        "atk": 41,
-        "def": 118,
-        "sp_atk": 259,
-        "sp_def": 118,
-        "crit": 10,
-        "lifesteal": 0
-      },
-      {
-        "level": 7,
-        "hp": 4265,
-        "atk": 46,
-        "def": 131,
-        "sp_atk": 295,
-        "sp_def": 131,
-        "crit": 10,
-        "lifesteal": 0
-      },
-      {
-        "level": 8,
-        "hp": 4487,
-        "atk": 53,
-        "def": 145,
-        "sp_atk": 335,
-        "sp_def": 145,
-        "crit": 10,
-        "lifesteal": 0
-      },
-      {
-        "level": 9,
-        "hp": 4730,
-        "atk": 59,
-        "def": 160,
-        "sp_atk": 379,
-        "sp_def": 160,
-        "crit": 20,
-        "lifesteal": 0
-      },
-      {
-        "level": 10,
-        "hp": 4999,
-        "atk": 67,
-        "def": 177,
-        "sp_atk": 427,
-        "sp_def": 177,
-        "crit": 20,
-        "lifesteal": 0
-      },
-      {
-        "level": 11,
-        "hp": 5293,
-        "atk": 75,
-        "def": 195,
-        "sp_atk": 480,
-        "sp_def": 195,
-        "crit": 20,
-        "lifesteal": 0
-      },
-      {
-        "level": 12,
-        "hp": 5618,
-        "atk": 84,
-        "def": 216,
-        "sp_atk": 538,
-        "sp_def": 216,
-        "crit": 20,
-        "lifesteal": 0
-      },
-      {
-        "level": 13,
-        "hp": 5975,
-        "atk": 93,
-        "def": 238,
-        "sp_atk": 602,
-        "sp_def": 238,
-        "crit": 20,
-        "lifesteal": 0
-      },
-      {
-        "level": 14,
-        "hp": 6368,
-        "atk": 104,
-        "def": 263,
-        "sp_atk": 672,
-        "sp_def": 263,
-        "crit": 20,
-        "lifesteal": 0
-      },
-      {
-        "level": 15,
-        "hp": 6800,
-        "atk": 116,
-        "def": 290,
-        "sp_atk": 750,
-        "sp_def": 290,
-        "crit": 20,
-        "lifesteal": 0
-      }
-    ],
-    "passive": {
-      "name": "Punk Rock",
-      "image": "assets/moves/toxtricity/punk_rock.png",
-      "description": "Each auto attack grants +8% Attack Speed for 5s, stacking up to 5 times. Auto attacks against a slowed target restore a small amount of health (not against wild Pokémon).",
-      "healRatio": 10,
-      "healConstant": 45,
-      "healScaling": "sp_atk",
-      "attackSpeedPerStack": 8,
-      "maxStacks": 5
-    },
-    "moves": [
-      {
-        "name": "Auto-attack",
-        "can_crit": "true",
-        "image": "assets/moves/basic_attack.png",
-        "damages": [
-          {
-            "name": "Basic",
-            "multiplier": 40,
-            "levelCoef": 0,
-            "constant": 100,
-            "dealDamage": true,
-            "scaling": "special",
-            "notes": "Poison Timbre: poisons the target for 2.5s. Electric Timbre: increased attack range."
-          },
-          {
-            "name": "Damage - Poison DoT (per stack, per tick x6)",
-            "max_hp_percent": 0.6,
-            "wild_cap": 100,
-            "dealDamage": true,
-            "can_crit": false,
-            "is_tick": true,
-            "tick_count": 6,
-            "mode": "poison",
-            "notes": "True damage: 0.6% of target Max HP per stack, on application then every 0.5s for 2.5s. Stacks up to 5 times (multiply by stack count). Capped at 100 per stack vs wild Pokémon."
-          },
-          {
-            "name": "Boosted",
-            "multiplier": 70,
-            "levelCoef": 0,
-            "constant": 175,
-            "dealDamage": true,
-            "scaling": "special",
-            "notes": "Every 3rd auto attack. Electric Timbre: also slows the target by 25% for 1s and restores health."
-          }
-        ],
-        "heals": [
-          {
-            "name": "Boosted (Healing) - Electric Timbre",
-            "scaling": "sp_atk",
-            "multiplier": 30,
-            "levelCoef": 0,
-            "constant": 70,
-            "target": "self",
-            "mode": "electric"
-          }
-        ]
-      },
-      {
-        "name": "Charge",
-        "learnLevel": 1,
-        "unlearn": 5,
-        "upgradeLevel": null,
-        "can_crit": "false",
-        "image": "assets/moves/toxtricity/charge.png",
-        "damages": [
-          {
-            "name": "Damage - Auto Attack Bonus",
-            "multiplier": 86,
-            "levelCoef": 0,
-            "constant": 215,
-            "dealDamage": true,
-            "notes": "Buff: +50% Move Speed for 2s (decays 10%/s to a minimum of 40%). For up to 4s, the next auto attack deals this additional damage and slows the target 20% for 2s."
-          }
-        ]
-      },
-      {
-        "name": "Shift Gear",
-        "learnLevel": 5,
-        "unlearn": null,
-        "upgradeLevel": 11,
-        "can_crit": "false",
-        "image": "assets/moves/toxtricity/shift_gear.png",
-        "damages": [
-          {
-            "name": "Utility",
-            "multiplier": 0,
-            "levelCoef": 0,
-            "constant": 0,
-            "dealDamage": false,
-            "notes": "Switches timbre. Poison Timbre: +25% Attack Speed for 4s or 5 auto attacks. Electric Timbre: +60% Move Speed for 3s (decays 10%/s to a minimum of 30%). Lv.11: readies a boosted attack when used."
-          }
-        ]
-      },
-      {
-        "name": "Growl",
-        "learnLevel": 1,
-        "unlearn": 7,
-        "upgradeLevel": null,
-        "can_crit": "false",
-        "image": "assets/moves/toxtricity/growl.png",
-        "damages": [
-          {
-            "name": "Damage",
-            "multiplier": 90,
-            "levelCoef": 0,
-            "constant": 225,
-            "dealDamage": true,
-            "notes": "Sure hit. Slows the target by 20% for 2s."
-          }
-        ]
-      },
-      {
-        "name": "Overdrive",
-        "learnLevel": 7,
-        "unlearn": null,
-        "upgradeLevel": 13,
-        "can_crit": "false",
-        "image": "assets/moves/toxtricity/overdrive.png",
-        "damages": [
-          {
-            "name": "Damage",
-            "multiplier": 40,
-            "levelCoef": 0,
-            "constant": 120,
-            "dealDamage": true,
-            "notes": "Area. Poison and Electric Timbre versions have separate cooldowns."
-          },
-          {
-            "name": "Damage - Poison Timbre sludge",
-            "multiplier": 180,
-            "levelCoef": 0,
-            "constant": 540,
-            "dealDamage": true,
-            "mode": "poison",
-            "notes": "Exploding poison ball: hits the first target and inflicts a stack of poison."
-          },
-          {
-            "name": "Damage - Poison Timbre sludge (Area)",
-            "multiplier": 90,
-            "levelCoef": 0,
-            "constant": 270,
-            "dealDamage": true,
-            "mode": "poison",
-            "notes": "Reduced damage around the target hit by the sludge."
-          },
-          {
-            "name": "Damage - Electric Timbre feedback",
-            "multiplier": 150,
-            "levelCoef": 0,
-            "constant": 450,
-            "dealDamage": true,
-            "mode": "electric",
-            "notes": "Stuns electrified targets for 0.5s and marks them for 4s; hitting a marked target with an auto attack or exploding poison triggers feedback on all marked Pokémon."
-          }
-        ],
-        "notes_lv13": "At level 13, hitting with this move grants Punk Rock stacks: 1 per target, +2 for the exploding poison hit, +1 per target in the explosion area."
-      },
-      {
-        "name": "Venom Distortion (Unite)",
-        "learnLevel": 9,
-        "unlearn": null,
-        "upgradeLevel": null,
-        "can_crit": "false",
-        "image": "assets/moves/toxtricity/venom_distortion.png",
-        "damages": [
-          {
-            "name": "Damage (x5)",
-            "multiplier": 100,
-            "levelCoef": 0,
-            "constant": 300,
-            "dealDamage": true,
-            "is_tick": true,
-            "tick_count": 5,
-            "notes": "5s performance, one burst per second. Poison Timbre: applies a poison stack per hit. Electric Timbre: slows by 25% for 1s. Auto attacks locked; Shift Gear cooldown reduced to 0.1s."
-          }
-        ],
-        "shields": [
-          {
-            "name": "Shield",
-            "scaling": "hp",
-            "multiplier": 20,
-            "levelCoef": 0,
-            "constant": 0,
-            "target": "self"
-          }
-        ],
-        "buffs": "30% Move Speed, 35% Attack Speed, 20% Max HP Shield for 6s; hindrance resistant during the performance"
       }
     ]
   },
@@ -14091,13 +13756,13 @@
         "image": "assets/moves/morpeko/spark.png",
         "damages": [
           {"name": "Damage", "multiplier": 170, "levelCoef": 0, "constant": 360, "dealDamage": true, "notes": "Applies a bolt mark for 5s and paralyzes for 4s (-30% Move Speed, -10% flat Attack Speed)."},
-          {"name": "Damage - Follow Up", "multiplier": 171, "levelCoef": 0, "constant": 684, "dealDamage": true, "mode": "full_belly", "notes": "Full Belly Mode only: recast within 2.5s to charge the marked Pok\u00e9mon, dealing area damage. Cooldown reduced 50% in Full Belly Mode."}
+          {"name": "Damage - Follow Up", "multiplier": 170, "levelCoef": 0, "constant": 360, "dealDamage": true, "mode": "full_belly", "notes": "Full Belly Mode only: recast within 2.5s to charge the marked Pok\u00e9mon, dealing area damage. Cooldown reduced 50% in Full Belly Mode; the cooldown now starts after the recast is used or expires (not when the first cast was used)."}
         ],
         "shields": [
           {
             "name": "Shield (Lv.11, on Follow Up)",
             "scaling": "hp",
-            "multiplier": 20,
+            "multiplier": 15,
             "levelCoef": 0,
             "constant": 0,
             "target": "self",
@@ -14124,7 +13789,7 @@
         "can_crit": "false",
         "image": "assets/moves/morpeko/assurance.png",
         "damages": [
-          {"name": "Damage", "multiplier": 180, "levelCoef": 0, "constant": 720, "dealDamage": true},
+          {"name": "Damage", "multiplier": 153, "levelCoef": 0, "constant": 612, "dealDamage": true},
           {"name": "Damage - Additional (Paralyzed target)", "multiplier": 60, "levelCoef": 0, "constant": 240, "dealDamage": true, "notes": "Hangry Mode: if this hits a bolt-marked Pok\u00e9mon, the cooldown is reset and the mark is consumed."}
         ],
         "notes_lv13": "At level 13, hitting a target readies a guaranteed critical-hit boosted attack."
@@ -14151,6 +13816,383 @@
           }
         ],
         "buffs": "80% Move Speed for 6s, unstoppable while dashing"
+      }
+    ]
+  },
+  {
+    "pokemonId": "toxtricity",
+    "dex": 849,
+    "role": "attacker",
+    "style": "special",
+    "stats": [
+      {"level": 1, "hp": 3300, "atk": 20, "def": 70, "sp_atk": 122, "sp_def": 70, "crit": 0, "lifesteal": 0},
+      {"level": 2, "hp": 3425, "atk": 23, "def": 78, "sp_atk": 144, "sp_def": 78, "crit": 0, "lifesteal": 0},
+      {"level": 3, "hp": 3563, "atk": 27, "def": 87, "sp_atk": 169, "sp_def": 87, "crit": 0, "lifesteal": 0},
+      {"level": 4, "hp": 3714, "atk": 31, "def": 96, "sp_atk": 196, "sp_def": 96, "crit": 0, "lifesteal": 0},
+      {"level": 5, "hp": 3880, "atk": 36, "def": 106, "sp_atk": 226, "sp_def": 106, "crit": 10, "lifesteal": 0},
+      {"level": 6, "hp": 4063, "atk": 41, "def": 118, "sp_atk": 259, "sp_def": 118, "crit": 10, "lifesteal": 0},
+      {"level": 7, "hp": 4265, "atk": 46, "def": 131, "sp_atk": 295, "sp_def": 131, "crit": 10, "lifesteal": 0},
+      {"level": 8, "hp": 4487, "atk": 53, "def": 145, "sp_atk": 335, "sp_def": 145, "crit": 10, "lifesteal": 0},
+      {"level": 9, "hp": 4730, "atk": 59, "def": 160, "sp_atk": 379, "sp_def": 160, "crit": 20, "lifesteal": 0},
+      {"level": 10, "hp": 4999, "atk": 67, "def": 177, "sp_atk": 427, "sp_def": 177, "crit": 20, "lifesteal": 0},
+      {"level": 11, "hp": 5293, "atk": 75, "def": 195, "sp_atk": 480, "sp_def": 195, "crit": 20, "lifesteal": 0},
+      {"level": 12, "hp": 5618, "atk": 84, "def": 216, "sp_atk": 538, "sp_def": 216, "crit": 20, "lifesteal": 0},
+      {"level": 13, "hp": 5975, "atk": 93, "def": 238, "sp_atk": 602, "sp_def": 238, "crit": 20, "lifesteal": 0},
+      {"level": 14, "hp": 6368, "atk": 104, "def": 263, "sp_atk": 672, "sp_def": 263, "crit": 20, "lifesteal": 0},
+      {"level": 15, "hp": 6800, "atk": 116, "def": 290, "sp_atk": 750, "sp_def": 290, "crit": 20, "lifesteal": 0}
+    ],
+    "passive": {
+      "name": "Punk Rock",
+      "image": "assets/moves/toxtricity/punk_rock.png",
+      "description": "Each auto attack grants +8% Attack Speed for 5s, stacking up to 5 times. Auto attacks against a slowed target restore a small amount of health (not against wild Pokémon).",
+      "healRatio": 10,
+      "healConstant": 45,
+      "healScaling": "sp_atk",
+      "attackSpeedPerStack": 8,
+      "maxStacks": 5
+    },
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "true",
+        "image": "assets/moves/basic_attack.png",
+        "damages": [
+          {"name": "Basic", "multiplier": 40, "levelCoef": 0, "constant": 100, "dealDamage": true, "scaling": "special", "notes": "Poison Timbre: poisons the target for 2.5s. Electric Timbre: increased attack range."},
+          {"name": "Damage - Poison DoT (per stack, per tick x6)", "max_hp_percent": 0.6, "wild_cap": 100, "dealDamage": true, "can_crit": false, "is_tick": true, "tick_count": 6, "mode": "poison", "notes": "True damage: 0.6% of target Max HP per stack, on application then every 0.5s for 2.5s. Stacks up to 5 times (multiply by stack count). Capped at 100 per stack vs wild Pokémon."},
+          {"name": "Boosted", "multiplier": 70, "levelCoef": 0, "constant": 175, "dealDamage": true, "scaling": "special", "notes": "Every 3rd auto attack. Electric Timbre: also slows the target by 25% for 1s and restores health."}
+        ],
+        "heals": [
+          {"name": "Boosted (Healing) - Electric Timbre", "scaling": "sp_atk", "multiplier": 30, "levelCoef": 0, "constant": 70, "target": "self", "mode": "electric"}
+        ]
+      },
+      {
+        "name": "Charge",
+        "learnLevel": 1,
+        "unlearn": 5,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/toxtricity/charge.png",
+        "damages": [
+          {"name": "Damage - Auto Attack Bonus", "multiplier": 86, "levelCoef": 0, "constant": 215, "dealDamage": true, "notes": "Buff: +50% Move Speed for 2s (decays 10%/s to a minimum of 40%). For up to 4s, the next auto attack deals this additional damage and slows the target 20% for 2s."}
+        ]
+      },
+      {
+        "name": "Shift Gear",
+        "learnLevel": 5,
+        "unlearn": null,
+        "upgradeLevel": 11,
+        "can_crit": "false",
+        "image": "assets/moves/toxtricity/shift_gear.png",
+        "damages": [
+          {"name": "Utility", "multiplier": 0, "levelCoef": 0, "constant": 0, "dealDamage": false, "notes": "Switches timbre. Poison Timbre: +25% Attack Speed for 4s or 5 auto attacks. Electric Timbre: +60% Move Speed for 3s (decays 10%/s to a minimum of 30%). Lv.11: readies a boosted attack when used."}
+        ]
+      },
+      {
+        "name": "Growl",
+        "learnLevel": 1,
+        "unlearn": 7,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/toxtricity/growl.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 90, "levelCoef": 0, "constant": 225, "dealDamage": true, "notes": "Sure hit. Slows the target by 20% for 2s."}
+        ]
+      },
+      {
+        "name": "Overdrive",
+        "learnLevel": 7,
+        "unlearn": null,
+        "upgradeLevel": 13,
+        "can_crit": "false",
+        "image": "assets/moves/toxtricity/overdrive.png",
+        "damages": [
+          {"name": "Damage", "multiplier": 40, "levelCoef": 0, "constant": 120, "dealDamage": true, "notes": "Area. Poison and Electric Timbre versions have separate cooldowns."},
+          {"name": "Damage - Poison Timbre sludge", "multiplier": 180, "levelCoef": 0, "constant": 540, "dealDamage": true, "mode": "poison", "notes": "Exploding poison ball: hits the first target and inflicts a stack of poison."},
+          {"name": "Damage - Poison Timbre sludge (Area)", "multiplier": 90, "levelCoef": 0, "constant": 270, "dealDamage": true, "mode": "poison", "notes": "Reduced damage around the target hit by the sludge."},
+          {"name": "Damage - Electric Timbre feedback", "multiplier": 150, "levelCoef": 0, "constant": 450, "dealDamage": true, "mode": "electric", "notes": "Stuns electrified targets for 0.5s and marks them for 4s; hitting a marked target with an auto attack or exploding poison triggers feedback on all marked Pokémon."}
+        ],
+        "notes_lv13": "At level 13, hitting with this move grants Punk Rock stacks: 1 per target, +2 for the exploding poison hit, +1 per target in the explosion area."
+      },
+      {
+        "name": "Venom Distortion (Unite)",
+        "learnLevel": 9,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/toxtricity/venom_distortion.png",
+        "damages": [
+          {"name": "Damage (x5)", "multiplier": 100, "levelCoef": 0, "constant": 300, "dealDamage": true, "is_tick": true, "tick_count": 5, "notes": "5s performance, one burst per second. Poison Timbre: applies a poison stack per hit. Electric Timbre: slows by 25% for 1s. Auto attacks locked; Shift Gear cooldown reduced to 0.1s."}
+        ],
+        "shields": [
+          {"name": "Shield", "scaling": "hp", "multiplier": 20, "levelCoef": 0, "constant": 0, "target": "self"}
+        ],
+        "buffs": "30% Move Speed, 35% Attack Speed, 20% Max HP Shield for 6s; hindrance resistant during the performance"
+      }
+    ]
+  },
+  {
+    "pokemonId": "flareon",
+    "dex": 136,
+    "role": "all-rounder",
+    "style": "physical",
+    "stats": [
+        { "level": 1, "hp": 3420, "atk": 160, "def": 88, "sp_atk": 20, "sp_def": 100, "crit": 0, "lifesteal": 0 },
+        { "level": 2, "hp": 3517, "atk": 168, "def": 96, "sp_atk": 22, "sp_def": 110, "crit": 0, "lifesteal": 0 },
+        { "level": 3, "hp": 3629, "atk": 178, "def": 105, "sp_atk": 25, "sp_def": 121, "crit": 0, "lifesteal": 0 },
+        { "level": 4, "hp": 4196, "atk": 226, "def": 150, "sp_atk": 37, "sp_def": 178, "crit": 0, "lifesteal": 0 },
+        { "level": 5, "hp": 4344, "atk": 238, "def": 162, "sp_atk": 40, "sp_def": 193, "crit": 10, "lifesteal": 5 },
+        { "level": 6, "hp": 4514, "atk": 252, "def": 176, "sp_atk": 44, "sp_def": 210, "crit": 10, "lifesteal": 5 },
+        { "level": 7, "hp": 4709, "atk": 269, "def": 192, "sp_atk": 48, "sp_def": 230, "crit": 10, "lifesteal": 5 },
+        { "level": 8, "hp": 4934, "atk": 288, "def": 210, "sp_atk": 53, "sp_def": 252, "crit": 10, "lifesteal": 5 },
+        { "level": 9, "hp": 5193, "atk": 310, "def": 231, "sp_atk": 59, "sp_def": 278, "crit": 20, "lifesteal": 10 },
+        { "level": 10, "hp": 5491, "atk": 335, "def": 254, "sp_atk": 65, "sp_def": 308, "crit": 20, "lifesteal": 10 },
+        { "level": 11, "hp": 5834, "atk": 364, "def": 282, "sp_atk": 73, "sp_def": 343, "crit": 20, "lifesteal": 10 },
+        { "level": 12, "hp": 6228, "atk": 397, "def": 314, "sp_atk": 82, "sp_def": 382, "crit": 20, "lifesteal": 10 },
+        { "level": 13, "hp": 6680, "atk": 435, "def": 350, "sp_atk": 91, "sp_def": 428, "crit": 20, "lifesteal": 15 },
+        { "level": 14, "hp": 7201, "atk": 479, "def": 392, "sp_atk": 103, "sp_def": 480, "crit": 20, "lifesteal": 15 },
+        { "level": 15, "hp": 7800, "atk": 530, "def": 440, "sp_atk": 116, "sp_def": 540, "crit": 20, "lifesteal": 15 }
+    ],
+    "passive": {
+      "name": "Adaptability",
+      "image": "assets/moves/flareon/adaptability.png",
+      "description": "When an auto attack or move hits an opposing Pokémon, the user's Attack is increased by 12% for 5s (10s cooldown).",
+      "stage2_name": "Flash Fire",
+      "stage2_description": "Hitting opposing Pokémon fills the heat gauge (3 thresholds). At each threshold Attack is increased by 8% and the user gains an additional 3% / 4% / 5% life steal on auto attacks. The gauge starts decaying 7s after its last increase. After the first threshold the user emits heat blasts for 3s (damage every 0.5s) while the gauge drains, then needs at least 2s before emitting another set.",
+      "adaptabilityAtkPercent": 12,
+      "heatAtkPercentPerThreshold": 8,
+      "heatLifestealPerThreshold": [3, 4, 5],
+      "heatMaxThresholds": 3
+    },
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "true",
+        "image": "assets/moves/basic_attack.png",
+        "notes": "Every third attack is a boosted attack. While Flash Fire is emitting heat blasts the user has endless boosted attacks with increased range and damage, lunging at the target with a flaming bite.",
+        "damages": [
+            { "name": "Basic", "multiplier": 100, "levelCoef": 0, "constant": 0, "dealDamage": true },
+            { "name": "Boosted", "multiplier": 130, "levelCoef": 0, "constant": 0, "dealDamage": true }
+        ]
+      },
+      {
+        "name": "Flash Fire (Passive)",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "can_crit": "false",
+        "image": "assets/moves/flareon/flash_fire.png",
+        "notes": "Heat blasts are emitted for 3s after the first heat threshold is reached (damage every 0.5s in an area around the user).",
+        "damages": [
+            { "name": "Heat Blast (per tick x7)", "multiplier": 54, "levelCoef": 0, "constant": 140, "dealDamage": true, "is_tick": true, "tick_count": 7 }
+        ]
+      },
+      {
+        "name": "Swift",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
+        "type": "Ranged",
+        "cd": "6",
+        "can_crit": "false",
+        "image": "assets/moves/flareon/swift.png",
+        "notes": "The user fires 4 star-shaped rays in the designated direction, dealing damage.",
+        "damages": [
+            { "name": "Damage - per Star (x4)", "multiplier": 37.5, "levelCoef": 0, "constant": 150, "dealDamage": true, "is_tick": true, "tick_count": 4 }
+        ]
+      },
+      {
+        "name": "Fire Blast",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
+        "type": "Area",
+        "cd": "6",
+        "can_crit": "false",
+        "image": "assets/moves/flareon/fire_blast.png",
+        "notes": "The user becomes Unstoppable, leaps up and fires a blast of fire a set distance away, dealing damage and burning opposing Pokémon for 1.5s (damage on hit and every 0.5s). Burned Pokémon are slowed by 25% and suffer 30% anti-heal. Auto attacks generate 3x the heat gauge against Pokémon burned by this move. Lv10 (Fire Blast+): the slow is increased to 40%.",
+        "damages": [
+            { "name": "Damage", "multiplier": 175, "levelCoef": 0, "constant": 700, "dealDamage": true },
+            { "name": "Damage - Burn (4x)", "multiplier": 20, "levelCoef": 0, "constant": 0, "dealDamage": true, "is_tick": true, "tick_count": 4 }
+        ]
+      },
+      {
+        "name": "Tackle",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
+        "type": "Dash",
+        "cd": "6",
+        "can_crit": "false",
+        "image": "assets/moves/flareon/tackle.png",
+        "notes": "The user charges in the designated direction, dealing damage to opposing Pokémon hit.",
+        "damages": [
+            { "name": "Damage", "multiplier": 75, "levelCoef": 0, "constant": 300, "dealDamage": true }
+        ]
+      },
+      {
+        "name": "Flare Blitz",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
+        "type": "Dash",
+        "cd": "7",
+        "can_crit": "false",
+        "image": "assets/moves/flareon/flare_blitz.png",
+        "notes": "The user charges in the designated direction cloaked in flames. If it hits an opposing Pokémon, they are shoved for 0.27s and damage is dealt in an area. Afterwards, for up to 5s, the move can be recast to backflip away from the pointed direction. Lv12 (Flare Blitz+): increased damage.",
+        "damages": [
+            { "name": "Damage", "multiplier": 145, "levelCoef": 0, "constant": 560, "dealDamage": true },
+            { "name": "Damage (Flare Blitz+)", "multiplier": 166.7, "levelCoef": 0, "constant": 644, "dealDamage": true, "upgraded": true }
+        ]
+      },
+      {
+        "name": "Garnet Ignition (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "type": "Area",
+        "cd": "100",
+        "energy": "90000",
+        "can_crit": "false",
+        "image": "assets/moves/flareon/garnet_ignition.png",
+        "buffs": "30% Movement Speed, 30% CDR, 20% Max HP Shield (6s)",
+        "notes": "The user becomes Unstoppable and quickly leaps towards the designated area, dealing damage. A heat wave is also released from the user, with up to 3 more heat waves depending on how many heat gauge bars are filled. Each hit slows opposing Pokémon by 30% for 1s.",
+        "damages": [
+            { "name": "Damage", "multiplier": 310, "levelCoef": 0, "constant": 1240, "dealDamage": true },
+            { "name": "Damage - Heat Waves (up to 3x)", "multiplier": 35, "levelCoef": 0, "constant": 140, "dealDamage": true, "is_tick": true, "tick_count": 3 }
+        ],
+        "shields": [
+            { "name": "Shield", "scaling": "hp", "multiplier": 20, "levelCoef": 0, "constant": 0, "target": "self" }
+        ]
+      }
+    ]
+  },
+  {
+    "pokemonId": "jolteon",
+    "dex": 135,
+    "role": "speedster",
+    "style": "special",
+    "stats": [
+        { "level": 1, "hp": 3100, "atk": 20, "def": 70, "sp_atk": 118, "sp_def": 76, "crit": 0 },
+        { "level": 2, "hp": 3182, "atk": 22, "def": 75, "sp_atk": 131, "sp_def": 82, "crit": 0 },
+        { "level": 3, "hp": 3277, "atk": 25, "def": 80, "sp_atk": 146, "sp_def": 89, "crit": 0 },
+        { "level": 4, "hp": 3755, "atk": 37, "def": 107, "sp_atk": 221, "sp_def": 123, "crit": 0 },
+        { "level": 5, "hp": 3880, "atk": 40, "def": 114, "sp_atk": 241, "sp_def": 132, "crit": 5 },
+        { "level": 6, "hp": 4024, "atk": 44, "def": 122, "sp_atk": 263, "sp_def": 142, "crit": 5 },
+        { "level": 7, "hp": 4189, "atk": 48, "def": 132, "sp_atk": 289, "sp_def": 154, "crit": 5 },
+        { "level": 8, "hp": 4379, "atk": 53, "def": 143, "sp_atk": 319, "sp_def": 167, "crit": 5 },
+        { "level": 9, "hp": 4598, "atk": 59, "def": 155, "sp_atk": 354, "sp_def": 183, "crit": 10 },
+        { "level": 10, "hp": 4850, "atk": 65, "def": 169, "sp_atk": 393, "sp_def": 201, "crit": 10 },
+        { "level": 11, "hp": 5139, "atk": 73, "def": 186, "sp_atk": 439, "sp_def": 222, "crit": 10 },
+        { "level": 12, "hp": 5472, "atk": 82, "def": 205, "sp_atk": 491, "sp_def": 245, "crit": 10 },
+        { "level": 13, "hp": 5854, "atk": 91, "def": 226, "sp_atk": 551, "sp_def": 273, "crit": 10 },
+        { "level": 14, "hp": 6294, "atk": 103, "def": 251, "sp_atk": 620, "sp_def": 304, "crit": 10 },
+        { "level": 15, "hp": 6800, "atk": 116, "def": 280, "sp_atk": 700, "sp_def": 340, "crit": 10 }
+    ],
+    "passive": {
+      "name": "Anticipation",
+      "image": "assets/moves/jolteon/anticipation.png",
+      "description": "If a Pokémon from the opposing team enters the indicated range, the user gains 40% Movement Speed for 5s (15s cooldown).",
+      "stage2_name": "Quick Feet",
+      "stage2_description": "Boosted attacks, moves and the Unite Move apply a jolt counter that lasts 6s, stacking up to 5 times. When an opposing Pokémon has a full jolt counter, a special boosted attack becomes available. Whenever the user faces a Pokémon that has a jolt counter, the user gains 20% Movement Speed. The user is also immune to paralysis.",
+      "joltMaxStacks": 5,
+      "joltMoveSpeedBonus": 20
+    },
+    "moves": [
+      {
+        "name": "Auto-attack",
+        "can_crit": "true",
+        "image": "assets/moves/basic_attack.png",
+        "notes": "Every third attack is a boosted tail swipe. Only auto attacks can critically strike, except the Quick Feet lightning bolt. Special boosted attack (Quick Feet): sends electricity to all Pokémon with a full jolt counter in an increased range, dealing damage twice and calling down a lightning bolt that deals additional damage and stuns for 0.4s. The user restores health on cast; each target beyond the first only heals 30% of the original amount.",
+        "damages": [
+            { "name": "Basic", "multiplier": 40, "levelCoef": 0, "constant": 100, "dealDamage": true },
+            { "name": "Boosted", "multiplier": 84, "levelCoef": 0, "constant": 160, "dealDamage": true },
+            { "name": "Boosted - Quick Feet (x2)", "multiplier": 84, "levelCoef": 0, "constant": 160, "dealDamage": true, "is_tick": true, "tick_count": 2 },
+            { "name": "Lightning Bolt (Quick Feet)", "multiplier": 150, "levelCoef": 0, "constant": 408, "dealDamage": true, "can_crit": "false" }
+        ],
+        "heals": [
+            { "name": "Healing - Quick Feet (first target)", "scaling": "sp_atk", "multiplier": 126, "levelCoef": 0, "constant": 100, "target": "self" }
+        ]
+      },
+      {
+        "name": "Swift",
+        "learnLevel": 1,
+        "unlearn": 4,
+        "upgradeLevel": null,
+        "type": "Ranged",
+        "cd": "6",
+        "can_crit": "false",
+        "image": "assets/moves/jolteon/swift.png",
+        "notes": "Fires 3 star-shaped rays in a cone. Stars beyond the first deal 30% of the damage to the same target.",
+        "damages": [
+            { "name": "Damage", "multiplier": 110, "levelCoef": 0, "constant": 330, "dealDamage": true },
+            { "name": "Damage - Stars beyond the first (x2, 30% each)", "multiplier": 33, "levelCoef": 0, "constant": 99, "dealDamage": true, "is_tick": true, "tick_count": 2 }
+        ]
+      },
+      {
+        "name": "Pin Missile",
+        "learnLevel": 4,
+        "unlearn": null,
+        "upgradeLevel": 10,
+        "type": "Melee",
+        "cd": "7",
+        "can_crit": "false",
+        "image": "assets/moves/jolteon/pin_missile.png",
+        "notes": "The user shoots electrified fur, dealing damage 3 times and paralyzing targets for 2s (-30% Movement Speed, -10% flat Attack Speed). Lv10 (Pin Missile+): the slow becomes 50% and the Attack Speed reduction a flat 20%.",
+        "damages": [
+            { "name": "Damage (3x)", "multiplier": 72, "levelCoef": 0, "constant": 216, "dealDamage": true, "is_tick": true, "tick_count": 3 }
+        ]
+      },
+      {
+        "name": "Quick Attack",
+        "learnLevel": 1,
+        "unlearn": 6,
+        "upgradeLevel": null,
+        "type": "Dash",
+        "cd": "7",
+        "can_crit": "false",
+        "image": "assets/moves/jolteon/quick_attack.png",
+        "notes": "The user dashes in the designated direction, dealing damage to opposing Pokémon hit. Afterwards the user readies a boosted attack.",
+        "damages": [
+            { "name": "Damage", "multiplier": 80, "levelCoef": 0, "constant": 240, "dealDamage": true }
+        ]
+      },
+      {
+        "name": "Volt Switch",
+        "learnLevel": 6,
+        "unlearn": null,
+        "upgradeLevel": 12,
+        "type": "Dash",
+        "cd": "7.5",
+        "can_crit": "false",
+        "image": "assets/moves/jolteon/volt_switch.png",
+        "notes": "The user dashes towards the designated target, dealing damage along the way, then readies a boosted attack. A recast is available for 5s: the user dashes in the designated direction, dealing damage along the way, then readies a boosted attack. Lv12 (Volt Switch+): cooldown reduced by 1s.",
+        "damages": [
+            { "name": "Damage", "multiplier": 96, "levelCoef": 0, "constant": 252, "dealDamage": true }
+        ]
+      },
+      {
+        "name": "Plasma Quintupulse (Unite)",
+        "learnLevel": 8,
+        "unlearn": null,
+        "upgradeLevel": null,
+        "type": "Area",
+        "cd": "100",
+        "energy": "90000",
+        "can_crit": "false",
+        "image": "assets/moves/jolteon/plasma_quintupulse.png",
+        "buffs": "80% Movement Speed, 20% Max HP Shield (6s)",
+        "notes": "The user is enveloped in electricity (invincible) and attacks in a flurry in the designated direction, dealing damage 4 times; targets in the area are paralyzed for 2s (-30% Movement Speed, -10% flat Attack Speed). Afterwards the user winds up a dash dealing increased damage. If the final dash hits opposing Pokémon with 4 or 5 jolt marks, the user triggers the health restoration and lightning bolt of the Quick Feet boosted attack.",
+        "damages": [
+            { "name": "Damage - Flurry (4x)", "multiplier": 50, "levelCoef": 0, "constant": 180, "dealDamage": true, "is_tick": true, "tick_count": 4 },
+            { "name": "Damage - Dash", "multiplier": 60, "levelCoef": 0, "constant": 360, "dealDamage": true },
+            { "name": "Damage - Lightning Bolt", "multiplier": 150, "levelCoef": 0, "constant": 408, "dealDamage": true, "can_crit": "false" }
+        ],
+        "heals": [
+            { "name": "Healing - Dash (4 or 5 jolt marks)", "scaling": "sp_atk", "multiplier": 126, "levelCoef": 0, "constant": 100, "target": "self" }
+        ],
+        "shields": [
+            { "name": "Shield", "scaling": "hp", "multiplier": 20, "levelCoef": 0, "constant": 0, "target": "self" }
+        ]
       }
     ]
   }

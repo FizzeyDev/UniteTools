@@ -151,7 +151,7 @@ function applyDebuffs(pokemon, stats) {
       { flag: state.debuffSlowbroScald, atk:0.40 }, { flag: state.debuffSylveonBabyDollEyes, atk:0.85 },
       { flag: state.debuffTrevenantWillOWisp, atk:0.90, sp:0.95 }, { flag: state.debuffTsareenaTropKick, atk:0.75 },
       { flag: state.debuffInteleonTearfulLook, atk:0.80, sp:0.80 }, { flag: state.debuffHoohFlamethrower, atk:0.80, sp:0.80 },
-      { flag: state.debuffHoohSacredFire, atk:0.90 }, { flag: state.debuffHoohSacredFirePlus, atk:0.80 },
+      { flag: state.debuffHoohSacredFire, atk:0.70 }, { flag: state.debuffHoohSacredFirePlus, atk:0.60 },
       { flag: state.debuffTinkatonIceHammer, atk:0.70, sp:0.85 }, { flag: state.debuffTinkatonIceHammerPlus, atk:0.50, sp:0.70 },
       { flag: state.debuffUmbreonSnarlFinalHit, atk:0.85, sp:0.85 }
     ];

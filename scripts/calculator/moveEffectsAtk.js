@@ -701,7 +701,7 @@ function applyDragapultDragonDanceHeal(atkStats, defStats, card) {
     ${icon('assets/moves/dragapult/dragon_dance.png')}
     <div style="flex:1;">
       ${moveBadge('Dragon Dance+', 11)}
-      While flying → auto attacks heal <strong style="color:#fff;">25% of damage dealt</strong><br>
+      While flying → auto attacks heal <strong style="color:#fff;">15% of damage dealt</strong><br>
       <span style="font-size:0.8rem;color:${C}99;">Flying auto attacks also deal 10% reduced damage</span><br>
       <button class="dragapult-dragon-dance-heal-toggle" style="
         margin-top:8px;padding:6px 16px;
@@ -1156,10 +1156,10 @@ export function getEonPowerProjectileScaling(eonPower) {
 
 export const EON_POWER_PROJECTILE_MAX_EON = 1099;
 
-// Dragon Breath (Latias only): +0.5% damage per Eon power point beyond 60 (caps at 1059 Eon power).
+// Dragon Breath (Latias only): +0.4% damage per Eon power point beyond 60 (caps at 1059 Eon power).
 export function getLatiasDragonBreathMultiplier(eonPower) {
   const eon = Math.min(1059, Math.max(0, eonPower || 0));
-  return 1 + Math.max(0, eon - 60) * 0.005;
+  return 1 + Math.max(0, eon - 60) * 0.004;
 }
 
 export const LATIAS_DRAGON_PULSE_MAX_EON  = EON_POWER_PROJECTILE_MAX_EON;

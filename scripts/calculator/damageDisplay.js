@@ -39,6 +39,9 @@ import {
   applyPalkiaAttacker,
   applySlowbroAttacker,
   applySolgaleoAttacker,
+  applyFlareonAttacker,
+  applyJolteonAttacker,
+  getFlareonHeatLifesteal,
   applyMorpekoAttacker,
   applyToxtricityAttacker,
 } from './passiveEffectsAtk.js';
@@ -724,6 +727,7 @@ function applyAttackerPassive(pokemonId, atkStats, defStats, card) {
     palkia: applyPalkiaAttacker,           // ← PALKIA
     slowbro: applySlowbroAttacker,         // ← SLOWBRO
     solgaleo: applySolgaleoAttacker,       // ← SOLGALEO
+    flareon: applyFlareonAttacker, jolteon: applyJolteonAttacker,
     morpeko: applyMorpekoAttacker,         // ← MORPEKO
     toxtricity: applyToxtricityAttacker,   // ← TOXTRICITY
   };
@@ -1019,7 +1023,7 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
       let normal = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, false, state.currentAttacker.pokemonId, 1.0,           effectiveGlobalMult, defStats.hp, currentDefHP, atkStats.hp);
       let crit   = calculateDamage(dmg, relevantAtk, effectiveDef, state.attackerLevel, true,  state.currentAttacker.pokemonId, scopeCritBonus, effectiveGlobalMult, defStats.hp, currentDefHP, atkStats.hp);
 
-      // ── LATIAS — Dragon Breath : +0.5% dmg / Eon power au-delà de 60 (cap 1059) ──
+      // ── LATIAS — Dragon Breath : +0.4% dmg / Eon power au-delà de 60 (cap 1059) ──
       // Actif uniquement si le mode Eon Power sélectionné est "dragonBreath"
       // (jamais cumulé avec Dragon Pulse — voir applyLatiasEonPower).
       if (
@@ -1356,6 +1360,10 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         if (state.currentAttacker?.pokemonId === "garchomp" && dmg.name === "Boosted" && (state.attackerPassiveStacks || 0) >= 5) {
           lifestealPct += 0.30;
         }
+        // Flareon — Flash Fire : life steal cumulé des seuils de chaleur (auto attacks)
+        if (state.currentAttacker?.pokemonId === "flareon" && state.attackerLevel >= 4 && move.name === "Auto-attack") {
+          lifestealPct += getFlareonHeatLifesteal(Math.min(state.attackerPassiveStacks || 0, 3)) / 100;
+        }
         if (lifestealPct > 0) {
           const lsComputeTotal = (base, scaling, n) => {
             if (!scaling) return base * n;
@@ -1689,7 +1697,7 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         move.name === "Dragon Dance" &&
         dmg.name?.includes("during flight")
       ) {
-        const healPct    = 0.25;
+        const healPct    = 0.15;
         const healNormal = Math.floor(displayedNormal * healPct);
         const healCrit    = Math.floor(displayedCrit   * healPct);
 
@@ -1698,7 +1706,7 @@ function displayMoves(atkStats, defStats, effects, currentDefHP) {
         healLine.innerHTML = `
           <span class="dmg-name" style="color:#4caf82;">
             Heal (Dragon Dance+)
-            <br><i style="font-size:0.8em;color:#4caf8299;">25% of damage dealt while flying</i>
+            <br><i style="font-size:0.8em;color:#4caf8299;">15% of damage dealt while flying</i>
           </span>
           <div class="dmg-values">
             <span class="dmg-heal">${healNormal.toLocaleString()}</span>

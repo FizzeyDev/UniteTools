@@ -68,6 +68,7 @@ export const state = {
   attackerMimikyuActive: false,
   defenderMimeActive: false,
   attackerTyranitarGutsActive: false,
+  attackerFlareonAdaptabilityActive: false,
   defenderTyranitarSandStreamActive: false,
   defenderUmbreonInnerFocusActive: false,
   attackerZeraoraDamageReceived: 0,

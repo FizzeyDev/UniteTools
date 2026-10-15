@@ -607,5 +607,17 @@
     "move2": [ "growl.png", "overdrive.png" ],
     "passive": [ "punk_rock.png" ],
     "unite": [ "venom_distortion.png" ]
+  },
+  "flareon": {
+    "move1": [ "swift.png", "fire_blast.png" ],
+    "move2": [ "tackle.png", "flare_blitz.png" ],
+    "passive": [ "adaptability.png", "flash_fire.png" ],
+    "unite": [ "garnet_ignition.png" ]
+  },
+  "jolteon": {
+    "move1": [ "swift.png", "pin_missile.png" ],
+    "move2": [ "quick_attack.png", "volt_switch.png" ],
+    "passive": [ "anticipation.png", "quick_feet.png" ],
+    "unite": [ "plasma_quintupulse.png" ]
   }
 }

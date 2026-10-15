@@ -1,6 +1,15 @@
 {
   "patches": [
     {
+      "version": "1.23.2.9",
+      "name": "Vortex of Astral Thunder",
+      "date": "2026-10-13",
+      "buffs": ["Solgaleo", "Slowbro", "Ho-Oh", "Inteleon", "Miraidon"],
+      "nerfs": ["Morpeko", "Cinderace", "Dragapult", "Latios", "Latias"],
+      "tweaks": [],
+      "notes": "Flareon and Jolteon release, Bug fixes (Solgaleo, Armarouge, Mewtwo X/Y, Palkia)"
+    },
+    {
       "version": "1.22.1.16",
       "name": "Drive to Victory",
       "date": "2026-09-03",

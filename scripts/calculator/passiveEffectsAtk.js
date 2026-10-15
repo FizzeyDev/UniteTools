@@ -480,6 +480,90 @@ function applySylveonAttacker(atkStats, defStats, card) {
   card.appendChild(line);
 }
 
+// ── FLAREON ───────────────────────────────────────────────────────────────────
+function applyFlareonAttacker(atkStats, defStats, card) {
+  const passive = state.currentAttacker.passive || {};
+  const level   = state.attackerLevel;
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  if (level <= 3) {
+    const active = state.attackerFlareonAdaptabilityActive || false;
+    const pct = passive.adaptabilityAtkPercent ?? 12;
+    line.innerHTML = wrap(`
+      ${icon('assets/moves/flareon/adaptability.png')}
+      <div style="flex:1;">
+        ${passiveBadge('Adaptability', null, PASSIVE_ATK)}
+        Status: <strong style="color:${active ? '#88ff88' : '#ff6666'};">${active ? 'Active' : 'Inactive'}</strong>
+        <br>→ Atk +${pct}% for 5s (10s cooldown)<br>
+        <button class="flareon-adapt-toggle" style="margin-top:8px;padding:8px 16px;background:${active ? '#27ae60' : '#7f8c8d'};color:white;border:none;border-radius:6px;cursor:pointer;">
+          ${active ? 'Deactivate' : 'Activate'}
+        </button>
+      </div>
+    `);
+    line.querySelector('.flareon-adapt-toggle').onclick = () => { state.attackerFlareonAdaptabilityActive = !active; updateDamages(); };
+  } else {
+    const max   = passive.heatMaxThresholds ?? 3;
+    const tier  = Math.min(state.attackerPassiveStacks || 0, max);
+    const atkPc = (passive.heatAtkPercentPerThreshold ?? 8) * tier;
+    const ls    = getFlareonHeatLifesteal(tier);
+    line.innerHTML = wrap(`
+      ${icon('assets/moves/flareon/flash_fire.png')}
+      <div style="flex:1;">
+        ${passiveBadge('Flash Fire', null, PASSIVE_ATK)}
+        Heat threshold: <button class="stack-btn minus">-</button>
+        <strong style="color:${C};">${tier}</strong>/${max}
+        <button class="stack-btn plus">+</button>
+        <br>→ Atk +${atkPc}%, auto-attack life steal +${ls}%
+      </div>
+    `);
+    line.querySelector('.minus').onclick = () => { if ((state.attackerPassiveStacks || 0) > 0) { state.attackerPassiveStacks--; updateDamages(); } };
+    line.querySelector('.plus').onclick  = () => { if ((state.attackerPassiveStacks || 0) < max) { state.attackerPassiveStacks++; updateDamages(); } };
+  }
+  card.appendChild(line);
+}
+
+// Life steal cumulé des seuils de chaleur atteints (ex. [3,4,5] → 3 / 7 / 12 %)
+function getFlareonHeatLifesteal(tier) {
+  const arr = state.currentAttacker?.passive?.heatLifestealPerThreshold || [3, 4, 5];
+  let sum = 0;
+  for (let i = 0; i < Math.min(tier, arr.length); i++) sum += arr[i];
+  return sum;
+}
+
+// ── JOLTEON ───────────────────────────────────────────────────────────────────
+function applyJolteonAttacker(atkStats, defStats, card) {
+  const passive = state.currentAttacker.passive || {};
+  const line = document.createElement('div');
+  line.className = 'global-bonus-line';
+  if (state.attackerLevel <= 3) {
+    line.innerHTML = wrap(`
+      ${icon('assets/moves/jolteon/anticipation.png')}
+      <div style="flex:1;">
+        ${passiveBadge('Anticipation', null, PASSIVE_ATK)}
+        When an opposing Pokémon enters the indicated range: Movement Speed +40% for 5s (15s cooldown).
+        <br><i style="opacity:.7;">No damage impact.</i>
+      </div>
+    `);
+  } else {
+    const max   = passive.joltMaxStacks ?? 5;
+    const stack = Math.min(state.attackerPassiveStacks || 0, max);
+    line.innerHTML = wrap(`
+      ${icon('assets/moves/jolteon/anticipation.png')}
+      <div style="flex:1;">
+        ${passiveBadge('Quick Feet', null, PASSIVE_ATK)}
+        Jolt counter on target: <button class="stack-btn minus">-</button>
+        <strong style="color:${C};">${stack}</strong>/${max}
+        <button class="stack-btn plus">+</button>
+        <br>→ Movement Speed +${stack > 0 ? (passive.joltMoveSpeedBonus ?? 20) : 0}%
+        ${stack >= max ? '<br>⚡ Full counter: the special boosted attack (<em>Lightning Bolt</em>) is available.' : ''}
+      </div>
+    `);
+    line.querySelector('.minus').onclick = () => { if ((state.attackerPassiveStacks || 0) > 0) { state.attackerPassiveStacks--; updateDamages(); } };
+    line.querySelector('.plus').onclick  = () => { if ((state.attackerPassiveStacks || 0) < max) { state.attackerPassiveStacks++; updateDamages(); } };
+  }
+  card.appendChild(line);
+}
+
 // ── TINKATON ──────────────────────────────────────────────────────────────────
 function applyTinkatonAttacker(atkStats, defStats, card) {
   const line = document.createElement('div');
@@ -909,4 +993,5 @@ export {
   applySolgaleoAttacker,
   applyMorpekoAttacker,
   applyToxtricityAttacker,
+  applyFlareonAttacker, applyJolteonAttacker, getFlareonHeatLifesteal,
 };
